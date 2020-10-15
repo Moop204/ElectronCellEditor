@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="IK_gating_rates">
+  <component name="myFirstComponent">  
+    <variable name="E" units="joule" />
+    <variable name="m" units="kilogram" />
+    <variable name="c" units="metre" />
+  </component>
+  <component name="mass_into_energy">
+    <math>
+      <apply><eq/>
+        <ci>E</ci>
+        <apply><times/>
+          <ci>m</ci>
+          <apply><power/>
+            <ci>c</ci>
+            <cn cellml:units="dimensionless">2</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <units name="myUnits">
+    <unit units="litre" prefix="kilo" exponent="2"/>
+  </units>
+  <units name="myOtherUnits"> 
+    <unit units="metre" exponent="3"/>
+    <unit units="second" prefix="milli" exponent="-1"/>
+  </units>
+
+  <!-- A model can contain any number of import items. -->
+  <import />
+  <import />
+
+  <!-- A model can contain any number of connection items, as long as the things they connect are unique. -->
+  <connection />
+  <connection />
+
+  <encapsulation>...</encapsulation>
+
+</model>
