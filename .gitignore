@@ -1,7 +1,7 @@
 venv
 __pycache__
 **/log
-test/*
-reqlib
-backend/example/4b1/*
-**/node_modules
+test/
+reqlib/
+react-front/src/backend/example/4b1/
+**/node_modules/
