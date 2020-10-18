@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "electron": "^10.1.3",
     "electron-builder": "^22.9.1",
+    "foreman": "^3.0.1",
     "material-ui": "^0.20.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -17,18 +18,22 @@
     "typescript": "^4.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "start-api": "cd ../flask-api && venv/bin/flask run --no-debugger",
+    "start": "nf start -p 3000",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "elec" : "nf start -p 3000"
+    "electron": "electron .",
+    "electron-start": "node src/start-react",
+    "react-start": "BROWSER=none react-scripts start",
+    "pack": "build --dir",
+    "dist": "npm run build && build",
+    "postinstall": "install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "proxy": "http://localhost:5000",
-  "main": "index.tsx",
+  "main": "src/start.js",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -40,5 +45,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.electron.electron-with-create-react-app",
+    "win": {
+      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
+    },
+    "directories": {
+      "buildResources": "public"
+    }
   }
 }
