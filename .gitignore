@@ -3,5 +3,6 @@ __pycache__
 **/log
 test/
 reqlib/
-react-front/src/backend/example/4b1/
+backend/example/4b1/
+**/build/
 **/node_modules/

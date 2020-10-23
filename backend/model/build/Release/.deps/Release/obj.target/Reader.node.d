@@ -1,1 +1,0 @@
-cmd_Release/obj.target/Reader.node := g++ -o Release/obj.target/Reader.node -shared -pthread -rdynamic -m64  -Wl,-soname=Reader.node -Wl,--start-group Release/obj.target/Reader/reader.o -Wl,--end-group /usr/local/lib/libcellml.so

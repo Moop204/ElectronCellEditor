@@ -38,7 +38,7 @@ void Parsing(std::string &xml, libcellml::ModelPtr &m, std::vector<std::string> 
     std::cout << i << ": " << v->issue(i)->description() << std::endl;
     issues.push_back(v->issue(i)->description());
   }
-  return
+  return;
 }
 
 //using namespace Nan;
