@@ -5,8 +5,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
-//import { importFile } from "../build/Release/Reader.node";
-//const r = require("../../../backend/build/Release/Reader.node");
 
 interface Reader {
   importFile: (file: string) => string;
@@ -33,7 +31,7 @@ const Terminal = () => {
   const classes = useStyles();
   let loc =
     "/home/moop204/Documents/uni/thesis/OpenCellEd/backend/example/sample.xml";
-  //let x = r.importFile(loc);
+  console.log(loc);
   let x = "PROBLEM HERE, LOOK AT CODE";
   return (
     <Box height="25%">
