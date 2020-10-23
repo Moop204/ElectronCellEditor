@@ -1,4 +1,7 @@
-const { app, BrowserWindow } = require('electron')
+const {
+  app,
+  BrowserWindow
+} = require('electron')
 
 const path = require('path')
 const url = require('url')
@@ -16,11 +19,11 @@ function createWindow() {
 
   mainWindow.loadURL(
     process.env.ELECTRON_START_URL ||
-      url.format({
-        pathname: path.join(__dirname, '/../public/index.html'),
-        protocol: 'file:',
-        slashes: true,
-      })
+    url.format({
+      pathname: path.join(__dirname, '/../public/index.html'),
+      protocol: 'file:',
+      slashes: true,
+    })
   )
 
   mainWindow.on('closed', () => {
@@ -41,4 +44,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-

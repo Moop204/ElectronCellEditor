@@ -25,18 +25,20 @@ std::string readFile(std::string &file)
   return ss.str();
 }
 
-void Parsing(std::string &xml)
+void Parsing(std::string &xml, libcellml::ModelPtr &m, std::vector<std::string> &issues)
 {
   auto p = libcellml::Parser::create();
   auto v = libcellml::Validator::create();
 
-  auto m = p->parseModel(xml);
+  m = p->parseModel(xml);
   v->validateModel(m);
   std::cout << "ISSUES: " << v->issueCount() << std::endl;
   for (auto i = 0; i < int(v->issueCount()); ++i)
   {
     std::cout << i << ": " << v->issue(i)->description() << std::endl;
+    issues.push_back(v->issue(i)->description());
   }
+  return
 }
 
 //using namespace Nan;
@@ -74,8 +76,9 @@ int LocalToString(Isolate *isolate, Local<Context> context, Local<Value> item, s
 static std::string loadFile(std::string file)
 {
   auto s = readFile(file);
-  Parsing(s);
-
+  libcellml::ModelPtr m;
+  std::vector<std::string> issues;
+  Parsing(s, m, issues);
   return s;
 }
 
@@ -94,16 +97,15 @@ void importFile(const Nan::FunctionCallbackInfo<v8::Value> &info)
   std::string file;
   LocalToString(isolate, context, info[0], file);
   std::string result = loadFile(file);
-  std::cout << result;
   if (result.length() == 0)
   {
     Nan::ThrowTypeError("Something went wrong.");
     return;
   }
-  Nan::MaybeLocal<String> mResponse = Nan::New(file); //Nan::New(static_cast<uint32_t>(5));
+  Nan::MaybeLocal<String> mResponse = Nan::New(result); //Nan::New(static_cast<uint32_t>(5));
   if (mResponse.IsEmpty())
   {
-    return -1;
+    return;
   }
   Local<String> response = mResponse.ToLocalChecked();
 
