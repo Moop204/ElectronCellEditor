@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) =>
       background: "#000",
     },
     test: {
-      height: "50%",
+      height: "50rem",
       background: "#00efff",
     },
   })
@@ -59,6 +59,32 @@ const PropertyAttribute = (props) => {
     <Grid container item direction="row">
       <AttributeLabel>{label}</AttributeLabel>
       <TextField id="standard-full-width" label="Label" />
+    </Grid>
+  );
+};
+
+const NewChild = (props) => {
+  return <Paper> W.I.P</Paper>;
+};
+
+const AddChildren = (props) => {
+  const styles = useStyles();
+
+  let val = 1;
+  return (
+    <Grid container item>
+      <Grid item md={12}>
+        <Button className={styles.heading}>Add Children</Button>
+      </Grid>
+      <Grid item md={12}>
+        {Array(5)
+          .fill(0)
+          .map((issue) => {
+            const key = "attr" + val;
+            val++;
+            return <NewChild key={key} />;
+          })}
+      </Grid>
     </Grid>
   );
 };
@@ -207,12 +233,10 @@ export default function AutoGrid() {
           <View />
           <Properties />
           <Issues />
-          <Paper className={styles.paper}>xs</Paper>
-          <Paper className={styles.paper}>xs</Paper>
-          <Paper className={styles.paper}>xs</Paper>
         </Grid>
         <Grid item md={8} className={styles.contentView} height="50%">
-          <div className={styles.test}>xs</div>
+          <Paper className={styles.test}>xs</Paper>
+          <AddChildren />
         </Grid>
       </Grid>
     </div>
