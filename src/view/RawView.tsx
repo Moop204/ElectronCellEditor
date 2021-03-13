@@ -1,9 +1,10 @@
-const { ipcRenderer } = require('electron');
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { EditorXml } from './EditorXml';
-import { XmlEditor } from 'react-xml-editor';
-//import Util from 'util';
+import { EditorMonaco } from './EditorMonaco';
+const { ipcRenderer } = require('electron');
+interface EditorProp {
+  xmlInput: string;
+}
 
 const rawStyles = makeStyles((theme) =>
   createStyles({
@@ -22,6 +23,9 @@ const rawStyles = makeStyles((theme) =>
 
 const RawView = () => {
   const [contentExist, setContentExist] = useState('');
+  ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
+    setContentExist(res);
+  });
 
   const requestFile = (event: React.MouseEvent) => {
     ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
@@ -46,13 +50,12 @@ const RawView = () => {
     const demoProps = {
       mode: 'laic',
     };
-
-    if (contentExist) {
-      return (
-        <div className={style.rawView}>
-          <EditorXml xmlInput={contentExist} {...demoProps} />
-        </div>
-      );
+    /*
+    <div className={style.rawView}>
+    <EditorXml xmlInput={contentExist} {...demoProps} />
+  </div>*/
+    if (contentExist !== '') {
+      return <EditorMonaco xmlInput={contentExist} />;
     } else {
       return (
         <div>
