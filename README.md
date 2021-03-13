@@ -1,6 +1,6 @@
 <div align="center">
-# Electron Cell(ML) Editor
 
+<img src="./media/logo-safe.svg">
 An editor for the CellML language.
 
 </div>
