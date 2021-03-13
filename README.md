@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./media/logo-safe.svg">
+<img src="./media/logo-safe.svg">\
 An editor for the CellML language.
 
 </div>
@@ -18,5 +18,5 @@ See our [docs and guides here](https://github.com/Moop204/ElectronCellEditor/wik
 
 ## Built On
 
-[Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
+[Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)\
 [Monaco React](https://github.com/suren-atoyan/monaco-react)
