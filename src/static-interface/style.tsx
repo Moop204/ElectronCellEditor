@@ -25,7 +25,21 @@ const useStyles = makeStyles((theme) =>
       borderBottom: "solid",
       marginTop: "1vh",
     },
+    plainText: {
+      color: 'black', 
+    }, 
+    issueMarker: {
+      color: 'red',
+    }   
   })
 );
 
-export { useStyles };
+const standardStyle = makeStyles((theme) => {
+  createStyles({
+    plainText: {
+      color: 'black', 
+    }
+  })
+})
+
+export { useStyles, standardStyle };

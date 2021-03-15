@@ -9,12 +9,22 @@ interface ImportInterface {
   valid: boolean;
 }
 
-const importFile = (fileLoc: string, parser) => {
+
+const importFile = (fileLoc: string, parser, validator) => {
   const file: string = fs.readFileSync(fileLoc, 'utf8');
   //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
   const model: string = parser.parseModel(file);
-  const valid = true;
-  return { model, valid };
+  validator.validateModel(model);
+  const noError = validator.issueCount();
+  let errors = [];
+  for (let errorNum = 1; errorNum <= noError; errorNum++) {
+    const issue = validator.issue(errorNum);
+    errors.push({
+      desc: issue.description(),
+      cause: issue.cause(),
+    });
+  }
+  return errors.length > 0 ? {file, errors} : {model, errors};
 };
 
 
@@ -29,17 +39,17 @@ const mainAsync = async () => {
     */
 
   // Waits for invocation from renderer and load in the requested file
-  ipcMain.handle('loadFile', async (event: Event, arg: string) => {
-    console.log('Requested we open ' + arg);
-    // const tmpArg = 'src/example/complex_encapsulation.xml'; // To be properly implemented
-    const { model, valid } = importFile(
-      'src/example/complex_encapsulation.xml',
-      parser
-    );
-    const printedModel = printer.printModel(model);
-    console.log(printedModel);
-    return printedModel;
-  });
+  // ipcMain.handle('loadFile', async (event: Event, arg: string) => {
+  //   console.log('Requested we open ' + arg);
+  //   // const tmpArg = 'src/example/complex_encapsulation.xml'; // To be properly implemented
+  //   const { model, valid } = importFile(
+  //     'src/example/complex_encapsulation.xml',
+  //     parser
+  //   );
+  //   const printedModel = printer.printModel(model);
+  //   console.log(printedModel);
+  //   return printedModel;
+  // });
 
 };
 
