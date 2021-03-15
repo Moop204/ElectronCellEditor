@@ -1,7 +1,8 @@
+import { Event } from 'electron/main';
 import { Parser } from 'webpack';
 import libcellModule from './wasm/libcellml';
 const fs = require('fs');
-const { ipcMain } = require('electron');
+const { ipcMain} = require('electron');
 
 interface ImportInterface {
   model: string;
@@ -15,6 +16,7 @@ const importFile = (fileLoc: string, parser) => {
   const valid = true;
   return { model, valid };
 };
+
 
 const mainAsync = async () => {
   const libcellml = await libcellModule();
@@ -38,6 +40,7 @@ const mainAsync = async () => {
     console.log(printedModel);
     return printedModel;
   });
+
 };
 
 export { mainAsync, importFile };

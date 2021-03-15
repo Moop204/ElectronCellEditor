@@ -4,7 +4,10 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  dialog,
 } from 'electron';
+import libcellModule from './wasm/libcellml';
+const fs = require('fs');
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -84,6 +87,7 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
       label: 'Edit',
       submenu: [
@@ -206,6 +210,28 @@ export default class MenuBuilder {
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
+            },
+          },
+          {
+            label: 'Open File',
+            click: () => {
+              const filePath = dialog.showOpenDialogSync({});
+              const libcellml = libcellModule().then((libcellml) => {
+                const parser = new libcellml.Parser();
+                const printer = new libcellml.Printer();
+
+                const importFile = (fileLoc: string, parser) => {
+                  const file: string = fs.readFileSync(fileLoc, 'utf8');
+                  //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
+                  const model: string = parser.parseModel(file);
+                  const valid = true;
+                  return { model, valid };
+                };
+
+                const { model, valid } = importFile(String(filePath), parser);
+                const printedModel = printer.printModel(model);
+                this.mainWindow.webContents.send('dialog-reply', printedModel);
+              });
             },
           },
         ],
