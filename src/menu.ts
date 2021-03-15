@@ -6,6 +6,7 @@ import {
   MenuItemConstructorOptions,
   dialog,
 } from 'electron';
+import { Module, Parser } from 'webpack';
 import libcellModule from './wasm/libcellml';
 const fs = require('fs');
 
@@ -219,18 +220,40 @@ export default class MenuBuilder {
               const libcellml = libcellModule().then((libcellml) => {
                 const parser = new libcellml.Parser();
                 const printer = new libcellml.Printer();
+                const validator = new libcellml.Validator();
 
-                const importFile = (fileLoc: string, parser) => {
+                const importFile = (
+                  fileLoc: string,
+                  parser,
+                  validator,
+                  printer
+                ) => {
                   const file: string = fs.readFileSync(fileLoc, 'utf8');
                   //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
-                  const model: string = parser.parseModel(file);
-                  const valid = true;
-                  return { model, valid };
+                  const model = parser.parseModel(file);
+                  validator.validateModel(model);
+                  const noError = validator.issueCount();
+                  let errors = [];
+                  for (let errorNum = 0; errorNum < noError; errorNum++) {
+                    const issue = validator.error(errorNum);
+                    errors.push({
+                      desc: issue.description(),
+                      cause: issue.cause(),
+                    });
+                  }
+                  return errors.length > 0
+                    ? { model: file, errors: errors }
+                    : { model: printer.printModel(model), errors: errors };
                 };
 
-                const { model, valid } = importFile(String(filePath), parser);
-                const printedModel = printer.printModel(model);
-                this.mainWindow.webContents.send('dialog-reply', printedModel);
+                const { model, errors } = importFile(
+                  String(filePath),
+                  parser,
+                  validator,
+                  printer
+                );
+                this.mainWindow.webContents.send('dialog-reply', model);
+                this.mainWindow.webContents.send('error-reply', errors);
               });
             },
           },
