@@ -12,4 +12,15 @@ const Heading = (props) => {
   );
 };
 
-export { Heading };
+const IssuesHeading = (props) => {
+  const styles = useStyles();
+  const { title } = props;
+
+  return (
+    <Grid item md={12}>
+      <div className={styles.heading}>{title} </div>
+    </Grid>
+  );
+};
+
+export { Heading, IssuesHeading };

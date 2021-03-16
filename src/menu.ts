@@ -232,28 +232,64 @@ export default class MenuBuilder {
                   //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
                   const model = parser.parseModel(file);
                   validator.validateModel(model);
-                  const noError = validator.issueCount();
+
+                  const noError = validator.errorCount();
                   let errors = [];
                   for (let errorNum = 0; errorNum < noError; errorNum++) {
                     const issue = validator.error(errorNum);
                     errors.push({
                       desc: issue.description(),
-                      cause: issue.cause(),
+                      cause: issue.referenceHeading(),
                     });
                   }
-                  return errors.length > 0
-                    ? { model: file, errors: errors }
-                    : { model: printer.printModel(model), errors: errors };
+
+                  const noWarning = validator.warningCount();
+                  let warnings = [];
+                  for (
+                    let warningNum = 0;
+                    warningNum < noWarning;
+                    warningNum++
+                  ) {
+                    const warning = validator.warning(warningNum);
+                    warnings.push({
+                      desc: warning.description(),
+                      cause: warning.referenceHeading(),
+                    });
+                  }
+
+                  const noHint = validator.hintCount();
+                  let hints = [];
+                  for (let i = 0; i < noHint; i++) {
+                    const hint = validator.hint(i);
+                    hints.push({
+                      desc: hint.description(),
+                      cause: hint.referenceHeading(),
+                    });
+                  }
+
+                  return {
+                    model:
+                      validator.issueCount() > 0
+                        ? file
+                        : printer.printModel(model),
+                    errors: errors,
+                    warnings: warnings,
+                    hints: hints,
+                  };
                 };
 
-                const { model, errors } = importFile(
+                const { model, errors, warnings, hints } = importFile(
                   String(filePath),
                   parser,
                   validator,
                   printer
                 );
                 this.mainWindow.webContents.send('dialog-reply', model);
-                this.mainWindow.webContents.send('error-reply', errors);
+                this.mainWindow.webContents.send('error-reply', {
+                  errors: errors,
+                  warnings: warnings,
+                  hints: hints,
+                });
               });
             },
           },
