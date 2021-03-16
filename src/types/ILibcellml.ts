@@ -1,8 +1,78 @@
-interface Parser {
+interface Version {
+  version(): number;
+  versionString(): string;
+}
+
+interface NamedEntity extends Entity {
+  name(): string;
+  setName(name: string): void;
+}
+
+interface ImportedEntity {
+  isImport(): boolean;
+  importReference(): string;
+  importSource(): ImportSource;
+  setImportSource(importSource: ImportSource): void;
+  setImportReference(reference: string): void;
+}
+
+interface Entity {
+  id(): string;
+  setId(id: string): void;
+  parent(): Entity;
+  setParent(parent: Entity): void;
+  removeParent(): void;
+  hasParent(): boolean;
+  hasAncestor(entity: Entity): boolean;
+}
+
+interface Logger {
+  addIssue(issue: Issue): void;
+  removeAllIssues(): void;
+  error(index: number): Issue;
+  warning(index: number): Issue;
+  hint(index: number): Issue;
+  issueCount(): number;
+  errorCount(): number;
+  warningCount(): number;
+  hintCount(): number;
+}
+
+interface ComponentEntity {
+  addComponent(component: Component): boolean;
+  componentCount(): number;
+  containsComponentByName(name: string, searchEncapsulated: boolean): boolean;
+  containsComponentByComponent(
+    component: Component,
+    searchEncapsulated: boolean
+  ): boolean;
+  componentByIndex(index: number): Component;
+  componentByName(name: string, searchEncapsulated: boolean): Component;
+  encapsulationId(): string;
+  removeAllComponents(): void;
+  removeComponentByIndex(index: number): boolean;
+  removeComponentByName(name: string, searchEncapsulated: boolean): boolean;
+  removeComponentByComponent(
+    component: Component,
+    searchEncapsulated: boolean
+  ): boolean;
+  replaceComponentByIndex(index: number, component: Component): boolean;
+  replaceComponentByName(name: string, component: Component): boolean;
+  replaceComponentByComponent(
+    oldComponent: Component,
+    newComponent: Component,
+    searchEncapsulated: boolean
+  ): boolean;
+  setEncapsulationId(id: string): void;
+  takeComponentByIndex(index: number): Component;
+  takeComponentByName(name: string, searchEncapsulated: boolean): Component;
+}
+
+interface Parser extends Logger {
   parseModel(content: string): Model;
 }
 
-interface Model {
+interface Model extends ComponentEntity {
   addUnits(units: Units): void;
   removeUnitsByIndex(index: number): boolean;
   removeUnitsByName(name: string): boolean;
@@ -80,7 +150,7 @@ enum StandardUnit {
   WEBER /**< Derived SI unit weber. */,
 }
 
-interface Units {
+interface Units extends ImportedEntity, NamedEntity {
   isBaseUnit(): boolean;
   addUnit(
     reference: string,
@@ -144,7 +214,7 @@ interface Units {
   setImportReference(reference: string): void;
 }
 
-interface ImportSource {
+interface ImportSource extends Entity {
   model(): Model;
   url(): string;
   hasModel(): boolean;
@@ -152,20 +222,8 @@ interface ImportSource {
   setUrl(url: string): void;
 }
 
-// Validator inherits Logger
-interface Validator {
-  // Validator
+interface Validator extends Logger {
   validateModel(model: Model): void;
-  // Logger
-  addIssue(issue: Issue): void;
-  removeAllIssues(): void;
-  error(index: number): Issue;
-  warning(index: number): Issue;
-  hint(index: number): Issue;
-  issueCount(): number;
-  errorCount(): number;
-  warningCount(): number;
-  hintCount(): number;
 }
 
 enum Cause {
@@ -275,7 +333,7 @@ interface Issue {
   setReset(reset: Reset): void;
 }
 
-interface Component {
+interface Component extends ComponentEntity, ImportedEntity {
   // Component
   addReset(reset: Reset): void;
   addVariable(variable: Variable): void;
@@ -302,12 +360,6 @@ interface Component {
   takeResetByIndex(index: number): Reset;
   variableCount(): number;
   clone(): Component;
-  // Imported Entity
-  isImport(): boolean;
-  importReference(): string;
-  importSource(): ImportSource;
-  setImportSource(importSource: ImportSource): void;
-  setImportReference(reference: string): void;
 }
 
 enum InterfaceType {
@@ -317,7 +369,7 @@ enum InterfaceType {
   PUBLIC_AND_PRIVATE,
 }
 
-interface Variable {
+interface Variable extends NamedEntity {
   removeAllEquivalences(): void;
   equivalentVariable(index: number): Variable;
   equivalentVariableCount(): number;
@@ -359,7 +411,7 @@ interface Variable {
   ): void;
 }
 
-interface Reset {
+interface Reset extends Entity {
   setOrder(order: number): void;
   order(): number;
   unsetOrder(): void;
@@ -378,17 +430,31 @@ interface Reset {
   clone(): Reset;
 }
 
-interface Printer {
+interface Printer extends Logger {
   printModel(model: Model): string;
 }
 
 export {
-  Parser,
-  Printer,
-  Validator,
+  Cause,
+  Component,
+  ComponentEntity,
+  Entity,
+  ImportedEntity,
+  ImportSource,
+  InterfaceType,
+  Issue,
+  Level,
+  Logger,
   Model,
+  NamedEntity,
+  Parser,
   Prefix,
+  Printer,
+  ReferenceRule,
+  Reset,
   StandardUnit,
   Units,
-  ImportSource,
+  Validator,
+  Variable,
+  Version,
 };
