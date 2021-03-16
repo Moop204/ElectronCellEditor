@@ -6,8 +6,8 @@ import {
   MenuItemConstructorOptions,
   dialog,
 } from 'electron';
-import { Module, Parser } from 'webpack';
 import libcellModule from './wasm/libcellml';
+import { Parser, Validator, Printer } from './types/ILibcellml';
 const fs = require('fs');
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -217,16 +217,16 @@ export default class MenuBuilder {
             label: 'Open File',
             click: () => {
               const filePath = dialog.showOpenDialogSync({});
-              const libcellml = libcellModule().then((libcellml) => {
+              const libcellml = libcellModule().then((libcellml: any) => {
                 const parser = new libcellml.Parser();
                 const printer = new libcellml.Printer();
                 const validator = new libcellml.Validator();
 
                 const importFile = (
                   fileLoc: string,
-                  parser,
-                  validator,
-                  printer
+                  parser: Parser,
+                  validator: Validator,
+                  printer: Printer
                 ) => {
                   const file: string = fs.readFileSync(fileLoc, 'utf8');
                   //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
