@@ -24,9 +24,7 @@ const rawStyles = makeStyles((theme) =>
 
 const RawView = () => {
   const [contentExist, setContentExist] = useState('');
-  // ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
-  //   setContentExist(res);
-  // });
+
   ipcRenderer.on('dialog-reply', (event: Event, message: string) => {
     console.log(message);
     setContentExist(message);
