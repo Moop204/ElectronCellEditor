@@ -11,10 +11,6 @@ import { View } from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
 import Paper from '@material-ui/core/Paper';
 
-ipcRenderer.on('asynchronous-reply', (event, arg) => {
-  console.log(arg); // prints "pong"
-});
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -37,7 +33,6 @@ const AutoGrid = () => {
 
   return (
     <div className={styles.root}>
-      <div></div> <button>ABC</button>
       <Grid container spacing={1} md={12}>
         <Grid item md={3}>
           <View />

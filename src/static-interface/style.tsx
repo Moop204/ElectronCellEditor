@@ -1,6 +1,6 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       color: "white",
       padding: "0.5rem",
+      justifyContent: "space-between" 
     },
     subheading: {
       borderTop: "solid",
@@ -29,8 +30,14 @@ const useStyles = makeStyles((theme) =>
       color: 'black', 
     }, 
     issueMarker: {
-      color: 'red',
-    }   
+      color: 'red'
+    },
+    issueButtons: {
+      height: '3vh',
+      padding: '1vh',
+      margin: '0px',
+      borderRadius: '0px',
+    }  
   })
 );
 
