@@ -1,11 +1,13 @@
-import * as React from "react";
-import Grid from "@material-ui/core/Grid";
-import { useStyles } from "./style";
-import Button from "@material-ui/core/Button";
-import { SubHeader } from "./SubHeader";
-import styled from "styled-components";
-import TextField from "@material-ui/core/Input";
-import { Heading } from "./Heading";
+import React, { useState, useEffect, ChangeEventHandler } from 'react';
+import Grid from '@material-ui/core/Grid';
+import { useStyles } from './style';
+import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import { SubHeader } from './SubHeader';
+import styled from 'styled-components';
+import TextField from '@material-ui/core/Input';
+import { Heading } from './Heading';
+import { ipcRenderer } from 'electron';
 
 const ElementChildren = (props) => {
   const styles = useStyles();
@@ -17,48 +19,86 @@ const ElementChildren = (props) => {
   );
 };
 
-const PropertyAttribute = (props) => {
-  const { labelVal } = props;
-  console.log(labelVal);
+interface AttrDesc {
+  id: string;
+  title: string;
+  value: string;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+const PropertyAttribute = (props: AttrDesc) => {
+  const { id, title, value, onChange } = props;
   /*
   const AttributeLabel = styled.p`
     padding-right: 1rem;
   `;
   */
+
   return (
     <Grid container item direction="row">
-      <div>{labelVal}</div>
-      <TextField id="standard-full-width"  />
+      <InputLabel>{title}</InputLabel>
+      <TextField id={id} value={value} onChange={onChange} />
     </Grid>
   );
 };
 
 const Properties = () => {
   const styles = useStyles();
+  const [attr, setAttr] = useState<AttrDesc[]>([]);
 
-  const attributes = ["name", "attr1", "attr2"];
+  
+  useEffect(() => {
+    ipcRenderer.on('reply-selected-name', (event, arg: AttrDesc[]) => {
+      let newAttr: AttrDesc[] = arg.map((obj, idNo) => {
+        const title = obj.title;
+        const val = obj.value;
+        return { id: idNo.toString(), title: title, value: val };
+      });
+      setAttr(newAttr);
+    });
+
+    ipcRenderer.on('initiate-properties', (event, arg) => {
+      console.log('INITIATE TIMEEEEE');
+      ipcRenderer.send('selected-name');
+    });
+  }, []);
+
   const children = [
-    "width",
-    "length",
-    "perimeter",
-    "perimeter=2*(width+length)",
+    'width',
+    'length',
+    'perimeter',
+    'perimeter=2*(width+length)',
   ];
-  let attrVal = 1;
-  let childVal = 1;
+
+  const handleOnChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    let newAttr = [...attr];
+    const id: number = parseInt(event.target.id);
+    newAttr[id].value = event.target.value;
+    setAttr(newAttr);
+  };
+
+  let id: number = 0;
   return (
     <Grid container item>
       <Heading title="Properties" />
-      <Grid item md={12}>
+      <Grid item md={12} className={styles.plainText}>
         <SubHeader title="Attributes" />
-        {attributes.map((elm) => {
-          const key = "attr" + attrVal;
-          attrVal++;
-          return <PropertyAttribute label={elm} key={key} />;
+        {attr.map((elm, key) => {
+          const { title, value } = elm;
+          const readId = id;
+          id++;
+          return (
+            <PropertyAttribute
+              id={readId.toString()}
+              title={title}
+              value={value}
+              key={key}
+              onChange={handleOnChange}
+            />
+          );
         })}
         <SubHeader title="Children" />
-        {children.map((child) => {
-          const key = "attr" + childVal;
-          childVal++;
+        {children.map((child, key) => {
           return <ElementChildren desc={child} key={key} />;
         })}
       </Grid>

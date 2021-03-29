@@ -38,7 +38,7 @@ interface Logger {
   hintCount(): number;
 }
 
-interface ComponentEntity {
+interface ComponentEntity extends NamedEntity {
   addComponent(component: Component): boolean;
   componentCount(): number;
   containsComponentByName(name: string, searchEncapsulated: boolean): boolean;
