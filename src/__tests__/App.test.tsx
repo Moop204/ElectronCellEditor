@@ -38,7 +38,8 @@ describe('CellML Library', () => {
     const { model, errors } = importFile(
       'src/example/complex_encapsulation.xml',
       parser,
-      validator
+      validator,
+      printer
     );
     expect(printer.printModel(model)).toBe(validFile);
     expect(errors.length).toBe(0);
@@ -50,7 +51,12 @@ tis not an xml file <much> it pretends to <be>`;
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
     const validator = new libcellml.Validator();
-    const { model, errors } = importFile('src/example/bad.xml', parser, validator);
+    const { model, errors } = importFile(
+      'src/example/bad.xml',
+      parser,
+      validator,
+      printer
+    );
     expect(printer.printModel(model)).toBe(invalidFile);
     expect(errors.length).toBeGreaterThan(0);
   });

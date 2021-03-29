@@ -7,6 +7,7 @@ import {
   dialog,
 } from 'electron';
 import libcellModule from './wasm/libcellml';
+import { importFile } from './AsyncMain';
 import { Parser, Validator, Printer } from './types/ILibcellml';
 const fs = require('fs');
 
@@ -217,74 +218,19 @@ export default class MenuBuilder {
             label: 'Open File',
             click: () => {
               const filePath = dialog.showOpenDialogSync({});
-              const libcellml = libcellModule().then((libcellml: any) => {
+              const libcellml = libcellModule().then(async (libcellml: any) => {
                 const parser = new libcellml.Parser();
                 const printer = new libcellml.Printer();
                 const validator = new libcellml.Validator();
 
-                const importFile = (
-                  fileLoc: string,
-                  parser: Parser,
-                  validator: Validator,
-                  printer: Printer
-                ) => {
-                  const file: string = fs.readFileSync(fileLoc, 'utf8');
-                  //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
-                  const model = parser.parseModel(file);
-                  validator.validateModel(model);
-
-                  const noError = validator.errorCount();
-                  let errors = [];
-                  for (let errorNum = 0; errorNum < noError; errorNum++) {
-                    const issue = validator.error(errorNum);
-                    errors.push({
-                      desc: issue.description(),
-                      cause: issue.referenceHeading(),
-                    });
-                  }
-
-                  const noWarning = validator.warningCount();
-                  let warnings = [];
-                  for (
-                    let warningNum = 0;
-                    warningNum < noWarning;
-                    warningNum++
-                  ) {
-                    const warning = validator.warning(warningNum);
-                    warnings.push({
-                      desc: warning.description(),
-                      cause: warning.referenceHeading(),
-                    });
-                  }
-
-                  const noHint = validator.hintCount();
-                  let hints = [];
-                  for (let i = 0; i < noHint; i++) {
-                    const hint = validator.hint(i);
-                    hints.push({
-                      desc: hint.description(),
-                      cause: hint.referenceHeading(),
-                    });
-                  }
-
-                  return {
-                    model:
-                      validator.issueCount() > 0
-                        ? file
-                        : printer.printModel(model),
-                    errors: errors,
-                    warnings: warnings,
-                    hints: hints,
-                  };
-                };
-
-                const { model, errors, warnings, hints } = importFile(
+                const { model, errors, warnings, hints } = await importFile(
                   String(filePath),
                   parser,
                   validator,
                   printer
                 );
                 this.mainWindow.webContents.send('dialog-reply', model);
+                this.mainWindow.webContents.send('initiate-properties');
                 this.mainWindow.webContents.send('error-reply', {
                   errors: errors,
                   warnings: warnings,

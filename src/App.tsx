@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import { Issues } from './static-interface/IssuesInterface';
 import { View } from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
 import Paper from '@material-ui/core/Paper';
+import { ComponentEntity } from './types/ILibcellml';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) =>
 const AutoGrid = () => {
   const styles = useStyles();
 
+
   return (
     <div className={styles.root}>
       <Grid container spacing={1} md={12}>
@@ -46,7 +48,7 @@ const AutoGrid = () => {
               <button>ABC</button>
               <button>DEF</button>
             </Paper>
-            <RawView></RawView>
+            <RawView/>
           </Paper>
           <AddChildren />
         </Grid>
