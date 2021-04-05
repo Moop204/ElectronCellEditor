@@ -13,9 +13,9 @@ import { ipcRenderer } from 'electron';
 import { useStyles } from './style';
 import { SubHeader } from './SubHeader';
 import { Heading } from './Heading';
-import { IModelProperties, IProperties } from '../types/IProperties';
+import { IModelProperties, IUnits } from '../types/IModelProperties';
 import { Elements } from './Elements';
-import { ISearch, ISelect, ISelection } from '../types/IQuery';
+import { IComponentProperties } from '../types/IComponentProperties';
 
 interface IPropertyAttribute {
   title: string;
@@ -26,10 +26,10 @@ interface IPropertyAttribute {
 const PropertyAttribute = (props: IPropertyAttribute) => {
   const { title, value, onChange } = props;
   /*
-    const AttributeLabel = styled.p`
-      padding-right: 1rem;
-    `;
-    */
+      const AttributeLabel = styled.p`
+        padding-right: 1rem;
+      `;
+      */
 
   return (
     <Grid container item direction="row">
@@ -49,44 +49,18 @@ const PropertyChild = (props: IPropertyChild) => {
 
   return (
     <Grid container item direction="row">
-      <Button onClick={onClick}>{title}</Button>
+      <Button>{title}</Button>
     </Grid>
   );
 };
 
-const findElement = (elm: Elements, name: string) => {
-  const select: ISearch = { index: null, name };
-  const query: ISelect = { element: elm, select };
-  switch (elm) {
-    case Elements.component:
-      ipcRenderer.send('select-element', query);
-
-      break;
-    default:
-      console.log('Error: Not a valid element type');
-  }
-  console.log(`FIND ME THAT ELEMENT!!!!${elm}${name}`);
-};
-
-const ModelProperties = () => {
+const ComponentProperties = () => {
   const styles = useStyles();
-  const [abstractModel, setAbstractModel] = useState<IProperties>();
+  const [abstractModel, setAbstractModel] = useState<IComponentProperties>();
 
   useEffect(() => {
-    ipcRenderer.on('res-get-element', (event, cellmlModel: IProperties) => {
-      setAbstractModel(cellmlModel);
-    });
-    // ipcRenderer.on('select-model', (event, arg) => {
-    //   ipcRenderer.send('selected-model');
-    // });
-    ipcRenderer.on('init-content', (event, arg) => {
-      ipcRenderer.send('get-element', Elements.model);
-    });
-
-    ipcRenderer.on('res-select-element', (event, arg: ISelection) => {
-      const { element, prop } = arg;
-      console.log(prop);
-      setAbstractModel(prop);
+    ipcRenderer.on('select-element', (event, arg: IComponentProperties) => {
+      setAbstractModel(arg);
     });
   }, []);
 
@@ -107,6 +81,16 @@ const ModelProperties = () => {
     setAbstractModel(newAbstractModel);
   };
 
+  const findElement = (elm: Elements, name: string) => {
+    switch (elm) {
+      case Elements.component:
+        ipcRenderer.send('find-component', name);
+        break;
+      default:
+        console.log('Error: Not a valid element type');
+    }
+  };
+
   return (
     <Grid container item>
       <Heading title="Properties" />
@@ -120,26 +104,25 @@ const ModelProperties = () => {
             onChange={(e) => handleChange(attrTitle, e.target.value)}
           />
         ))}
-        {abstractModel.children &&
-          Object.entries(abstractModel.children).map(
-            ([parentKey, childrenType]) => (
-              <div key={parentKey}>
-                <SubHeader title={parentKey} />
-                {Object.values(childrenType).map((attrType) => (
-                  <PropertyChild
-                    title={attrType.name}
-                    onClick={() => {
-                      findElement(Elements[parentKey], attrType.name);
-                    }}
-                    key={attrType.name}
-                  />
-                ))}
-              </div>
-            )
-          )}
+        {Object.entries(abstractModel.children).map(
+          ([parentKey, childrenType]) => (
+            <div key={parentKey}>
+              <SubHeader title={parentKey} />
+              {Object.values(childrenType).map((attrType) => (
+                <PropertyChild
+                  title={attrType.name}
+                  onClick={() => {
+                    findElement(Elements[parentKey], attrType.name);
+                  }}
+                  key={attrType.name}
+                />
+              ))}
+            </div>
+          )
+        )}
       </Grid>
     </Grid>
   );
 };
 
-export { ModelProperties };
+export { ComponentProperties };

@@ -8,6 +8,10 @@ import styled from 'styled-components';
 import TextField from '@material-ui/core/Input';
 import { Heading } from './Heading';
 import { ipcRenderer } from 'electron';
+import { ModelProperties } from './ModelProperties';
+import { ComponentProperties } from './ComponentProperties';
+import { Elements } from './Elements';
+import { ISelect } from '../types/IQuery';
 
 const ElementChildren = (props) => {
   const styles = useStyles();
@@ -19,91 +23,58 @@ const ElementChildren = (props) => {
   );
 };
 
-interface AttrDesc {
-  id: string;
-  title: string;
-  value: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-const PropertyAttribute = (props: AttrDesc) => {
-  const { id, title, value, onChange } = props;
-  /*
-  const AttributeLabel = styled.p`
-    padding-right: 1rem;
-  `;
-  */
-
-  return (
-    <Grid container item direction="row">
-      <InputLabel>{title}</InputLabel>
-      <TextField id={id} value={value} onChange={onChange} />
-    </Grid>
-  );
-};
-
 const Properties = () => {
   const styles = useStyles();
-  const [attr, setAttr] = useState<AttrDesc[]>([]);
+  const [curElm, setCurElm] = useState<Elements>(Elements.model);
 
-  
   useEffect(() => {
-    ipcRenderer.on('reply-selected-name', (event, arg: AttrDesc[]) => {
-      let newAttr: AttrDesc[] = arg.map((obj, idNo) => {
-        const title = obj.title;
-        const val = obj.value;
-        return { id: idNo.toString(), title: title, value: val };
-      });
-      setAttr(newAttr);
+    ipcRenderer.on('res-select-element', (event, selection: ISelect) => {
+      console.log('Changed curelm');
+      setCurElm(Elements.component);
     });
 
-    ipcRenderer.on('initiate-properties', (event, arg) => {
-      console.log('INITIATE TIMEEEEE');
-      ipcRenderer.send('selected-name');
-    });
+    // ipcRenderer.on('reply-selected-name', (event, arg: AttrDesc[]) => {
+    //   let newAttr: AttrDesc[] = arg.map((obj, idNo) => {
+    //     const title = obj.title;
+    //     const val = obj.value;
+    //     return { id: idNo.toString(), title: title, value: val };
+    //   });
+    //   setAttr(newAttr);
+    // });
+
+    // ipcRenderer.on('initiate-properties', (event, arg) => {
+    //   console.log('INITIATE TIMEEEEE');
+    //   ipcRenderer.send('selected-name');
+    // });
   }, []);
 
-  const children = [
-    'width',
-    'length',
-    'perimeter',
-    'perimeter=2*(width+length)',
-  ];
-
-  const handleOnChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    let newAttr = [...attr];
-    const id: number = parseInt(event.target.id);
-    newAttr[id].value = event.target.value;
-    setAttr(newAttr);
-  };
-
-  let id: number = 0;
   return (
     <Grid container item>
-      <Heading title="Properties" />
-      <Grid item md={12} className={styles.plainText}>
-        <SubHeader title="Attributes" />
-        {attr.map((elm, key) => {
-          const { title, value } = elm;
-          const readId = id;
-          id++;
-          return (
-            <PropertyAttribute
-              id={readId.toString()}
-              title={title}
-              value={value}
-              key={key}
-              onChange={handleOnChange}
-            />
-          );
-        })}
-        <SubHeader title="Children" />
-        {children.map((child, key) => {
-          return <ElementChildren desc={child} key={key} />;
-        })}
-      </Grid>
+      <ModelProperties />
     </Grid>
   );
+
+  // switch (curElm) {
+  //   case Elements.model:
+  //     return (
+  //       <Grid container item>
+  //         <ModelProperties />
+  //       </Grid>
+  //     );
+  //   case Elements.component:
+  //     return (
+  //       <Grid container item>
+  //         COMPONENNNT
+  //         <ComponentProperties />
+  //       </Grid>
+  //     );
+  //   default:
+  //     return (
+  //       <Grid container item>
+  //         ERROR: NO VALID ELEMENT ASSIGNED
+  //       </Grid>
+  //     );
+  // }
 };
 
 export { Properties };

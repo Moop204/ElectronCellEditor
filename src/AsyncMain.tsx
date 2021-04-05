@@ -1,4 +1,6 @@
 import { Event } from 'electron/main';
+import { dialog } from 'electron';
+import { IEvent } from 'monaco-editor';
 import {
   Component,
   NamedEntity,
@@ -14,10 +16,15 @@ import {
   Validator,
   Printer,
 } from './types/ILibcellml';
-import { IModelProperties } from './types/IModelProperties';
-import { IUnitsProperties } from './types/IUnitsProperties';
+import {
+  IProperties,
+  IChild,
+  IModelProperties,
+  IComponentProperties,
+} from './types/IProperties';
 import libcellModule from './wasm/libcellml';
-import { dialog } from 'electron';
+import { Elements } from './static-interface/Elements';
+import { ISearch, ISelect, ISelection } from './types/IQuery';
 
 const fs = require('fs');
 const { ipcMain } = require('electron');
@@ -48,8 +55,8 @@ const importFile = (
   validator.validateModel(model);
 
   const noError = validator.errorCount();
-  let errors = [];
-  for (let errorNum = 0; errorNum < noError; errorNum++) {
+  const errors = [];
+  for (let errorNum = 0; errorNum < noError; errorNum += 1) {
     const issue = validator.error(errorNum);
     errors.push({
       desc: issue.description(),
@@ -58,8 +65,8 @@ const importFile = (
   }
 
   const noWarning = validator.warningCount();
-  let warnings = [];
-  for (let warningNum = 0; warningNum < noWarning; warningNum++) {
+  const warnings = [];
+  for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
     const warning = validator.warning(warningNum);
     warnings.push({
       desc: warning.description(),
@@ -68,8 +75,8 @@ const importFile = (
   }
 
   const noHint = validator.hintCount();
-  let hints = [];
-  for (let i = 0; i < noHint; i++) {
+  const hints = [];
+  for (let i = 0; i < noHint; i += 1) {
     const hint = validator.hint(i);
     hints.push({
       desc: hint.description(),
@@ -79,10 +86,91 @@ const importFile = (
 
   return {
     model: validator.issueCount() > 0 ? file : printer.printModel(model),
-    errors: errors,
-    warnings: warnings,
-    hints: hints,
+    errors,
+    warnings,
+    hints,
   };
+};
+
+const convertModel = () => {
+  const model = currentComponent as Model;
+  const unitsNum = model.unitsCount();
+  const componentNum = model.componentCount();
+
+  const listUnitsName = [];
+  const listComponentName = [];
+
+  for (let i = 0; i < unitsNum; i += 1) {
+    listUnitsName.push(model.unitsByIndex(i).name());
+  }
+  for (let i = 0; i < componentNum; i += 1) {
+    listComponentName.push(model.componentByIndex(i).name());
+  }
+  return {
+    attribute: {
+      name: model.name(),
+    },
+    children: {
+      component: listComponentName.map((name: string, index: number) => {
+        return { name, index };
+      }),
+      units: listUnitsName.map((name: string, index: number) => {
+        return { name, index };
+      }),
+    },
+  };
+};
+
+const convertComponent = () => {
+  const component = currentComponent as Component;
+  const resetNum = component.resetCount();
+  const varNum = component.variableCount();
+  const compNum = component.componentCount();
+
+  const listReset = [];
+  for (let i = 0; i < resetNum; i += 1) {
+    listReset.push(component.resetByIndex(i).variable().name());
+  }
+
+  const listVar = [];
+  for (let i = 0; i < varNum; i += 1) {
+    listVar.push(component.variableByIndex(i).name());
+  }
+
+  const listComponent = [];
+  for (let i = 0; i < compNum; i += 1) {
+    listComponent.push(component.componentByIndex(i).name());
+  }
+
+  return {
+    attribute: {
+      name: component.name(),
+      math: component.math(),
+    },
+    children: {
+      reset: listReset.map((name: string, index: number) => {
+        return { name, index };
+      }),
+      variable: listVar.map((name: string, index: number) => {
+        return { name, index };
+      }),
+      component: listComponent.map((name: string, index: number) => {
+        return { name, index };
+      }),
+    },
+  };
+};
+
+const findElement = (select: ISearch) => {
+  const curComp = currentComponent as ComponentEntity;
+  if (curComp) {
+    const { name, index } = select;
+    if (name != null) {
+      currentComponent = curComp.componentByName(name, false);
+    } else if (index != null) {
+      currentComponent = curComp.componentByIndex(index);
+    }
+  }
 };
 
 const mainAsync = async () => {
@@ -92,179 +180,178 @@ const mainAsync = async () => {
   // const printer = new libcellml.Printer();
 
   // Traversal
-  ipcMain.on('select-component', (event: Event, arg: { index: number }) => {
-    const curComp = currentComponent as ComponentEntity;
-    if (curComp) {
-      const { index } = arg;
-      if (index > curComp.componentCount())
-        currentComponent = curComp.componentByIndex(index);
-      else {
-        console.log('INVALID INDEX!!!');
-        // Send a message to the error box?
-      }
-    } else {
-      console.log('Model not loaded');
+  ipcMain.on('get-element', (event: any, element: Elements) => {
+    let prop: IProperties;
+    console.log(`Element  ${element}`);
+    switch (element) {
+      case Elements.model:
+        prop = convertModel();
+        break;
+      case Elements.component:
+        prop = convertComponent();
+        break;
+      default:
+        console.log('UwU no elements');
+        prop = { attribute: null, children: null };
     }
+    console.log(prop);
+    event.reply('res-get-element', prop);
   });
 
-  // Get details about currently selected element
-  ipcMain.on('selected-name', (event: Event) => {
-    const curComp = currentComponent as NamedEntity;
-    if (curComp) {
-      console.log('ME NAMES ' + curComp.name());
-      event.reply('reply-selected-name', [
-        {
-          key: 'Name',
-          value: curComp.name(),
-        },
-      ]);
-    } else {
-      console.log('NO NAMES AHHHHHHHHHH');
-      event.reply('reply-selected-name', 'No element selected.');
+  ipcMain.on('select-element', (event: any, arg: ISelect) => {
+    const { element, select } = arg;
+    let prop: IProperties;
+
+    switch (element) {
+      case Elements.component:
+        findElement(select);
+        prop = convertComponent();
+        break;
+      default:
+        prop = { attribute: null, children: null };
+        console.log('Not a valid element.');
     }
+    const selection: ISelection = { element, prop };
+    event.reply('res-select-element', selection);
   });
 
-  ipcMain.on('selected-model', (event: Event) => {
-    const model = currentComponent as Model;
-    const unitsNum = model.unitsCount();    
-    const componentNum = model.componentCount();    
+  // TODO: Select global
 
-    let listUnitsName = []; 
-    let listComponentName = [];
+  // ipcMain.on('select-component', (event: Event, arg: { index: number }) => {
+  //   const curComp = currentComponent as ComponentEntity;
+  //   if (curComp) {
+  //     const { index } = arg;
+  //     if (index > curComp.componentCount())
+  //       currentComponent = curComp.componentByIndex(index);
+  //     else {
+  //       console.log('INVALID INDEX!!!');
+  //       // Send a message to the error box?
+  //     }
+  //   } else {
+  //     console.log('Model not loaded');
+  //   }
+  // });
 
-    for(let i=0;i<unitsNum;i++) {
-      listUnitsName.push(model.unitsByIndex(i).name());
-    }
-    for(let i=0;i<componentNum;i++) {
-      listComponentName.push(model.componentByIndex(i).name());
-    }
-    const modelProp: IModelProperties = {
-      name: model.name(), 
-      children: {
-        components: listComponentName.map((name: string, index: number) => {
-          return {name, index};  
-        }),
-        units: listUnitsName.map((name: string, index: number) => {
-          return {name, index};  
-        }),
-      }
-    };
-    event.reply('reply-selected-model', modelProp);
-  });
+  // ipcMain.on('selected-units', (event: any) => {
+  //   const units = currentComponent as Units;
+  //   const unitsNum = units.unitCount();
 
-  ipcMain.on('selected-units', (event: Event) => { 
-    const units = currentComponent as Units;
-    const unitsNum = units.unitCount();    
+  //   const listUnitName = [];
 
-    let listUnitName = []; 
+  //   for (let i = 0; i < unitsNum; i += 1) {
+  //     listUnitName.push(i);
+  //   }
 
-    for(let i=0;i<unitsNum;i++) {
-      listUnitName.push(i);
-    }
-    // std::string	unitAttributeReferenceByIndex(size_t index)
-    // std::string	unitAttributePrefixByIndex(size_t index)
-    // double	unitAttributeExponentByIndex(size_t index)
-    // double	unitAttributeMultiplierByIndex(size_t index) 
+  //   const unitsProp: IUnitsProperties = {
+  //     name: units.name(),
+  //     children: {
+  //       unit: listUnitName.map((i: number) => {
+  //         return {
+  //           reference: units.unitAttributeReferenceByIndex(i),
+  //           prefix: units.unitAttributePrefixByIndex(i),
+  //           exponent: units.unitAttributeExponentByIndex(i),
+  //           multiplier: units.unitAttributeMultiplierByIndex(i),
+  //         };
+  //       }),
+  //     },
+  //   };
+  //   event.reply('reply-selected-units', unitsProp);
+  // });
 
-    const unitsProp: IUnitsProperties = {
-      name: units.name(), 
-      children: {
-        unit: listUnitName.map((i: number) => {
-          return { 
-            reference: units.unitAttributeReferenceByIndex(i), 
-            prefix: units.unitAttributePrefixByIndex(i),
-            exponent: units.unitAttributeExponentByIndex(i), 
-            multiplier: units.unitAttributeMultiplierByIndex(i)
-          }
-        })
-      },      
-    };
-    event.reply('reply-selected-units', unitsProp);
-  })
+  // ipcMain.on('selected-id', (event: Event) => {
+  //   const curComp = currentComponent as Entity;
+  //   event.reply(curComp.id());
+  // });
 
-  ipcMain.on('selected-id', (event: Event) => {
-    const curComp = currentComponent as Entity;
-    event.reply(curComp.id());
-  });
+  // ipcMain.on('selected-parent', (event: any) => {
+  //   const curComp = currentComponent as Entity;
+  //   if (currentComponent.hasParent()) event.reply(curComp.parent());
+  //   event.reply(null);
+  // });
 
-  ipcMain.on('selected-parent', (event: Event) => {
-    const curComp = currentComponent as Entity;
-    if (currentComponent.hasParent()) event.reply(curComp.parent());
-    event.reply(null);
-  });
+  // ipcMain.on('selected-components', (event: any) => {
+  //   const curComp = currentComponent as ComponentEntity;
+  //   const components = [];
+  //   for (let i = 0; i < curComp.componentCount(); i += 1) {
+  //     components.push(curComp.componentByIndex(i));
+  //   }
+  //   event.reply(components);
+  // });
 
-  ipcMain.on('selected-components', (event: Event) => {
-    const curComp = currentComponent as ComponentEntity;
-    let components = [];
-    for (let i = 0; i < curComp.componentCount(); i++) {
-      components.push(curComp.componentByIndex(i));
-    }
-    event.reply(components);
-  });
+  // ipcMain.on('selected-model-units', (event: any) => {
+  //   const curComp = currentComponent as Model;
+  //   const units = [];
+  //   for (let i = 0; i < curComp.unitsCount(); i += 1) {
+  //     units.push(curComp.takeUnitsByIndex(i));
+  //   }
+  //   event.reply(units);
+  // });
 
-  ipcMain.on('selected-model-units', (event: Event) => {
-    const curComp = currentComponent as Model;
-    let units = [];
-    for (let i = 0; i < curComp.unitsCount(); i++) {
-      units.push(curComp.takeUnitsByIndex(i));
-    }
-    event.reply(units);
-  });
+  // ipcMain.on('selected-variable-units', (event: any) => {
+  //   const curComp = currentComponent as Variable;
+  //   event.reply(curComp.units());
+  // });
 
-  ipcMain.on('selected-variable-units', (event: Event) => {
-    const curComp = currentComponent as Variable;
-    event.reply(curComp.units());
-  });
+  // ipcMain.on('selected-variables', (event: any) => {
+  //   const curComp = currentComponent as Component;
+  //   const variables = [];
+  //   for (let i = 0; i < curComp.variableCount(); i += 1) {
+  //     variables.push(curComp.variableByIndex(i));
+  //   }
+  //   event.reply(variables);
+  // });
 
-  ipcMain.on('selected-variables', (event: Event) => {
-    const curComp = currentComponent as Component;
-    let variables = [];
-    for (let i = 0; i < curComp.variableCount(); i++) {
-      variables.push(curComp.variableByIndex(i));
-    }
-    event.reply(variables);
-  });
+  // ipcMain.on('selected-reset', (event: any) => {
+  //   const curComp = currentComponent as Component;
+  //   const resets = [];
+  //   for (let i = 0; i < curComp.resetCount(); i += 1) {
+  //     resets.push(curComp.resetByIndex(i));
+  //   }
+  //   event.reply(resets);
+  // });
 
-  ipcMain.on('selected-reset', (event: Event) => {
-    const curComp = currentComponent as Component;
-    let resets = [];
-    for (let i = 0; i < curComp.resetCount(); i++) {
-      resets.push(curComp.resetByIndex(i));
-    }
-    event.reply(resets);
-  });
+  // ipcMain.on('selected-math', (event: any) => {
+  //   const curComp = currentComponent as Component;
+  //   event.reply(curComp.math());
+  // });
 
-  ipcMain.on('selected-math', (event: Event) => {
-    const curComp = currentComponent as Component;
-    event.reply(curComp.math());
-  });
+  // // Information on Reset Element
+  // ipcMain.on('selected-reset', (event: any) => {
+  //   const curComp = currentComponent as Reset;
 
-  // Information on Reset Element
-  ipcMain.on('selected-reset', (event: Event) => {
-    const curComp = currentComponent as Reset;
+  //   const order = { order: curComp.isOrderSet() ? curComp.order() : null };
+  //   const variable = { variable: curComp.variable() };
+  //   const testValue = { testValue: curComp.testValue() };
+  //   const id = { id: curComp.id() };
+  //   const parent = { parent: curComp.hasParent() ? curComp.parent() : null };
 
-    const order = { order: curComp.isOrderSet() ? curComp.order() : null };
-    const variable = { variable: curComp.variable() };
-    const testValue = { testValue: curComp.testValue() };
-    const id = { id: curComp.id() };
-    const parent = { parent: curComp.hasParent() ? curComp.parent() : null };
+  //   event.reply({ order, variable, testValue, id, parent });
+  // });
 
-    event.reply({ order, variable, testValue, id, parent });
-  });
+  // // Information on Variable
+  // ipcMain.on('selected-variable', (event: any) => {
+  //   const curComp = currentComponent as Variable;
 
-  // Information on Variable
-  ipcMain.on('selected-variable', (event: Event) => {
-    const curComp = currentComponent as Variable;
+  //   const units = { units: curComp.units() };
+  //   const initialValue = { units: curComp.initialValue() };
+  //   const interfaceType = { interfaceType: curComp.interfaceType() };
+  //   const name = { name: curComp.name() };
+  //   const id = { id: curComp.id() };
+  //   const parent = { parent: curComp.hasParent() ? curComp.parent() : null };
 
-    const units = { units: curComp.units() };
-    const initialValue = { units: curComp.initialValue() };
-    const interfaceType = { interfaceType: curComp.interfaceType() };
-    const name = { name: curComp.name() };
-    const id = { id: curComp.id() };
-    const parent = { parent: curComp.hasParent() ? curComp.parent() : null };
+  //   event.reply({ units, initialValue, interfaceType, name, id, parent });
+  // });
 
-    event.reply({ units, initialValue, interfaceType, name, id, parent });
-  });
+  // ipcMain.on('find-component', (event: any, compName: string) => {
+  //   console.log('FIND COMPONENT');
+  //   const curComp = currentComponent as ComponentEntity;
+
+  //   if (curComp.containsComponentByName(compName, false)) {
+  //     currentComponent = curComp.componentByName(compName, false);
+  //     event.reply('select-component', convertComponent());
+  //     console.log('SENT COMPONENT');
+  //   }
+  // });
 };
 
 export { mainAsync, importFile };
