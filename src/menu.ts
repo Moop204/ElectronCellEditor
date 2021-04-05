@@ -9,6 +9,7 @@ import {
 import libcellModule from './wasm/libcellml';
 import { importFile } from './AsyncMain';
 import { Parser, Validator, Printer } from './types/ILibcellml';
+import { Elements } from './static-interface/Elements';
 const fs = require('fs');
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -199,6 +200,7 @@ export default class MenuBuilder {
   }
 
   buildDefaultTemplate() {
+    const filePath = null;
     const templateDefault = [
       {
         label: '&File',
@@ -218,7 +220,7 @@ export default class MenuBuilder {
             label: 'Open File',
             click: () => {
               const filePath = dialog.showOpenDialogSync({});
-              const libcellml = libcellModule().then(async (libcellml: any) => {
+              libcellModule().then(async (libcellml: any) => {
                 const parser = new libcellml.Parser();
                 const printer = new libcellml.Printer();
                 const validator = new libcellml.Validator();
@@ -229,8 +231,7 @@ export default class MenuBuilder {
                   validator,
                   printer
                 );
-                this.mainWindow.webContents.send('dialog-reply', model);
-                this.mainWindow.webContents.send('initiate-properties');
+                this.mainWindow.webContents.send('init-content', model);
                 this.mainWindow.webContents.send('error-reply', {
                   errors: errors,
                   warnings: warnings,
