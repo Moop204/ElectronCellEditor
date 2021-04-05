@@ -7,15 +7,15 @@ import React, {
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
-import styled from 'styled-components';
 import TextField from '@material-ui/core/Input';
 import { ipcRenderer } from 'electron';
-import { useStyles } from './style';
-import { SubHeader } from './SubHeader';
-import { Heading } from './Heading';
-import { IModelProperties, IProperties } from '../types/IProperties';
-import { Elements } from './Elements';
-import { ISearch, ISelect, ISelection } from '../types/IQuery';
+import { useStyles } from '../style';
+import { SubHeader } from '../SubHeader';
+import { Heading } from '../Heading';
+import { IProperties } from '../../types/IProperties';
+import { Elements } from '../Elements';
+import { ISearch, ISelect, ISelection } from '../../types/IQuery';
+import { IpcRendererEvent } from 'electron/main';
 
 interface IPropertyAttribute {
   title: string;
@@ -25,12 +25,6 @@ interface IPropertyAttribute {
 
 const PropertyAttribute = (props: IPropertyAttribute) => {
   const { title, value, onChange } = props;
-  /*
-    const AttributeLabel = styled.p`
-      padding-right: 1rem;
-    `;
-    */
-
   return (
     <Grid container item direction="row">
       <InputLabel>{title}</InputLabel>
@@ -73,21 +67,25 @@ const ModelProperties = () => {
   const [abstractModel, setAbstractModel] = useState<IProperties>();
 
   useEffect(() => {
-    ipcRenderer.on('res-get-element', (event, cellmlModel: IProperties) => {
-      setAbstractModel(cellmlModel);
-    });
-    // ipcRenderer.on('select-model', (event, arg) => {
-    //   ipcRenderer.send('selected-model');
-    // });
-    ipcRenderer.on('init-content', (event, arg) => {
+    ipcRenderer.on(
+      'res-get-element',
+      (event: IpcRendererEvent, cellmlModel: IProperties) => {
+        setAbstractModel(cellmlModel);
+      }
+    );
+
+    ipcRenderer.on('init-content', () => {
       ipcRenderer.send('get-element', Elements.model);
     });
 
-    ipcRenderer.on('res-select-element', (event, arg: ISelection) => {
-      const { element, prop } = arg;
-      console.log(prop);
-      setAbstractModel(prop);
-    });
+    ipcRenderer.on(
+      'res-select-element',
+      (event: IpcRendererEvent, arg: ISelection) => {
+        const { element, prop } = arg;
+        console.log(prop);
+        setAbstractModel(prop);
+      }
+    );
   }, []);
 
   if (!abstractModel) {
@@ -106,7 +104,7 @@ const ModelProperties = () => {
     };
     setAbstractModel(newAbstractModel);
   };
-
+  console.log(abstractModel);
   return (
     <Grid container item>
       <Heading title="Properties" />
@@ -120,23 +118,25 @@ const ModelProperties = () => {
             onChange={(e) => handleChange(attrTitle, e.target.value)}
           />
         ))}
-        {abstractModel.children &&
-          Object.entries(abstractModel.children).map(
-            ([parentKey, childrenType]) => (
-              <div key={parentKey}>
-                <SubHeader title={parentKey} />
-                {Object.values(childrenType).map((attrType) => (
-                  <PropertyChild
-                    title={attrType.name}
-                    onClick={() => {
-                      findElement(Elements[parentKey], attrType.name);
-                    }}
-                    key={attrType.name}
-                  />
-                ))}
-              </div>
-            )
-          )}
+        {Object.entries(abstractModel.children).map(
+          ([parentKey, childrenType]) => (
+            <div key={parentKey}>
+              <SubHeader title={parentKey} />
+              {Object.values(childrenType).map((attrType: any) => (
+                <PropertyChild
+                  title={attrType.name}
+                  onClick={() => {
+                    findElement(
+                      Elements[parentKey as keyof typeof Elements],
+                      attrType.name
+                    );
+                  }}
+                  key={attrType.name}
+                />
+              ))}
+            </div>
+          )
+        )}
       </Grid>
     </Grid>
   );

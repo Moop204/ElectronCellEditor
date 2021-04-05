@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { EditorMonaco } from './EditorMonaco';
 import { Event } from 'electron/renderer';
+import { useEffect } from 'react';
 const { ipcRenderer } = require('electron');
 interface EditorProp {
   xmlInput: string;
@@ -25,15 +26,16 @@ const rawStyles = makeStyles((theme) =>
 const RawView = () => {
   const [contentExist, setContentExist] = useState('');
 
-  ipcRenderer.on('init-content', (event: Event, message: string) => {
-    setContentExist(message);
-  });
+  useEffect(() => {
+    ipcRenderer.on('init-content', (event: Event, message: string) => {
+      setContentExist(message);
+    });
+  }, []);
 
   const requestFile = (event: React.MouseEvent) => {
     ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
       setContentExist(res);
     });
-    console.log('SENT PING');
   };
 
   const StartButton = () => {

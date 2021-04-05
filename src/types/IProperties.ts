@@ -1,6 +1,6 @@
 interface IProperties {
-  attribute: any;
-  children: any;
+  attribute: Record<string, any>;
+  children: Record<string, IChild[]>;
 }
 
 interface IChild {
@@ -18,7 +18,7 @@ interface IModelProperties extends IProperties {
   };
 }
 
-interface IComponentProperties {
+interface IComponentProperties extends IProperties {
   attribute: {
     name: string;
     math: string;

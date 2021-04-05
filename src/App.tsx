@@ -1,11 +1,11 @@
 const { ipcRenderer } = require('electron');
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { AddChildren } from './static-interface/AddChildrenInterface';
-import { Properties } from './static-interface/PropertiesInterface';
+import { Properties } from './static-interface/properties/PropertiesInterface';
 import { Issues } from './static-interface/IssuesInterface';
 import { View } from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
@@ -29,40 +29,73 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const AutoGrid = () => {
-  const styles = useStyles();
-
-
-  return (
-    <div className={styles.root}>
-      <Grid container spacing={1} md={12}>
-        <Grid item md={3}>
-          <View />
-          <Properties />
-          <input type="file" id="file" />
-          <Issues />
-        </Grid>
-        <Grid item md={9}>
-          <Paper className={styles.contentView}>
-            <Paper className={styles.tabbing}>
-              <button>ABC</button>
-              <button>DEF</button>
-            </Paper>
-            <RawView/>
-          </Paper>
-          <AddChildren />
-        </Grid>
-      </Grid>
-    </div>
-  );
+const MemeView = () => {
+  return <div>OwO whats that UwU</div>;
 };
 
 export default function App() {
+  const styles = useStyles();
   return (
-    <Router>
-      <Switch>
-        <Route path="/" component={AutoGrid} />
-      </Switch>
-    </Router>
+    <div className={styles.root}>
+      <Router>
+        <Grid container spacing={1} md={12}>
+          <Grid item md={3}>
+            <View />
+            <Properties />
+            <input type="file" id="file" />
+            <Issues />
+          </Grid>
+          <Grid item md={9}>
+            <Paper className={styles.contentView}>
+              <Paper className={styles.tabbing}>
+                <button>ABC</button>
+                <button>DEF</button>
+              </Paper>
+              <Switch>
+                <Route exact path="/" component={MemeView} />
+                <Route exact path="/spatial" component={RawView} />
+              </Switch>
+            </Paper>
+            <AddChildren />
+          </Grid>
+        </Grid>
+      </Router>
+    </div>
   );
 }
+
+// const AutoGrid = () => {
+//   const styles = useStyles();
+//   return (
+//     <div className={styles.root}>
+//       <Grid container spacing={1} md={12}>
+//         <Grid item md={3}>
+//           <View />
+//           <Properties />
+//           <input type="file" id="file" />
+//           <Issues />
+//         </Grid>
+//         <Grid item md={9}>
+//           <Paper className={styles.contentView}>
+//             <Paper className={styles.tabbing}>
+//               <button>ABC</button>
+//               <button>DEF</button>
+//             </Paper>
+//             <RawView />
+//           </Paper>
+//           <AddChildren />
+//         </Grid>
+//       </Grid>
+//     </div>
+//   );
+// };
+
+// export default function App() {
+//   return (
+//     <Router>
+//       <Switch>
+//         <Route path="/" component={AutoGrid} />
+//       </Switch>
+//     </Router>
+//   );
+// }
