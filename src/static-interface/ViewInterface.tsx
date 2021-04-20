@@ -15,16 +15,16 @@ const View = () => {
       <Grid container item>
         <Grid item md={2}>
           <Tooltip title="Text View">
-            <Button className={styles.viewButton}>
-              <Link to="/spatial">Y</Link>
-            </Button>
+            <Link to="/spatial">
+              <Button className={styles.viewButton}>Y </Button>
+            </Link>
           </Tooltip>
         </Grid>
         <Grid item md={2}>
           <Tooltip title="Hierarchy View">
-            <Button className={styles.viewButton}>
-              <Link to="/">Z</Link>
-            </Button>
+            <Link to="">
+              <Button className={styles.viewButton}>Z </Button>
+            </Link>
           </Tooltip>
         </Grid>
         <Grid item md={2}>

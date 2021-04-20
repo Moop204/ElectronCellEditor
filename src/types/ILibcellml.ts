@@ -431,7 +431,7 @@ interface Reset extends Entity {
 }
 
 interface Printer extends Logger {
-  printModel(model: Model): string;
+  printModel(model: Model, autoIds: boolean): string;
 }
 
 export {

@@ -38,6 +38,13 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '0px',
       borderRadius: '0px',
     },
+    spatialView: {
+      paddingLeft: '3vh',
+    },
+    notLoaded: {
+      textAlign: 'center',
+      height: '40vv',
+    },
   })
 );
 
