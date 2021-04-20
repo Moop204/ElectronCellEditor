@@ -6,7 +6,7 @@ import {
   MenuItemConstructorOptions,
   dialog,
 } from 'electron';
-import libcellModule from './wasm/libcellml';
+const libcellModule = require('libcellml.js/libcellml.common');
 import { importFile } from './AsyncMain';
 import { Parser, Validator, Printer } from './types/ILibcellml';
 import { Elements } from './static-interface/Elements';
@@ -220,24 +220,28 @@ export default class MenuBuilder {
             label: 'Open File',
             click: () => {
               const filePath = dialog.showOpenDialogSync({});
-              libcellModule().then(async (libcellml: any) => {
-                const parser = new libcellml.Parser();
-                const printer = new libcellml.Printer();
-                const validator = new libcellml.Validator();
+              if (filePath) {
+                libcellModule().then(async (libcellml: any) => {
+                  const parser = new libcellml.Parser();
+                  const printer = new libcellml.Printer();
+                  const validator = new libcellml.Validator();
 
-                const { model, errors, warnings, hints } = await importFile(
-                  String(filePath),
-                  parser,
-                  validator,
-                  printer
-                );
-                this.mainWindow.webContents.send('init-content', model);
-                this.mainWindow.webContents.send('error-reply', {
-                  errors: errors,
-                  warnings: warnings,
-                  hints: hints,
+                  console.log('MENU: Importing file');
+                  const { model, errors, warnings, hints } = await importFile(
+                    String(filePath),
+                    parser,
+                    validator,
+                    printer
+                  );
+                  console.log('MENU: Sending information');
+                  this.mainWindow.webContents.send('init-content', model);
+                  this.mainWindow.webContents.send('error-reply', {
+                    errors: errors,
+                    warnings: warnings,
+                    hints: hints,
+                  });
                 });
-              });
+              }
             },
           },
         ],

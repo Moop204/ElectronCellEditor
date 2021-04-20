@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -9,8 +9,11 @@ import { Properties } from './static-interface/properties/PropertiesInterface';
 import { Issues } from './static-interface/IssuesInterface';
 import { View } from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
+import { SpatialView } from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ComponentEntity } from './types/ILibcellml';
+import EditorXml from './view/EditorXml';
+import styled from 'styled-components';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -33,8 +36,21 @@ const MemeView = () => {
   return <div>OwO whats that UwU</div>;
 };
 
-export default function App() {
+const App = () => {
   const styles = useStyles();
+  const [contentExist, setContentExist] = useState('');
+  useEffect(() => {
+    ipcRenderer.on('init-content', (event: Event, message: string) => {
+      setContentExist(message);
+    });
+  }, []);
+
+  const requestFile = (event: React.MouseEvent) => {
+    ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
+      setContentExist(res);
+    });
+  };
+
   return (
     <div className={styles.root}>
       <Router>
@@ -42,7 +58,6 @@ export default function App() {
           <Grid item md={3}>
             <View />
             <Properties />
-            <input type="file" id="file" />
             <Issues />
           </Grid>
           <Grid item md={9}>
@@ -51,9 +66,22 @@ export default function App() {
                 <button>ABC</button>
                 <button>DEF</button>
               </Paper>
+              <EditorXml xmlInput={contentExist} />
+
               <Switch>
-                <Route exact path="/" component={MemeView} />
-                <Route exact path="/spatial" component={RawView} />
+                <Route exact path="/spatial">
+                  <SpatialView
+                    setContentExist={setContentExist}
+                    contentExist={contentExist}
+                  />
+                </Route>
+                <Route exact path="">
+                  <RawView
+                    setContentExist={setContentExist}
+                    contentExist={contentExist}
+                    requestFile={requestFile}
+                  />
+                </Route>
               </Switch>
             </Paper>
             <AddChildren />
@@ -62,40 +90,6 @@ export default function App() {
       </Router>
     </div>
   );
-}
+};
 
-// const AutoGrid = () => {
-//   const styles = useStyles();
-//   return (
-//     <div className={styles.root}>
-//       <Grid container spacing={1} md={12}>
-//         <Grid item md={3}>
-//           <View />
-//           <Properties />
-//           <input type="file" id="file" />
-//           <Issues />
-//         </Grid>
-//         <Grid item md={9}>
-//           <Paper className={styles.contentView}>
-//             <Paper className={styles.tabbing}>
-//               <button>ABC</button>
-//               <button>DEF</button>
-//             </Paper>
-//             <RawView />
-//           </Paper>
-//           <AddChildren />
-//         </Grid>
-//       </Grid>
-//     </div>
-//   );
-// };
-
-// export default function App() {
-//   return (
-//     <Router>
-//       <Switch>
-//         <Route path="/" component={AutoGrid} />
-//       </Switch>
-//     </Router>
-//   );
-// }
+export default App;

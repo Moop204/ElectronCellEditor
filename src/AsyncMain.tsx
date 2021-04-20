@@ -22,9 +22,10 @@ import {
   IModelProperties,
   IComponentProperties,
 } from './types/IProperties';
-import libcellModule from './wasm/libcellml';
 import { Elements } from './static-interface/Elements';
 import { ISearch, ISelect, ISelection } from './types/IQuery';
+
+const libcellModule = require('libcellml.js/libcellml.common');
 
 const fs = require('fs');
 const { ipcMain } = require('electron');
@@ -48,11 +49,15 @@ const importFile = (
   validator: Validator,
   printer: Printer
 ) => {
+  console.log(`LIBCELL: Importing file ${fileLoc}`);
   const file: string = fs.readFileSync(fileLoc, 'utf8');
+  console.log(file);
   //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
   const model = parser.parseModel(file);
+  console.log(`LIBCELL: Parsed Model`);
   currentComponent = model;
   validator.validateModel(model);
+  console.log(`LIBCELL: Validated Model`);
 
   const noError = validator.errorCount();
   const errors = [];
@@ -85,7 +90,7 @@ const importFile = (
   }
 
   return {
-    model: validator.issueCount() > 0 ? file : printer.printModel(model),
+    model: validator.issueCount() > 0 ? file : printer.printModel(model, false),
     errors,
     warnings,
     hints,
@@ -182,7 +187,7 @@ const mainAsync = async () => {
   // Traversal
   ipcMain.on('get-element', (event: any, element: Elements) => {
     let prop: IProperties;
-    console.log(`Element  ${element}`);
+    console.log(`LIBCELL: Get Element  ${element}`);
     switch (element) {
       case Elements.model:
         prop = convertModel();
@@ -194,7 +199,6 @@ const mainAsync = async () => {
         console.log('UwU no elements');
         prop = { attribute: null, children: null };
     }
-    console.log(prop);
     event.reply('res-get-element', prop);
   });
 

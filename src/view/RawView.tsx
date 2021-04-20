@@ -23,41 +23,10 @@ const rawStyles = makeStyles((theme) =>
 
 //export declare const newElementChild: (parameter: string) => (xml: Xml, id: string[]) => Promise<Xml>;
 
-const RawView = () => {
-  const [contentExist, setContentExist] = useState('');
-
-  useEffect(() => {
-    ipcRenderer.on('init-content', (event: Event, message: string) => {
-      setContentExist(message);
-    });
-  }, []);
-
-  const requestFile = (event: React.MouseEvent) => {
-    ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
-      setContentExist(res);
-    });
-  };
+const RawView = (prop) => {
+  const { setContentExist, contentExist, requestFile } = prop;
 
   const StartButton = () => {
-    const style = rawStyles();
-    // return (
-    //     <div>
-    //         <button onClick={requestFile}>
-    //             Click me for content
-    //         </button>
-    //         <code className={style.content}  contentEditable="true">
-    //         {contentExist}
-    //         </code>
-    //     </div>
-    // )
-
-    const demoProps = {
-      mode: 'laic',
-    };
-    /*
-    <div className={style.rawView}>
-    <EditorXml xmlInput={contentExist} {...demoProps} />
-  </div>*/
     if (contentExist !== '') {
       return <EditorMonaco xmlInput={contentExist} />;
     } else {
