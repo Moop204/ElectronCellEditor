@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { EditorMonaco } from './EditorMonaco';
+import { Event } from 'electron/renderer';
+import { useEffect } from 'react';
 const { ipcRenderer } = require('electron');
 interface EditorProp {
   xmlInput: string;
@@ -21,39 +23,10 @@ const rawStyles = makeStyles((theme) =>
 
 //export declare const newElementChild: (parameter: string) => (xml: Xml, id: string[]) => Promise<Xml>;
 
-const RawView = () => {
-  const [contentExist, setContentExist] = useState('');
-  ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
-    setContentExist(res);
-  });
-
-  const requestFile = (event: React.MouseEvent) => {
-    ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
-      setContentExist(res);
-    });
-    console.log('SENT PING');
-  };
+const RawView = (prop) => {
+  const { setContentExist, contentExist, requestFile } = prop;
 
   const StartButton = () => {
-    const style = rawStyles();
-    // return (
-    //     <div>
-    //         <button onClick={requestFile}>
-    //             Click me for content
-    //         </button>
-    //         <code className={style.content}  contentEditable="true">
-    //         {contentExist}
-    //         </code>
-    //     </div>
-    // )
-
-    const demoProps = {
-      mode: 'laic',
-    };
-    /*
-    <div className={style.rawView}>
-    <EditorXml xmlInput={contentExist} {...demoProps} />
-  </div>*/
     if (contentExist !== '') {
       return <EditorMonaco xmlInput={contentExist} />;
     } else {

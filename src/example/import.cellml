@@ -1,0 +1,5 @@
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="MembraneModel">
+    <import xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../example/SodiumChannelModel.cellml">
+        <component component_ref="sodiumChannel" name="sodiumChannel"/>
+    </import>
+</model>
