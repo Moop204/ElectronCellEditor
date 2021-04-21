@@ -1,0 +1,32 @@
+interface IProperties {
+  attribute: Record<string, any>;
+  children: Record<string, IChild[]>;
+}
+
+interface IChild {
+  name: string;
+  index: number;
+}
+
+interface IModelProperties extends IProperties {
+  attribute: {
+    name: string;
+  };
+  children: {
+    units: IChild[];
+    component: IChild[];
+  };
+}
+
+interface IComponentProperties extends IProperties {
+  attribute: {
+    name: string;
+    math: string;
+  };
+  children: {
+    reset: IChild[];
+    variable: IChild[];
+  };
+}
+
+export { IProperties, IChild, IModelProperties, IComponentProperties };

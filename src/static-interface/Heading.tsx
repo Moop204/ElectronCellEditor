@@ -2,7 +2,11 @@ import * as React from "react";
 import Grid from "@material-ui/core/Grid";
 import { useStyles } from "./style";
 
-const Heading = (props) => {
+interface IHeadingProp {
+  title: string
+}
+
+const Heading = (props: IHeadingProp) => {
   const styles = useStyles();
   const { title } = props;
   return (
@@ -12,4 +16,4 @@ const Heading = (props) => {
   );
 };
 
-export { Heading };
+export { Heading, IHeadingProp };

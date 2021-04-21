@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Editor from '@monaco-editor/react';
 import { languages, Position } from 'monaco-editor';
-import { autoFill } from './Autofill';
-import { loader, Monaco } from '@monaco-editor/react'; //import Util from 'util';
+import Editor, { loader, Monaco } from '@monaco-editor/react';
 import { Path } from 'history';
+import { autoFill } from './Autofill';
+
 const path = require('path');
 
 interface EditorProp {
@@ -12,12 +12,12 @@ interface EditorProp {
 
 const config = () => {
   function ensureFirstBackSlash(str: string) {
-    return str.length > 0 && str.charAt(0) !== '/' ? '/' + str : str;
+    return str.length > 0 && str.charAt(0) !== '/' ? `/${str}` : str;
   }
 
   function uriFromPath(_path: Path) {
     const pathName = path.resolve(_path).replace(/\\/g, '/');
-    return encodeURI('file://' + ensureFirstBackSlash(pathName));
+    return encodeURI(`file://${ensureFirstBackSlash(pathName)}`);
   }
 
   loader.config({
@@ -34,17 +34,17 @@ const EditorMonaco = (props: EditorProp) => {
   const { xmlInput } = props;
   const handleBeforeMount = (monaco: Monaco) => {
     monaco.languages.registerCompletionItemProvider('xml', {
-      provideCompletionItems: function (model, position, context, token) {
+      provideCompletionItems(model, position, context, token) {
         // Provide stronger context
         // find out if we are completing a property in the 'dependencies' object.
-        var textUntilPosition = model.getValueInRange({
+        const textUntilPosition = model.getValueInRange({
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: position.lineNumber,
           endColumn: position.column,
         });
-        var word = model.getWordUntilPosition(position);
-        var range = {
+        const word = model.getWordUntilPosition(position);
+        const range: Range = {
           startLineNumber: position.lineNumber,
           endLineNumber: position.lineNumber,
           startColumn: word.startColumn,
