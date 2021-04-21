@@ -4,7 +4,13 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  dialog,
 } from 'electron';
+const libcellModule = require('libcellml.js/libcellml.common');
+import { importFile } from './AsyncMain';
+import { Parser, Validator, Printer } from './types/ILibcellml';
+import { Elements } from './static-interface/Elements';
+const fs = require('fs');
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -84,6 +90,7 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
       label: 'Edit',
       submenu: [
@@ -193,6 +200,7 @@ export default class MenuBuilder {
   }
 
   buildDefaultTemplate() {
+    const filePath = null;
     const templateDefault = [
       {
         label: '&File',
@@ -206,6 +214,34 @@ export default class MenuBuilder {
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
+            },
+          },
+          {
+            label: 'Open File',
+            click: () => {
+              const filePath = dialog.showOpenDialogSync({});
+              if (filePath) {
+                libcellModule().then(async (libcellml: any) => {
+                  const parser = new libcellml.Parser();
+                  const printer = new libcellml.Printer();
+                  const validator = new libcellml.Validator();
+
+                  console.log('MENU: Importing file');
+                  const { model, errors, warnings, hints } = await importFile(
+                    String(filePath),
+                    parser,
+                    validator,
+                    printer
+                  );
+                  console.log('MENU: Sending information');
+                  this.mainWindow.webContents.send('init-content', model);
+                  this.mainWindow.webContents.send('error-reply', {
+                    errors: errors,
+                    warnings: warnings,
+                    hints: hints,
+                  });
+                });
+              }
             },
           },
         ],
