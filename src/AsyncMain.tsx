@@ -51,50 +51,59 @@ const importFile = (
 ) => {
   console.log(`LIBCELL: Importing file ${fileLoc}`);
   const file: string = fs.readFileSync(fileLoc, 'utf8');
-  console.log(file);
-  //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
-  const model = parser.parseModel(file);
-  console.log(`LIBCELL: Parsed Model`);
-  currentComponent = model;
-  validator.validateModel(model);
-  console.log(`LIBCELL: Validated Model`);
+  try {
+    console.log(file);
+    //    const loadfile: string = fs.readFileSync(tmpArg, 'utf8');
+    const model = parser.parseModel(file);
+    console.log(`LIBCELL: Parsed Model`);
+    currentComponent = model;
+    validator.validateModel(model);
+    console.log(`LIBCELL: Validated Model`);
 
-  const noError = validator.errorCount();
-  const errors = [];
-  for (let errorNum = 0; errorNum < noError; errorNum += 1) {
-    const issue = validator.error(errorNum);
-    errors.push({
-      desc: issue.description(),
-      cause: issue.referenceHeading(),
-    });
+    const noError = validator.errorCount();
+    const errors = [];
+    for (let errorNum = 0; errorNum < noError; errorNum += 1) {
+      const issue = validator.error(errorNum);
+      errors.push({
+        desc: issue.description(),
+        cause: issue.referenceHeading(),
+      });
+    }
+
+    const noWarning = validator.warningCount();
+    const warnings = [];
+    for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
+      const warning = validator.warning(warningNum);
+      warnings.push({
+        desc: warning.description(),
+        cause: warning.referenceHeading(),
+      });
+    }
+
+    const noHint = validator.hintCount();
+    const hints = [];
+    for (let i = 0; i < noHint; i += 1) {
+      const hint = validator.hint(i);
+      hints.push({
+        desc: hint.description(),
+        cause: hint.referenceHeading(),
+      });
+    }
+
+    return {
+      model: file,
+      errors,
+      warnings,
+      hints,
+    };
+  } catch (e) {
+    return {
+      model: file,
+      errors: null,
+      warnings: null,
+      hints: null,
+    };
   }
-
-  const noWarning = validator.warningCount();
-  const warnings = [];
-  for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
-    const warning = validator.warning(warningNum);
-    warnings.push({
-      desc: warning.description(),
-      cause: warning.referenceHeading(),
-    });
-  }
-
-  const noHint = validator.hintCount();
-  const hints = [];
-  for (let i = 0; i < noHint; i += 1) {
-    const hint = validator.hint(i);
-    hints.push({
-      desc: hint.description(),
-      cause: hint.referenceHeading(),
-    });
-  }
-
-  return {
-    model: validator.issueCount() > 0 ? file : printer.printModel(model, false),
-    errors,
-    warnings,
-    hints,
-  };
 };
 
 const convertModel = () => {
@@ -188,16 +197,20 @@ const mainAsync = async () => {
   ipcMain.on('get-element', (event: any, element: Elements) => {
     let prop: IProperties;
     console.log(`LIBCELL: Get Element  ${element}`);
-    switch (element) {
-      case Elements.model:
-        prop = convertModel();
-        break;
-      case Elements.component:
-        prop = convertComponent();
-        break;
-      default:
-        console.log('UwU no elements');
-        prop = { attribute: null, children: null };
+    if (currentComponent != null) {
+      switch (element) {
+        case Elements.model:
+          prop = convertModel();
+          break;
+        case Elements.component:
+          prop = convertComponent();
+          break;
+        default:
+          console.log('UwU no elements');
+          prop = { attribute: null, children: null };
+      }
+    } else {
+      prop = null;
     }
     event.reply('res-get-element', prop);
   });

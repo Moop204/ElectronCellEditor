@@ -26,24 +26,22 @@ const rawStyles = makeStyles((theme) =>
 const RawView = (prop) => {
   const { setContentExist, contentExist, requestFile } = prop;
 
-  const StartButton = () => {
-    if (contentExist !== '') {
-      return <EditorMonaco xmlInput={contentExist} />;
-    } else {
-      return (
-        <div>
-          No Content
-          <button onClick={requestFile}>Click me for content</button>
-        </div>
-      );
-    }
+  const handleEditorChange = (value, event) => {
+    setContentExist(value);
   };
 
-  return (
-    <div>
-      <StartButton />
-    </div>
-  );
+  if (contentExist !== '') {
+    return (
+      <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />
+    );
+  } else {
+    return (
+      <div>
+        No Content
+        <button onClick={requestFile}>Click me for content</button>
+      </div>
+    );
+  }
 };
 
 export { RawView };

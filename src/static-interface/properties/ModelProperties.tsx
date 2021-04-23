@@ -64,13 +64,19 @@ const findElement = (elm: Elements, name: string) => {
 
 const ModelProperties = () => {
   const styles = useStyles();
+  const [baseModel, setBaseModel] = useState<IProperties>();
   const [abstractModel, setAbstractModel] = useState<IProperties>();
 
   useEffect(() => {
     ipcRenderer.on(
       'res-get-element',
       (event: IpcRendererEvent, cellmlModel: IProperties) => {
-        setAbstractModel(cellmlModel);
+        if (cellmlModel != null) {
+          setAbstractModel(cellmlModel);
+          if (!baseModel) {
+            setBaseModel(cellmlModel);
+          }
+        }
       }
     );
 

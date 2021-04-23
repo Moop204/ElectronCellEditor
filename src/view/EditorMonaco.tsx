@@ -8,6 +8,7 @@ const path = require('path');
 
 interface EditorProp {
   xmlInput: string;
+  onChange: any;
 }
 
 const config = () => {
@@ -31,7 +32,7 @@ const config = () => {
 
 const EditorMonaco = (props: EditorProp) => {
   config();
-  const { xmlInput } = props;
+  const { xmlInput, onChange } = props;
   const handleBeforeMount = (monaco: Monaco) => {
     monaco.languages.registerCompletionItemProvider('xml', {
       provideCompletionItems(model, position, context, token) {
@@ -56,12 +57,14 @@ const EditorMonaco = (props: EditorProp) => {
       },
     });
   };
+
   return (
     <Editor
       height="90vh"
       defaultLanguage="xml"
       defaultValue={xmlInput}
       beforeMount={handleBeforeMount}
+      onChange={onChange}
     />
   );
 };

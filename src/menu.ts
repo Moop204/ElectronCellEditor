@@ -5,17 +5,25 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
   dialog,
+  ipcMain,
 } from 'electron';
 const libcellModule = require('libcellml.js/libcellml.common');
 import { importFile } from './AsyncMain';
 import { Parser, Validator, Printer } from './types/ILibcellml';
 import { Elements } from './static-interface/Elements';
+
 const fs = require('fs');
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
   submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
+
+let content: string;
+
+ipcMain.on('update-content', (event, arg) => {
+  content = arg;
+});
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -242,6 +250,21 @@ export default class MenuBuilder {
                   });
                 });
               }
+            },
+          },
+          {
+            label: 'Save File',
+            click: () => {
+              var options = {
+                title: 'Save file',
+                buttonLabel: 'Save',
+
+                filters: [{ name: 'All Files', extensions: ['*'] }],
+              };
+
+              dialog.showSaveDialog(null, options).then(({ filePath }) => {
+                fs.writeFileSync(filePath, content, 'utf-8');
+              });
             },
           },
         ],

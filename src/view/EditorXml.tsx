@@ -2,7 +2,6 @@ import { XmlEditor } from 'react-xml-editor';
 import Builder from 'react-xml-editor/lib/Builder';
 import React, { useState } from 'react';
 import { docSpec } from './Specification';
-//import { DocSpec as docSpec } from 'react-xml-editor/lib/types';
 import './css/xonomy.css';
 
 export default class EditorXml extends React.Component<
