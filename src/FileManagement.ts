@@ -256,7 +256,7 @@ export default class FileManagement {
 
       this.updateContent(printer.printModel(model, false));
 
-      //event.reply('update-content', this.getContent());
+      event.reply('update-content', this.getContent());
     });
 
     // Finds the element queried
@@ -317,6 +317,52 @@ export default class FileManagement {
       const v = new libcellml.Validator();
       v.validateModel(m);
       event.reply('validated-file', v.issueCount() === 0);
+
+      event.reply('update-content', file);
+
+      const noError = v.errorCount();
+      const errors = [];
+      for (let errorNum = 0; errorNum < noError; errorNum += 1) {
+        const issue = v.error(errorNum);
+        errors.push({
+          desc: issue.description(),
+          cause: issue.referenceHeading(),
+        });
+      }
+
+      const noWarning = v.warningCount();
+      const warnings = [];
+      for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
+        const warning = v.warning(warningNum);
+        warnings.push({
+          desc: warning.description(),
+          cause: warning.referenceHeading(),
+        });
+      }
+
+      const noHint = v.hintCount();
+      const hints = [];
+      for (let i = 0; i < noHint; i += 1) {
+        const hint = v.hint(i);
+        hints.push({
+          desc: hint.description(),
+          cause: hint.referenceHeading(),
+        });
+      }
+
+      console.log(errors.length);
+
+      console.log({
+        errors,
+        warnings,
+        hints,
+      });
+
+      event.reply('error-reply', {
+        errors,
+        warnings,
+        hints,
+      });
     });
   }
 }

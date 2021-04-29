@@ -66,21 +66,11 @@ const Issues = () => {
 
   useEffect(() => {
     ipcRenderer.on('error-reply', (event: Event, message) => {
-      const { modelErrors, modelWarnings, modelHints } = message;
-      if (modelErrors === null) {
-        const failedToParse: IIssue = {
-          desc:
-            "You've found a way to break the parser! At the moment we are using libcellml which is in development and cannot handle certain cases. If you're seeing this you may be providing non-numeric Unit prefixes.",
-          cause: '',
-        };
-        setErrors([failedToParse]);
-        setWarnings([]);
-        setHints([]);
-      } else {
-        setErrors(modelErrors || []);
-        setWarnings(modelWarnings || []);
-        setHints(modelHints || []);
-      }
+      const { errors, warnings, hints } = message;
+      console.log(message);
+      setErrors(errors);
+      setWarnings(warnings);
+      setHints(hints);
     });
   }, []);
 

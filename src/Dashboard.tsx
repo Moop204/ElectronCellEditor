@@ -39,7 +39,11 @@ const Dashboard = () => {
   const styles = useStyles();
   const [contentExist, setContentExist] = useState('');
   const [valid, setValid] = useState(false);
+
   useEffect(() => {
+    ipcRenderer.on('update-content', (event: Event, content: string) => {
+      setContentExist(content);
+    });
     ipcRenderer.on('init-content', (event: Event, message: string) => {
       setContentExist(message);
     });
@@ -50,6 +54,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     ipcRenderer.send('validate-file', contentExist);
+    console.log(contentExist);
   }, [contentExist]);
 
   // Used by the menu opening
