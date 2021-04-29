@@ -16,9 +16,11 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { mainAsync } from './AsyncMain';
+import FileManagement from './FileManagement';
 
 let mainWindow: BrowserWindow | null = null;
-
+let fm = new FileManagement();
+fm.setupHandlers();
 mainAsync();
 
 if (process.env.NODE_ENV === 'production') {
@@ -91,7 +93,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
+  const menuBuilder = new MenuBuilder(mainWindow, fm);
   menuBuilder.buildMenu();
 
   // Open urls in the user's browser

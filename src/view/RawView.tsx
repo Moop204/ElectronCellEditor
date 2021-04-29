@@ -38,7 +38,7 @@ const RawView = (prop) => {
     return (
       <div>
         No Content
-        <button onClick={requestFile}>Click me for content</button>
+        <button onClick={requestFile}>Load a File</button>
       </div>
     );
   }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="complex_encapsulation_example" id="complex_encpsulation_example_id">
+  <component name="rootkoop"/>
+  <component name="L1_c1"/>
+  <component name="L1_L2_c1"/>
+  <component name="L1_c2"/>
+  <component name="L1_c3"/>
+  <encapsulation>
+    <component_ref component="rootkoop">
+      <component_ref component="L1_c1">
+        <component_ref component="L1_L2_c1"/>
+      </component_ref>
+      <component_ref component="L1_c2"/>
+      <component_ref component="L1_c3"/>
+    </component_ref>
+  </encapsulation>
+</model>

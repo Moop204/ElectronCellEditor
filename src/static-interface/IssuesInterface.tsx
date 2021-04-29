@@ -6,7 +6,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import HintIcon from '@material-ui/icons/EmojiObjects';
 import BugIcon from '@material-ui/icons/BugReport';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 import { useStyles, standardStyle } from './style';
 
@@ -33,10 +33,9 @@ const IssueText = (props: IIssueTextProp) => {
     const mapIssues = issues.map((record: IssueRecord) => {
       const { desc, cause } = record;
       const key = `issue${val}`;
-      val++;
+      val += 1;
       return (
         <Grid item key={key}>
-          {' '}
           <span className={styles.issueMarker}>{'>>>'}</span> {desc}{' '}
         </Grid>
       );
@@ -59,30 +58,31 @@ const Issues = () => {
   const [errors, setErrors] = useState<IIssue[]>([]);
   const [warnings, setWarnings] = useState<IIssue[]>([]);
   const [hints, setHints] = useState<IIssue[]>([]);
-  const [issueMode, setIssueMode] = useState<number>(0);
+  const [errorMode, setErrorMode] = useState<boolean>(true);
+  const [warningMode, setWarningMode] = useState<boolean>(true);
+  const [hintMode, setHintMode] = useState<boolean>(true);
 
   const styles = useStyles();
-  ipcRenderer.on('error-reply', (event: Event, message) => {
-    const { modelErrors, modelWarnings, modelHints } = message;
-    if (modelErrors == null) {
-      const failedToParse: IIssue = {
-        desc:
-          "You've found a way to break the parser! At the moment we are using libcellml which is in development and cannot handle certain cases. If you're seeing this you may be providing non-numeric Unit prefixes.",
-        cause: '',
-      };
-      setErrors([failedToParse]);
-      setWarnings([]);
-      setHints([]);
-    } else {
-      setErrors(modelErrors);
-      setWarnings(modelWarnings);
-      setHints(modelHints);
-    }
-  });
 
-  const selectMode = (mode: number) => {
-    setIssueMode(mode);
-  };
+  useEffect(() => {
+    ipcRenderer.on('error-reply', (event: Event, message) => {
+      const { modelErrors, modelWarnings, modelHints } = message;
+      if (modelErrors === null) {
+        const failedToParse: IIssue = {
+          desc:
+            "You've found a way to break the parser! At the moment we are using libcellml which is in development and cannot handle certain cases. If you're seeing this you may be providing non-numeric Unit prefixes.",
+          cause: '',
+        };
+        setErrors([failedToParse]);
+        setWarnings([]);
+        setHints([]);
+      } else {
+        setErrors(modelErrors || []);
+        setWarnings(modelWarnings || []);
+        setHints(modelHints || []);
+      }
+    });
+  }, []);
 
   return (
     <Grid container item>
@@ -92,7 +92,17 @@ const Issues = () => {
           <IconButton
             color="inherit"
             className={styles.issueButtons}
-            onClick={() => selectMode(0)}
+            onClick={() => {
+              if (errorMode && warningMode && hintMode) {
+                setErrorMode(false);
+                setHintMode(false);
+                setWarningMode(false);
+              } else {
+                setErrorMode(true);
+                setHintMode(true);
+                setWarningMode(true);
+              }
+            }}
           >
             <BugIcon />
           </IconButton>
@@ -101,7 +111,9 @@ const Issues = () => {
           <IconButton
             color="inherit"
             className={styles.issueButtons}
-            onClick={() => selectMode(1)}
+            onClick={() => {
+              setErrorMode(!errorMode);
+            }}
           >
             <ErrorIcon />
           </IconButton>
@@ -110,7 +122,9 @@ const Issues = () => {
           <IconButton
             color="inherit"
             className={styles.issueButtons}
-            onClick={() => selectMode(2)}
+            onClick={() => {
+              setErrorMode(!warningMode);
+            }}
           >
             <WarningIcon />
           </IconButton>
@@ -119,7 +133,9 @@ const Issues = () => {
           <IconButton
             color="inherit"
             className={styles.issueButtons}
-            onClick={() => selectMode(3)}
+            onClick={() => {
+              setErrorMode(!hintMode);
+            }}
           >
             <HintIcon />
           </IconButton>
@@ -127,24 +143,15 @@ const Issues = () => {
       </Grid>
 
       <Grid item md={12}>
-        <div className={styles.heading}>
-          {issueMode === 0
-            ? 'All Issues'
-            : issueMode === 1
-            ? 'Errors'
-            : issueMode === 2
-            ? 'Warnings'
-            : 'Hints'}
-        </div>
-        {issueMode === 0 && (
-          <IssueText issues={errors.concat(warnings.concat(hints))} />
-        )}
-        {issueMode === 1 && <IssueText issues={errors} />}
-        {issueMode === 2 && <IssueText issues={warnings} />}
-        {issueMode === 3 && <IssueText issues={hints} />}
+        <IssueText
+          issues={(errorMode ? errors : []).concat(
+            (warningMode ? warnings : []).concat(hintMode ? hints : [])
+          )}
+        />
       </Grid>
     </Grid>
   );
 };
 
+// todo chuck it all in issuetext
 export { Issues };

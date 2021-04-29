@@ -8,9 +8,14 @@ import {
   ipcMain,
 } from 'electron';
 const libcellModule = require('libcellml.js/libcellml.common');
-import { importFile } from './AsyncMain';
-import { Parser, Validator, Printer } from './types/ILibcellml';
-import { Elements } from './static-interface/Elements';
+import { Parser, Validator, Printer, Model } from './types/ILibcellml';
+import { Elements } from './types/Elements';
+import { IUpdate, ISelection } from './types/IQuery';
+import { AcUnitSharp } from '@material-ui/icons';
+import FileManagement from './FileManagement';
+import { HelpMenuBar } from './Menu/Help';
+import { ViewMenuBar } from './Menu/View';
+import { FileMenuBar } from './Menu/File';
 
 const fs = require('fs');
 
@@ -18,18 +23,13 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
   submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
-
-let content: string;
-
-ipcMain.on('update-content', (event, arg) => {
-  content = arg;
-});
-
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
+  fm: FileManagement;
 
-  constructor(mainWindow: BrowserWindow) {
+  constructor(mainWindow: BrowserWindow, fm: FileManagement) {
     this.mainWindow = mainWindow;
+    this.fm = fm;
   }
 
   buildMenu(): Menu {
@@ -167,35 +167,7 @@ export default class MenuBuilder {
       ],
     };
     const subMenuHelp: MenuItemConstructorOptions = {
-      label: 'Help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click() {
-            shell.openExternal('https://electronjs.org');
-          },
-        },
-        {
-          label: 'Documentation',
-          click() {
-            shell.openExternal(
-              'https://github.com/electron/electron/tree/master/docs#readme'
-            );
-          },
-        },
-        {
-          label: 'Community Discussions',
-          click() {
-            shell.openExternal('https://www.electronjs.org/community');
-          },
-        },
-        {
-          label: 'Search Issues',
-          click() {
-            shell.openExternal('https://github.com/electron/electron/issues');
-          },
-        },
-      ],
+      HelpMenuBar,
     };
 
     const subMenuView =
@@ -210,138 +182,9 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const filePath = null;
     const templateDefault = [
-      {
-        label: '&File',
-        submenu: [
-          {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
-          },
-          {
-            label: '&Close',
-            accelerator: 'Ctrl+W',
-            click: () => {
-              this.mainWindow.close();
-            },
-          },
-          {
-            label: 'Open File',
-            click: () => {
-              const filePath = dialog.showOpenDialogSync({});
-              if (filePath) {
-                libcellModule().then(async (libcellml: any) => {
-                  const parser = new libcellml.Parser();
-                  const printer = new libcellml.Printer();
-                  const validator = new libcellml.Validator();
-
-                  console.log('MENU: Importing file');
-                  const { model, errors, warnings, hints } = await importFile(
-                    String(filePath),
-                    parser,
-                    validator,
-                    printer
-                  );
-                  console.log('MENU: Sending information');
-                  this.mainWindow.webContents.send('init-content', model);
-                  this.mainWindow.webContents.send('error-reply', {
-                    errors: errors,
-                    warnings: warnings,
-                    hints: hints,
-                  });
-                });
-              }
-            },
-          },
-          {
-            label: 'Save File',
-            click: () => {
-              var options = {
-                title: 'Save file',
-                buttonLabel: 'Save',
-
-                filters: [{ name: 'All Files', extensions: ['*'] }],
-              };
-
-              dialog.showSaveDialog(null, options).then(({ filePath }) => {
-                fs.writeFileSync(filePath, content, 'utf-8');
-              });
-            },
-          },
-        ],
-      },
-      {
-        label: '&View',
-        submenu:
-          process.env.NODE_ENV === 'development' ||
-          process.env.DEBUG_PROD === 'true'
-            ? [
-                {
-                  label: '&Reload',
-                  accelerator: 'Ctrl+R',
-                  click: () => {
-                    this.mainWindow.webContents.reload();
-                  },
-                },
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  },
-                },
-                {
-                  label: 'Toggle &Developer Tools',
-                  accelerator: 'Alt+Ctrl+I',
-                  click: () => {
-                    this.mainWindow.webContents.toggleDevTools();
-                  },
-                },
-              ]
-            : [
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  },
-                },
-              ],
-      },
-      {
-        label: 'Help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
-            },
-          },
-          {
-            label: 'Documentation',
-            click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/master/docs#readme'
-              );
-            },
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
-            },
-          },
-        ],
-      },
+      FileMenuBar(this.mainWindow, this.fm),
+      ViewMenuBar(this.mainWindow),
+      HelpMenuBar,
     ];
 
     return templateDefault;

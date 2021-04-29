@@ -1,9 +1,17 @@
-import { Elements } from '../static-interface/Elements';
+import { Elements } from './Elements';
 import { IProperties } from './IProperties';
 
 interface ISelect {
   element: Elements;
   select: ISearch;
+}
+
+interface IUpdate {
+  element: Elements;
+  select: ISearch;
+  parentSelect: ISearch | null;
+  attribute: string;
+  value: any;
 }
 
 interface ISearch {
@@ -16,4 +24,4 @@ interface ISelection {
   prop: IProperties;
 }
 
-export { ISelect, ISearch, ISelection };
+export { IUpdate, ISelect, ISearch, ISelection };

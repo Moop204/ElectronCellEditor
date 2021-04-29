@@ -10,9 +10,12 @@
   <component name="L1_c3"/>
   <component name="L1_L2_c1"/>
   <encapsulation>
-    <compd
-    
-    dponent_ref component="L1_c3"/>
+    <component_ref component="root">
+      <component_ref component="L1_c1">
+        <component_ref component="L1_L2_c1"/>
+      </component_ref>
+      <component_ref component="L1_c2"/>
+      <component_ref component="L1_c3"/>
     </component_ref>
   </encapsulation>
 </model>

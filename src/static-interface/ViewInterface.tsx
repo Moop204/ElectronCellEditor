@@ -6,34 +6,50 @@ import { useStyles } from './style';
 import { Heading } from './Heading';
 import { Link } from 'react-router-dom';
 
-const View = () => {
+import CreateIcon from '@material-ui/icons/Create';
+import StorageIcon from '@material-ui/icons/Storage';
+import { dialog } from 'electron';
+import { BrowserWindow } from 'electron/main';
+
+const View = (prop: { valid: boolean }) => {
+  const { valid } = prop;
   const styles = useStyles();
 
   return (
     <Grid container item>
       <Heading title="Views" />
       <Grid container item>
-        <Grid item md={2}>
+        <Grid item md={3}>
           <Tooltip title="Text View">
-            <Link to="/spatial">
-              <Button className={styles.viewButton}>Y </Button>
+            <Link to="">
+              <Button className={styles.viewButton}>Text</Button>
             </Link>
           </Tooltip>
         </Grid>
-        <Grid item md={2}>
+        <Grid item md={3}>
           <Tooltip title="Hierarchy View">
-            <Link to="">
-              <Button className={styles.viewButton}>Z </Button>
+            <Link to="/spatial">
+              <Button
+                className={styles.viewButton}
+                onClick={() => {
+                  if (!valid) {
+                    dialog.showMessageBox(window.open(), {
+                      message:
+                        'Current file is not valid CellML. Please fix before switching to concise view.',
+                      type: 'info',
+                      buttons: ['OK'],
+                      title: 'Cannot use concise view with invalid file',
+                    });
+                  }
+                }}
+              >
+                Concise
+              </Button>
             </Link>
           </Tooltip>
         </Grid>
         <Grid item md={2}>
           <Tooltip title="Hide Interface">
-            <Button className={styles.viewButton}>X</Button>
-          </Tooltip>
-        </Grid>
-        <Grid item md={2}>
-          <Tooltip title="Show Interface (TO BE REMOVED?)">
             <Button className={styles.viewButton}>X</Button>
           </Tooltip>
         </Grid>
