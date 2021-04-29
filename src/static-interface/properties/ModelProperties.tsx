@@ -4,18 +4,19 @@ import React, {
   ChangeEventHandler,
   ClickEventHandler,
 } from 'react';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/Input';
+import { IpcRendererEvent } from 'electron/main';
 import { ipcRenderer } from 'electron';
 import { useStyles } from '../style';
 import { SubHeader } from '../SubHeader';
 import { Heading } from '../Heading';
-import { IProperties } from '../../types/IProperties';
-import { Elements } from '../Elements';
-import { ISearch, ISelect, ISelection } from '../../types/IQuery';
-import { IpcRendererEvent } from 'electron/main';
+import { IChild, IProperties } from '../../types/IProperties';
+import { Elements, strToElm } from '../../types/Elements';
+import { ISearch, ISelect, ISelection, IUpdate } from '../../types/IQuery';
 
 interface IPropertyAttribute {
   title: string;
@@ -54,7 +55,6 @@ const findElement = (elm: Elements, name: string) => {
   switch (elm) {
     case Elements.component:
       ipcRenderer.send('select-element', query);
-
       break;
     default:
       console.log('Error: Not a valid element type');
@@ -80,9 +80,15 @@ const ModelProperties = () => {
       }
     );
 
+    // Asks backend to convert current pointer into a specific element
+    // Element MUST be correct type
     ipcRenderer.on('init-content', () => {
       ipcRenderer.send('get-element', Elements.model);
     });
+
+    // ipcRenderer.on('update-content', () => {
+    //   ipcRenderer.send('get-element', abstractModel.type);
+    // });
 
     ipcRenderer.on(
       'res-select-element',
@@ -94,6 +100,7 @@ const ModelProperties = () => {
     );
   }, []);
 
+  // Before a file is loaded
   if (!abstractModel) {
     return (
       <Grid container item>
@@ -103,14 +110,27 @@ const ModelProperties = () => {
     );
   }
 
+  // After a file is loaded
   const handleChange = (attrType: string, attrVal: string) => {
     const newAbstractModel = {
       ...abstractModel,
       attribute: { ...abstractModel?.attribute, [attrType]: attrVal },
     };
+    const compName = abstractModel.attribute.name;
     setAbstractModel(newAbstractModel);
+    ipcRenderer.send('update-attribute', {
+      element: abstractModel.type,
+      select: {
+        name: compName,
+        index: null,
+      },
+      parentSelect: null,
+      attribute: attrType,
+      value: attrVal,
+    } as IUpdate);
+    console.log(abstractModel);
   };
-  console.log(abstractModel);
+
   return (
     <Grid container item>
       <Heading title="Properties" />

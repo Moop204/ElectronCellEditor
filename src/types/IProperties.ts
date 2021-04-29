@@ -1,4 +1,7 @@
+import { Elements } from './Elements';
+
 interface IProperties {
+  type: Elements;
   attribute: Record<string, any>;
   children: Record<string, IChild[]>;
 }

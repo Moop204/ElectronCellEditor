@@ -10,7 +10,7 @@ import { Heading } from '../Heading';
 import { ipcRenderer } from 'electron';
 import { ModelProperties } from './ModelProperties';
 import { ComponentProperties } from './ComponentProperties';
-import { Elements } from '../Elements';
+import { Elements } from '../../types/Elements';
 import { ISelect } from '../../types/IQuery';
 
 const ElementChildren = (props) => {
@@ -29,7 +29,6 @@ const Properties = () => {
 
   useEffect(() => {
     ipcRenderer.on('res-select-element', (event, selection: ISelect) => {
-      console.log('Changed curelm');
       setCurElm(Elements.component);
     });
   }, []);
