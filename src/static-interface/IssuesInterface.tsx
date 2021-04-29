@@ -9,6 +9,7 @@ import BugIcon from '@material-ui/icons/BugReport';
 import { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 import { useStyles, standardStyle } from './style';
+import _ from 'underscore';
 
 interface IssueRecord {
   desc: string;
@@ -65,13 +66,19 @@ const Issues = () => {
   const styles = useStyles();
 
   useEffect(() => {
-    ipcRenderer.on('error-reply', (event: Event, message) => {
+    const errorReplyFn = (event: Event, message) => {
       const { errors, warnings, hints } = message;
       console.log(message);
       setErrors(errors);
       setWarnings(warnings);
       setHints(hints);
-    });
+    };
+    const dbErrorReplyFn = errorReplyFn;
+    ipcRenderer.on('error-reply', dbErrorReplyFn);
+
+    return () => {
+      ipcRenderer.removeListener('error-reply', dbErrorReplyFn);
+    };
   }, []);
 
   return (
@@ -113,7 +120,7 @@ const Issues = () => {
             color="inherit"
             className={styles.issueButtons}
             onClick={() => {
-              setErrorMode(!warningMode);
+              setWarningMode(!warningMode);
             }}
           >
             <WarningIcon />
@@ -124,7 +131,7 @@ const Issues = () => {
             color="inherit"
             className={styles.issueButtons}
             onClick={() => {
-              setErrorMode(!hintMode);
+              setHintMode(!hintMode);
             }}
           >
             <HintIcon />

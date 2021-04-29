@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       height: '40vv',
     },
+    properties: {
+      height: '40vv',
+    },
   })
 );
 

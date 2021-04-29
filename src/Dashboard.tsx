@@ -17,6 +17,7 @@ import { SpatialView } from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
+import _ from 'underscore';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -41,31 +42,43 @@ const Dashboard = () => {
   const [valid, setValid] = useState(false);
 
   useEffect(() => {
-    ipcRenderer.on('update-content', (event: Event, content: string) => {
+    const updateContentFn = (event: Event, content: string) => {
       setContentExist(content);
-    });
-    ipcRenderer.on('init-content', (event: Event, message: string) => {
+      console.log('Update content B');
+    };
+    ipcRenderer.on('update-content-B', updateContentFn);
+
+    const initContentFn = (event: Event, message: string) => {
       setContentExist(message);
-    });
-    ipcRenderer.on('validated-file', (event: Event, res: boolean) => {
+    };
+    ipcRenderer.on('init-content', initContentFn);
+
+    const validatedFile = (event: Event, res: boolean) => {
       setValid(res);
-    });
+    };
+    ipcRenderer.on('validated-file', validatedFile);
+    return () => {
+      ipcRenderer.removeListener('update-content', updateContentFn);
+      ipcRenderer.removeListener('init-content', initContentFn);
+      ipcRenderer.removeListener('validated-file', validatedFile);
+    };
   }, []);
 
+  // Check here for sync problems?
   useEffect(() => {
-    ipcRenderer.send('validate-file', contentExist);
-    console.log(contentExist);
+    const validateFile = () => {
+      ipcRenderer.send('validate-file', contentExist);
+    };
+    const dbValidateFile = validateFile;
+    dbValidateFile();
   }, [contentExist]);
 
-  // Used by the menu opening
-  const requestFile = (event: React.MouseEvent) => {
-    ipcRenderer.invoke('loadFile', 'ping').then((res: any) => {
-      setContentExist(res);
-    });
-  };
-
   useEffect(() => {
-    ipcRenderer.send('update-content', contentExist);
+    const sendUpdate = () => {
+      ipcRenderer.send('update-content-A', contentExist);
+    };
+    const dbSendUpdate = sendUpdate;
+    dbSendUpdate();
   }, [contentExist]);
 
   return (
@@ -103,7 +116,6 @@ const Dashboard = () => {
                   <RawView
                     setContentExist={setContentExist}
                     contentExist={contentExist}
-                    requestFile={requestFile}
                   />
                 </Route>
               </Switch>
