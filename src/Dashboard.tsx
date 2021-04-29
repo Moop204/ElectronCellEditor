@@ -16,6 +16,7 @@ import { RawView } from './view/RawView';
 import { SpatialView } from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -77,16 +78,23 @@ const Dashboard = () => {
                 {/* <button>ABC</button>
                 <button>DEF</button> */}
               </Paper>
-
               <Switch>
                 <Route exact path="/spatial">
-                  <SpatialView
-                    setContentExist={setContentExist}
-                    contentExist={contentExist}
-                  />
                   {!valid && <Redirect to="" />}
+                  {valid && (
+                    <SpatialView
+                      setContentExist={setContentExist}
+                      contentExist={contentExist}
+                    />
+                  )}
                 </Route>
                 <Route exact path="">
+                  {!valid && (
+                    <Alert severity="error">
+                      File is not in valid CellML. You cannot use Concise View
+                      without fixing this.
+                    </Alert>
+                  )}
                   <RawView
                     setContentExist={setContentExist}
                     contentExist={contentExist}

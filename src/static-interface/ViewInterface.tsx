@@ -29,22 +29,7 @@ const View = (prop: { valid: boolean }) => {
         <Grid item md={3}>
           <Tooltip title="Hierarchy View">
             <Link to="/spatial">
-              <Button
-                className={styles.viewButton}
-                onClick={() => {
-                  if (!valid) {
-                    dialog.showMessageBox(window.open(), {
-                      message:
-                        'Current file is not valid CellML. Please fix before switching to concise view.',
-                      type: 'info',
-                      buttons: ['OK'],
-                      title: 'Cannot use concise view with invalid file',
-                    });
-                  }
-                }}
-              >
-                Concise
-              </Button>
+              <Button className={styles.viewButton}>Concise</Button>
             </Link>
           </Tooltip>
         </Grid>
