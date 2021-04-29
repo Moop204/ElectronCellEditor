@@ -24,24 +24,13 @@ const rawStyles = makeStyles((theme) =>
 //export declare const newElementChild: (parameter: string) => (xml: Xml, id: string[]) => Promise<Xml>;
 
 const RawView = (prop) => {
-  const { setContentExist, contentExist, requestFile } = prop;
+  const { setContentExist, contentExist } = prop;
 
   const handleEditorChange = (value, event) => {
     setContentExist(value);
   };
 
-  if (contentExist !== '') {
-    return (
-      <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />
-    );
-  } else {
-    return (
-      <div>
-        No Content
-        <button onClick={requestFile}>Load a File</button>
-      </div>
-    );
-  }
+  return <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />;
 };
 
 export { RawView };

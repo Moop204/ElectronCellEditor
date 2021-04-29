@@ -135,6 +135,25 @@ const elementList: elementObject[] = [
   },
 ];
 
+const attributesList = [
+  { label: 'name', insertion: 'name', tooltip: `wip` },
+  { label: 'href', insertion: 'href', tooltip: `wip` },
+  { label: 'units_ref', insertion: 'units_ref', tooltip: `wip` },
+  { label: 'component_ref', insertion: 'component_ref', tooltip: `wip` },
+  { label: 'units', insertion: 'units', tooltip: `wip` },
+  { label: 'prefix', insertion: 'prefix', tooltip: `wip` },
+  { label: 'multiplier', insertion: 'multiplier', tooltip: `wip` },
+  { label: 'exponent', insertion: 'exponent', tooltip: `wip` },
+  { label: 'variable', insertion: 'variable', tooltip: `wip` },
+  { label: 'test_variable', insertion: 'test_variable', tooltip: `wip` },
+  { label: 'order', insertion: 'order', tooltip: `wip` },
+  { label: 'component', insertion: 'component', tooltip: `wip` },
+  { label: 'component_1', insertion: 'component_1', tooltip: `wip` },
+  { label: 'component_2', insertion: 'component_2', tooltip: `wip` },
+  { label: 'variable_1', insertion: 'variable_1', tooltip: `wip` },
+  { label: 'variable_2', insertion: 'variable_2', tooltip: `wip` },
+];
+
 const constantsList = [
   { label: 'ampere', insertion: 'ampere', tooltip: `wip` },
   { label: 'becquerel', insertion: 'becquerel', tooltip: `wip` },
@@ -197,6 +216,10 @@ const autoFill = (range: Range, monaco: Monaco) => {
   const consts = constantsList.map((element: elementObject) => {
     result.push(documentationTemplate(element, range, monaco));
   });
+  attributesList.map((element: elementObject) => {
+    result.push(documentationTemplate(element, range, monaco));
+  });
+
   return result;
 };
 

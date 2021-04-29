@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
+import _ from 'underscore';
 import { convertComponent, convertModel, importFile } from './AsyncMain';
 import { Elements } from './types/Elements';
 import {
@@ -25,10 +26,12 @@ const libcellModule = require('libcellml.js/libcellml.common');
 export default class FileManagement {
   content: string;
   currentComponent: Component | Model | Reset | Units | Variable | null;
+  type: Elements;
 
   constructor() {
     this.content = '';
     this.currentComponent = null;
+    this.type = Elements.model;
   }
 
   updateContent(s: string) {
@@ -216,47 +219,52 @@ export default class FileManagement {
 
   // Run once to set up handlers
   setupHandlers() {
-    ipcMain.on('update-content', (event, arg: string) => {
+    ipcMain.on('update-content-A', (event, arg: string) => {
       this.content = arg;
+      console.log('update content A');
     });
 
     // Used in Spatial view
     // Assume starting valid
     ipcMain.on('update-attribute', async (event: any, arg: IUpdate) => {
-      console.log(arg);
       const { element, select, parentSelect, value, attribute } = arg;
 
-      const libcellml = await libcellModule();
-      const parser = new libcellml.Parser();
-      const printer = new libcellml.Printer();
+      const update = async () => {
+        const libcellml = await libcellModule();
+        const parser = new libcellml.Parser();
+        const printer = new libcellml.Printer();
 
-      let model: Model = parser.parseModel(this.getContent());
+        let model: Model = parser.parseModel(this.getContent());
 
-      console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
+        console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
 
-      switch (attribute) {
-        case 'name':
-          model = this.updateName(
-            model,
-            element,
-            select,
-            parentSelect,
-            value,
-            attribute
-          );
-          break;
-        default:
-          console.log(
-            `UPDATE ATTRIBUTE: Failed to identify attribute ${attribute}`
-          );
-      }
+        switch (attribute) {
+          case 'name':
+            model = this.updateName(
+              model,
+              element,
+              select,
+              parentSelect,
+              value,
+              attribute
+            );
+            break;
+          default:
+            console.log(
+              `UPDATE ATTRIBUTE: Failed to identify attribute ${attribute}`
+            );
+        }
 
-      console.log(`<<< ${this.getContent()}`);
-      console.log(`>>> ${printer.printModel(model, false)}`);
+        console.log(`<<< ${this.getContent()}`);
+        console.log(`>>> ${printer.printModel(model, false)}`);
 
-      this.updateContent(printer.printModel(model, false));
+        this.updateContent(printer.printModel(model, false));
 
-      event.reply('update-content', this.getContent());
+        event.reply('update-content-B', this.getContent());
+      };
+      const dbUpdate = update;
+
+      await dbUpdate();
     });
 
     // Finds the element queried
@@ -311,58 +319,61 @@ export default class FileManagement {
     });
 
     ipcMain.on('validate-file', async (event: any, file: string) => {
-      const libcellml = await libcellModule();
-      const parser = new libcellml.Parser();
-      const m = parser.parseModel(file);
-      const v = new libcellml.Validator();
-      v.validateModel(m);
-      event.reply('validated-file', v.issueCount() === 0);
+      const validate = async () => {
+        const libcellml = await libcellModule();
+        const parser = new libcellml.Parser();
+        const m = parser.parseModel(file);
+        const v = new libcellml.Validator();
+        v.validateModel(m);
+        event.reply('validated-file', v.issueCount() === 0);
 
-      event.reply('update-content', file);
+        event.reply('update-content-B', file);
 
-      const noError = v.errorCount();
-      const errors = [];
-      for (let errorNum = 0; errorNum < noError; errorNum += 1) {
-        const issue = v.error(errorNum);
-        errors.push({
-          desc: issue.description(),
-          cause: issue.referenceHeading(),
+        const noError = v.errorCount();
+        const errors = [];
+        for (let errorNum = 0; errorNum < noError; errorNum += 1) {
+          const issue = v.error(errorNum);
+          errors.push({
+            desc: issue.description(),
+            cause: issue.referenceHeading(),
+          });
+        }
+
+        const noWarning = v.warningCount();
+        const warnings = [];
+        for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
+          const warning = v.warning(warningNum);
+          warnings.push({
+            desc: warning.description(),
+            cause: warning.referenceHeading(),
+          });
+        }
+
+        const noHint = v.hintCount();
+        const hints = [];
+        for (let i = 0; i < noHint; i += 1) {
+          const hint = v.hint(i);
+          hints.push({
+            desc: hint.description(),
+            cause: hint.referenceHeading(),
+          });
+        }
+
+        errors.push({ desc: 'ERROR BAD', cause: 'test' });
+        warnings.push({ desc: 'WARNING MEH', cause: 'test' });
+        hints.push({ desc: 'HELP YAY', cause: 'test' });
+
+        console.log('FM: SENDING ERROR REPLY');
+        event.reply('error-reply', {
+          errors,
+          warnings,
+          hints,
         });
-      }
+      };
 
-      const noWarning = v.warningCount();
-      const warnings = [];
-      for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
-        const warning = v.warning(warningNum);
-        warnings.push({
-          desc: warning.description(),
-          cause: warning.referenceHeading(),
-        });
-      }
+      const dbValidate = validate;
 
-      const noHint = v.hintCount();
-      const hints = [];
-      for (let i = 0; i < noHint; i += 1) {
-        const hint = v.hint(i);
-        hints.push({
-          desc: hint.description(),
-          cause: hint.referenceHeading(),
-        });
-      }
-
-      console.log(errors.length);
-
-      console.log({
-        errors,
-        warnings,
-        hints,
-      });
-
-      event.reply('error-reply', {
-        errors,
-        warnings,
-        hints,
-      });
+      await dbValidate();
     });
   }
 }

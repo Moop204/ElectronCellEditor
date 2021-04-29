@@ -15,8 +15,11 @@ import { useStyles } from '../style';
 import { SubHeader } from '../SubHeader';
 import { Heading } from '../Heading';
 import { IChild, IProperties } from '../../types/IProperties';
-import { Elements, strToElm } from '../../types/Elements';
+import { Elements, elmToStr } from '../../types/Elements';
 import { ISearch, ISelect, ISelection, IUpdate } from '../../types/IQuery';
+import { capitaliseFirst } from '../../helper/utility';
+import FormPropsTextFields, { DialogSelect } from './forms/ComponentChildForm';
+import Basic from './forms/ComponentChildForm';
 
 interface IPropertyAttribute {
   title: string;
@@ -131,10 +134,9 @@ const ModelProperties = () => {
     console.log(abstractModel);
   };
 
-  return (
-    <Grid container item>
-      <Heading title="Properties" />
-      <Grid item md={12} className={styles.plainText}>
+  const AttributesWidget = () => {
+    return (
+      <div>
         <SubHeader title="Attributes" />
         {Object.entries(abstractModel.attribute).map(([attrTitle, attrVal]) => (
           <PropertyAttribute
@@ -144,10 +146,20 @@ const ModelProperties = () => {
             onChange={(e) => handleChange(attrTitle, e.target.value)}
           />
         ))}
+      </div>
+    );
+  };
+
+  const ChildrenWidget = () => {
+    return (
+      <div>
+        <SubHeader title="Children" />
+
         {Object.entries(abstractModel.children).map(
           ([parentKey, childrenType]) => (
             <div key={parentKey}>
-              <SubHeader title={parentKey} />
+              {capitaliseFirst(parentKey)}
+
               {Object.values(childrenType).map((attrType: any) => (
                 <PropertyChild
                   title={attrType.name}
@@ -163,6 +175,63 @@ const ModelProperties = () => {
             </div>
           )
         )}
+      </div>
+    );
+  };
+
+  const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
+    const { element, name } = prop;
+    const addChild = (childElm: Elements) => {
+      return (
+        <div>
+          <Button
+            onClick={() => {
+              // TODO:
+              ipcRenderer.send('addChild', { target: name });
+              console.log(`Adding to ${name} an ${elmToStr(element)}`);
+            }}
+          >
+            {`+ ${elmToStr(childElm)}`}{' '}
+          </Button>
+        </div>
+      );
+    };
+    switch (element) {
+      case Elements.component:
+        const children = [
+          Elements.reset,
+          Elements.variable,
+          Elements.component,
+        ];
+
+        return (
+          <div>
+            {children.map((elm) => {
+              return addChild(elm);
+            })}
+          </div>
+        );
+
+      default:
+        return <div>No Children</div>;
+    }
+  };
+
+  const typeName = capitaliseFirst(elmToStr(abstractModel.type));
+  return (
+    <Grid container item className={styles.properties}>
+      <Heading title="Properties" />
+      <Grid item md={12} className={styles.plainText}>
+        {typeName}
+
+        <AttributesWidget />
+        <ChildrenWidget />
+        <SubHeader title="Add Children" />
+        <AddChildrenWidget
+          element={abstractModel.type}
+          name={abstractModel.attribute.name}
+        />
+        <DialogSelect />
       </Grid>
     </Grid>
   );
