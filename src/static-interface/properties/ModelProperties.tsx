@@ -86,6 +86,9 @@ const ModelProperties = () => {
     // Asks backend to convert current pointer into a specific element
     // Element MUST be correct type
     ipcRenderer.on('init-content', () => {
+      console.log(
+        'MODELPROPERTIES: We are looking for detail about the model after opening a file'
+      );
       ipcRenderer.send('get-element', Elements.model);
     });
 

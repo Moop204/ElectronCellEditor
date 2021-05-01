@@ -221,7 +221,7 @@ export default class FileManagement {
   setupHandlers() {
     ipcMain.on('update-content-A', (event, arg: string) => {
       this.content = arg;
-      console.log('update content A');
+      console.log(`update content A ${arg}`);
     });
 
     // Used in Spatial view
