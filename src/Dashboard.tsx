@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -42,6 +42,12 @@ const Dashboard = () => {
   const [valid, setValid] = useState(false);
 
   useEffect(() => {
+    const validateFile = () => {
+      ipcRenderer.send('validate-file', contentExist);
+    };
+    const dbValidateFile = _.debounce(validateFile, 300);
+    dbValidateFile();
+
     const updateContentFn = (event: Event, content: string) => {
       setContentExist(content);
       console.log('Update content B');
@@ -49,6 +55,7 @@ const Dashboard = () => {
     ipcRenderer.on('update-content-B', updateContentFn);
 
     const initContentFn = (event: Event, message: string) => {
+      console.log('INIT CONTENT: We opened a file and have set the content');
       setContentExist(message);
     };
     ipcRenderer.on('init-content', initContentFn);
@@ -64,16 +71,18 @@ const Dashboard = () => {
     };
   }, []);
 
+  const validateFile = () => {
+    ipcRenderer.send('validate-file', contentExist);
+  };
+  const dbValidateFile = useCallback(_.debounce(validateFile, 300), []);
+
   // Check here for sync problems?
   useEffect(() => {
-    const validateFile = () => {
-      ipcRenderer.send('validate-file', contentExist);
-    };
-    const dbValidateFile = validateFile;
     dbValidateFile();
   }, [contentExist]);
 
   useEffect(() => {
+    console.log(contentExist);
     const sendUpdate = () => {
       ipcRenderer.send('update-content-A', contentExist);
     };
