@@ -61,7 +61,7 @@ const compressCellml = (s: string) => {
   );
 
   console.log(parsed);
-
+  const componentMap: Record<string, any> = [];
   const newElements: IElement[] = [];
   parsed.elements[0].elements.map((elm: IElement) => {
     if (elm.name === 'component' && elm.elements) {
@@ -70,7 +70,9 @@ const compressCellml = (s: string) => {
       // Assign math as an attribute
       elm.attributes.math = math;
       newElements.push(elm);
+      componentMap[elm.name] = elm;
     } else if (elm.name === 'import') {
+      // Reduce imports
       console.log(elm);
       elm.elements.map((childElm: IElement) => {
         const newElm = childElm;
@@ -84,6 +86,8 @@ const compressCellml = (s: string) => {
     }
   });
   parsed.elements[0].elements = newElements;
+
+  // Parse to remove encapsulation and sub variables
 
   const result = xml.json2xml(parsed);
   return result;

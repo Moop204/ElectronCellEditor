@@ -5,7 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { useStyles } from './style';
 import { Heading } from './Heading';
 import { Link } from 'react-router-dom';
-
+import ForwardIcon from '@material-ui/icons/Forward';
 import CreateIcon from '@material-ui/icons/Create';
 import StorageIcon from '@material-ui/icons/Storage';
 import { dialog } from 'electron';
@@ -35,17 +35,17 @@ const View = (prop: { valid: boolean }) => {
         </Grid>
         <Grid item md={2}>
           <Tooltip title="Hide Interface">
-            <Button className={styles.viewButton}>X</Button>
+            <Button className={styles.viewButton}>{'< o >'} </Button>
           </Tooltip>
         </Grid>
         <Grid item md={2}>
           <Tooltip title="UNDO">
-            <Button className={styles.viewButton}>X</Button>
+            <Button className={styles.viewButton}>{'<<'}</Button>
           </Tooltip>
         </Grid>
         <Grid item md={2}>
           <Tooltip title="REDO">
-            <Button className={styles.viewButton}>X</Button>
+            <Button className={styles.viewButton}>{'>>'}</Button>
           </Tooltip>
         </Grid>
       </Grid>

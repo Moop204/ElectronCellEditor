@@ -126,16 +126,23 @@ const convertUnits = (component: Units) => {
     listUnit.push(unitDescriptor);
   }
 
-  return {
+  // TODO: Unambiguous naming
+  // Name refers to both name attribute, the name of the attribute of name and name of units
+  const units: IProperties = {
+    type: Elements.units,
     attribute: {
       name: component.name(),
     },
     children: {
-      unit: listUnit.map((unitDescriptor: any, index: number) => {
-        return { unitDescriptor, index };
+      unit: listUnit.map((name: any, index: number) => {
+        return { name, index };
       }),
     },
   };
+  console.log('Converted to Units');
+  console.log(units);
+
+  return units;
 };
 
 const mainAsync = async () => {

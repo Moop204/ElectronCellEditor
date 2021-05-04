@@ -38,12 +38,12 @@ const EditorMonaco = (props: EditorProp) => {
       provideCompletionItems(model, position, context, token) {
         // Provide stronger context
         // find out if we are completing a property in the 'dependencies' object.
-        const textUntilPosition = model.getValueInRange({
-          startLineNumber: 1,
-          startColumn: 1,
-          endLineNumber: position.lineNumber,
-          endColumn: position.column,
-        });
+        // const textUntilPosition = model.getValueInRange({
+        //   startLineNumber: 1,
+        //   startColumn: 1,
+        //   endLineNumber: position.lineNumber,
+        //   endColumn: position.column,
+        // });
         const word = model.getWordUntilPosition(position);
         const range: Range = {
           startLineNumber: position.lineNumber,
@@ -62,7 +62,8 @@ const EditorMonaco = (props: EditorProp) => {
     <Editor
       height="90vh"
       defaultLanguage="xml"
-      defaultValue={xmlInput}
+      defaultValue=""
+      value={xmlInput}
       beforeMount={handleBeforeMount}
       onChange={onChange}
     />

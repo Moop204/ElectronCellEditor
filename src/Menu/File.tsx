@@ -9,6 +9,7 @@ const ActionOpen = (mainWindow: BrowserWindow, fm: FileManagement) => {
     click: () => {
       const filePath = dialog.showOpenDialogSync({});
       if (filePath) {
+        // Get content of file
         fm.openedFile(String(filePath), mainWindow);
       }
     },

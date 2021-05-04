@@ -8,8 +8,8 @@ import HintIcon from '@material-ui/icons/EmojiObjects';
 import BugIcon from '@material-ui/icons/BugReport';
 import { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
-import { useStyles, standardStyle } from './style';
 import _ from 'underscore';
+import { useStyles, standardStyle } from './style';
 
 interface IssueRecord {
   desc: string;
