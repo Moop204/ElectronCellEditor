@@ -1,12 +1,13 @@
 import { makeStyles, createStyles } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useStyles } from '../static-interface/style';
 import EditorXml from './EditorXml';
 import { compressCellml } from '../compression/compress';
 
+// Updated through ipc calls to the backend
 const SpatialView = (prop) => {
-  const { setContentExist, contentExist } = prop;
+  const { contentExist } = prop;
   const styles = useStyles();
   if (contentExist === '') {
     return <div className={styles.notLoaded}>No File Loaded</div>;
@@ -14,7 +15,7 @@ const SpatialView = (prop) => {
 
   return (
     <div className={styles.spatialView}>
-      <div>{compressCellml(contentExist)}</div>
+      {/* <div>{compressCellml(contentExist)}</div> */}
       <EditorXml xmlInput={compressCellml(contentExist)} />
     </div>
   );

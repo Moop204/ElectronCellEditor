@@ -18,6 +18,7 @@ import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'underscore';
+import { useRef } from 'react';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) =>
       marginLeft: 0,
     },
     contentView: {
-      height: '80vh',
+      height: '100vh',
     },
     tabbing: {
       height: '4vh',
@@ -41,13 +42,11 @@ const Dashboard = () => {
   const [contentExist, setContentExist] = useState('');
   const [valid, setValid] = useState(false);
 
-  useEffect(() => {
-    const validateFile = () => {
-      ipcRenderer.send('validate-file', contentExist);
-    };
-    const dbValidateFile = _.debounce(validateFile, 300);
-    dbValidateFile();
+  // const contentCallback = useCallback(() => {
+  //   return getContentExists();
+  // }, []);
 
+  useEffect(() => {
     const updateContentFn = (event: Event, content: string) => {
       setContentExist(content);
       console.log('Update content B');
@@ -55,7 +54,6 @@ const Dashboard = () => {
     ipcRenderer.on('update-content-B', updateContentFn);
 
     const initContentFn = (event: Event, message: string) => {
-      console.log('INIT CONTENT: We opened a file and have set the content');
       setContentExist(message);
     };
     ipcRenderer.on('init-content', initContentFn);
@@ -71,23 +69,19 @@ const Dashboard = () => {
     };
   }, []);
 
-  const validateFile = () => {
-    ipcRenderer.send('validate-file', contentExist);
+  const validateFile = (c: string) => {
+    ipcRenderer.send('validate-file', c);
   };
-  const dbValidateFile = useCallback(_.debounce(validateFile, 300), []);
+
+  const dbValidateFile = useCallback(
+    _.debounce((c: string) => validateFile(c), 800),
+    []
+  );
 
   // Check here for sync problems?
   useEffect(() => {
-    dbValidateFile();
-  }, [contentExist]);
-
-  useEffect(() => {
-    console.log(contentExist);
-    const sendUpdate = () => {
-      ipcRenderer.send('update-content-A', contentExist);
-    };
-    const dbSendUpdate = sendUpdate;
-    dbSendUpdate();
+    dbValidateFile(contentExist);
+    // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
   return (
@@ -96,6 +90,7 @@ const Dashboard = () => {
         <Grid container spacing={1} md={12}>
           <Grid item md={3}>
             <View valid={valid} />
+
             <Properties />
             <Issues />
           </Grid>
@@ -110,8 +105,8 @@ const Dashboard = () => {
                   {!valid && <Redirect to="" />}
                   {valid && (
                     <SpatialView
-                      setContentExist={setContentExist}
                       contentExist={contentExist}
+                      key="spatial-view"
                     />
                   )}
                 </Route>
@@ -122,14 +117,15 @@ const Dashboard = () => {
                       without fixing this.
                     </Alert>
                   )}
+                  {/* {contentExist} */}
                   <RawView
                     setContentExist={setContentExist}
                     contentExist={contentExist}
+                    key="raw-view"
                   />
                 </Route>
               </Switch>
             </Paper>
-            <AddChildren />
           </Grid>
         </Grid>
       </Router>

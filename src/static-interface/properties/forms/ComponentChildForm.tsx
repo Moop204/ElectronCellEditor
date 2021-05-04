@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,55 +12,63 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+import * as yup from 'yup';
+import { elmToStr } from '../../../types/Elements';
+import { ipcRenderer } from 'electron';
 
-const Basic = () => (
-  <div>
-    <h1>Anywhere in your app!</h1>
-    <Formik
-      initialValues={{ name: '' }}
-      validate={(values) => {
-        const errors: any = {};
-        if (!values.name) {
-          errors.name = 'Required';
-        } else if (!/^[a-zA-Z][A-Za-z0-9_]+$/i.test(values.name)) {
-          errors.name = 'Invalid CellML identifier';
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        /* and other goodies */
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.name}
-          />
-          {errors.name && touched.name && errors.name}
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
-        </form>
-      )}
-    </Formik>
-  </div>
-);
+const Basic = (prop) => {
+  const { attr, parent, child, parentName } = prop;
+  const validationSchema = yup.object({
+    name: yup
+      .string('Name')
+      .min(1, 'Require at least one character')
+      .matches(
+        /^[a-zA-Z][a-z-A-Z0-9_]*$/,
+        'Must start with an alphabetical character'
+      )
+      .required('Attribute "name" is required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      name: 'name',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      ipcRenderer.send('add-child', {
+        child: {
+          type: child,
+          attribute: [values],
+        },
+        parent: {
+          name: parentName,
+          index: null,
+        },
+        parentType: parent,
+      });
+    },
+  });
+
+  return (
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="name"
+          name="name"
+          label="Name"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
+        />
+        <Button color="primary" variant="contained" fullWidth type="submit">
+          Submit
+        </Button>
+      </form>
+    </div>
+  );
+};
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -73,7 +81,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DialogSelect = () => {
+const AddChildSelect = (prop) => {
+  const { elm, parent, parentName } = prop;
   const classes = useStyles();
   const [name, setName] = React.useState('');
   // Controls it popping or not
@@ -92,25 +101,30 @@ const DialogSelect = () => {
     setOpen(false);
   };
 
+  console.log(`ComponentChildForm elementcheck: ${parent}`);
+
   return (
     <div>
-      <Button onClick={handleClickOpen}>+ Some child</Button>
+      <Button onClick={handleClickOpen}>+ {elmToStr(elm)}</Button>
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
         open={open}
         onClose={handleClose}
       >
-        <DialogTitle>Add an X Child to Y</DialogTitle>
+        <DialogTitle>
+          Add {elmToStr(elm)} as child of {elmToStr(parent)}
+        </DialogTitle>
         <DialogContent>
-          <form className={classes.container}>
+          {/* <form className={classes.container}>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="demo-dialog-native">
                 {name ? name : 'Name'}
               </InputLabel>
               <TextField value={name} onChange={handleChange} label="Name" />
             </FormControl>
-          </form>
+          </form> */}
+          <Basic attr="Name" parent child={elm} parentName />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -125,4 +139,4 @@ const DialogSelect = () => {
   );
 };
 
-export { DialogSelect };
+export { AddChildSelect, Basic };

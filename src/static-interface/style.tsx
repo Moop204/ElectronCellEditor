@@ -6,6 +6,19 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       marginLeft: 0,
     },
+    elementType: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      fontSize: '1.8em',
+    },
+    viewBackground: {
+      color: '#EAFDF8',
+    },
+    subElementType: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      fontSize: '1.2em',
+    },
     viewButton: {
       padding: theme.spacing(2),
       maxWidth: '12rem',
@@ -19,12 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       color: 'white',
       padding: '0.5rem',
-      justifyContent: 'space-between',
+      //justifyContent: 'space-between',
     },
     subheading: {
-      borderTop: 'solid',
       borderBottom: 'solid',
       marginTop: '1vh',
+      fontSize: '1.5em',
+      marginBottom: '1vh',
     },
     plainText: {
       color: 'black',
@@ -41,12 +55,17 @@ const useStyles = makeStyles((theme: Theme) =>
     spatialView: {
       paddingLeft: '3vh',
     },
+    testProperties: {
+      height: '100%',
+    },
     notLoaded: {
       textAlign: 'center',
-      height: '40vv',
+      height: '40vh',
     },
     properties: {
-      height: '40vv',
+      height: '70vh',
+      width: '100%',
+      alignContent: 'flex-start',
     },
   })
 );

@@ -10,6 +10,8 @@ export default class EditorXml extends React.Component<
 > {
   private ref: React.RefObject<XmlEditor>;
 
+  //timerUpdate: NodeJS.Timeout;
+
   public constructor(props) {
     const { xmlInput } = props;
     super(props);
@@ -19,6 +21,20 @@ export default class EditorXml extends React.Component<
       xml: xmlInput,
     };
   }
+
+  // componentDidMount() {
+  //   this.timerUpdate = setInterval(() => this.newUpdate(), 1000);
+  // }
+
+  // componentWillUnmount() {
+  //   clearInterval(this.timerUpdate);
+  // }
+
+  // private newUpdate() {
+  //   this.setState((state, prop) => {
+  //     prop.xmlInput;
+  //   });
+  // }
 
   private onClickHarvest(): void {
     if (this.ref.current) {

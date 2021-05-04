@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
           <model xmlns="http://www.cellml.org/cellml/2.0#" name="multipleImportedUnit">
+	  <component name="root"/>
+	  <component name="L1_c1"/>
           <import xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../example/SodiumChannelModel.cellml">
-            <units units_ref="iUnits1" name="iUnits1"/>
-            <units units_ref="iUnits2" name="iUnits2"/>
+            <units units_ref="somethingElse" name="somethingElse"/>
+            <units units_ref="fromFarAway" name="fromFarAway"/>
           </import>
+
+          <units prefix="1" name="normalUnit"/>
+
+  <component name="L1_c2"/>
+  <component name="L1_c3"/>
+  <component name="L1_L2_c1"/>
+  <encapsulation>
+    <component_ref component="root">
+      <component_ref component="L1_c1">
+        <component_ref component="L1_L2_c1"/>
+      </component_ref>
+      <component_ref component="L1_c2"/>
+      <component_ref component="L1_c3"/>
+    </component_ref>
+  </encapsulation>
+
       </model>
 

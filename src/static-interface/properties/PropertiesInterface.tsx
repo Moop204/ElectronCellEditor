@@ -12,6 +12,7 @@ import { ModelProperties } from './ModelProperties';
 import { ComponentProperties } from './ComponentProperties';
 import { Elements } from '../../types/Elements';
 import { ISelect } from '../../types/IQuery';
+import { Paper } from '@material-ui/core';
 
 const ElementChildren = (props) => {
   const styles = useStyles();
@@ -25,13 +26,13 @@ const ElementChildren = (props) => {
 
 const Properties = () => {
   const styles = useStyles();
-  const [curElm, setCurElm] = useState<Elements>(Elements.model);
+  //const [curElm, setCurElm] = useState<Elements>(Elements.model);
 
-  useEffect(() => {
-    ipcRenderer.on('res-select-element', (event, selection: ISelect) => {
-      setCurElm(Elements.component);
-    });
-  }, []);
+  // useEffect(() => {
+  //   ipcRenderer.on('res-select-element', (event, selection: ISelect) => {
+  //     setCurElm(Elements.component);
+  //   });
+  // }, []);
 
   return (
     <Grid container item>

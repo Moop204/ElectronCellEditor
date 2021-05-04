@@ -22,13 +22,23 @@ const rawStyles = makeStyles((theme) =>
 );
 
 //export declare const newElementChild: (parameter: string) => (xml: Xml, id: string[]) => Promise<Xml>;
-
-const RawView = (prop) => {
-  const { setContentExist, contentExist } = prop;
-
-  const handleEditorChange = (value, event) => {
+// Directly update based on setContent
+const RawView = ({
+  setContentExist,
+  contentExist,
+}: {
+  setContentExist: React.Dispatch<React.SetStateAction<string>>;
+  contentExist: any;
+}) => {
+  const handleEditorChange = (value: string, _) => {
+    console.log('alain');
+    console.log(value);
     setContentExist(value);
   };
+
+  // useEffect(() => {
+  //   setContent(contentExist);
+  // }, [contentExist]);
 
   return <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />;
 };
