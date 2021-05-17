@@ -429,6 +429,7 @@ interface Reset extends Entity {
   setTestValue(math: string): void;
   removeTestValue(): void;
   appendResetValue(math: string): void;
+  resetValue(): string;
   setResetValue(math: string): void;
   removeResetValue(): void;
   clone(): Reset;
