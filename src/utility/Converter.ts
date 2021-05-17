@@ -6,6 +6,7 @@ import {
   NamedEntity,
   ComponentEntity,
   Variable,
+  Reset,
 } from '../types/ILibcellml';
 import { IProperties } from '../types/IProperties';
 
@@ -130,7 +131,6 @@ const convertUnits = (component: Units) => {
 };
 
 const convertVariable = (variable: Variable) => {
-  const parent: Component = variable.parent() as Component;
   const eqVarCount: number = variable.equivalentVariableCount();
   const eqVarNameList: string[] = [];
   for (let i = 0; i < eqVarCount; i += 1) {
@@ -151,11 +151,38 @@ const convertVariable = (variable: Variable) => {
       units: variable.units(),
     },
     children: {
-      connection: eqVarNameList.map((name: any, index: number) => {
+      connection: eqVarNameList.map((name: string, index: number) => {
         return { name, index };
       }),
     },
   };
+
+  return varProp;
 };
 
-export { convertModel, convertUnits, convertComponent, convertVariable };
+const convertReset = (element: Reset) => {
+  const resetProp: IProperties = {
+    type: Elements.reset,
+    parent: {
+      type: Elements.component,
+      name: (element.parent() as Component).name(),
+    },
+    attribute: {
+      variable: element.variable(),
+      testVariable: element.testVariable(),
+      order: element.order(),
+      resetValue: element.resetValue(),
+      testValue: element.testValue(),
+    },
+    children: {},
+  };
+  return resetProp;
+};
+
+export {
+  convertModel,
+  convertUnits,
+  convertComponent,
+  convertVariable,
+  convertReset,
+};
