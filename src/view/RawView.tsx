@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { EditorMonaco } from './EditorMonaco';
-import { Event } from 'electron/renderer';
-import { useEffect } from 'react';
-const { ipcRenderer } = require('electron');
 interface EditorProp {
   xmlInput: string;
 }
@@ -28,17 +25,11 @@ const RawView = ({
   contentExist,
 }: {
   setContentExist: React.Dispatch<React.SetStateAction<string>>;
-  contentExist: any;
+  contentExist: string;
 }) => {
-  const handleEditorChange = (value: string, _) => {
-    console.log('alain');
-    console.log(value);
+  const handleEditorChange = (value: string, _: any) => {
     setContentExist(value);
   };
-
-  // useEffect(() => {
-  //   setContent(contentExist);
-  // }, [contentExist]);
 
   return <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />;
 };

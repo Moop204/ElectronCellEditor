@@ -4,6 +4,7 @@ enum Elements {
   units,
   reset,
   variable, // TODO: Remove maybe?
+  none, // For Model parents
 }
 
 const strToElm = (s: string) => {
@@ -18,6 +19,8 @@ const strToElm = (s: string) => {
       return Elements.reset;
     case 'variable':
       return Elements.variable;
+    case 'none':
+      return Elements.none;
     default:
       console.log(`ELEMENTS: Failed to identify ${s} as an Element`);
   }
@@ -36,6 +39,9 @@ const elmToStr = (e: Elements): string => {
       return 'reset';
     case Elements.variable:
       return 'variable';
+    case Elements.none:
+      return 'none';
+
     default:
       console.log(`ELEMENTS: Failed to identify ${e} as an Element`);
   }

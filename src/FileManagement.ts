@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { ipcMain } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import _ from 'underscore';
@@ -5,13 +6,11 @@ import {
   convertComponent,
   convertModel,
   convertUnits,
-  importFile,
-} from './AsyncMain';
+} from './utility/Converter';
 import { NewChild } from './static-interface/AddChildrenInterface';
 import { Elements, elmToStr } from './types/Elements';
 import {
   Component,
-  ImportSource,
   ComponentEntity,
   Model,
   Reset,
@@ -20,9 +19,11 @@ import {
   Parser,
   Printer,
   Validator,
+  Issue,
 } from './types/ILibcellml';
 import { IProperties } from './types/IProperties';
 import { ISearch, ISelect, ISelection, IUpdate } from './types/IQuery';
+
 const fs = require('fs');
 
 const libcellModule = require('libcellml.js/libcellml.common');
@@ -31,7 +32,9 @@ const libcellModule = require('libcellml.js/libcellml.common');
 // Handles the truth in the backend
 export default class FileManagement {
   content: string;
+
   currentComponent: Component | Model | Reset | Units | Variable | null;
+
   type: Elements;
 
   constructor() {
@@ -100,18 +103,14 @@ export default class FileManagement {
   }
 
   // Import File
-  importFile(
-    fileLoc: string,
-    parser: Parser,
-    validator: Validator,
-    printer: Printer
-  ) {
+  importFile(fileLoc: string, parser: Parser, validator: Validator) {
     const file: string = fs.readFileSync(fileLoc, 'utf8');
     try {
       const model = parser.parseModel(file);
       this.updateContent(file);
       this.setCurrentComponent(model);
       validator.validateModel(model);
+
       const noError = validator.errorCount();
       const errors = [];
       for (let errorNum = 0; errorNum < noError; errorNum += 1) {
@@ -141,7 +140,7 @@ export default class FileManagement {
           cause: hint.referenceHeading(),
         });
       }
-
+      this.type = Elements.model;
       return {
         model: file,
         errors,
@@ -202,11 +201,7 @@ export default class FileManagement {
         );
 
         if (componentElement === null) {
-          console.log('ITS NULL! !! !');
-          console.log(model);
-          for (let i = 0; i < model.componentCount(); i++) {
-            console.log(model.componentByIndex(i).name());
-          }
+          console.log('FM Error: Component Element is null');
         }
         componentElement.setName(value);
         model.replaceComponentByName(
@@ -259,8 +254,7 @@ export default class FileManagement {
         );
 
         const componentElement = parentElement.takeVariableByName(
-          select.name as string,
-          true
+          select.name as string
         );
         componentElement.setUnitsByName(value);
         model.replaceComponentByName(
@@ -278,6 +272,7 @@ export default class FileManagement {
       default:
         break;
     }
+    return model;
   }
 
   // Definitely name attribute search
@@ -304,7 +299,7 @@ export default class FileManagement {
         if (componentElement === null) {
           console.log('ITS NULL! !! !');
           console.log(model);
-          for (let i = 0; i < model.componentCount(); i++) {
+          for (let i = 0; i < model.componentCount(); i += 1) {
             console.log(model.componentByIndex(i).name());
           }
         }
@@ -344,14 +339,12 @@ export default class FileManagement {
   async openedFile(filePath: string, mainWindow: BrowserWindow) {
     const libcellml = await libcellModule();
     const parser = new libcellml.Parser();
-    const printer = new libcellml.Printer();
     const validator = new libcellml.Validator();
     console.log('MENU: Importing file');
     const { model, errors, warnings, hints } = await this.importFile(
       filePath,
       parser,
-      validator,
-      printer
+      validator
     );
     console.log('MENU: Sending information');
     mainWindow.webContents.send('init-content', model);
@@ -411,14 +404,15 @@ export default class FileManagement {
               value,
               attribute
             );
+            break;
           default:
             console.log(
               `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
             );
         }
 
-        console.log(`<<< ${this.getContent()}`);
-        console.log(`>>> ${printer.printModel(model, false)}`);
+        console.log(`<<<c ${this.getContent()}`);
+        console.log(`>>>p ${printer.printModel(model, false)}`);
 
         this.updateContent(printer.printModel(model, false));
 
@@ -447,6 +441,10 @@ export default class FileManagement {
       const libcellml = await libcellModule();
       console.log(' I GOT A CHILD');
 
+      const parser: Parser = new libcellml.Parser();
+      const printer: Printer = new libcellml.Printer();
+      const m: Model = parser.parseModel(this.getContent());
+
       switch (child.type) {
         case Elements.component:
           const newComp: Component = new libcellml.Component();
@@ -455,11 +453,11 @@ export default class FileManagement {
           console.log(newComp);
           // Update current component
           console.log('ADDING TO IT ');
-          //(this.currentComponent as Model | Component).addComponent(newComp);
+          // (this.currentComponent as Model | Component).addComponent(newComp);
           // Update the truth
-          const parser: Parser = new libcellml.Parser();
-          const printer: Printer = new libcellml.Printer();
-          const m: Model = parser.parseModel(this.getContent());
+          // const parser: Parser = new libcellml.Parser();
+          // const printer: Printer = new libcellml.Printer();
+          // const m: Model = parser.parseModel(this.getContent());
           m.addComponent(newComp);
           this.updateContent(printer.printModel(m, false));
           // if (parentType === Elements.model) {
@@ -468,15 +466,15 @@ export default class FileManagement {
           break;
 
         case Elements.units:
-          const parser1: Parser = new libcellml.Parser();
-          const printer1: Printer = new libcellml.Printer();
+          // const parser1: Parser = new libcellml.Parser();
+          // const printer1: Printer = new libcellml.Printer();
           // Make new element with attributes specified by user
           const newUnits: Units = new libcellml.Units();
           newUnits.setName(child.attribute[0].name as string);
           // Get the truth and update it
-          const m1: Model = parser1.parseModel(this.content);
-          m1.addUnits(newUnits);
-          this.updateContent(printer1.printModel(m1, false));
+          // const m1: Model = parser1.parseModel(this.content);
+          m.addUnits(newUnits);
+          this.updateContent(printer.printModel(m, false));
           break;
         default:
           console.log('FM: Add child - should not reach here');
@@ -491,36 +489,35 @@ export default class FileManagement {
     // INPUT
     // TODO:
     // OUTPUT
-    ipcMain.on('select-element-A', (event: any, arg: ISelect) => {
-      console.log('FM: Receive select-element');
-      this.printModel();
-      const { element, select } = arg;
-      let prop: IProperties;
-      console.log(`FileManagement elementcheck: ${element}`);
-      console.log(`SELECT ELEMENT: Looking for ${elmToStr(element)}`);
-      switch (element) {
-        case Elements.model:
-          prop = convertModel(this.getCurrentComponent() as Model);
-          break;
-        case Elements.component:
-          this.findElement(select, element);
-          prop = convertComponent(this.getCurrentComponent() as Component);
-          break;
-        case Elements.units:
-          console.log('ID"d AS A UNIT');
-          this.findElement(select, element);
-          prop = convertUnits(this.getCurrentComponent() as Units);
-          break;
-        default:
-          prop = { attribute: null, children: null };
-          console.log('Not a valid element.');
-          break;
+    ipcMain.on(
+      'select-element-A',
+      (event: any, { element, select }: ISelect) => {
+        console.log('FM: Receive select-element');
+        this.type = element;
+        let prop: IProperties;
+        console.log(`FileManagement elementcheck: ${element}`);
+        console.log(`SELECT ELEMENT: Looking for ${elmToStr(element)}`);
+        switch (element) {
+          case Elements.model:
+            prop = convertModel(this.getCurrentComponent() as Model);
+            break;
+          case Elements.component:
+            this.findElement(select, element);
+            prop = convertComponent(this.getCurrentComponent() as Component);
+            break;
+          case Elements.units:
+            this.findElement(select, element);
+            prop = convertUnits(this.getCurrentComponent() as Units);
+            break;
+          default:
+            prop = { attribute: null, children: null };
+            console.log('FM: Select Element A Not a valid element.');
+            break;
+        }
+        const selection: ISelection = { element, prop };
+        event.reply('res-select-element', selection);
       }
-      console.log('Ready to send SELECT ELEMENT');
-      console.log(prop);
-      const selection: ISelection = { element, prop };
-      event.reply('res-select-element', selection);
-    });
+    );
 
     // Takes the currently selected element
     // INPUT
@@ -529,12 +526,14 @@ export default class FileManagement {
     // :. Frontend maintains selection
     // OUTPUT
     // Sets the raw truth directly to frontend
-    ipcMain.on('get-element', (event: any, element: Elements) => {
+    ipcMain.on('get-element', (event: any) => {
       this.printModel();
-      let prop: IProperties;
-      console.log(`LIBCELL: Get Element  ${element}`);
+      let prop: IProperties | null;
+
+      console.log(`LIBCELL: Get Element  ${this.type}`);
+
       if (this.currentComponent != null) {
-        switch (element) {
+        switch (this.type) {
           case Elements.model:
             prop = convertModel(this.getCurrentComponent() as Model);
             break;
@@ -561,7 +560,7 @@ export default class FileManagement {
         v.validateModel(m);
         event.reply('validated-file', v.issueCount() === 0);
 
-        event.reply('update-content-B', file);
+        //event.reply('update-content-B', file);
 
         const noError = v.errorCount();
         const errors = [];
@@ -598,6 +597,7 @@ export default class FileManagement {
         hints.push({ desc: 'HELP YAY', cause: 'test' });
 
         console.log('FM: SENDING ERROR REPLY');
+
         event.reply('error-reply', {
           errors,
           warnings,

@@ -1,4 +1,7 @@
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+// Reuse components not styles
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const standardStyle = makeStyles((theme) => {
+const standardStyle = makeStyles((theme: Theme) => {
   createStyles({
     plainText: {
       color: 'black',
