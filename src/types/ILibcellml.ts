@@ -57,7 +57,11 @@ interface ComponentEntity extends NamedEntity {
     searchEncapsulated: boolean
   ): boolean;
   replaceComponentByIndex(index: number, component: Component): boolean;
-  replaceComponentByName(name: string, component: Component): boolean;
+  replaceComponentByName(
+    name: string,
+    component: Component,
+    searchEncapsulated: boolean
+  ): boolean;
   replaceComponentByComponent(
     oldComponent: Component,
     newComponent: Component,

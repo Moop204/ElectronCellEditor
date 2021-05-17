@@ -9,18 +9,18 @@ import {
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { AddChildren } from './static-interface/AddChildrenInterface';
-import { Properties } from './static-interface/properties/PropertiesInterface';
+import PropertiesWidget from './static-interface/properties/PropertiesWidget';
 import { Issues } from './static-interface/IssuesInterface';
-import { View } from './static-interface/ViewInterface';
+import View from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
-import { SpatialView } from './view/SpatialView';
+import SpatialView from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'underscore';
 import { useRef } from 'react';
 
-const useStyles = makeStyles((theme) =>
+const localStyles = makeStyles((theme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme) =>
 );
 
 const Dashboard = () => {
-  const styles = useStyles();
+  const styles = localStyles();
+  // Chuck in React Contexts
   const [contentExist, setContentExist] = useState('');
   const [valid, setValid] = useState(false);
 
@@ -50,6 +51,7 @@ const Dashboard = () => {
     const updateContentFn = (event: Event, content: string) => {
       setContentExist(content);
       console.log('Update content B');
+      ipcRenderer.send('get-element');
     };
     ipcRenderer.on('update-content-B', updateContentFn);
 
@@ -61,6 +63,7 @@ const Dashboard = () => {
     const validatedFile = (event: Event, res: boolean) => {
       setValid(res);
     };
+
     ipcRenderer.on('validated-file', validatedFile);
     return () => {
       ipcRenderer.removeListener('update-content', updateContentFn);
@@ -91,7 +94,7 @@ const Dashboard = () => {
           <Grid item md={3}>
             <View valid={valid} />
 
-            <Properties />
+            <PropertiesWidget />
             <Issues />
           </Grid>
           <Grid item md={9}>

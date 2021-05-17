@@ -1,16 +1,13 @@
-import * as React from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import { useStyles } from "./style";
-import { Heading } from "./Heading";
+import * as React from 'react';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { Heading } from './Heading';
 
 const NewChild = (props) => {
   return <Paper> W.I.P</Paper>;
 };
 
 const AddChildren = (props) => {
-  const styles = useStyles();
-
   let val = 1;
   return (
     <Grid container item>
@@ -19,7 +16,7 @@ const AddChildren = (props) => {
         {Array(5)
           .fill(0)
           .map((issue) => {
-            const key = "attr" + val;
+            const key = 'attr' + val;
             val++;
             return <NewChild key={key} />;
           })}

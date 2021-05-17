@@ -68,7 +68,6 @@ const Issues = () => {
   useEffect(() => {
     const errorReplyFn = (event: Event, message) => {
       const { errors, warnings, hints } = message;
-      console.log(message);
       setErrors(errors);
       setWarnings(warnings);
       setHints(hints);

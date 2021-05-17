@@ -1,46 +1,13 @@
-import { Event } from 'electron/main';
-import { dialog } from 'electron';
-import { IEvent } from 'monaco-editor';
+import { Elements } from '../types/Elements';
 import {
+  Model,
+  Units,
   Component,
   NamedEntity,
   ComponentEntity,
-  Entity,
-  ImportSource,
-  Model,
-  Reset,
-  Units,
   Variable,
-  Version,
-  Parser,
-  Validator,
-  Printer,
-} from './types/ILibcellml';
-import {
-  IProperties,
-  IChild,
-  IModelProperties,
-  IComponentProperties,
-} from './types/IProperties';
-import { Elements } from './types/Elements';
-import { IUpdate, ISearch, ISelect, ISelection } from './types/IQuery';
-
-const libcellModule = require('libcellml.js/libcellml.common');
-
-const { ipcMain } = require('electron');
-
-let currentComponent1:
-  | Component
-  | ImportSource
-  | Model
-  | Reset
-  | Units
-  | Variable;
-
-interface ImportInterface {
-  model: string;
-  valid: boolean;
-}
+} from '../types/ILibcellml';
+import { IProperties } from '../types/IProperties';
 
 const convertModel = (model: Model) => {
   const unitsNum = model.unitsCount();
@@ -55,10 +22,14 @@ const convertModel = (model: Model) => {
   for (let i = 0; i < componentNum; i += 1) {
     listComponentName.push(model.componentByIndex(i).name());
   }
-  return {
+  const propertyFormat: IProperties = {
     type: Elements.model,
     attribute: {
       name: model.name(),
+    },
+    parent: {
+      name: '',
+      type: Elements.none,
     },
     children: {
       component: listComponentName.map((name: string, index: number) => {
@@ -69,6 +40,7 @@ const convertModel = (model: Model) => {
       }),
     },
   };
+  return propertyFormat;
 };
 
 const convertComponent = (component: Component) => {
@@ -91,11 +63,17 @@ const convertComponent = (component: Component) => {
     listComponent.push(component.componentByIndex(i).name());
   }
 
-  return {
+  const hasParent: boolean = component.hasParent();
+
+  const propertyFormat: IProperties = {
     type: Elements.component,
     attribute: {
       name: component.name(),
       math: component.math(),
+    },
+    parent: {
+      type: hasParent ? Elements.component : Elements.model,
+      name: hasParent ? (component.parent() as Model | Component).name() : '',
     },
     children: {
       reset: listReset.map((name: string, index: number) => {
@@ -109,6 +87,7 @@ const convertComponent = (component: Component) => {
       }),
     },
   };
+  return propertyFormat;
 };
 
 const convertUnits = (component: Units) => {
@@ -126,10 +105,17 @@ const convertUnits = (component: Units) => {
     listUnit.push(unitDescriptor);
   }
 
+  const parentType: Elements = Elements.model;
+  const parentElement = component.parent() as Model;
+
   // TODO: Unambiguous naming
   // Name refers to both name attribute, the name of the attribute of name and name of units
   const units: IProperties = {
     type: Elements.units,
+    parent: {
+      type: parentType,
+      name: parentElement.name(),
+    },
     attribute: {
       name: component.name(),
     },
@@ -139,15 +125,37 @@ const convertUnits = (component: Units) => {
       }),
     },
   };
-  console.log('Converted to Units');
-  console.log(units);
 
   return units;
 };
 
-const mainAsync = async () => {
-  // Traversal
-  // TODO: Select global
+const convertVariable = (variable: Variable) => {
+  const parent: Component = variable.parent() as Component;
+  const eqVarCount: number = variable.equivalentVariableCount();
+  const eqVarNameList: string[] = [];
+  for (let i = 0; i < eqVarCount; i += 1) {
+    const v: Variable = variable.equivalentVariable(i);
+    eqVarNameList.push(v.name());
+  }
+
+  const varProp: IProperties = {
+    type: Elements.variable,
+    parent: {
+      type: Elements.component,
+      name: (variable.parent() as Component).name(),
+    },
+    attribute: {
+      name: variable.name(),
+      interfaceType: variable.interfaceType(),
+      initialValue: variable.initialValue(),
+      units: variable.units(),
+    },
+    children: {
+      connection: eqVarNameList.map((name: any, index: number) => {
+        return { name, index };
+      }),
+    },
+  };
 };
 
-export { mainAsync, convertModel, convertComponent, convertUnits };
+export { convertModel, convertUnits, convertComponent, convertVariable };

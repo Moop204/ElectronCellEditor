@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Formik, useFormik } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -13,21 +13,30 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import * as yup from 'yup';
-import { elmToStr } from '../../../types/Elements';
 import { ipcRenderer } from 'electron';
+import { Elements, elmToStr } from '../../../types/Elements';
 
-const Basic = (prop) => {
-  const { attr, parent, child, parentName } = prop;
-  const validationSchema = yup.object({
-    name: yup
-      .string('Name')
-      .min(1, 'Require at least one character')
-      .matches(
-        /^[a-zA-Z][a-z-A-Z0-9_]*$/,
-        'Must start with an alphabetical character'
-      )
-      .required('Attribute "name" is required'),
-  });
+const nameValidation = yup.object({
+  name: yup
+    .string()
+    .min(1, 'Require at least one character')
+    .matches(
+      /^[a-zA-Z][a-z-A-Z0-9_]*$/,
+      'Must start with an alphabetical character'
+    )
+    .required('Attribute "name" is required'),
+});
+
+interface IPopup {
+  attr: string;
+  parent: Elements;
+  child: Elements;
+  parentName: string;
+  handleClose: () => void;
+}
+
+const Basic = ({ attr, parent, child, parentName, handleClose }: IPopup) => {
+  const validationSchema = nameValidation;
 
   const formik = useFormik({
     initialValues: {
@@ -62,15 +71,31 @@ const Basic = (prop) => {
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
         />
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="submit"
+            onClick={handleClose}
+          >
+            Add
+          </Button>
+        </DialogActions>
       </form>
     </div>
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const localStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -83,12 +108,12 @@ const useStyles = makeStyles((theme) => ({
 
 const AddChildSelect = (prop) => {
   const { elm, parent, parentName } = prop;
-  const classes = useStyles();
-  const [name, setName] = React.useState('');
+  const classes = localStyles();
+  const [name, setName] = useState('');
   // Controls it popping or not
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const handleChange = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     console.log(event.target.value);
     setName(event.target.value || '');
   };
@@ -124,16 +149,22 @@ const AddChildSelect = (prop) => {
               <TextField value={name} onChange={handleChange} label="Name" />
             </FormControl>
           </form> */}
-          <Basic attr="Name" parent child={elm} parentName />
+          <Basic
+            attr="Name"
+            parent={parent}
+            child={elm}
+            parentName={parentName}
+            handleClose={handleClose}
+          />
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary" type="submit">
             Ok
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </div>
   );
