@@ -6,11 +6,12 @@ const ActionOpen = (mainWindow: BrowserWindow, fm: FileManagement) => {
   return {
     label: 'Open File',
     acceleration: 'Ctrl+O',
-    click: () => {
+    click: async () => {
       const filePath = dialog.showOpenDialogSync({});
       if (filePath) {
+        console.log('action --- open');
         // Get content of file
-        fm.openedFile(String(filePath), mainWindow);
+        await fm.openedFile(String(filePath), mainWindow);
       }
     },
   };

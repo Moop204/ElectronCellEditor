@@ -24,27 +24,26 @@ interface IXmlJs {
 }
 
 const parseReset = (reset: IElement) => {
-  console.log(reset);
-  reset.elements = reset.elements.map((elm: IElement) => {
-    elm.attributes = {};
+  reset.elements.map((elm: IElement) => {
     if (elm.name === 'reset_value') {
-      elm.attributes.math = xml.json2xml(elm.elements[0]);
-      elm.elements = [];
+      reset.attributes.reset_value = xml.json2xml(elm.elements[0]);
     } else if (elm.name === 'test_value') {
-      elm.attributes.math = xml.json2xml(elm.elements[0]);
-      elm.elements = [];
+      reset.attributes.test_value = xml.json2xml(elm.elements[0]);
     }
     return elm;
   });
+  reset.elements = [];
   return reset;
 };
 
 // Inside components
 const parseComponent = (elms: IElement[]) => {
+  console.log('PARsing comPONENT');
   let math = '';
   const newElm: IElement[] = [];
   elms.map((elm: IElement) => {
     // When facing Math
+    console.log(elm.name);
     if (elm.name === 'math') {
       // Take Math
       // Stringify it
@@ -71,13 +70,15 @@ const parseEncapsulationReferences = (
   for (let i = 0; i < elms.length; i += 1) {
     const elm = elms[i];
     // Replace with component
-    const conciseComponent: IElement = componentMap[elm.attributes.component];
-    // Append rest as children recursively
-    conciseComponent.elements = [
-      ...(conciseComponent ? conciseComponent.elements : []),
-      ...parseEncapsulationReferences(elms ? elm.elements : [], componentMap),
-    ];
-    res.push(conciseComponent);
+    if (elm.attributes.component) {
+      const conciseComponent: IElement = componentMap[elm.attributes.component];
+      // Append rest as children recursively
+      conciseComponent.elements = [
+        ...(conciseComponent ? conciseComponent.elements : []),
+        ...parseEncapsulationReferences(elms ? elm.elements : [], componentMap),
+      ];
+      res.push(conciseComponent);
+    }
   }
   return res;
 };
@@ -89,13 +90,17 @@ const compressCellml = (s: string) => {
 
   const componentMap: Record<string, any> = [];
   const newElements: IElement[] = [];
+
   parsed.elements[0].elements.map((elm: IElement) => {
+    // For child of model
     if (elm.name === 'component') {
       const { newElm, math } = parseComponent(elm.elements || []);
+      console.log(elm.attributes.name);
+      console.log(math);
       elm.elements = newElm;
       // Assign math as an attribute
       elm.attributes.math = math;
-      newElements.push(elm);
+      // newElements.push(elm);
       componentMap[elm.attributes.name] = elm;
     } else if (elm.name === 'import') {
       // Reduce imports
@@ -106,25 +111,31 @@ const compressCellml = (s: string) => {
         newElm.attributes['xmlns:xlink'] = elm.attributes['xmlns:xlink'];
         newElements.push(newElm);
       });
+    } else if (elm.name === 'connection' || elm.name === 'map_variable') {
+      // empty
     } else {
       newElements.push(elm);
     }
-
-    let finalElements: IElement[] = [];
-    for (let i = 0; i < newElements.length; i += 1) {
-      const newElm = newElements[i];
-      if (elm.name !== 'encapsulation') {
-        finalElements.push(newElm);
-      } else {
-        const compressedComponents = parseEncapsulationReferences(
-          newElm.elements,
-          componentMap
-        );
-        finalElements = [...finalElements, ...compressedComponents];
-      }
-    }
-    parsed.elements[0].elements = finalElements;
   });
+
+  let finalElements: IElement[] = [];
+
+  for (let i = 0; i < newElements.length; i += 1) {
+    const newElm = newElements[i];
+    // elm = newElements[i];
+    if (newElm.name !== 'encapsulation') {
+      finalElements.push(newElm);
+      // finalElements.push(elm);
+    } else {
+      const compressedComponents = parseEncapsulationReferences(
+        newElm.elements,
+        // elm.elements,
+        componentMap
+      );
+      finalElements = [...finalElements, ...compressedComponents];
+    }
+  }
+  parsed.elements[0].elements = finalElements;
 
   // Parse to remove encapsulation and sub variables
   const result = xml.json2xml(parsed, { spaces: 4 });

@@ -68,9 +68,9 @@ const Issues = () => {
   useEffect(() => {
     const errorReplyFn = (event: Event, message) => {
       const { errors, warnings, hints } = message;
-      setErrors(errors);
-      setWarnings(warnings);
-      setHints(hints);
+      setErrors(errors || []);
+      setWarnings(warnings || []);
+      setHints(hints || []);
     };
     const dbErrorReplyFn = errorReplyFn;
     ipcRenderer.on('error-reply', dbErrorReplyFn);

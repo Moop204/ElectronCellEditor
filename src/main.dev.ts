@@ -15,13 +15,11 @@ import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { mainAsync } from './AsyncMain';
 import FileManagement from './FileManagement';
 
 let mainWindow: BrowserWindow | null = null;
 let fm = new FileManagement();
 fm.setupHandlers();
-mainAsync();
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

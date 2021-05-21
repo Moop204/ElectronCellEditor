@@ -18,7 +18,9 @@ describe('CellML Library', () => {
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
     const validator = new libcellml.Validator();
-    return true;
+    expect(parser).toBeDefined();
+    expect(printer).toBeDefined();
+    expect(validator).toBeDefined();
   });
   test('should parse models', async () => {
     const validFile: string = `<?xml version="1.0" encoding="UTF-8"?>
@@ -70,20 +72,16 @@ describe('CellML Library', () => {
     const libcellml = await libcellModule();
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
-    const validator = new libcellml.Validator();
     const fm = new FileManagement();
-    const { model, errors } = fm.importFile(
-      'src/example/complex_encapsulation.xml',
-      parser,
-      validator
+    const { model, errors } = await fm.importFile(
+      'src/example/complex_encapsulation.xml'
     );
 
     // File contains what was expected
     const m = parser.parseModel(model);
-    console.log(printer.printModel(m, false));
     expect(m).toBeDefined();
     expect(printer.printModel(m, false)).toBe(validFile);
-    expect(errors && errors.length).toBe(0);
+    expect(errors.length).toBe(0);
   });
   test('should read invalid CellML files and identify errors', async () => {
     const invalidFile: string = `<?xml version="1.0" encoding="UTF-8"?>
@@ -92,17 +90,11 @@ describe('CellML Library', () => {
     const libcellml = await libcellModule();
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
-    const validator = new libcellml.Validator();
     const fm = new FileManagement();
-    const { model, errors } = fm.importFile(
-      'src/example/bad.xml',
-      parser,
-      validator
-    );
+    const { model, errors } = await fm.importFile('src/example/bad.xml');
     const m = parser.parseModel(model);
     expect(printer.printModel(m, false)).toBe(invalidFile);
     expect(errors && errors.length).toBeGreaterThan(0);
-    return true;
   });
   // Figure out how errors work
   // describe('Identifying errors', () => {
