@@ -179,10 +179,35 @@ const convertReset = (element: Reset) => {
   return resetProp;
 };
 
+const convertSelectedElement = (
+  selectedElement: Elements,
+  curElm: Component | Model | Reset | Units | Variable | null
+) => {
+  let prop: IProperties = {
+    type: Elements.none,
+    attribute: {},
+    children: {},
+    parent: { name: '', type: Elements.none },
+  };
+  if (curElm) {
+    switch (selectedElement) {
+      case Elements.model:
+        prop = convertModel(curElm as Model);
+        break;
+      case Elements.component:
+        prop = convertComponent(curElm as Component);
+        break;
+      default:
+    }
+  }
+  return prop;
+};
+
 export {
   convertModel,
   convertUnits,
   convertComponent,
   convertVariable,
   convertReset,
+  convertSelectedElement,
 };
