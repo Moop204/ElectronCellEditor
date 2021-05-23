@@ -8,8 +8,32 @@ import HintIcon from '@material-ui/icons/EmojiObjects';
 import BugIcon from '@material-ui/icons/BugReport';
 import { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
-import _ from 'underscore';
-import { useStyles, standardStyle } from './style';
+import _ from 'lodash';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import Heading from './Heading';
+
+const useStyle = makeStyles((theme: Theme) =>
+  createStyles({
+    errorMarker: {
+      color: 'red',
+    },
+    warningMarker: {
+      color: 'orange',
+    },
+    hintMarker: {
+      color: 'green',
+    },
+    plainText: {
+      color: 'black',
+    },
+    issueButtons: {
+      height: '3vh',
+      padding: '1vh',
+      margin: '0px',
+      borderRadius: '0px',
+    },
+  })
+);
 
 interface IssueRecord {
   desc: string;
@@ -27,24 +51,22 @@ interface IIssue {
 
 const IssueText = (props: IIssueTextProp) => {
   const { issues } = props;
-  let val = 1;
-  const styles = useStyles();
+  const styles = useStyle();
 
+  // TODO: turn to func for everyone
   if (issues.length > 0) {
-    const mapIssues = issues.map((record: IssueRecord) => {
+    const mapErrors = issues.map((record) => {
       const { desc, cause } = record;
-      const key = `issue${val}`;
-      val += 1;
       return (
-        <Grid item key={key}>
-          <span className={styles.issueMarker}>{'>>>'}</span> {desc}{' '}
+        <Grid item key={record.cause + record.desc}>
+          <span className={styles.errorMarker}>{'>>>'}</span> {desc}
         </Grid>
       );
     });
 
     return (
       <div className={styles.plainText} key="issue-text">
-        {mapIssues}
+        {mapErrors}
       </div>
     );
   }
@@ -63,9 +85,10 @@ const Issues = () => {
   const [warningMode, setWarningMode] = useState<boolean>(true);
   const [hintMode, setHintMode] = useState<boolean>(true);
 
-  const styles = useStyles();
+  const styles = useStyle();
 
   useEffect(() => {
+    // TODO: Have individual issues contain their type
     const errorReplyFn = (event: Event, message) => {
       const { errors, warnings, hints } = message;
       setErrors(errors || []);
@@ -82,11 +105,11 @@ const Issues = () => {
 
   return (
     <Grid container item>
-      <Grid item md={12} className={styles.heading}>
-        <span className={styles.heading}>Issues</span>
+      <Grid item md={12}>
+        <Heading title="Issues" />
         <span>
           <IconButton
-            color="inherit"
+            color="primary"
             className={styles.issueButtons}
             onClick={() => {
               if (errorMode && warningMode && hintMode) {
@@ -105,7 +128,7 @@ const Issues = () => {
         </span>
         <span>
           <IconButton
-            color="inherit"
+            color="primary"
             className={styles.issueButtons}
             onClick={() => {
               setErrorMode(!errorMode);
@@ -116,7 +139,7 @@ const Issues = () => {
         </span>
         <span>
           <IconButton
-            color="inherit"
+            color="primary"
             className={styles.issueButtons}
             onClick={() => {
               setWarningMode(!warningMode);
@@ -125,9 +148,9 @@ const Issues = () => {
             <WarningIcon />
           </IconButton>
         </span>
-        <span color="#7986cb">
+        <span>
           <IconButton
-            color="inherit"
+            color="primary"
             className={styles.issueButtons}
             onClick={() => {
               setHintMode(!hintMode);
@@ -140,9 +163,9 @@ const Issues = () => {
 
       <Grid item md={12}>
         <IssueText
-          issues={(errorMode ? errors : []).concat(
-            (warningMode ? warnings : []).concat(hintMode ? hints : [])
-          )}
+          issues={(errorMode ? errors : [])
+            .concat(warningMode ? warnings : [])
+            .concat(hintMode ? hints : [])}
         />
       </Grid>
     </Grid>

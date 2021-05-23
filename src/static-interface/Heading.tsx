@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Typography } from '@material-ui/core';
 
 interface IHeadingProp {
   title: string;
@@ -23,7 +24,12 @@ const localStyles = makeStyles((theme: Theme) =>
 
 const Heading = ({ title }: IHeadingProp) => {
   const styles = localStyles();
-  return <div className={styles.heading}>{title}</div>;
+
+  return (
+    <Typography variant="h3" align="center" className={styles.heading}>
+      {title}
+    </Typography>
+  );
 };
 
 export default Heading;

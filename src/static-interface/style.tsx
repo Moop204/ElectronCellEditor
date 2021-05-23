@@ -49,12 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
     issueMarker: {
       color: 'red',
     },
-    issueButtons: {
-      height: '3vh',
-      padding: '1vh',
-      margin: '0px',
-      borderRadius: '0px',
-    },
+
     spatialView: {
       paddingLeft: '3vh',
     },

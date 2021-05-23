@@ -17,7 +17,13 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import FileManagement from './FileManagement';
 
+const libcellModule = require('libcellml.js/libcellml.common');
+
 let mainWindow: BrowserWindow | null = null;
+async () => {
+  await libcellModule();
+};
+
 let fm = new FileManagement();
 fm.setupHandlers();
 

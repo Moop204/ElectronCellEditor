@@ -189,6 +189,7 @@ const convertSelectedElement = (
     children: {},
     parent: { name: '', type: Elements.none },
   };
+
   if (curElm) {
     switch (selectedElement) {
       case Elements.model:

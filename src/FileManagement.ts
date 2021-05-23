@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { ipcMain } from 'electron';
 import { BrowserWindow, Event } from 'electron/main';
-import _ from 'underscore';
+import _ from 'lodash';
 import { convertSelectedElement } from './utility/Converter';
 import { Elements, elmToStr } from './types/Elements';
 import {
@@ -15,6 +15,7 @@ import {
   Printer,
   Validator,
   Issue,
+  InterfaceType,
 } from './types/ILibcellml';
 import { ISearch, ISelect, ISelection, IUpdate } from './types/IQuery';
 import { obtainIssues, validateModel } from './helper/issues';
@@ -26,6 +27,11 @@ const fs = require('fs');
 
 const libcellModule = require('libcellml.js/libcellml.common');
 
+interface IChildDetail {
+  type: Elements;
+  attribute: any[];
+}
+
 // Command Pattern
 // Handles the truth in the backend
 export default class FileManagement {
@@ -35,16 +41,36 @@ export default class FileManagement {
 
   type: Elements;
 
+  variableList: Variable[];
+
+  variableParentList: string[];
+
   constructor() {
     this.content = '';
     this.currentComponent = null;
     this.type = Elements.model;
+    this.variableList = [];
+    this.variableParentList = [];
   }
 
-  updateContent(s: string) {
+  async updateContent(s: string) {
     this.content = s;
-    // console.log('!!!CONTENT HAS BEEN UPDATED TO!!!');
-    // console.log(s);
+
+    // const libcellml = await libcellModule();
+    // const parser: Parser = new libcellml.Parser();
+    // const printer: Printer = new libcellml.Printer();
+    // const m: Model = parser.parseModel(s);
+    // const numComponent = m.componentCount();
+    // this.variableList = [];
+    // this.variableParentList = [];
+    // for (let ci = 0; ci < numComponent; ci += 1) {
+    //   const comp = m.componentByIndex(ci);
+    //   for (let vi = 0; vi < comp.variableCount(); vi += 1) {
+    //     const variable = comp.variableByIndex(vi);
+    //     this.variableList.push(variable);
+    //     this.variableParentList.push(comp.name());
+    //   }
+    // }
   }
 
   // Getters and Setters
@@ -113,7 +139,7 @@ export default class FileManagement {
 
       this.type = Elements.model;
       this.setCurrentComponent(p.parseModel(file));
-      this.updateContent(file);
+      await this.updateContent(file);
       const res = {
         model: file,
         ...issues,
@@ -147,6 +173,110 @@ export default class FileManagement {
     }
   };
 
+  // Internal
+  getCurrentAsSelection = (element: Elements) => {
+    this.type = element;
+    const prop = convertSelectedElement(element, this.getCurrentComponent());
+    const selection: ISelection = { element, prop };
+    return selection;
+  };
+
+  addChild = async (
+    child: IChildDetail,
+    parent: ISearch,
+    parentType: Elements
+  ) => {
+    const libcellml = await libcellModule();
+    const parser: Parser = new libcellml.Parser();
+    const printer: Printer = new libcellml.Printer();
+    const m: Model = parser.parseModel(this.getContent());
+
+    switch (child.type) {
+      case Elements.component:
+        const newComp: Component = new libcellml.Component();
+        console.log('SETTING NAME');
+        newComp.setName(child.attribute[0].name as string);
+        console.log(newComp);
+        // Update current component
+        console.log('ADDING TO IT ');
+        // (this.currentComponent as Model | Component).addComponent(newComp);
+        // Update the truth
+        if (parentType === Elements.model) {
+          m.addComponent(newComp);
+        } else {
+          const parentComponent = m.componentByName(
+            parent.name as string,
+            true
+          );
+          parentComponent.addComponent(newComp);
+          m.replaceComponentByName(
+            parent.name as string,
+            parentComponent,
+            true
+          );
+        }
+        this.updateContent(printer.printModel(m, false));
+        break;
+      case Elements.units:
+        // const parser1: Parser = new libcellml.Parser();
+        // const printer1: Printer = new libcellml.Printer();
+        // Make new element with attributes specified by user
+        const newUnits: Units = new libcellml.Units();
+        newUnits.setName(child.attribute[0].name as string);
+        // Get the truth and update it
+        // const m1: Model = parser1.parseModel(this.content);
+        m.addUnits(newUnits);
+        await this.updateContent(printer.printModel(m, false));
+        break;
+      case Elements.variable: {
+        // Create Variable
+        const newVariable: Variable = new libcellml.Variable();
+        newVariable.setName(child.attribute[0].name as string);
+        // TODO: CASE WHERE CUSTOM UNITS USED
+        newVariable.setUnitsByName(child.attribute[0].units as string);
+        if (child.attribute[0].interface) {
+          newVariable.setInterfaceTypeByInterfaceType(
+            child.attribute[0].interface as InterfaceType
+          );
+        }
+        if (child.attribute[0].initialValue) {
+          newVariable.setInitialValueByString(
+            child.attribute[0].initialValue as string
+          );
+        }
+
+        // Add to Model
+        const parentComponent = m.componentByName(parent.name as string, true);
+        parentComponent.addVariable(newVariable);
+        m.replaceComponentByName(parent.name as string, parentComponent, true);
+        await this.updateContent(printer.printModel(m, false));
+        break;
+      }
+      case Elements.reset: {
+        // Make reset element
+        const newReset: Reset = new libcellml.Reset();
+        // TODO Make sure it gets sent
+        newReset.setVariable(this.variableList[child.attribute[0].variable]);
+        newReset.setOrder(child.attribute[0].order);
+        newReset.setTestVariable(
+          this.variableList[child.attribute[0].testVariable]
+        );
+        newReset.setResetValue(child.attribute[0].resetValue);
+        newReset.setTestValue(child.attribute[0].testValue);
+        // Attach it to parent component
+        const parentComponent = m.componentByName(parent.name as string, true);
+        parentComponent.addReset(newReset);
+        m.replaceComponentByName(parent.name as string, parentComponent, true);
+        this.updateContent(printer.printModel(m, false));
+        break;
+      }
+      default:
+        console.log('FM: Add child - should not reach here');
+
+      // }
+    }
+  };
+
   // Public
 
   async openedFile(filePath: string, mainWindow: BrowserWindow) {
@@ -165,70 +295,75 @@ export default class FileManagement {
   setupHandlers() {
     // Used in Spatial view
     // Assume starting valid
-    ipcMain.on('update-attribute', async (event: any, arg: IUpdate) => {
-      const { element, select, parentSelect, value, attribute } = arg;
+    ipcMain.on(
+      'update-attribute',
+      async (
+        event: any,
+        { element, select, parentSelect, value, attribute }: IUpdate
+      ) => {
+        const update = async () => {
+          const libcellml = await libcellModule();
+          const parser = new libcellml.Parser();
+          const printer = new libcellml.Printer();
 
-      const update = async () => {
-        const libcellml = await libcellModule();
-        const parser = new libcellml.Parser();
-        const printer = new libcellml.Printer();
+          console.log('THIS CONTENT');
+          console.log(this.getContent());
+          const model: Model = parser.parseModel(this.getContent());
 
-        console.log('THIS CONTENT');
-        console.log(this.getContent());
-        const model: Model = parser.parseModel(this.getContent());
+          console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
 
-        console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
+          let newModel: Model;
+          let currentElement:
+            | Component
+            | Model
+            | Reset
+            | Units
+            | Variable
+            | null;
 
-        let newModel: Model;
-        let currentElement: Component | Model | Reset | Units | Variable | null;
+          if (attribute === 'name') {
+            ({ currentElement, newModel } = updateName(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent()
+            ));
+          } else if (attribute === 'units') {
+            ({ newModel, currentElement } = updateUnits(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent()
+            ));
+          } else if (attribute === 'math') {
+            ({ newModel, currentElement } = updateMath(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent()
+            ));
+          } else {
+            currentElement = this.getCurrentComponent();
+            newModel = model;
+            console.log(
+              `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
+            );
+          }
+          this.setCurrentComponent(currentElement);
+          await this.updateContent(printer.printModel(newModel, false));
+          event.reply('update-content-B', this.getContent());
+        };
+        const dbUpdate = update;
 
-        if (attribute === 'name') {
-          ({ currentElement, newModel } = updateName(
-            model,
-            element,
-            select,
-            parentSelect as ISearch,
-            value,
-            this.getCurrentComponent()
-          ));
-        } else if (attribute === 'units') {
-          ({ newModel, currentElement } = updateUnits(
-            model,
-            element,
-            select,
-            parentSelect as ISearch,
-            value,
-            this.getCurrentComponent()
-          ));
-        } else if (attribute === 'math') {
-          ({ newModel, currentElement } = updateMath(
-            model,
-            element,
-            select,
-            parentSelect as ISearch,
-            value,
-            this.getCurrentComponent()
-          ));
-        } else {
-          currentElement = this.getCurrentComponent();
-          newModel = model;
-          console.log(
-            `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
-          );
-        }
-        this.setCurrentComponent(currentElement);
-        this.updateContent(printer.printModel(newModel, false));
-        event.reply('update-content-B', this.getContent());
-      };
-      const dbUpdate = update;
-
-      await dbUpdate();
-    });
-
-    interface IChildDetail {
-      type: Elements;
-      attribute: any[];
-    }
+        await dbUpdate();
+      }
+    );
 
     // ipcMain.on('notify-backend', (event: any, content: string) => {
     //   if (content !== this.getContent()) {
@@ -240,50 +375,7 @@ export default class FileManagement {
       const { child, parent, parentType } = arg;
       parent as ISearch;
       child as IChildDetail;
-      const libcellml = await libcellModule();
-      console.log(' I GOT A CHILD');
-
-      const parser: Parser = new libcellml.Parser();
-      const printer: Printer = new libcellml.Printer();
-      const m: Model = parser.parseModel(this.getContent());
-
-      switch (child.type) {
-        case Elements.component:
-          const newComp: Component = new libcellml.Component();
-          console.log('SETTING NAME');
-          newComp.setName(child.attribute[0].name as string);
-          console.log(newComp);
-          // Update current component
-          console.log('ADDING TO IT ');
-          // (this.currentComponent as Model | Component).addComponent(newComp);
-          // Update the truth
-          // const parser: Parser = new libcellml.Parser();
-          // const printer: Printer = new libcellml.Printer();
-          // const m: Model = parser.parseModel(this.getContent());
-          m.addComponent(newComp);
-          this.updateContent(printer.printModel(m, false));
-          // if (parentType === Elements.model) {
-          //   m.addComponent(newComp);
-          // } else {
-          break;
-
-        case Elements.units:
-          // const parser1: Parser = new libcellml.Parser();
-          // const printer1: Printer = new libcellml.Printer();
-          // Make new element with attributes specified by user
-          const newUnits: Units = new libcellml.Units();
-          newUnits.setName(child.attribute[0].name as string);
-          // Get the truth and update it
-          // const m1: Model = parser1.parseModel(this.content);
-          m.addUnits(newUnits);
-          this.updateContent(printer.printModel(m, false));
-          break;
-        default:
-          console.log('FM: Add child - should not reach here');
-
-        // }
-      }
-
+      await this.addChild(child, parent, parentType);
       event.reply('update-content-B', this.getContent());
     });
 
@@ -294,15 +386,7 @@ export default class FileManagement {
     ipcMain.on(
       'select-element-A',
       (event: any, { element, select }: ISelect) => {
-        console.log('FM: Receive select-element');
-        this.type = element;
-        console.log(`FileManagement elementcheck: ${element}`);
-        console.log(`SELECT ELEMENT: Looking for ${elmToStr(element)}`);
-        const prop = convertSelectedElement(
-          this.type,
-          this.getCurrentComponent()
-        );
-        const selection: ISelection = { element, prop };
+        const selection = this.getCurrentAsSelection(element);
         event.reply('res-select-element', selection);
       }
     );

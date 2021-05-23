@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { IpcRendererEvent } from 'electron/main';
 import { ipcRenderer } from 'electron';
-import _ from 'underscore';
+import _ from 'lodash';
 import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -40,6 +40,13 @@ const localStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const sendGetElement = () => {
+  console.log(
+    'MODELPROPERTIES: We are looking for detail about the model after opening a file'
+  );
+  ipcRenderer.send('get-element');
+};
+
 const ModelProperties = () => {
   const styles = localStyles();
   const [abstractModel, setAbstractModel] = useState<IProperties>();
@@ -72,10 +79,7 @@ const ModelProperties = () => {
     // Asks backend to convert current pointer into a specific element
     // Element MUST be correct type
     ipcRenderer.on('init-content', () => {
-      console.log(
-        'MODELPROPERTIES: We are looking for detail about the model after opening a file'
-      );
-      ipcRenderer.send('get-element');
+      sendGetElement();
     });
 
     // Handles receiving updates to the abstract model
@@ -98,6 +102,9 @@ const ModelProperties = () => {
     // ipcRenderer.on('update-content', () => {
     //   ipcRenderer.send('get-element', abstractModel.type);
     // });
+    return () => {
+      ipcRenderer.removeListener('res-select-element', sendGetElement);
+    };
   }, []);
 
   const updateAttr = (
@@ -162,7 +169,9 @@ const ModelProperties = () => {
 
   return (
     <Grid container item className={styles.properties}>
-      <Heading title="Properties" />
+      <Grid md={12}>
+        <Heading title="Properties" />
+      </Grid>
       <Grid item className={styles.plainText}>
         <div className={styles.elementType}>
           <Button>Parent</Button>

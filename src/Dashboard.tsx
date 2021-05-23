@@ -17,7 +17,7 @@ import SpatialView from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
-import _ from 'underscore';
+import _ from 'lodash';
 import { useRef } from 'react';
 
 const localStyles = makeStyles((theme) =>
