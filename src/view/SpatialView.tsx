@@ -36,4 +36,4 @@ const SpatialView = ({ contentExist }: ISpatialView) => {
   );
 };
 
-export default SpatialView;
+export { SpatialView };

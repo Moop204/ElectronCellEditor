@@ -26,4 +26,4 @@ const Heading = ({ title }: IHeadingProp) => {
   return <div className={styles.heading}>{title}</div>;
 };
 
-export default Heading;
+export { Heading };

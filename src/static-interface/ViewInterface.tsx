@@ -15,7 +15,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { dialog } from 'electron';
 import { BrowserWindow } from 'electron/main';
 import IconButton from '@material-ui/core/IconButton';
-import Heading from './Heading';
+import { Heading } from '../frontend/Heading';
 
 const localStyle = makeStyles((theme: Theme) =>
   createStyles({

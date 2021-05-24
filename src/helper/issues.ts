@@ -1,4 +1,4 @@
-import { Model, Parser, Validator } from '../types/ILibcellml';
+import { Level, Model, Parser, Validator } from '../types/ILibcellml';
 
 const libcellModule = require('libcellml.js/libcellml.common');
 
@@ -10,6 +10,7 @@ const formatErrors = (v: Validator) => {
     errors.push({
       desc: issue.description(),
       cause: issue.referenceHeading(),
+      type: Level.ERROR,
     });
   }
   return errors;
@@ -23,6 +24,7 @@ const formatWarnings = (v: Validator) => {
     warnings.push({
       desc: warning.description(),
       cause: warning.referenceHeading(),
+      type: Level.WARNING,
     });
   }
   return warnings;
@@ -36,6 +38,7 @@ const formatHints = (v: Validator) => {
     hints.push({
       desc: hint.description(),
       cause: hint.referenceHeading(),
+      type: Level.HINT,
     });
   }
   return hints;
@@ -55,11 +58,7 @@ const obtainIssues = async (v: Validator) => {
   const warnings = formatWarnings(v);
   const hints = formatHints(v);
 
-  const formattedErrors = {
-    errors,
-    warnings,
-    hints,
-  };
+  const formattedErrors = errors.concat(warnings).concat(hints);
   return formattedErrors;
 };
 

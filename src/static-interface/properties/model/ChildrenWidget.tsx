@@ -6,7 +6,7 @@ import { capitaliseFirst } from '../../../helper/utility';
 import { Elements } from '../../../types/Elements';
 import { IChild } from '../../../types/IProperties';
 import { ISearch, ISelect } from '../../../types/IQuery';
-import SubHeader from '../../SubHeader';
+import { SubHeader } from '../../../frontend/SubHeader';
 import PropertyChild from './PropertyChild';
 
 const findElement = (elm: Elements, name: string) => {
@@ -43,14 +43,6 @@ const ChildrenWidget = ({ abstractChildren, parentType }: IChildrenWidget) => {
   return (
     <div>
       <SubHeader title="Children" />
-      {/* <PropertyChild
-        title="dasd"
-        onClick={() => {
-          // findElement(Elements[type as keyof typeof Elements], attrType.name);
-          console.log('clicky');
-        }}
-        element={type}
-      /> */}
 
       {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
         console.log(childrenType);
@@ -79,4 +71,4 @@ const ChildrenWidget = ({ abstractChildren, parentType }: IChildrenWidget) => {
   );
 };
 
-export default ChildrenWidget;
+export { ChildrenWidget };

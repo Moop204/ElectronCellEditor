@@ -24,4 +24,4 @@ const SubHeader = (props: ISubHeader) => {
   return <div className={styles.subheading}>{title}</div>;
 };
 
-export default SubHeader;
+export { SubHeader };
