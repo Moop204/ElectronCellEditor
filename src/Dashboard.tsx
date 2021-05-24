@@ -13,11 +13,11 @@ import PropertiesWidget from './static-interface/properties/PropertiesWidget';
 import { Issues } from './static-interface/IssuesInterface';
 import View from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
-import SpatialView from './view/SpatialView';
+import { SpatialView } from './view/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
-import _ from 'underscore';
+import _ from 'lodash';
 import { useRef } from 'react';
 
 const localStyles = makeStyles((theme) =>

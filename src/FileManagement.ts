@@ -1,7 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { ipcMain } from 'electron';
 import { BrowserWindow, Event } from 'electron/main';
-import _ from 'underscore';
 import { convertSelectedElement } from './utility/Converter';
 import { Elements, elmToStr } from './types/Elements';
 import {
