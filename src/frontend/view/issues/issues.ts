@@ -1,4 +1,4 @@
-import { Level, Model, Parser, Validator } from '../types/ILibcellml';
+import { Level, Model, Parser, Validator } from '../../../types/ILibcellml';
 
 const libcellModule = require('libcellml.js/libcellml.common');
 

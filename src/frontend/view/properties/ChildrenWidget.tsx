@@ -2,11 +2,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { ipcRenderer } from 'electron';
 import React, { MouseEventHandler } from 'react';
-import { capitaliseFirst } from '../../../helper/utility';
+import { capitaliseFirst } from '../../utils/utility';
 import { Elements } from '../../../types/Elements';
 import { IChild } from '../../../types/IProperties';
 import { ISearch, ISelect } from '../../../types/IQuery';
-import { SubHeader } from '../../../frontend/SubHeader';
+import { SubHeader } from '../../../frontend/components/SubHeader';
 import PropertyChild from './PropertyChild';
 
 const findElement = (elm: Elements, name: string) => {

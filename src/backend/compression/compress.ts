@@ -1,6 +1,3 @@
-import { Elements } from '../types/Elements';
-import { IChild } from '../types/IProperties';
-
 /* eslint-disable array-callback-return */
 const xml = require('xml-js');
 

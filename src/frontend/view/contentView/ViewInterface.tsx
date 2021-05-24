@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import { Link } from 'react-router-dom';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
@@ -12,10 +11,8 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { dialog } from 'electron';
-import { BrowserWindow } from 'electron/main';
 import IconButton from '@material-ui/core/IconButton';
-import { Heading } from '../frontend/Heading';
+import { Heading } from '../../components/Heading';
 
 const localStyle = makeStyles((theme: Theme) =>
   createStyles({

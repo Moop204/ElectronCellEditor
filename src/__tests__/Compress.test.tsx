@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import compressCellml from '../compression/compress';
+import { compressCellml } from '../backend/compression/compress';
 
 describe('Compressing XML', () => {
   test('should remove encapsulated components and replace with the components referenced', () => {

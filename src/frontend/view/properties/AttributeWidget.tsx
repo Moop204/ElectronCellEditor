@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubHeader } from '../../../frontend/SubHeader';
+import { SubHeader } from '../../components/SubHeader';
 import PropertyAttribute from './PropertyAttribute';
 
 interface IAttributeWidget {

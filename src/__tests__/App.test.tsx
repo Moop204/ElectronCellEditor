@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import App from '../App';
 const libcellModule = require('libcellml.js/libcellml.common');
 
-import FileManagement from '../FileManagement';
+import FileManagement from '../backend/FileManagement';
 
 // describe('App', () => {
 //   it('should render', () => {
@@ -73,7 +73,7 @@ describe('CellML Library', () => {
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
     const fm = new FileManagement();
-    const { model, errors } = await fm.importFile(
+    const { model, issues } = await fm.importFile(
       'src/example/complex_encapsulation.xml'
     );
 
@@ -81,7 +81,7 @@ describe('CellML Library', () => {
     const m = parser.parseModel(model);
     expect(m).toBeDefined();
     expect(printer.printModel(m, false)).toBe(validFile);
-    expect(errors.length).toBe(0);
+    expect(issues.length).toBe(0);
   });
   test('should read invalid CellML files and identify errors', async () => {
     const invalidFile: string = `<?xml version="1.0" encoding="UTF-8"?>
@@ -91,10 +91,10 @@ describe('CellML Library', () => {
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
     const fm = new FileManagement();
-    const { model, errors } = await fm.importFile('src/example/bad.xml');
+    const { model, issues } = await fm.importFile('src/example/bad.xml');
     const m = parser.parseModel(model);
     expect(printer.printModel(m, false)).toBe(invalidFile);
-    expect(errors && errors.length).toBeGreaterThan(0);
+    expect(issues && issues.length).toBeGreaterThan(0);
   });
   // Figure out how errors work
   // describe('Identifying errors', () => {

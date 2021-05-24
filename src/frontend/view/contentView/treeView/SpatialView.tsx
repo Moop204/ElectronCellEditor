@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import EditorXml from './EditorXml';
-import { compressCellml } from '../compression/compress';
+import { compressCellml } from '../../../../backend/compression/compress';
 
 interface ISpatialView {
   contentExist: string;
