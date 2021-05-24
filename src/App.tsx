@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.global.css';
-import { Dashboard } from './Dashboard';
+import { Dashboard } from './frontend/view/Dashboard';
 
 const App = () => {
   return <Dashboard />;

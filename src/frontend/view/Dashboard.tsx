@@ -6,18 +6,17 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import { RawView } from './contentView/rawView/RawView';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { PropertiesWidget } from './static-interface/properties/PropertiesWidget';
-import { Issues } from './static-interface/IssuesInterface';
-import View from './static-interface/ViewInterface';
-import { RawView } from './view/RawView';
-import { SpatialView } from './view/SpatialView';
+import { PropertiesWidget } from './properties/PropertiesWidget';
+import { IssuesWidget } from './issues/IssuesWidget';
+import View from './contentView/ViewInterface';
+import { SpatialView } from './contentView/treeView/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'lodash';
-import { useRef } from 'react';
 
 const localStyles = makeStyles((theme) =>
   createStyles({
@@ -94,7 +93,7 @@ const Dashboard = () => {
             <View valid={valid} />
 
             <PropertiesWidget />
-            <Issues />
+            <IssuesWidget />
           </Grid>
           <Grid item md={9}>
             <Paper className={styles.contentView}>

@@ -11,26 +11,12 @@ import { ipcRenderer } from 'electron';
 import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Level } from '../types/ILibcellml';
-import { Heading } from '../frontend/Heading';
+import { Heading } from '../../components/Heading';
+import { IssueText } from './IssueText';
+import { IIssue } from './interface/IIssue';
 
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
-    errorMarker: {
-      color: 'red',
-    },
-    warningMarker: {
-      color: 'orange',
-    },
-    hintMarker: {
-      color: 'green',
-    },
-    markerPadding: {
-      paddingRight: '2vh',
-    },
-    plainText: {
-      color: 'black',
-    },
     issueButtons: {
       height: '3vh',
       padding: '1vh',
@@ -40,83 +26,7 @@ const useStyle = makeStyles((theme: Theme) =>
   })
 );
 
-interface IIssueTextProp {
-  issues: IIssue[];
-}
-
-interface IIssue {
-  desc: string;
-  cause: string;
-  type: Level;
-}
-
-const ErrorComponent = ({ desc }: { desc: string }) => {
-  const style = useStyle();
-  return (
-    <span>
-      <span className={[style.errorMarker, style.markerPadding].join(' ')}>
-        {'>>>'}
-      </span>
-      {desc}
-    </span>
-  );
-};
-const WarningComponent = ({ desc }: { desc: string }) => {
-  const style = useStyle();
-  return (
-    <span>
-      <span className={[style.warningMarker, style.markerPadding].join(' ')}>
-        {'>>>'}
-      </span>
-      {desc}
-    </span>
-  );
-};
-
-const HintComponent = ({ desc }: { desc: string }) => {
-  const style = useStyle();
-  return (
-    <span>
-      <span className={[style.hintMarker, style.markerPadding].join(' ')}>
-        {'>>>'}
-      </span>
-      {desc}
-    </span>
-  );
-};
-
-const IssueText = (props: IIssueTextProp) => {
-  const { issues } = props;
-  let val = 1;
-  const styles = useStyle();
-
-  if (issues.length > 0) {
-    const mapIssues = issues.map((record: IIssue) => {
-      const { desc, cause, type } = record;
-      const key = `issue${val}`;
-      val += 1;
-      return (
-        <Grid item key={key}>
-          {type === Level.ERROR && <ErrorComponent desc={desc} />}
-          {type === Level.WARNING && <WarningComponent desc={desc} />}
-          {type === Level.HINT && <HintComponent desc={desc} />}
-        </Grid>
-      );
-    });
-    return (
-      <div className={styles.plainText} key="issue-text">
-        {mapIssues}
-      </div>
-    );
-  }
-  return (
-    <Grid item className={styles.plainText}>
-      No problems!
-    </Grid>
-  );
-};
-
-const Issues = () => {
+const IssuesWidget = () => {
   const [issues, setIssues] = useState<IIssue[]>([]);
   const [errorMode, setErrorMode] = useState<boolean>(true);
   const [warningMode, setWarningMode] = useState<boolean>(true);
@@ -202,4 +112,4 @@ const Issues = () => {
 };
 
 // todo chuck it all in issuetext
-export { Issues };
+export { IssuesWidget };

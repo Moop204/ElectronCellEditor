@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { Elements } from '../types/Elements';
 import { Component, Model } from '../types/ILibcellml';
-import { convertComponent, convertModel } from '../utility/Converter';
+import { convertComponent, convertModel } from '../backend/Converter';
 
 const libcellModule = require('libcellml.js/libcellml.common');
 

@@ -1,14 +1,15 @@
 import React from 'react';
 import { Elements, elmToStr } from '../../../types/Elements';
-import { AddChildSelect, Basic } from '../forms/ComponentChildForm';
+import { AddChildSelect, Basic } from './forms/ComponentChildForm';
 
 const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
   const { element, name } = prop;
   const addChild = (childElm: Elements, parent: Elements) => {
     return (
       <AddChildSelect
-        elm={childElm}
-        parent={element}
+        childElement={childElm}
+        parentElement={element}
+        parentName={name}
         key={elmToStr(childElm)}
       />
     );

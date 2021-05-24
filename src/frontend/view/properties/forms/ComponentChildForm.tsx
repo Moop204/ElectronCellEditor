@@ -6,15 +6,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import * as yup from 'yup';
 import { ipcRenderer } from 'electron';
-import { Elements, elmToStr } from '../../../types/Elements';
+import { Elements, elmToStr } from '../../../../types/Elements';
 
 const nameValidation = yup.object({
   name: yup
@@ -106,8 +101,14 @@ const localStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddChildSelect = (prop) => {
-  const { elm, parent, parentName } = prop;
+interface IAddChild {
+  childElement: Elements;
+  parentElement: Elements;
+  parentName: string;
+}
+
+const AddChildSelect = (prop: IAddChild) => {
+  const { childElement, parentElement, parentName } = prop;
   const classes = localStyles();
   const [name, setName] = useState('');
   // Controls it popping or not
@@ -126,11 +127,11 @@ const AddChildSelect = (prop) => {
     setOpen(false);
   };
 
-  console.log(`ComponentChildForm elementcheck: ${parent}`);
+  console.log(`ComponentChildForm elementcheck: ${parentElement}`);
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>+ {elmToStr(elm)}</Button>
+      <Button onClick={handleClickOpen}>+ {elmToStr(childElement)}</Button>
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
@@ -138,7 +139,7 @@ const AddChildSelect = (prop) => {
         onClose={handleClose}
       >
         <DialogTitle>
-          Add {elmToStr(elm)} as child of {elmToStr(parent)}
+          Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
         </DialogTitle>
         <DialogContent>
           {/* <form className={classes.container}>
@@ -151,8 +152,8 @@ const AddChildSelect = (prop) => {
           </form> */}
           <Basic
             attr="Name"
-            parent={parent}
-            child={elm}
+            parent={parentElement}
+            child={childElement}
             parentName={parentName}
             handleClose={handleClose}
           />

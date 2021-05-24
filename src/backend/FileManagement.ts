@@ -2,8 +2,8 @@
 import { ipcMain } from 'electron';
 import { BrowserWindow, Event, IpcMainEvent } from 'electron/main';
 import _ from 'lodash';
-import { convertSelectedElement } from './utility/Converter';
-import { Elements, elmToStr } from './types/Elements';
+import { convertSelectedElement } from './Converter';
+import { Elements, elmToStr } from '../types/Elements';
 import {
   Component,
   ComponentEntity,
@@ -16,12 +16,12 @@ import {
   Validator,
   Issue,
   InterfaceType,
-} from './types/ILibcellml';
-import { ISearch, ISelect, ISelection, IUpdate } from './types/IQuery';
-import { obtainIssues, validateModel } from './helper/issues';
-import updateName from './utility/updating-attribute/UpdateName';
-import updateUnits from './utility/updating-attribute/UpdateUnits';
-import updateMath from './utility/updating-attribute/UpdateMath';
+} from '../types/ILibcellml';
+import { ISearch, ISelect, ISelection, IUpdate } from '../types/IQuery';
+import { obtainIssues, validateModel } from '../frontend/view/issues/issues';
+import updateName from './updatingAttribute/UpdateName';
+import updateUnits from './updatingAttribute/UpdateUnits';
+import updateMath from './updatingAttribute/UpdateMath';
 
 const fs = require('fs');
 

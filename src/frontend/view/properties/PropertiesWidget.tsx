@@ -7,15 +7,15 @@ import { Theme } from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '@material-ui/core/Button';
-import { SubHeader } from '../../frontend/SubHeader';
-import { Heading } from '../../frontend/Heading';
-import { IProperties } from '../../types/IProperties';
-import { Elements, elmToStr, strToElm } from '../../types/Elements';
-import { ISelection, IUpdate } from '../../types/IQuery';
-import { capitaliseFirst } from '../../helper/utility';
-import { AddChildrenWidget } from './model/AddChildrenWidget';
-import { AttributeWidget } from './model/AttributeWidget';
-import { ChildrenWidget } from './model/ChildrenWidget';
+import { SubHeader } from '../../components/SubHeader';
+import { Heading } from '../../components/Heading';
+import { IProperties } from '../../../types/IProperties';
+import { Elements, elmToStr, strToElm } from '../../../types/Elements';
+import { ISelection, IUpdate } from '../../../types/IQuery';
+import { capitaliseFirst } from '../../utils/utility';
+import { AddChildrenWidget } from './AddChildrenWidget';
+import { AttributeWidget } from './AttributeWidget';
+import { ChildrenWidget } from './ChildrenWidget';
 
 const localStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +40,7 @@ const localStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ModelProperties = () => {
+const PropertiesWidget = () => {
   const styles = localStyles();
   const [abstractModel, setAbstractModel] = useState<IProperties>();
 
@@ -186,4 +186,4 @@ const ModelProperties = () => {
   );
 };
 
-export { ModelProperties };
+export { PropertiesWidget };

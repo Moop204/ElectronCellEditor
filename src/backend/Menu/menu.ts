@@ -8,14 +8,14 @@ import {
   ipcMain,
 } from 'electron';
 const libcellModule = require('libcellml.js/libcellml.common');
-import { Parser, Validator, Printer, Model } from './types/ILibcellml';
-import { Elements } from './types/Elements';
-import { IUpdate, ISelection } from './types/IQuery';
+import { Parser, Validator, Printer, Model } from '../../types/ILibcellml';
+import { Elements } from '../../types/Elements';
+import { IUpdate, ISelection } from '../../types/IQuery';
 import { AcUnitSharp } from '@material-ui/icons';
-import FileManagement from './FileManagement';
-import { HelpMenuBar } from './Menu/Help';
-import { ViewMenuBar } from './Menu/View';
-import { FileMenuBar } from './Menu/File';
+import FileManagement from '../FileManagement';
+import { HelpMenuBar } from './Help';
+import { ViewMenuBar } from './View';
+import { FileMenuBar } from './File';
 
 const fs = require('fs');
 
@@ -167,7 +167,7 @@ export default class MenuBuilder {
       ],
     };
     const subMenuHelp: MenuItemConstructorOptions = {
-      HelpMenuBar,
+      ...HelpMenuBar,
     };
 
     const subMenuView =

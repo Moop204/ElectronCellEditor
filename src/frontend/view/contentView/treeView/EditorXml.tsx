@@ -12,7 +12,7 @@ export default class EditorXml extends React.Component<
 
   //timerUpdate: NodeJS.Timeout;
 
-  public constructor(props) {
+  public constructor(props: { xmlInput: string }) {
     const { xmlInput } = props;
     super(props);
     this.ref = React.createRef();

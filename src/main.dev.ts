@@ -14,8 +14,8 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import FileManagement from './FileManagement';
+import MenuBuilder from './backend/Menu/menu';
+import FileManagement from './backend/FileManagement';
 
 let mainWindow: BrowserWindow | null = null;
 let fm = new FileManagement();
