@@ -8,8 +8,7 @@ import {
 } from 'react-router-dom';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { AddChildren } from './static-interface/AddChildrenInterface';
-import PropertiesWidget from './static-interface/properties/PropertiesWidget';
+import { PropertiesWidget } from './static-interface/properties/PropertiesWidget';
 import { Issues } from './static-interface/IssuesInterface';
 import View from './static-interface/ViewInterface';
 import { RawView } from './view/RawView';
@@ -90,7 +89,7 @@ const Dashboard = () => {
   return (
     <div className={styles.root}>
       <Router>
-        <Grid container spacing={1} md={12}>
+        <Grid container spacing={1}>
           <Grid item md={3}>
             <View valid={valid} />
 

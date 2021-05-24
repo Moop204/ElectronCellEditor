@@ -142,4 +142,4 @@ const compressCellml = (s: string) => {
   return result;
 };
 
-export default compressCellml;
+export { compressCellml };

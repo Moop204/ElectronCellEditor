@@ -8,12 +8,37 @@ import HintIcon from '@material-ui/icons/EmojiObjects';
 import BugIcon from '@material-ui/icons/BugReport';
 import { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
-import { useStyles, standardStyle } from './style';
+import { Theme } from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Level } from '../types/ILibcellml';
+import { Heading } from '../frontend/Heading';
 
-interface IssueRecord {
-  desc: string;
-  cause: string;
-}
+const useStyle = makeStyles((theme: Theme) =>
+  createStyles({
+    errorMarker: {
+      color: 'red',
+    },
+    warningMarker: {
+      color: 'orange',
+    },
+    hintMarker: {
+      color: 'green',
+    },
+    markerPadding: {
+      paddingRight: '2vh',
+    },
+    plainText: {
+      color: 'black',
+    },
+    issueButtons: {
+      height: '3vh',
+      padding: '1vh',
+      margin: '0px',
+      borderRadius: '0px',
+    },
+  })
+);
 
 interface IIssueTextProp {
   issues: IIssue[];
@@ -22,25 +47,62 @@ interface IIssueTextProp {
 interface IIssue {
   desc: string;
   cause: string;
+  type: Level;
 }
+
+const ErrorComponent = ({ desc }: { desc: string }) => {
+  const style = useStyle();
+  return (
+    <span>
+      <span className={[style.errorMarker, style.markerPadding].join(' ')}>
+        {'>>>'}
+      </span>
+      {desc}
+    </span>
+  );
+};
+const WarningComponent = ({ desc }: { desc: string }) => {
+  const style = useStyle();
+  return (
+    <span>
+      <span className={[style.warningMarker, style.markerPadding].join(' ')}>
+        {'>>>'}
+      </span>
+      {desc}
+    </span>
+  );
+};
+
+const HintComponent = ({ desc }: { desc: string }) => {
+  const style = useStyle();
+  return (
+    <span>
+      <span className={[style.hintMarker, style.markerPadding].join(' ')}>
+        {'>>>'}
+      </span>
+      {desc}
+    </span>
+  );
+};
 
 const IssueText = (props: IIssueTextProp) => {
   const { issues } = props;
   let val = 1;
-  const styles = useStyles();
+  const styles = useStyle();
 
   if (issues.length > 0) {
-    const mapIssues = issues.map((record: IssueRecord) => {
-      const { desc, cause } = record;
+    const mapIssues = issues.map((record: IIssue) => {
+      const { desc, cause, type } = record;
       const key = `issue${val}`;
       val += 1;
       return (
         <Grid item key={key}>
-          <span className={styles.issueMarker}>{'>>>'}</span> {desc}{' '}
+          {type === Level.ERROR && <ErrorComponent desc={desc} />}
+          {type === Level.WARNING && <WarningComponent desc={desc} />}
+          {type === Level.HINT && <HintComponent desc={desc} />}
         </Grid>
       );
     });
-
     return (
       <div className={styles.plainText} key="issue-text">
         {mapIssues}
@@ -55,21 +117,16 @@ const IssueText = (props: IIssueTextProp) => {
 };
 
 const Issues = () => {
-  const [errors, setErrors] = useState<IIssue[]>([]);
-  const [warnings, setWarnings] = useState<IIssue[]>([]);
-  const [hints, setHints] = useState<IIssue[]>([]);
+  const [issues, setIssues] = useState<IIssue[]>([]);
   const [errorMode, setErrorMode] = useState<boolean>(true);
   const [warningMode, setWarningMode] = useState<boolean>(true);
   const [hintMode, setHintMode] = useState<boolean>(true);
 
-  const styles = useStyles();
+  const styles = useStyle();
 
   useEffect(() => {
-    const errorReplyFn = (event: Event, message) => {
-      const { errors, warnings, hints } = message;
-      setErrors(errors || []);
-      setWarnings(warnings || []);
-      setHints(hints || []);
+    const errorReplyFn = (event: Event, issues: IIssue[]) => {
+      setIssues(issues || []);
     };
     const dbErrorReplyFn = errorReplyFn;
     ipcRenderer.on('error-reply', dbErrorReplyFn);
@@ -81,8 +138,8 @@ const Issues = () => {
 
   return (
     <Grid container item>
-      <Grid item md={12} className={styles.heading}>
-        <span className={styles.heading}>Issues</span>
+      <Grid item md={12}>
+        <Heading title="Issues" />
         <span>
           <IconButton
             color="inherit"
@@ -124,7 +181,7 @@ const Issues = () => {
             <WarningIcon />
           </IconButton>
         </span>
-        <span color="#7986cb">
+        <span>
           <IconButton
             color="inherit"
             className={styles.issueButtons}
@@ -138,11 +195,7 @@ const Issues = () => {
       </Grid>
 
       <Grid item md={12}>
-        <IssueText
-          issues={(errorMode ? errors : []).concat(
-            (warningMode ? warnings : []).concat(hintMode ? hints : [])
-          )}
-        />
+        <IssueText issues={issues} />
       </Grid>
     </Grid>
   );

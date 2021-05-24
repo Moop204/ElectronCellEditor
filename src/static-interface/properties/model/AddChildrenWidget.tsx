@@ -1,14 +1,16 @@
 import React from 'react';
-import { Elements } from '../../../types/Elements';
+import { Elements, elmToStr } from '../../../types/Elements';
 import { AddChildSelect, Basic } from '../forms/ComponentChildForm';
 
 const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
   const { element, name } = prop;
   const addChild = (childElm: Elements, parent: Elements) => {
     return (
-      <div key={name}>
-        <AddChildSelect elm={childElm} parent={element} />
-      </div>
+      <AddChildSelect
+        elm={childElm}
+        parent={element}
+        key={elmToStr(childElm)}
+      />
     );
   };
   let children = [];
@@ -28,8 +30,9 @@ const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
       {children.map((elm) => {
         return addChild(elm, element);
       })}
+      dsfsdfdfsdf
     </div>
   );
 };
 
-export default AddChildrenWidget;
+export { AddChildrenWidget };

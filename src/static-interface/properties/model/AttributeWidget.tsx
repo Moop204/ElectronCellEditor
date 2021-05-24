@@ -1,5 +1,5 @@
 import React from 'react';
-import SubHeader from '../../SubHeader';
+import { SubHeader } from '../../../frontend/SubHeader';
 import PropertyAttribute from './PropertyAttribute';
 
 interface IAttributeWidget {
@@ -24,4 +24,4 @@ const AttributeWidget = (prop: IAttributeWidget) => {
   );
 };
 
-export default AttributeWidget;
+export { AttributeWidget };
