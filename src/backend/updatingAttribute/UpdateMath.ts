@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { Elements } from '../../types/Elements';
+import { ICurrentElement } from '../../types/ICurrentElement';
 import {
   Model,
   Reset,
@@ -21,7 +22,7 @@ const updateMath = (
   select: ISearch,
   parentSelect: ISearch,
   value: any,
-  currentElement: Component | Model | Reset | Units | Variable | null
+  currentElement: ICurrentElement
 ) => {
   const modelCopy = model.clone();
 
@@ -61,7 +62,8 @@ const updateMath = (
   }
 
   const newModel = model;
-  return { newModel, currentElement };
+  const newCurrentElement = currentElement;
+  return { newModel, newCurrentElement };
 };
 
 export default updateMath;

@@ -11,7 +11,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { PropertiesWidget } from './properties/PropertiesWidget';
 import { IssuesWidget } from './issues/IssuesWidget';
-import View from './contentView/ViewInterface';
+import { OptionWidget } from '../optionSelect/OptionWidget';
 import { SpatialView } from './contentView/treeView/SpatialView';
 import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
@@ -90,7 +90,7 @@ const Dashboard = () => {
       <Router>
         <Grid container spacing={1}>
           <Grid item md={3}>
-            <View valid={valid} />
+            <OptionWidget valid={valid} />
 
             <PropertiesWidget />
             <IssuesWidget />

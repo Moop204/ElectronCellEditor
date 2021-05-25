@@ -19,9 +19,10 @@ import {
 } from '../types/ILibcellml';
 import { ISearch, ISelect, ISelection, IUpdate } from '../types/IQuery';
 import { obtainIssues, validateModel } from '../frontend/view/issues/issues';
-import updateName from './updatingAttribute/UpdateName';
+import updateName from './updatingAttribute/updatingName/UpdateName';
 import updateUnits from './updatingAttribute/UpdateUnits';
 import updateMath from './updatingAttribute/UpdateMath';
+import { ICurrentElement } from '../types/ICurrentElement';
 
 const fs = require('fs');
 
@@ -41,6 +42,8 @@ export default class FileManagement {
 
   type: Elements;
 
+  _cellml: any;
+  _cellmlLoaded: boolean;
   // // combine parent and child name
   // variables: Record<string, Variable>;
 
@@ -54,6 +57,13 @@ export default class FileManagement {
     this.type = Elements.model;
     // this.variableList = [];
     // this.variableParentList = [];
+    this._cellmlLoaded = false;
+    this.init();
+  }
+
+  async init() {
+    this._cellml = await libcellModule();
+    this._cellmlLoaded = true;
   }
 
   async updateContent(s: string) {
@@ -133,12 +143,20 @@ export default class FileManagement {
   async importFile(fileLoc: string) {
     const file: string = fs.readFileSync(fileLoc, 'utf8');
     try {
-      const validator = await validateModel(file);
+      const validator = await validateModel(this, file);
       const issues = await obtainIssues(validator);
 
       // Update file management class
-      const libcellml = await libcellModule();
-      const p: Parser = new libcellml.Parser();
+      // const libcellml = await libcellModule();
+      // const p: Parser = new libcellml.Parser();
+
+      let p: Parser;
+      if (this._cellmlLoaded) {
+        p = new this._cellml.Parser();
+      } else {
+        await this.init();
+        p = new this._cellml.Parser();
+      }
 
       this.type = Elements.model;
       this.setCurrentComponent(p.parseModel(file));
@@ -187,7 +205,10 @@ export default class FileManagement {
     parent: ISearch,
     parentType: Elements
   ) => {
-    const libcellml = await libcellModule();
+    if (!this._cellmlLoaded) {
+      await this.init();
+    }
+    const libcellml = this._cellml;
     const parser: Parser = new libcellml.Parser();
     const printer: Printer = new libcellml.Printer();
     const m: Model = parser.parseModel(this.getContent());
@@ -301,7 +322,10 @@ export default class FileManagement {
         { element, select, parentSelect, value, attribute }: IUpdate
       ) => {
         const update = async () => {
-          const libcellml = await libcellModule();
+          if (!this._cellmlLoaded) {
+            await this.init();
+          }
+          const libcellml = this._cellml;
           const parser = new libcellml.Parser();
           const printer = new libcellml.Printer();
 
@@ -312,16 +336,10 @@ export default class FileManagement {
           console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
 
           let newModel: Model;
-          let currentElement:
-            | Component
-            | Model
-            | Reset
-            | Units
-            | Variable
-            | null;
+          let newCurrentElement: ICurrentElement;
 
           if (attribute === 'name') {
-            ({ currentElement, newModel } = updateName(
+            ({ newCurrentElement, newModel } = updateName(
               model,
               element,
               select,
@@ -330,7 +348,7 @@ export default class FileManagement {
               this.getCurrentComponent()
             ));
           } else if (attribute === 'units') {
-            ({ newModel, currentElement } = updateUnits(
+            ({ newModel, newCurrentElement } = updateUnits(
               model,
               element,
               select,
@@ -339,7 +357,7 @@ export default class FileManagement {
               this.getCurrentComponent()
             ));
           } else if (attribute === 'math') {
-            ({ newModel, currentElement } = updateMath(
+            ({ newModel, newCurrentElement } = updateMath(
               model,
               element,
               select,
@@ -348,13 +366,13 @@ export default class FileManagement {
               this.getCurrentComponent()
             ));
           } else {
-            currentElement = this.getCurrentComponent();
+            newCurrentElement = this.getCurrentComponent();
             newModel = model;
             console.log(
               `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
             );
           }
-          this.setCurrentComponent(currentElement);
+          this.setCurrentComponent(newCurrentElement);
           await this.updateContent(printer.printModel(newModel, false));
           event.reply('update-content-B', this.getContent());
         };
@@ -410,7 +428,7 @@ export default class FileManagement {
     });
 
     ipcMain.on('validate-file', async (event: IpcMainEvent, file: string) => {
-      const validator = await validateModel(file);
+      const validator = await validateModel(this, file);
       event.reply('validated-file', validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
       console.log(issues);
