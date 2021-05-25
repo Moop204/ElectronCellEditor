@@ -1,7 +1,5 @@
 import { Level, Model, Parser, Validator } from '../../../types/ILibcellml';
 
-const libcellModule = require('libcellml.js/libcellml.common');
-
 const formatErrors = (v: Validator) => {
   const noError = v.errorCount();
   const errors = [];
@@ -44,8 +42,11 @@ const formatHints = (v: Validator) => {
   return hints;
 };
 
-const validateModel = async (file: string) => {
-  const libcellml = await libcellModule();
+const validateModel = async (self, file: string) => {
+  if (!self._cellml) {
+    await self.init();
+  }
+  const libcellml = self._cellml; //await libcellModule();
   const parser: Parser = new libcellml.Parser();
   const m: Model = parser.parseModel(file);
   const v: Validator = new libcellml.Validator();

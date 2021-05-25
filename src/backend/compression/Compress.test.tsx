@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { compressCellml } from '../backend/compression/compress';
+import { compressCellml } from './compress';
 
 describe('Compressing XML', () => {
   test('should remove encapsulated components and replace with the components referenced', () => {
@@ -99,8 +99,8 @@ describe('Compressing XML', () => {
   });
 });
 describe('should turn math elements into attributes of its parent element', () => {
-  //   test('where parent element is component', () => {
-  //     const validFile = `<?xml version="1.0" encoding="UTF-8"?><model xmlns="http://www.cellml.org/cellml/2.0#" xmlns:cellml="http://www.cellml.org/cellml/2.0#" xmlns:xlink="http://www.w3.org/1999/xlink" name="deriv_approx_sin" id="deriv_approx_sin">
+  // test('where parent element is component', () => {
+  //   const validFile = `<?xml version="1.0" encoding="UTF-8"?><model xmlns="http://www.cellml.org/cellml/2.0#" xmlns:cellml="http://www.cellml.org/cellml/2.0#" xmlns:xlink="http://www.w3.org/1999/xlink" name="deriv_approx_sin" id="deriv_approx_sin">
   //       <component name="sin" id="sin">
   //           <variable id="x" name="x" interface="public_and_private"/>
   //           <variable id="sin" name="sin" initial_value="sin_initial_value" interface="public_and_private"/>
@@ -125,16 +125,16 @@ describe('should turn math elements into attributes of its parent element', () =
   //       </encapsulation>
 
   //   </model>`;
-  //     const result = compressCellml(validFile);
+  //   const result = compressCellml(validFile);
 
-  //     const expectedResult = `<?xml version="1.0" encoding="UTF-8"?>
+  //   const expectedResult = `<?xml version="1.0" encoding="UTF-8"?>
   // <model xmlns="http://www.cellml.org/cellml/2.0#" xmlns:cellml="http://www.cellml.org/cellml/2.0#" xmlns:xlink="http://www.w3.org/1999/xlink" name="deriv_approx_sin" id="deriv_approx_sin">
   //     <component name="sin" id="sin" math="<apply><eq/><apply><diff/><bvar><ci>x</ci></bvar><ci>sin</ci></apply><apply><cos/><ci>x</ci></apply></apply>"><variable id="x" name="x" interface="public_and_private"/><variable id="sin" name="sin" initial_value="sin_initial_value" interface="public_and_private"/>
   //         <variable name="sin_initial_value" interface="public_and_private"/>
   //     </component>
   // </model>`;
-  //     expect(result).toBe(expectedResult);
-  //   });
+  //   expect(result).toBe(expectedResult);
+  // });
 
   test('where parent component is reset_value or test_value', () => {
     const validFile = `<?xml version="1.0" encoding="UTF-8"?><model xmlns="http://www.cellml.org/cellml/2.0#" xmlns:cellml="http://www.cellml.org/cellml/2.0#" xmlns:xlink="http://www.w3.org/1999/xlink" name="deriv_approx_sin" id="deriv_approx_sin">
