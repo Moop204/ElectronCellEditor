@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
+import '../backend/updateAttribute/updatingName/node_modules/@testing-library/jest-dom';
 import { Elements } from '../types/Elements';
 import { Component, Model } from '../types/ILibcellml';
-import updateMath from '../backend/updatingAttribute/UpdateMath';
+import updateMath from '../backend/updateAttribute/UpdateMath';
 
 const libcellModule = require('libcellml.js/libcellml.common');
 

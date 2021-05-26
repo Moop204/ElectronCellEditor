@@ -343,7 +343,7 @@ interface Component extends ComponentEntity, ImportedEntity {
   addVariable(variable: Variable): void;
   appendMath(math: string): void;
   math(): string;
-  resetByIndex(index: number): Reset;
+  reset(index: number): Reset;
   variableByIndex(index: number): Variable;
   variableByName(name: string): Variable;
   hasReset(reset: Reset): boolean;
