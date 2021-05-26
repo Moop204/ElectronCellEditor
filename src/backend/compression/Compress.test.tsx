@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '../updateAttribute/updatingName/node_modules/@testing-library/jest-dom';
 import { compressCellml } from './compress';
 
 describe('Compressing XML', () => {

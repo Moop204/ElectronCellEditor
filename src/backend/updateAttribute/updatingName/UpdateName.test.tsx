@@ -159,7 +159,6 @@ describe('Updating name attributes', () => {
     expect((newCurrentElement as Variable).name()).toEqual(newName);
   });
 
-  // TODO: Units
   test('for units', async () => {
     const cellml = await libcellModule();
     const parser: Parser = new cellml.Parser();

@@ -1,4 +1,4 @@
-import { Elements } from '../types/Elements';
+import { Elements } from '../../types/Elements';
 import {
   Model,
   Units,
@@ -7,8 +7,8 @@ import {
   ComponentEntity,
   Variable,
   Reset,
-} from '../types/ILibcellml';
-import { IProperties } from '../types/IProperties';
+} from '../../types/ILibcellml';
+import { IProperties } from '../../types/IProperties';
 
 const convertModel = (model: Model) => {
   const unitsNum = model.unitsCount();

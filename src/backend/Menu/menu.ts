@@ -7,7 +7,6 @@ import {
   dialog,
   ipcMain,
 } from 'electron';
-const libcellModule = require('libcellml.js/libcellml.common');
 import { Parser, Validator, Printer, Model } from '../../types/ILibcellml';
 import { Elements } from '../../types/Elements';
 import { IUpdate, ISelection } from '../../types/IQuery';

@@ -1,3 +1,4 @@
+import FileManagement from '../../../backend/FileManagement';
 import { Level, Model, Parser, Validator } from '../../../types/ILibcellml';
 
 const formatErrors = (v: Validator) => {
@@ -42,11 +43,11 @@ const formatHints = (v: Validator) => {
   return hints;
 };
 
-const validateModel = async (self, file: string) => {
+const validateModel = async (self: FileManagement, file: string) => {
   if (!self._cellml) {
     await self.init();
   }
-  const libcellml = self._cellml; //await libcellModule();
+  const libcellml = self._cellml;
   const parser: Parser = new libcellml.Parser();
   const m: Model = parser.parseModel(file);
   const v: Validator = new libcellml.Validator();

@@ -8008,9 +8008,9 @@ levn@~0.3.0:
     type-check "~0.3.2"
 
 libcellml.js@^0.2.0-dev.0:
-  version "0.2.0-dev.0"
-  resolved "https://registry.yarnpkg.com/libcellml.js/-/libcellml.js-0.2.0-dev.0.tgz#3d5a783facd7093b6b9599b926e2f747d66e7227"
-  integrity sha512-IcVzXou4CjoCovA9DKXs9mcX3Hv938UCSG25mELE13x/Juc9peMTvu4uGx51sq4ok9k9PTJvTHBXj+Fhad4/Sg==
+  version "0.2.0-dev.21"
+  resolved "https://registry.yarnpkg.com/libcellml.js/-/libcellml.js-0.2.0-dev.21.tgz#3618f19578852b2ed3d8c12e807c95cb0e15aab1"
+  integrity sha512-OOvTvNt1x1GcWlsPSFRfq+CSp/fsZIKOniBchHm1TmFbmPPkVWnpGgw8Zo+YxH6Dq5kwA0DuA8g2/xzvoJyq3w==
 
 lie@~3.3.0:
   version "3.3.0"
