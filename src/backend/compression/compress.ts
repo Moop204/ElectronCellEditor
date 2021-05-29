@@ -35,12 +35,10 @@ const parseReset = (reset: IElement) => {
 
 // Inside components
 const parseComponent = (elms: IElement[]) => {
-  console.log('PARsing comPONENT');
   let math = '';
   const newElm: IElement[] = [];
   elms.map((elm: IElement) => {
     // When facing Math
-    console.log(elm.name);
     if (elm.name === 'math') {
       // Take Math
       // Stringify it
@@ -92,8 +90,6 @@ const compressCellml = (s: string) => {
     // For child of model
     if (elm.name === 'component') {
       const { newElm, math } = parseComponent(elm.elements || []);
-      console.log(elm.attributes.name);
-      console.log(math);
       elm.elements = newElm;
       // Assign math as an attribute
       elm.attributes.math = math;
