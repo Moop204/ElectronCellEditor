@@ -83,6 +83,16 @@ export default class FileManagement {
     // }
   }
 
+  async setContent(s: string) {
+    this.content = s;
+    this.type = Elements.model;
+    if (!this._cellmlLoaded) {
+      await this.init();
+    }
+    const parser: Parser = new this._cellml.Parser();
+    this.currentComponent = parser.parseModel(this.content);
+  }
+
   // Getters and Setters
 
   getContent() {
@@ -90,9 +100,11 @@ export default class FileManagement {
   }
 
   setCurrentComponent(
-    currentComponent: Component | Model | Reset | Units | Variable | null
+    currentComponent: Component | Model | Reset | Units | Variable | null,
+    type: Elements
   ) {
     this.currentComponent = currentComponent;
+    this.type = type;
   }
 
   getCurrentComponent() {
@@ -151,7 +163,7 @@ export default class FileManagement {
       const p: Parser = new cellml.Parser();
 
       this.type = Elements.model;
-      this.setCurrentComponent(p.parseModel(file));
+      this.setCurrentComponent(p.parseModel(file), Elements.model);
       await this.updateContent(file);
       const res = {
         model: file,
@@ -268,7 +280,7 @@ export default class FileManagement {
               `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
             );
           }
-          this.setCurrentComponent(newCurrentElement);
+          this.setCurrentComponent(newCurrentElement, this.type);
           await this.updateContent(printer.printModel(newModel, false));
           event.reply('update-content-B', this.getContent());
         };

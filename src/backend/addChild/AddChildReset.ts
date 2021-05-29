@@ -1,3 +1,4 @@
+import { Elements } from '../../types/Elements';
 import { IChildDetail } from '../../types/IChildDetail';
 import { Model, Parser, Reset } from '../../types/ILibcellml';
 import { ISearch } from '../../types/IQuery';
@@ -39,11 +40,17 @@ const AddChildReset = async (
   newReset.setTestValue(testValue as string);
 
   // Attach it to parent component
-  parentComponent.addReset(newReset);
-  console.log(parentComponent.reset(0).resetValue());
-  m.replaceComponentByName(parent.name as string, parentComponent, true);
+  // parentComponent.addReset(newReset);
+  // m.replaceComponentByName(
+  //   parent.name as string,
+  //   parentComponent.clone(),
+  //   true
+  // );
+  m.componentByName(parent.name as string, true).addReset(newReset);
   await fm.updateContent(printer.printModel(m, false));
-  console.log(printer.printModel(m, false));
+
+  // Update current element
+  fm.setCurrentComponent(parentComponent.clone(), Elements.component);
 };
 
 export { AddChildReset };

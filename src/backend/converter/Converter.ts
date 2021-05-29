@@ -51,7 +51,7 @@ const convertComponent = (component: Component) => {
 
   const listReset = [];
   for (let i = 0; i < resetNum; i += 1) {
-    listReset.push(component.resetByIndex(i).variable().name());
+    listReset.push(component.reset(i).variable().name());
   }
 
   const listVar = [];

@@ -23,12 +23,16 @@ const AddChildComponent = async (
   // Update the truth
   if (parentType === Elements.model) {
     m.addComponent(newComp);
+    fm.setCurrentComponent(m.clone(), Elements.model);
   } else {
     const parentComponent = m.componentByName(parent.name as string, true);
     parentComponent.addComponent(newComp);
     m.replaceComponentByName(parent.name as string, parentComponent, true);
+
+    const curComp = m.componentByName(parent.name as string, true);
+    fm.setCurrentComponent(curComp, Elements.component);
   }
-  fm.updateContent(printer.printModel(m, false));
+  await fm.updateContent(printer.printModel(m, false));
 };
 
 export { AddChildComponent };
