@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'lodash';
+import { Math } from '../components/Math';
 
 const localStyles = makeStyles((theme) =>
   createStyles({
@@ -35,6 +36,7 @@ const localStyles = makeStyles((theme) =>
   })
 );
 
+// Describes the layout of the window
 const Dashboard = () => {
   const styles = localStyles();
   // Chuck in React Contexts

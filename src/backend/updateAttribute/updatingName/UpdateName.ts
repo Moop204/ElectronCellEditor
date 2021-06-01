@@ -14,7 +14,7 @@ import { updateNameOfModel } from './UpdateNameOfModel';
 import { updateNameOfUnits } from './updateNameOfUnits';
 import { updateNameOfVariable } from './UpdateNameOfVariable';
 
-// Definitely name attribute search
+// Change the name of a named entity (Model, Component, Variable, Units)
 const updateName = (
   model: Model,
   element: Elements,
