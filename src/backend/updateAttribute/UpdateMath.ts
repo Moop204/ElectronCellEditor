@@ -60,7 +60,6 @@ const updateMath = (
     default:
       console.log(`UPDATE ATTRIBUTE: Failed to identify element ${element}`);
   }
-
   const newModel = model;
   const newCurrentElement = currentElement;
   return { newModel, newCurrentElement };

@@ -1,4 +1,4 @@
-import '../backend/updateAttribute/updatingName/node_modules/@testing-library/jest-dom';
+import '@testing-library/jest-dom';
 import { Elements } from '../types/Elements';
 import { Component, Model } from '../types/ILibcellml';
 import updateMath from '../backend/updateAttribute/UpdateMath';
@@ -14,7 +14,7 @@ describe('Updating maths with components', () => {
     c1.setName('c1_test');
     m.addComponent(c1);
     const mathVal = 'TEST VALUE';
-    const { newModel, currentElement } = updateMath(
+    const { newModel, newCurrentElement } = updateMath(
       m,
       Elements.component,
       { name: 'c1_test', index: null },
@@ -24,8 +24,9 @@ describe('Updating maths with components', () => {
     );
     expect(newModel.componentCount()).toEqual(m.componentCount());
     expect(c1.math()).toEqual(mathVal);
-    expect((currentElement as Component).math()).toEqual(mathVal);
+    expect((newCurrentElement as Component).math()).toEqual(mathVal);
   });
+
   test('For a component under another component', async () => {
     const libcell = await libcellModule();
     const m: Model = new libcell.Model();
@@ -37,7 +38,7 @@ describe('Updating maths with components', () => {
     m.addComponent(c1);
     c1.addComponent(c2);
     const mathVal = 'TEST VALUE';
-    const { newModel, currentElement } = updateMath(
+    const { newModel, newCurrentElement } = updateMath(
       m,
       Elements.component,
       { name: 'c2_test', index: null },
@@ -48,6 +49,6 @@ describe('Updating maths with components', () => {
 
     expect(newModel.componentCount()).toEqual(m.componentCount());
     expect(c2.math()).toEqual(mathVal);
-    expect((currentElement as Component).math()).toEqual(mathVal);
+    expect((newCurrentElement as Component).math()).toEqual(mathVal);
   });
 });

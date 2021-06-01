@@ -1,4 +1,4 @@
-import '../backend/updateAttribute/updatingName/node_modules/@testing-library/jest-dom';
+import '@testing-library/jest-dom';
 import { Elements } from '../../types/Elements';
 import { Component, Model } from '../../types/ILibcellml';
 import { convertComponent, convertModel } from './Converter';
