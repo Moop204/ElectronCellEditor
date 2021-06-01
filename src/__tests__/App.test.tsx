@@ -1,5 +1,5 @@
 import React from 'react';
-import '../backend/updateAttribute/updatingName/node_modules/@testing-library/jest-dom';
+import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import App from '../App';
 const libcellModule = require('libcellml.js/libcellml.common');
