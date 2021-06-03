@@ -17,7 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'lodash';
-import { Math } from '../components/Math';
+import { Math } from '../components/math/Math';
 
 const localStyles = makeStyles((theme) =>
   createStyles({

@@ -2,7 +2,7 @@ import { Elements } from './Elements';
 
 interface IChildDetail {
   type: Elements;
-  attribute: any[];
+  attribute: any;
 }
 
 export { IChildDetail };

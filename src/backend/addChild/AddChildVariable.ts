@@ -22,7 +22,7 @@ const AddChildVariable = async (
   const parser: Parser = new libcellml.Parser();
   const m: Model = parser.parseModel(fm.getContent());
 
-  const { name, varInterface, initialValue, units } = child.attribute[0];
+  const { name, varInterface, initialValue, units } = child.attribute;
 
   const newVariable: Variable = new libcellml.Variable();
   newVariable.setName(name as string);

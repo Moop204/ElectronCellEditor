@@ -1,6 +1,12 @@
 import { Elements } from '../../types/Elements';
 import { IChildDetail } from '../../types/IChildDetail';
-import { Component, Model, Parser, Printer } from '../../types/ILibcellml';
+import {
+  Component,
+  ImportSource,
+  Model,
+  Parser,
+  Printer,
+} from '../../types/ILibcellml';
 import { ISearch } from '../../types/IQuery';
 import FileManagement from '../FileManagement';
 
@@ -14,10 +20,17 @@ const AddChildComponent = async (
   const printer: Printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
   const m: Model = parser.parseModel(fm.getContent());
-  const { name } = child.attribute[0];
+  const { name, imported, source, component_ref } = child.attribute;
 
+  // Create new component
   const newComp: Component = new libcellml.Component();
   newComp.setName(name as string);
+  if (imported) {
+    const importSource: ImportSource = new libcellml.ImportSource();
+    importSource.setUrl(source);
+    newComp.setSourceComponent(importSource, component_ref);
+  }
+
   // Update current component
   // (this.currentComponent as Model | Component).addComponent(newComp);
   // Update the truth

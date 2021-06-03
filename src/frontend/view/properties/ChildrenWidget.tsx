@@ -1,5 +1,3 @@
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import { ipcRenderer } from 'electron';
 import React, { MouseEventHandler } from 'react';
 import { capitaliseFirst } from '../../utils/utility';
@@ -18,7 +16,8 @@ const findElement = (elm: Elements, name: string) => {
     case Elements.component:
     case Elements.units:
       console.log('ModelProperties: Request Select-Element');
-      ipcRenderer.send('select-element-A', query);
+      console.log(query);
+      ipcRenderer.send('find-element-from-children', query);
       break;
     default:
       console.log('Error: Not a valid element type');

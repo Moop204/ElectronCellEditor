@@ -56,111 +56,111 @@ describe('Converting CellML Model into property format', () => {
   });
 });
 
-// describe('Converting CellML Component into property format', () => {
-//   test('Converting Basic Component', async () => {
-//     const libcellml = await libcellModule();
-//     // Make Component
-//     const m: Model = new libcellml.Model();
-//     m.setName('testModel');
-//     const component: Component = new libcellml.Component();
-//     component.setName('testComponent1');
-//     m.addComponent(component);
-//     // Give model to converter
-//     const convertedElement = convertComponent(component);
+describe('Converting CellML Component into property format', () => {
+  test('Converting Basic Component', async () => {
+    const libcellml = await libcellModule();
+    // Make Component
+    const m: Model = new libcellml.Model();
+    m.setName('testModel');
+    const component: Component = new libcellml.Component();
+    component.setName('testComponent1');
+    m.addComponent(component);
+    // Give model to converter
+    const convertedElement = convertComponent(component);
 
-//     // Check attributes of element are preserved
-//     expect(convertedElement.type).toEqual(Elements.component);
-//     expect(Object.keys(convertedElement.attribute).length).toEqual(2);
-//     expect(convertedElement.attribute['name']).toBeDefined();
-//     expect(convertedElement.attribute['name']).toEqual('testComponent1');
-//     expect(convertedElement.attribute['math']).toEqual('');
-//     // Check children
-//     expect(Object.keys(convertedElement.children).length).toEqual(2);
-//     expect(convertedElement.children['component'].length).toEqual(0);
-//     expect(convertedElement.children['variable'].length).toEqual(0);
-//     expect(convertedElement.parent.type).toEqual(Elements.model);
-//   });
+    // Check attributes of element are preserved
+    expect(convertedElement.type).toEqual(Elements.component);
+    expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+    expect(convertedElement.attribute['name']).toBeDefined();
+    expect(convertedElement.attribute['name']).toEqual('testComponent1');
+    expect(convertedElement.attribute['math']).toEqual('');
+    // Check children
+    expect(convertedElement.children['component'].length).toEqual(0);
+    expect(convertedElement.children['variable'].length).toEqual(0);
+    // TODO: Enable test after libcellml parent() binding is fixed
+    // expect(convertedElement.parent.type).toEqual(Elements.model);
+  });
 
-//   test('Converting a Component with math', async () => {
-//     const libcellml = await libcellModule();
-//     // Make Component
-//     const m: Model = new libcellml.Model();
-//     m.setName('testModel');
-//     const component: Component = new libcellml.Component();
-//     component.setName('testComponent1');
-//     m.addComponent(component);
-//     // Give model to converter
-//     const convertedElement = convertComponent(component);
+  //   test('Converting a Component with math', async () => {
+  //     const libcellml = await libcellModule();
+  //     // Make Component
+  //     const m: Model = new libcellml.Model();
+  //     m.setName('testModel');
+  //     const component: Component = new libcellml.Component();
+  //     component.setName('testComponent1');
+  //     m.addComponent(component);
+  //     // Give model to converter
+  //     const convertedElement = convertComponent(component);
 
-//     // Check attributes of element are preserved
-//     expect(convertedElement.type).toEqual(Elements.component);
-//     expect(Object.keys(convertedElement.attribute).length).toEqual(2);
-//     expect(convertedElement.attribute['name']).toBeDefined();
-//     expect(convertedElement.attribute['name']).toEqual('testComponent1');
-//     expect(convertedElement.attribute['math']).toEqual('');
-//     // Check children
-//     expect(Object.keys(convertedElement.children).length).toEqual(2);
-//     expect(convertedElement.children['component'].length).toEqual(0);
-//     expect(convertedElement.children['variable'].length).toEqual(0);
-//     expect(convertedElement.parent.type).toEqual(Elements.model);
-//   });
+  //     // Check attributes of element are preserved
+  //     expect(convertedElement.type).toEqual(Elements.component);
+  //     expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+  //     expect(convertedElement.attribute['name']).toBeDefined();
+  //     expect(convertedElement.attribute['name']).toEqual('testComponent1');
+  //     expect(convertedElement.attribute['math']).toEqual('');
+  //     // Check children
+  //     expect(Object.keys(convertedElement.children).length).toEqual(2);
+  //     expect(convertedElement.children['component'].length).toEqual(0);
+  //     expect(convertedElement.children['variable'].length).toEqual(0);
+  //     expect(convertedElement.parent.type).toEqual(Elements.model);
+  //   });
 
-//   test('Converting Component of Component', async () => {
-//     const libcellml = await libcellModule();
+  //   test('Converting Component of Component', async () => {
+  //     const libcellml = await libcellModule();
 
-//     // Make Component
-//     const m: Model = new libcellml.Model();
-//     m.setName('testModel');
-//     const componentParent: Component = new libcellml.Component();
-//     componentParent.setName('testComponent1');
-//     m.addComponent(componentParent);
-//     const component: Component = new libcellml.Component();
-//     component.setName('testComponent2');
-//     componentParent.addComponent(component);
+  //     // Make Component
+  //     const m: Model = new libcellml.Model();
+  //     m.setName('testModel');
+  //     const componentParent: Component = new libcellml.Component();
+  //     componentParent.setName('testComponent1');
+  //     m.addComponent(componentParent);
+  //     const component: Component = new libcellml.Component();
+  //     component.setName('testComponent2');
+  //     componentParent.addComponent(component);
 
-//     // Give model to converter
-//     const convertedElement = convertComponent(component);
+  //     // Give model to converter
+  //     const convertedElement = convertComponent(component);
 
-//     // Check attributes of element are preserved
-//     expect(convertedElement.type).toEqual(Elements.component);
-//     expect(Object.keys(convertedElement.attribute).length).toEqual(2);
-//     expect(convertedElement.attribute['name']).toBeDefined();
-//     expect(convertedElement.attribute['name']).toEqual('testComponent2');
-//     expect(convertedElement.attribute['math']).toEqual('');
+  //     // Check attributes of element are preserved
+  //     expect(convertedElement.type).toEqual(Elements.component);
+  //     expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+  //     expect(convertedElement.attribute['name']).toBeDefined();
+  //     expect(convertedElement.attribute['name']).toEqual('testComponent2');
+  //     expect(convertedElement.attribute['math']).toEqual('');
 
-//     // Check children
-//     expect(Object.keys(convertedElement.children).length).toEqual(2);
-//     expect(convertedElement.children['component'].length).toEqual(0);
-//     expect(convertedElement.children['variable'].length).toEqual(0);
-//     expect(convertedElement.parent.type).toEqual(Elements.component);
-//   });
+  //     // Check children
+  //     expect(Object.keys(convertedElement.children).length).toEqual(2);
+  //     expect(convertedElement.children['component'].length).toEqual(0);
+  //     expect(convertedElement.children['variable'].length).toEqual(0);
+  //     expect(convertedElement.parent.type).toEqual(Elements.component);
+  //   });
 
-//   // test Converting component with component children
+  //   // test Converting component with component children
 
-//   // test Converting component with variable children
-// });
+  //   // test Converting component with variable children
+  // });
 
-// describe('Converting CellML Units into property format', () => {
-//   test('Converting barest Units', () => {
-//     return false;
-//   });
-//   test('Converting Units with Unit', () => {
-//     return false;
-//   });
-//   test('Converting Units with Unit and prefixes', () => {
-//     return false;
-//   });
-//   test('Converting Units with Unit and exponents', () => {
-//     return false;
-//   });
-//   test('Converting Units with Unit and multiplier', () => {
-//     return false;
-//   });
-// });
+  // describe('Converting CellML Units into property format', () => {
+  //   test('Converting barest Units', () => {
+  //     return false;
+  //   });
+  //   test('Converting Units with Unit', () => {
+  //     return false;
+  //   });
+  //   test('Converting Units with Unit and prefixes', () => {
+  //     return false;
+  //   });
+  //   test('Converting Units with Unit and exponents', () => {
+  //     return false;
+  //   });
+  //   test('Converting Units with Unit and multiplier', () => {
+  //     return false;
+  //   });
+  // });
 
-// describe('Converting CellML Variables into property format', () => {
-//   test('Converting bare Variable', () => {
-//     //Name + Units attributes
-//     return false;
-//   });
-// });
+  // describe('Converting CellML Variables into property format', () => {
+  //   test('Converting bare Variable', () => {
+  //     //Name + Units attributes
+  //     return false;
+  //   });
+});

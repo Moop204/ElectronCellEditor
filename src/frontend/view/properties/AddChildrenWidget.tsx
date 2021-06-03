@@ -1,19 +1,20 @@
 import React from 'react';
 import { Elements, elmToStr } from '../../../types/Elements';
-import { AddChildSelect, Basic } from './forms/ComponentChildForm';
+import { AddChildSelect } from './forms/AddChildSelect';
+
+const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
+  return (
+    <AddChildSelect
+      childElement={childElm}
+      parentElement={parent}
+      parentName={parentName}
+      key={elmToStr(childElm)}
+    />
+  );
+};
 
 const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
   const { element, name } = prop;
-  const addChild = (childElm: Elements, parent: Elements) => {
-    return (
-      <AddChildSelect
-        childElement={childElm}
-        parentElement={element}
-        parentName={name}
-        key={elmToStr(childElm)}
-      />
-    );
-  };
   let children = [];
   switch (element) {
     case Elements.model:
@@ -22,16 +23,19 @@ const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
     case Elements.component:
       children = [Elements.reset, Elements.variable, Elements.component];
       break;
+    case Elements.units:
+      children = [Elements.unit];
+      break;
     default:
-      return <div>No Children</div>;
+      return <div></div>;
   }
   console.log(children);
   return (
     <div>
-      {children.map((elm) => {
-        return addChild(elm, element);
-      })}
-      dsfsdfdfsdf
+      {children.length > 0 &&
+        children.map((elm) => {
+          return AddChild(elm, element, name);
+        })}
     </div>
   );
 };

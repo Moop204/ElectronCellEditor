@@ -61,6 +61,10 @@ const PropertiesWidget = () => {
             console.log(
               'ABSTRACTMODEL: Failed to contain requisite properties upon res-get-element'
             );
+            console.log(`Type: ` + cellmlModel.type);
+            console.log(`Attribute: ` + cellmlModel.attribute);
+            console.log(`Children ` + cellmlModel.children);
+            console.log(`Parent ` + cellmlModel.parent);
           }
           setAbstractModel(cellmlModel);
         }

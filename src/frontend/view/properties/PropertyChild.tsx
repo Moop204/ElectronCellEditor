@@ -21,6 +21,7 @@ const PropertyChild = (props: IPropertyChild) => {
     case Elements.units:
       icon = <CropSquareIcon />;
       break;
+    case Elements.variable:
     default:
       icon = <div> {element} </div>;
   }

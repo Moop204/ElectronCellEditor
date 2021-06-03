@@ -1,5 +1,5 @@
 import React from 'react';
-import { ctop } from '../utils/ctop';
+import { ctop } from '../../utils/ctop';
 import MathJax from 'mathjax3-react';
 
 interface IMath {
@@ -27,7 +27,7 @@ const convertToPresentation = (mathml: string) => {
   return transformed;
 };
 
-const Math = ({ mathml }: IMath) => {
+const PresentationMath = ({ mathml }: IMath) => {
   return (
     <div>
       <MathJax.Provider>
@@ -43,4 +43,4 @@ const Math = ({ mathml }: IMath) => {
   );
 };
 
-export { Math };
+export { PresentationMath };
