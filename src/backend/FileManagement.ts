@@ -65,22 +65,6 @@ export default class FileManagement {
 
   async updateContent(s: string) {
     this.content = s;
-
-    // const libcellml = await libcellModule();
-    // const parser: Parser = new libcellml.Parser();
-    // const printer: Printer = new libcellml.Printer();
-    // const m: Model = parser.parseModel(s);
-    // const numComponent = m.componentCount();
-    // this.variableList = [];
-    // this.variableParentList = [];
-    // for (let ci = 0; ci < numComponent; ci += 1) {
-    //   const comp = m.componentByIndex(ci);
-    //   for (let vi = 0; vi < comp.variableCount(); vi += 1) {
-    //     const variable = comp.variableByIndex(vi);
-    //     this.variableList.push(variable);
-    //     this.variableParentList.push(comp.name());
-    //   }
-    // }
   }
 
   async setContent(s: string) {
@@ -309,8 +293,11 @@ export default class FileManagement {
     // TODO:
     // OUTPUT
     ipcMain.on(
-      'select-element-A',
+      'find-element-from-children',
       (event: IpcMainEvent, { element, select }: ISelect) => {
+        this.findElement(select, element);
+        console.log(`Finding element`);
+        console.log(select);
         const selection = this.getCurrentAsSelection(element);
         event.reply('res-select-element', selection);
       }
@@ -341,6 +328,49 @@ export default class FileManagement {
       const issues = await obtainIssues(validator);
       console.log(issues);
       event.reply('error-reply', issues);
+    });
+
+    // Gathers all component names from a model recursively
+    const getAllComponentNames = (res: string[], parent: ComponentEntity) => {
+      const componentCount = parent.componentCount();
+      for (let i = 0; i < componentCount; i++) {
+        const cur = parent.componentByIndex(i);
+        res = getAllComponentNames(res, cur);
+        res.push(cur.name());
+      }
+      return res;
+    };
+
+    ipcMain.on('all-components', async (event: IpcMainEvent) => {
+      if (!this._cellmlLoaded) {
+        await this.init();
+      }
+      const libcellml = this._cellml;
+      const parser: Parser = new libcellml.Parser();
+      const model = parser.parseModel(this.content);
+      const componentCount = model.componentCount();
+      let res: string[] = [];
+      res = getAllComponentNames(res, model);
+      event.returnValue = res;
+    });
+
+    const getAllUnitsNames = async () => {
+      if (!this._cellmlLoaded) {
+        await this.init();
+      }
+      const libcellml = this._cellml;
+      const parser: Parser = new libcellml.Parser();
+      const model = parser.parseModel(this.content);
+      const res = [];
+      const unitsCount = model.unitsCount();
+      for (let i = 0; i < unitsCount; i++) {
+        res.push(model.unitsByIndex(i).name());
+      }
+      return res;
+    };
+
+    ipcMain.on('all-units', async (event: IpcMainEvent) => {
+      event.returnValue = await getAllUnitsNames();
     });
   }
 }

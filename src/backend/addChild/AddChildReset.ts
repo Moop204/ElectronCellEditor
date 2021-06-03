@@ -19,7 +19,7 @@ const AddChildReset = async (
     order,
     resetValue,
     testValue,
-  } = child.attribute[0];
+  } = child.attribute;
   // Make reset element
   const m: Model = parser.parseModel(fm.getContent());
 

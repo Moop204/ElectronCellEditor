@@ -207,7 +207,7 @@ interface Units extends ImportedEntity, NamedEntity {
   removeUnitByIndex(index: number): boolean;
   removeUnitByName(reference: string): boolean;
   removeUnitByStandardUnit(standardRef: StandardUnit): boolean;
-  setSourceUnits(): void;
+  setSourceUnits(importSource: ImportSource, name: string): void;
   removeAllUnits(): void;
   unitCount(): number;
   clone(): Units;

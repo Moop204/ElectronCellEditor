@@ -3,7 +3,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import IPropertyAttribute from '../../../types/IPropertyAttribute';
-import { Math } from '../../components/Math';
 
 const PropertyAttribute = (props: IPropertyAttribute) => {
   const { title, value, onChange } = props;

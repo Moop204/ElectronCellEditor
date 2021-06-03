@@ -125,6 +125,12 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
+process.on('uncaughtException', (error: any) => {
+  // Handle the error
+  console.log('LISTENER ERROR');
+  console.log(error);
+});
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

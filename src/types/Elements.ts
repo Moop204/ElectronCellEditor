@@ -2,6 +2,7 @@ enum Elements {
   model,
   component,
   units,
+  unit,
   reset,
   variable, // TODO: Remove maybe?
   none, // For Model parents
@@ -19,6 +20,8 @@ const strToElm = (s: string) => {
       return Elements.reset;
     case 'variable':
       return Elements.variable;
+    case 'unit':
+      return Elements.unit;
     case 'none':
       return Elements.none;
     default:
@@ -39,6 +42,8 @@ const elmToStr = (e: Elements): string => {
       return 'reset';
     case Elements.variable:
       return 'variable';
+    case Elements.unit:
+      return 'unit';
     case Elements.none:
       return 'none';
 
