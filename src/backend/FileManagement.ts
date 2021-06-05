@@ -65,6 +65,7 @@ export default class FileManagement {
 
   async updateContent(s: string) {
     this.content = s;
+    console.log(`updateContent` + s);
   }
 
   async setContent(s: string) {
@@ -311,7 +312,6 @@ export default class FileManagement {
     // OUTPUT
     // Sets the raw truth directly to frontend
     ipcMain.on('get-element', (event: IpcMainEvent) => {
-      this.printModel();
       console.log(`LIBCELL: Get Element  ${this.type}`);
       const prop = convertSelectedElement(
         this.type,
@@ -332,6 +332,7 @@ export default class FileManagement {
 
     // Gathers all component names from a model recursively
     const getAllComponentNames = (res: string[], parent: ComponentEntity) => {
+      console.log('GETALLCOMPONENTS');
       const componentCount = parent.componentCount();
       for (let i = 0; i < componentCount; i++) {
         const cur = parent.componentByIndex(i);
@@ -355,6 +356,7 @@ export default class FileManagement {
     });
 
     const getAllUnitsNames = async () => {
+      console.log('GETALLUNITS');
       if (!this._cellmlLoaded) {
         await this.init();
       }
@@ -371,6 +373,24 @@ export default class FileManagement {
 
     ipcMain.on('all-units', async (event: IpcMainEvent) => {
       event.returnValue = await getAllUnitsNames();
+    });
+
+    const getAllVariableNames = async () => {
+      console.log('GETALLVARIABLES');
+      if (!this._cellmlLoaded) {
+        await this.init();
+      }
+      const current = this.getCurrentComponent() as Component;
+      const varCount = current.variableCount();
+      const res: string[] = [];
+      for (let i = 0; i < varCount; i++) {
+        res.push(current.variableByIndex(i).name());
+      }
+      return res;
+    };
+
+    ipcMain.on('all-variable', async (event: IpcMainEvent) => {
+      event.returnValue = await getAllVariableNames();
     });
   }
 }

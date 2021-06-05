@@ -4,6 +4,9 @@ import { IProperties } from '../../types/IProperties';
 
 const convertComponent = (component: Component) => {
   console.log(component);
+  if (component === null) {
+    console.log('ConvertComponent: Given component is null');
+  }
   const resetNum = component.resetCount();
   const varNum = component.variableCount();
   const compNum = component.componentCount();
