@@ -10,6 +10,7 @@ import { ComponentChildForm } from './forms/form-type/ComponentChildForm';
 import { Input } from '@material-ui/core';
 import { InputType } from './forms/utility/Inputs';
 import { UnitsChildForm } from './forms/form-type/UnitsChildForm';
+import { VariableChildForm } from './forms/form-type/VariableChildForm';
 
 interface IAddChild {
   childElement: Elements;
@@ -65,6 +66,13 @@ const ComponentForm = (prop: IAddChild) => {
               parentName={parentName}
               handleClose={handleClose}
             />
+          )}
+          {childElement === Elements.variable && (
+            <VariableChildForm
+              parent={parentElement}
+              parentName={parentName}
+              handleClose={handleClose}
+            ></VariableChildForm>
           )}
         </DialogContent>
       </Dialog>

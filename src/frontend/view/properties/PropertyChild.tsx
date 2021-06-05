@@ -6,6 +6,7 @@ import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import CropSquareIcon from '@material-ui/icons/CropSquare';
 import { strToElm, Elements } from '../../../types/Elements';
 import IPropertyChild from '../../../types/IPropertyChild';
+import ChangeHistoryIcon from '@material-ui/icons/ChangeHistory';
 
 const PropertyChild = (props: IPropertyChild) => {
   const { onClick, title, element } = props;
@@ -22,6 +23,7 @@ const PropertyChild = (props: IPropertyChild) => {
       icon = <CropSquareIcon />;
       break;
     case Elements.variable:
+      icon = <ChangeHistoryIcon />;
     default:
       icon = <div> {element} </div>;
   }

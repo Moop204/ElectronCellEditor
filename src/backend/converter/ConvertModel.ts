@@ -3,6 +3,9 @@ import { Model } from '../../types/ILibcellml';
 import { IProperties } from '../../types/IProperties';
 
 const convertModel = (model: Model) => {
+  if (model === null) {
+    console.log('ConvertModel: Given model is null');
+  }
   const unitsNum = model.unitsCount();
   const componentNum = model.componentCount();
 

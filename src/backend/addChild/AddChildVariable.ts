@@ -26,7 +26,6 @@ const AddChildVariable = async (
 
   const newVariable: Variable = new libcellml.Variable();
   newVariable.setName(name as string);
-  // TODO: CASE WHERE CUSTOM UNITS USED
   console.log(units);
   newVariable.setUnitsByName(units as string);
   if (varInterface) {
@@ -36,11 +35,20 @@ const AddChildVariable = async (
     newVariable.setInitialValueByString(initialValue as string);
   }
 
+  console.log('Before replacing');
+  console.log(printer.printModel(m, false));
+  console.log(`Search for ` + parent.name);
   // Add to Model
   const parentComponent = m.componentByName(parent.name as string, true);
   parentComponent.addVariable(newVariable);
+
   m.replaceComponentByName(parent.name as string, parentComponent, true);
+
+  console.log('Where updatecontent would be');
+  console.log(printer.printModel(m, false));
+
   await fm.updateContent(printer.printModel(m, false));
+
   // Add to cur elm
   // const curElm = fm.getCurrentComponent() as Component;
   // console.log(curElm);

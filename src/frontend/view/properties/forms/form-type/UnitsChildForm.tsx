@@ -19,7 +19,7 @@ const nameValidation = (curComponents: string[]) =>
         'Must start with an alphabetical character'
       )
       .required('Attribute "name" is required')
-      .notOneOf(curComponents, 'Cannot be an existing component'),
+      .notOneOf(curComponents, 'Cannot be an existing Units'),
   });
 
 interface IPopup {
