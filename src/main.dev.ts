@@ -14,12 +14,12 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import { mainAsync } from './AsyncMain';
+import MenuBuilder from './backend/Menu/menu';
+import FileManagement from './backend/FileManagement';
 
 let mainWindow: BrowserWindow | null = null;
-
-mainAsync();
+let fm = new FileManagement();
+fm.setupHandlers();
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -64,12 +64,9 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
-      webSecurity: false,
     },
   });
 
@@ -82,6 +79,7 @@ const createWindow = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
+      mainWindow.maximize();
       mainWindow.show();
       mainWindow.focus();
     }
@@ -91,7 +89,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
+  const menuBuilder = new MenuBuilder(mainWindow, fm);
   menuBuilder.buildMenu();
 
   // Open urls in the user's browser
@@ -125,6 +123,12 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+});
+
+process.on('uncaughtException', (error: any) => {
+  // Handle the error
+  console.log('LISTENER ERROR');
+  console.log(error);
 });
 
 export default class AppUpdater {
