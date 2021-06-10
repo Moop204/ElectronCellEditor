@@ -134,6 +134,7 @@ const VariableChildForm = ({ parent, parentName, handleClose }: IPopup) => {
                     </MenuItem>
                   );
                 })}
+                {validUnits.length === 0 && <div>No units</div>}
               </Select>
               <FormHelperText error>
                 {formik.touched.units && formik.errors.units}

@@ -18,6 +18,7 @@ const convertReset = (element: Reset) => {
       testValue: element.testValue(),
     },
     children: {},
+    unit: [],
   };
   return resetProp;
 };

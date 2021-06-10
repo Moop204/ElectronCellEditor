@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import { Elements } from '../../types/Elements';
-import { Component, Model } from '../../types/ILibcellml';
-import { convertComponent, convertModel } from './Converter';
+import { Component, Model, Units } from '../../types/ILibcellml';
+import { convertSelectedElement } from './Converter';
+import { convertUnits } from './ConvertUnits';
 
 const libcellModule = require('libcellml.js/libcellml.common');
 
@@ -16,9 +17,8 @@ describe('Converting CellML Model into property format', () => {
     const m = parser.parseModel(sampleModel);
 
     // Give model to converter
-    const convertedModel = convertModel(m);
+    const convertedModel = convertSelectedElement(Elements.model, m);
 
-    const pr = new libcellml.Printer();
     // Check attributes of model are preserved
     expect(convertedModel.type).toEqual(Elements.model);
     expect(Object.keys(convertedModel.attribute).length).toEqual(1);
@@ -43,7 +43,7 @@ describe('Converting CellML Model into property format', () => {
     const m = parser.parseModel(sampleModel);
 
     // Give model to converter
-    const convertedModel = convertModel(m);
+    const convertedModel = convertSelectedElement(Elements.model, m);
     // Check attributes of model are preserved
     expect(convertedModel.type).toEqual(Elements.model);
     expect(Object.keys(convertedModel.attribute).length).toEqual(1);
@@ -66,7 +66,10 @@ describe('Converting CellML Component into property format', () => {
     component.setName('testComponent1');
     m.addComponent(component);
     // Give model to converter
-    const convertedElement = convertComponent(component);
+    const convertedElement = convertSelectedElement(
+      Elements.component,
+      component
+    );
 
     // Check attributes of element are preserved
     expect(convertedElement.type).toEqual(Elements.component);
@@ -140,24 +143,244 @@ describe('Converting CellML Component into property format', () => {
   //   // test Converting component with variable children
   // });
 
-  // describe('Converting CellML Units into property format', () => {
-  //   test('Converting barest Units', () => {
-  //     return false;
-  //   });
-  //   test('Converting Units with Unit', () => {
-  //     return false;
-  //   });
-  //   test('Converting Units with Unit and prefixes', () => {
-  //     return false;
-  //   });
-  //   test('Converting Units with Unit and exponents', () => {
-  //     return false;
-  //   });
-  //   test('Converting Units with Unit and multiplier', () => {
-  //     return false;
-  //   });
-  // });
+  describe('Converting CellML Units into property format', () => {
+    test('Converting barest Units', async () => {
+      const libcellml = await libcellModule();
+      // Make Component
+      const m: Model = new libcellml.Model();
+      m.setName('testModel');
+      const units: Units = new libcellml.Units();
+      units.setName('testUnit1');
+      m.addUnits(units);
+      // Give model to converter
+      const convertedElement = convertSelectedElement(Elements.units, units);
 
+      // Check attributes of element are preserved
+      expect(convertedElement.type).toEqual(Elements.units);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(convertedElement.attribute['name']).toBeDefined();
+      expect(convertedElement.attribute['name']).toEqual('testUnit1');
+      // Check children
+      expect(convertedElement.attribute['unit'].length).toEqual(0);
+      // TODO: Enable test after libcellml parent() binding is fixed
+      // expect(convertedElement.parent.type).toEqual(Elements.model);
+    });
+    test('Converting Units with Unit', async () => {
+      const libcellml = await libcellModule();
+      // Make Component
+      const m: Model = new libcellml.Model();
+      m.setName('testModel');
+      const units: Units = new libcellml.Units();
+      units.setName('testUnit1');
+      units.addUnitByReference('second');
+      m.addUnits(units);
+      // Give model to converter
+      const convertedElement = convertSelectedElement(Elements.units, units);
+
+      // Check attributes of element are preserved
+      expect(convertedElement.type).toEqual(Elements.units);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(convertedElement.attribute['name']).toBeDefined();
+      expect(convertedElement.attribute['name']).toEqual('testUnit1');
+      // Check children
+      expect(convertedElement.attribute['unit'].length).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][0].description.reference
+      ).toEqual('second');
+      expect(
+        convertedElement.attribute['unit'][0].description.imported
+      ).toEqual('');
+      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+        ''
+      );
+      expect(
+        convertedElement.attribute['unit'][0].description.exponent
+      ).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][0].description.multiplier
+      ).toEqual(1);
+      // TODO: Enable test after libcellml parent() binding is fixed
+      // expect(convertedElement.parent.type).toEqual(Elements.model);
+    });
+    test('Converting Units with Unit and exponent, prefixes and multipliers', async () => {
+      const libcellml = await libcellModule();
+      // Make Component
+      const m: Model = new libcellml.Model();
+      m.setName('testModel');
+      const units: Units = new libcellml.Units();
+      units.setName('testUnit1');
+      units.addUnitByReferenceStringPrefix('second', 'milli', 1, -1000, '');
+      m.addUnits(units);
+      // Give model to converter
+      const convertedElement = convertSelectedElement(Elements.units, units);
+
+      // Check attributes of element are preserved
+      expect(convertedElement.type).toEqual(Elements.units);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(convertedElement.attribute['name']).toBeDefined();
+      expect(convertedElement.attribute['name']).toEqual('testUnit1');
+      // Check children
+      expect(convertedElement.attribute['unit'].length).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][0].description.reference
+      ).toEqual('second');
+      expect(
+        convertedElement.attribute['unit'][0].description.imported
+      ).toEqual('');
+      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+        'milli'
+      );
+      expect(
+        convertedElement.attribute['unit'][0].description.exponent
+      ).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][0].description.multiplier
+      ).toEqual(-1000);
+      // TODO: Enable test after libcellml parent() binding is fixed
+      // expect(convertedElement.parent.type).toEqual(Elements.model);
+    });
+    test('Converting Units with Unit and exponents', async () => {
+      const libcellml = await libcellModule();
+      // Make Component
+      const m: Model = new libcellml.Model();
+      m.setName('testModel');
+      const units: Units = new libcellml.Units();
+      units.setName('testUnit1');
+      units.addUnitByReferenceExponent('second', 12, '');
+      m.addUnits(units);
+      // Give model to converter
+      const convertedElement = convertSelectedElement(Elements.units, units);
+
+      // Check attributes of element are preserved
+      expect(convertedElement.type).toEqual(Elements.units);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(convertedElement.attribute['name']).toBeDefined();
+      expect(convertedElement.attribute['name']).toEqual('testUnit1');
+      // Check children
+      expect(convertedElement.attribute['unit'].length).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][0].description.reference
+      ).toEqual('second');
+      expect(
+        convertedElement.attribute['unit'][0].description.imported
+      ).toEqual('');
+      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+        ''
+      );
+      expect(
+        convertedElement.attribute['unit'][0].description.exponent
+      ).toEqual(12);
+      expect(
+        convertedElement.attribute['unit'][0].description.multiplier
+      ).toEqual(1);
+      // TODO: Enable test after libcellml parent() binding is fixed
+      // expect(convertedElement.parent.type).toEqual(Elements.model);
+    });
+
+    // test('Converting Units with imported Unit', async () => {
+    //   const libcellml = await libcellModule();
+    //   // Make Component
+    //   const m: Model = new libcellml.Model();
+    //   m.setName('testModel');
+    //   const units: Units = new libcellml.Units();
+    //   units.setName('testUnit1');
+    //   units.
+    //   m.addUnits(units);
+    //   // Give model to converter
+    //   const convertedElement = convertSelectedElement(Elements.units, units);
+
+    //   // Check attributes of element are preserved
+    //   expect(convertedElement.type).toEqual(Elements.units);
+    //   expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+    //   expect(convertedElement.attribute['name']).toBeDefined();
+    //   expect(convertedElement.attribute['name']).toEqual('testUnit1');
+    //   // Check children
+    //   expect(convertedElement.attribute['unit'].length).toEqual(1);
+    //   expect(
+    //     convertedElement.attribute['unit'][0].description.reference
+    //   ).toEqual('second');
+    //   expect(
+    //     convertedElement.attribute['unit'][0].description.imported
+    //   ).toEqual('');
+    //   expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+    //     ''
+    //   );
+    //   expect(
+    //     convertedElement.attribute['unit'][0].description.exponent
+    //   ).toEqual(12);
+    //   expect(
+    //     convertedElement.attribute['unit'][0].description.multiplier
+    //   ).toEqual(1);
+    //   // TODO: Enable test after libcellml parent() binding is fixed
+    //   // expect(convertedElement.parent.type).toEqual(Elements.model);
+    // });
+
+    test('Converting Units with multiple Unit', async () => {
+      const libcellml = await libcellModule();
+      // Make Component
+      const m: Model = new libcellml.Model();
+      m.setName('testModel');
+
+      const units: Units = new libcellml.Units();
+      units.setName('testUnit1');
+      units.addUnitByReferenceExponent('second', 12, '');
+      units.addUnitByReferenceStringPrefix('second', 'milli', 1, -1000, '');
+
+      m.addUnits(units);
+      // Give model to converter
+      const convertedElement = convertSelectedElement(Elements.units, units);
+
+      // Check attributes of element are preserved
+      expect(convertedElement.type).toEqual(Elements.units);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(convertedElement.attribute['name']).toBeDefined();
+      expect(convertedElement.attribute['name']).toEqual('testUnit1');
+      // Check children
+      expect(convertedElement.attribute['unit'].length).toEqual(2);
+      expect(
+        convertedElement.attribute['unit'][0].description.reference
+      ).toEqual('second');
+      expect(
+        convertedElement.attribute['unit'][0].description.imported
+      ).toEqual('');
+      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+        ''
+      );
+      expect(
+        convertedElement.attribute['unit'][0].description.exponent
+      ).toEqual(12);
+      expect(
+        convertedElement.attribute['unit'][0].description.multiplier
+      ).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][1].description.reference
+      ).toEqual('second');
+      expect(
+        convertedElement.attribute['unit'][1].description.imported
+      ).toEqual('');
+      expect(convertedElement.attribute['unit'][1].description.prefix).toEqual(
+        'milli'
+      );
+      expect(
+        convertedElement.attribute['unit'][1].description.exponent
+      ).toEqual(1);
+      expect(
+        convertedElement.attribute['unit'][1].description.multiplier
+      ).toEqual(-1000);
+
+      // TODO: Enable test after libcellml parent() binding is fixed
+      // expect(convertedElement.parent.type).toEqual(Elements.model);
+    });
+  });
+
+  test('short-test', async () => {
+    const libcellml = await libcellModule();
+    // Make Component
+    const units: Units = new libcellml.Units();
+    units.setName('testUnit1');
+    units.addUnitByReferenceExponent('second', 12, '');
+    units.addUnitByReferenceStringPrefix('second', 'milli', 1, -1000, '');
+  });
   // describe('Converting CellML Variables into property format', () => {
   //   test('Converting bare Variable', () => {
   //     //Name + Units attributes

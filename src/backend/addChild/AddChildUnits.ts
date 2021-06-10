@@ -20,6 +20,7 @@ const AddChildUnits = async (fm: FileManagement, child: IChildDetail) => {
 
   // Make new element with attributes specified by user
   const newUnits: Units = new libcellml.Units();
+  console.log(child.attribute);
   newUnits.setName(name as string);
   if (imported) {
     const importSource: ImportSource = new libcellml.ImportSource();

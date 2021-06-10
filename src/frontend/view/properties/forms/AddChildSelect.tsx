@@ -1,7 +1,7 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React, { useState, ChangeEventHandler } from 'react';
 import { Elements, elmToStr } from '../../../../types/Elements';
-import { ComponentForm } from '../ComponentForm';
+import { ComponentForm } from '../ElementForm';
 
 interface IAddChild {
   childElement: Elements;

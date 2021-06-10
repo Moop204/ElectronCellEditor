@@ -156,28 +156,32 @@ enum StandardUnit {
 
 interface Units extends ImportedEntity, NamedEntity {
   isBaseUnit(): boolean;
-  addUnit(
+  addUnitByReferenceStringPrefix(
     reference: string,
     prefix: string,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByStringPrefix(
+  addUnitByReferenceEnumPrefix(
     reference: string,
     prefix: Prefix,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByEnumPrefix(
+  addUnitByReferenceIntPrefix(
     reference: string,
     prefix: number,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByExponent(reference: string, exponent: number, id: string): void;
+  addUnitByReferenceExponent(
+    reference: string,
+    exponent: number,
+    id: string
+  ): void;
   addUnitByReference(reference: string): void;
 
   addUnitByStandardUnitStringPrefix(
@@ -200,10 +204,10 @@ interface Units extends ImportedEntity, NamedEntity {
     id: string
   ): void;
   addUnitByStandardUnit(standardRef: StandardUnit): void;
-  unitAttributeReferenceByIndex(index: number): string;
-  unitAttributePrefixByIndex(index: number): string;
-  unitAttributeExponentByIndex(index: number): number;
-  unitAttributeMultiplierByIndex(index: number): number;
+  unitAttributeReference(index: number): string;
+  unitAttributePrefix(index: number): string;
+  unitAttributeExponent(index: number): number;
+  unitAttributeMultiplier(index: number): number;
   removeUnitByIndex(index: number): boolean;
   removeUnitByName(reference: string): boolean;
   removeUnitByStandardUnit(standardRef: StandardUnit): boolean;

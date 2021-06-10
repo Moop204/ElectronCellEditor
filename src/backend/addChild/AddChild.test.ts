@@ -29,11 +29,9 @@ describe('Adding child of type Component', () => {
     const newName = 'newOne';
     const child: IChildDetail = {
       type: Elements.component,
-      attribute: [
-        {
-          name: newName,
-        },
-      ],
+      attribute: {
+        name: newName,
+      },
     };
     const parent: ISearch = {
       index: null,
@@ -74,11 +72,9 @@ describe('Adding child of type Component', () => {
     const newName = 'newOne';
     const child: IChildDetail = {
       type: Elements.component,
-      attribute: [
-        {
-          name: newName,
-        },
-      ],
+      attribute: {
+        name: newName,
+      },
     };
     const parent: ISearch = {
       index: null,
@@ -121,11 +117,9 @@ describe('Adding child of type Units', () => {
     const newName = 'newOne';
     const child: IChildDetail = {
       type: Elements.units,
-      attribute: [
-        {
-          name: newName,
-        },
-      ],
+      attribute: {
+        name: newName,
+      },
     };
     const parent: ISearch = {
       index: null,
@@ -149,6 +143,7 @@ describe('Adding child of type Units', () => {
     ).toEqual(newName);
   });
 });
+
 describe('Adding child of type Variable', () => {
   test('to Component', async () => {
     const libcellml = await libcellModule();
@@ -179,14 +174,12 @@ describe('Adding child of type Variable', () => {
 
     const child: IChildDetail = {
       type: Elements.variable,
-      attribute: [
-        {
-          name: newName,
-          varInterface: tInterface,
-          initialValue: tInitialValue,
-          units: tUnits,
-        },
-      ],
+      attribute: {
+        name: newName,
+        varInterface: tInterface,
+        initialValue: tInitialValue,
+        units: tUnits,
+      },
     };
     const parent: ISearch = {
       index: null,
@@ -265,15 +258,13 @@ describe('Adding child of type Reset', () => {
 
     const child: IChildDetail = {
       type: Elements.reset,
-      attribute: [
-        {
-          variable: tVariable,
-          variableTest: tVariableTest,
-          order: tOrder,
-          resetValue: tResetValue,
-          testValue: tTestValue,
-        },
-      ],
+      attribute: {
+        variable: tVariable,
+        variableTest: tVariableTest,
+        order: tOrder,
+        resetValue: tResetValue,
+        testValue: tTestValue,
+      },
     };
     const parent: ISearch = {
       index: null,

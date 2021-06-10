@@ -13,6 +13,7 @@ import { ISearch } from '../../types/IQuery';
 import FileManagement from '../FileManagement';
 import { AddChildComponent } from './AddChildComponent';
 import { AddChildReset } from './AddChildReset';
+import { AddChildUnit } from './AddChildUnit';
 import { AddChildUnits } from './AddChildUnits';
 import { AddChildVariable } from './AddChildVariable';
 
@@ -39,6 +40,10 @@ const addChild = async (
     }
     case Elements.reset: {
       await AddChildReset(fm, child, parent);
+      break;
+    }
+    case Elements.unit: {
+      await AddChildUnit(fm, child, parent);
       break;
     }
     default:

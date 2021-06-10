@@ -6,6 +6,7 @@ import { IChild } from '../../../types/IProperties';
 import { ISearch, ISelect } from '../../../types/IQuery';
 import { SubHeader } from '../../../frontend/components/SubHeader';
 import PropertyChild from './PropertyChild';
+import Grid from '@material-ui/core/Grid';
 
 const findElement = (elm: Elements, name: string) => {
   const select: ISearch = { index: null, name };
@@ -40,8 +41,10 @@ const ChildrenWidget = ({ abstractChildren, parentType }: IChildrenWidget) => {
   }
 
   return (
-    <div>
-      <SubHeader title="Children" />
+    <Grid item xs={12}>
+      {Object.entries(abstractChildren).length > 0 && (
+        <SubHeader title="Children" />
+      )}
 
       {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
         console.log(childrenType);
@@ -66,7 +69,7 @@ const ChildrenWidget = ({ abstractChildren, parentType }: IChildrenWidget) => {
           </div>
         );
       })}
-    </div>
+    </Grid>
   );
 };
 

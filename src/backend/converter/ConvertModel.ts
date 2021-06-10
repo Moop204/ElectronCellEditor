@@ -35,6 +35,7 @@ const convertModel = (model: Model) => {
         return { name, index };
       }),
     },
+    unit: [],
   };
   return propertyFormat;
 };

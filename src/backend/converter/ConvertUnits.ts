@@ -2,17 +2,26 @@ import { Elements } from '../../types/Elements';
 import { Units, Model } from '../../types/ILibcellml';
 import { IProperties } from '../../types/IProperties';
 
-const convertUnits = (component: Units) => {
-  const unitNum = component.unitCount();
+interface UnitDescriptor {
+  reference: string;
+  prefix: string;
+  exponent: number;
+  multiplier: number;
+  imported: string;
+}
+
+const convertUnits = (unitsElement: Units) => {
+  const unitNum = unitsElement.unitCount();
 
   const listUnit = [];
   for (let i = 0; i < unitNum; i += 1) {
-    const unitDescriptor = {
-      reference: component.unitAttributeReferenceByIndex(i),
-      prefix: component.unitAttributePrefixByIndex(i),
-      exponent: component.unitAttributeExponentByIndex(i),
-      multiplier: component.unitAttributeMultiplierByIndex(i),
-      imported: component.isImport() ? component.importReference() : '',
+    const unitDescriptor: UnitDescriptor = {
+      reference: unitsElement.unitAttributeReference(i),
+      prefix: unitsElement.unitAttributePrefix(i),
+      exponent: unitsElement.unitAttributeExponent(i),
+      multiplier: unitsElement.unitAttributeMultiplier(i),
+      // TODO: Renable after ImportedEntity issue is resolved
+      imported: '', // unitsElement.isImport() ? unitsElement.importReference() : '',
     };
     listUnit.push(unitDescriptor);
   }
@@ -21,7 +30,7 @@ const convertUnits = (component: Units) => {
   // const parentType: Elements = Elements.model;
   // const parentElement = component.parent() as Model;
 
-  // TODO: Unambiguous naming
+  // TODO: Unambiguous namingunitsElement
   // Name refers to both name attribute, the name of the attribute of name and name of units
   const units: IProperties = {
     type: Elements.units,
@@ -31,16 +40,15 @@ const convertUnits = (component: Units) => {
       name: '', //parentElement.name(),
     },
     attribute: {
-      name: component.name(),
+      name: unitsElement.name(),
     },
-    children: {
-      unit: listUnit.map((name: any, index: number) => {
-        return { name, index };
-      }),
-    },
+    children: {},
+    unit: listUnit.map((description: UnitDescriptor, index: number) => {
+      return { description, index };
+    }),
   };
 
   return units;
 };
 
-export { convertUnits };
+export { convertUnits, UnitDescriptor };
