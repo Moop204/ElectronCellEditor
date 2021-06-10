@@ -57,7 +57,11 @@ interface ComponentEntity extends NamedEntity {
     searchEncapsulated: boolean
   ): boolean;
   replaceComponentByIndex(index: number, component: Component): boolean;
-  replaceComponentByName(name: string, component: Component): boolean;
+  replaceComponentByName(
+    name: string,
+    component: Component,
+    searchEncapsulated: boolean
+  ): boolean;
   replaceComponentByComponent(
     oldComponent: Component,
     newComponent: Component,
@@ -152,28 +156,32 @@ enum StandardUnit {
 
 interface Units extends ImportedEntity, NamedEntity {
   isBaseUnit(): boolean;
-  addUnit(
+  addUnitByReferenceStringPrefix(
     reference: string,
     prefix: string,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByStringPrefix(
+  addUnitByReferenceEnumPrefix(
     reference: string,
     prefix: Prefix,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByEnumPrefix(
+  addUnitByReferenceIntPrefix(
     reference: string,
     prefix: number,
     exponent: number,
     multiplier: number,
     id: string
   ): void;
-  addUnitByExponent(reference: string, exponent: number, id: string): void;
+  addUnitByReferenceExponent(
+    reference: string,
+    exponent: number,
+    id: string
+  ): void;
   addUnitByReference(reference: string): void;
 
   addUnitByStandardUnitStringPrefix(
@@ -196,14 +204,14 @@ interface Units extends ImportedEntity, NamedEntity {
     id: string
   ): void;
   addUnitByStandardUnit(standardRef: StandardUnit): void;
-  unitAttributeReferenceByIndex(index: number): string;
-  unitAttributePrefixByIndex(index: number): string;
-  unitAttributeExponentByIndex(index: number): number;
-  unitAttributeMultiplierByIndex(index: number): number;
+  unitAttributeReference(index: number): string;
+  unitAttributePrefix(index: number): string;
+  unitAttributeExponent(index: number): number;
+  unitAttributeMultiplier(index: number): number;
   removeUnitByIndex(index: number): boolean;
   removeUnitByName(reference: string): boolean;
   removeUnitByStandardUnit(standardRef: StandardUnit): boolean;
-  setSourceUnits(): void;
+  setSourceUnits(importSource: ImportSource, name: string): void;
   removeAllUnits(): void;
   unitCount(): number;
   clone(): Units;
@@ -339,9 +347,9 @@ interface Component extends ComponentEntity, ImportedEntity {
   addVariable(variable: Variable): void;
   appendMath(math: string): void;
   math(): string;
-  resetByIndex(index: number): Reset;
+  reset(index: number): Reset;
   variableByIndex(index: number): Variable;
-  variableByName(name: string): number;
+  variableByName(name: string): Variable;
   hasReset(reset: Reset): boolean;
   hasVariableByName(name: string): boolean;
   hasVariableByVariable(variable: Variable): boolean;
@@ -368,6 +376,13 @@ enum InterfaceType {
   PUBLIC,
   PUBLIC_AND_PRIVATE,
 }
+
+const InterfaceTypeString = {
+  NONE: 'none',
+  PRIVATE: 'private',
+  PUBLIC: 'public',
+  PUBLIC_AND_PRIVATE: 'public_and_private',
+};
 
 interface Variable extends NamedEntity {
   removeAllEquivalences(): void;
@@ -425,6 +440,7 @@ interface Reset extends Entity {
   setTestValue(math: string): void;
   removeTestValue(): void;
   appendResetValue(math: string): void;
+  resetValue(): string;
   setResetValue(math: string): void;
   removeResetValue(): void;
   clone(): Reset;
@@ -457,4 +473,5 @@ export {
   Validator,
   Variable,
   Version,
+  InterfaceTypeString,
 };

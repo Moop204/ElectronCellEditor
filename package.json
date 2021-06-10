@@ -13,7 +13,7 @@
     "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -146,7 +146,10 @@
     ],
     "setupFiles": [
       "./.erb/scripts/CheckBuildsExist.js"
-    ]
+    ],
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -189,7 +192,7 @@
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.1.0",
+    "babel-jest": "^27.0.2",
     "babel-loader": "^8.2.2",
     "babel-plugin-dev-expression": "^0.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -238,6 +241,7 @@
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.0.3",
+    "ts-node": "^10.0.0",
     "typescript": "^4.0.5",
     "url-loader": "^4.1.0",
     "webpack": "^5.5.1",
@@ -250,24 +254,35 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "@monaco-editor/loader": "^1.0.0",
     "@monaco-editor/react": "^4.0.11",
-    "@types/styled-components": "^5.1.9",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
+    "formik": "^2.2.6",
     "history": "^5.0.0",
-    "libcellml.js": "^0.2.0-dev.0",
+    "libcellml.js": "^0.2.0-dev.21",
+    "lodash": "^4.17.21",
+    "mathjax-full": "^3.1.4",
+    "mathjax-react": "^1.0.6",
+    "mathjax3-react": "^1.0.11",
     "monaco-editor": "^0.23.0",
     "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-mathjax2": "^0.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-xml-editor": "^0.8.0",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
-    "xml-js": "^1.6.11"
+    "ts-jest": "^27.0.2",
+    "xml-js": "^1.6.11",
+    "xslt-processor": "^0.11.5",
+    "xslt3-loader": "^0.0.9",
+    "yup": "^0.32.9"
   },
   "devEngines": {
     "node": ">=10.x",
