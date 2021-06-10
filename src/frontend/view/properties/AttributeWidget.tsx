@@ -1,3 +1,4 @@
+import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import { SubHeader } from '../../components/SubHeader';
 import PropertyAttribute from './PropertyAttribute';
@@ -10,7 +11,7 @@ interface IAttributeWidget {
 const AttributeWidget = (prop: IAttributeWidget) => {
   const { handleChange, attribute } = prop;
   return (
-    <div>
+    <Grid item xs={12}>
       <SubHeader title="Attributes" />
       {Object.entries(attribute).map(([attrTitle, attrVal]) => (
         <PropertyAttribute
@@ -20,7 +21,7 @@ const AttributeWidget = (prop: IAttributeWidget) => {
           onChange={(e) => handleChange(attrTitle, e.target.value)}
         />
       ))}
-    </div>
+    </Grid>
   );
 };
 

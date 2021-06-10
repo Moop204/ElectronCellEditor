@@ -24,6 +24,7 @@ const convertSelectedElement = (
     attribute: {},
     children: {},
     parent: { name: '', type: Elements.none },
+    unit: [],
   };
   if (curElm) {
     switch (selectedElement) {

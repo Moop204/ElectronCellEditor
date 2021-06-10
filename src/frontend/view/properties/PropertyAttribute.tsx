@@ -15,10 +15,12 @@ const PropertyAttribute = (props: IPropertyAttribute) => {
   //   );
   // }
   return (
-    <Grid container item direction="row">
-      <InputLabel>{title}</InputLabel>
-      <TextField value={value} onChange={onChange} />
-    </Grid>
+    <div>
+      <Grid container item direction="row">
+        <InputLabel>{title}</InputLabel>
+        <TextField value={value} onChange={onChange} />
+      </Grid>
+    </div>
   );
 };
 

@@ -10,7 +10,9 @@ import { ComponentChildForm } from './forms/form-type/ComponentChildForm';
 import { Input } from '@material-ui/core';
 import { InputType } from './forms/utility/Inputs';
 import { UnitsChildForm } from './forms/form-type/UnitsChildForm';
+import { UnitChildForm } from './forms/form-type/UnitChildForm';
 import { VariableChildForm } from './forms/form-type/VariableChildForm';
+import { ResetChildForm } from './forms/form-type/ResetChildForm';
 
 interface IAddChild {
   childElement: Elements;
@@ -73,6 +75,20 @@ const ComponentForm = (prop: IAddChild) => {
               parentName={parentName}
               handleClose={handleClose}
             ></VariableChildForm>
+          )}
+          {childElement === Elements.reset && (
+            <ResetChildForm
+              parent={parentElement}
+              parentName={parentName}
+              handleClose={handleClose}
+            />
+          )}
+          {childElement === Elements.unit && (
+            <UnitChildForm
+              parent={parentElement}
+              parentName={parentName}
+              handleClose={handleClose}
+            />
           )}
         </DialogContent>
       </Dialog>

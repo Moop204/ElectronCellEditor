@@ -16,6 +16,7 @@ import { capitaliseFirst } from '../../utils/utility';
 import { AddChildrenWidget } from './AddChildrenWidget';
 import { AttributeWidget } from './AttributeWidget';
 import { ChildrenWidget } from './ChildrenWidget';
+import { UnitWidget } from './UnitWidget';
 
 const localStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -165,22 +166,24 @@ const PropertiesWidget = () => {
   };
 
   return (
-    <Grid container item className={styles.properties}>
+    <Grid container item className={styles.properties} xs={12}>
       <Heading title="Properties" />
-      <Grid item className={styles.plainText}>
-        <div className={styles.elementType}>
+      <Grid container item className={styles.plainText}>
+        <Grid item className={styles.elementType} xs={2}>
           <Button>Parent</Button>
+        </Grid>
+        <Grid item className={styles.elementType} xs={10}>
           {capitaliseFirst(elmToStr(abstractModel.type))}
-        </div>
+        </Grid>
         <AttributeWidget
           attribute={abstractModel.attribute}
           handleChange={handleChange}
         />
+        <UnitWidget unitMap={abstractModel.unit} />
         <ChildrenWidget
           abstractChildren={abstractModel.children}
           parentType={abstractModel.type}
         />
-        <SubHeader title="Add Children" />
         <AddChildrenWidget
           element={abstractModel.type}
           name={abstractModel.attribute.name}

@@ -3,7 +3,6 @@ import { Elements } from '../../types/Elements';
 import { IProperties } from '../../types/IProperties';
 
 const convertComponent = (component: Component) => {
-  console.log(component);
   if (component === null) {
     console.log('ConvertComponent: Given component is null');
   }
@@ -50,6 +49,7 @@ const convertComponent = (component: Component) => {
         return { name, index };
       }),
     },
+    unit: [],
   };
   return propertyFormat;
 };

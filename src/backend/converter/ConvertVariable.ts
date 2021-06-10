@@ -28,6 +28,7 @@ const convertVariable = (variable: Variable) => {
         return { name, index };
       }),
     },
+    unit: [],
   };
 
   return varProp;
