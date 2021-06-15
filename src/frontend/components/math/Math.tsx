@@ -23,7 +23,11 @@ const convertToPresentation = (mathml: string) => {
     resultDocument.documentElement
   );
   console.log(`res: ` + transformed);
-  return '<math>' + transformed + '</math>';
+  return (
+    '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
+    transformed +
+    '</math>'
+  );
   return transformed;
 };
 

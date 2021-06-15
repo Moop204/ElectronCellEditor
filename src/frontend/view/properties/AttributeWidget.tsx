@@ -18,7 +18,8 @@ const AttributeWidget = (prop: IAttributeWidget) => {
           title={attrTitle}
           value={attrVal}
           key={attrTitle}
-          onChange={(e) => handleChange(attrTitle, e.target.value)}
+          // onChange={(e) => handleChange(attrTitle, e.target.value)}
+          onChange={handleChange}
         />
       ))}
     </Grid>

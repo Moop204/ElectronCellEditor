@@ -4,11 +4,11 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import CreateIcon from '@material-ui/icons/Create';
 
-const TextViewButton = () => {
+const TextViewButton = ({ onClick }: { onClick: any }) => {
   return (
     <Tooltip title="Text View">
       <Link to="">
-        <IconButton aria-label="Text View" color="primary">
+        <IconButton aria-label="Text View" color="primary" onClick={onClick}>
           <CreateIcon />
         </IconButton>
       </Link>

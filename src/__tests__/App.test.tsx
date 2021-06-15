@@ -13,15 +13,6 @@ import FileManagement from '../backend/FileManagement';
 // });
 
 describe('CellML Library', () => {
-  test('should create cellml objects', async () => {
-    const libcellml = await libcellModule();
-    const parser = new libcellml.Parser();
-    const printer = new libcellml.Printer();
-    const validator = new libcellml.Validator();
-    expect(parser).toBeDefined();
-    expect(printer).toBeDefined();
-    expect(validator).toBeDefined();
-  });
   test('should parse models', async () => {
     const validFile: string = `<?xml version="1.0" encoding="UTF-8"?>
     <model xmlns="http://www.cellml.org/cellml/2.0#" 
@@ -74,7 +65,7 @@ describe('CellML Library', () => {
     const printer = new libcellml.Printer();
     const fm = new FileManagement();
     const { model, issues } = await fm.importFile(
-      'src/example/complex_encapsulation.xml'
+      'example/complex_encapsulation.xml'
     );
 
     // File contains what was expected
@@ -91,7 +82,7 @@ describe('CellML Library', () => {
     const parser = new libcellml.Parser();
     const printer = new libcellml.Printer();
     const fm = new FileManagement();
-    const { model, issues } = await fm.importFile('src/example/bad.xml');
+    const { model, issues } = await fm.importFile('example/bad.xml');
     const m = parser.parseModel(model);
     expect(printer.printModel(m, false)).toBe(invalidFile);
     expect(issues && issues.length).toBeGreaterThan(0);
