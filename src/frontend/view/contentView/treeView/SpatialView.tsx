@@ -27,7 +27,8 @@ const SpatialView = ({ contentExist }: ISpatialView) => {
   if (contentExist === '') {
     return <div className={styles.notLoaded}>No File Loaded</div>;
   }
-
+  console.log(contentExist);
+  console.log(compressCellml(contentExist));
   return (
     <div className={styles.spatialView}>
       {/* <div>{compressCellml(contentExist)}</div> */}

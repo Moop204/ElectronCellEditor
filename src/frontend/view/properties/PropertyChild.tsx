@@ -24,14 +24,11 @@ const PropertyChild = (props: IPropertyChild) => {
       break;
     case Elements.variable:
       icon = <ChangeHistoryIcon />;
+      break;
     default:
-      icon = <div> {element} </div>;
+      icon = <div> |{element}| </div>;
   }
   return (
-    // <Grid item direction="row">
-    //   {icon}
-    //   {/* <Button onClick={onClick}>{title}</Button> */}
-    // </Grid>
     <div>
       {icon}
       <Button onClick={onClick}>{title}</Button>

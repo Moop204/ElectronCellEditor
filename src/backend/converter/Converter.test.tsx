@@ -157,11 +157,11 @@ describe('Converting CellML Component into property format', () => {
 
       // Check attributes of element are preserved
       expect(convertedElement.type).toEqual(Elements.units);
-      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(1);
       expect(convertedElement.attribute['name']).toBeDefined();
       expect(convertedElement.attribute['name']).toEqual('testUnit1');
       // Check children
-      expect(convertedElement.attribute['unit'].length).toEqual(0);
+      expect(convertedElement.unit.length).toEqual(0);
       // TODO: Enable test after libcellml parent() binding is fixed
       // expect(convertedElement.parent.type).toEqual(Elements.model);
     });
@@ -179,26 +179,16 @@ describe('Converting CellML Component into property format', () => {
 
       // Check attributes of element are preserved
       expect(convertedElement.type).toEqual(Elements.units);
-      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(1);
       expect(convertedElement.attribute['name']).toBeDefined();
       expect(convertedElement.attribute['name']).toEqual('testUnit1');
       // Check children
-      expect(convertedElement.attribute['unit'].length).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][0].description.reference
-      ).toEqual('second');
-      expect(
-        convertedElement.attribute['unit'][0].description.imported
-      ).toEqual('');
-      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
-        ''
-      );
-      expect(
-        convertedElement.attribute['unit'][0].description.exponent
-      ).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][0].description.multiplier
-      ).toEqual(1);
+      expect(convertedElement.unit.length).toEqual(1);
+      expect(convertedElement.unit[0].description.reference).toEqual('second');
+      expect(convertedElement.unit[0].description.imported).toEqual('');
+      expect(convertedElement.unit[0].description.prefix).toEqual('');
+      expect(convertedElement.unit[0].description.exponent).toEqual(1);
+      expect(convertedElement.unit[0].description.multiplier).toEqual(1);
       // TODO: Enable test after libcellml parent() binding is fixed
       // expect(convertedElement.parent.type).toEqual(Elements.model);
     });
@@ -216,26 +206,16 @@ describe('Converting CellML Component into property format', () => {
 
       // Check attributes of element are preserved
       expect(convertedElement.type).toEqual(Elements.units);
-      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
+      expect(Object.keys(convertedElement.attribute).length).toEqual(1);
       expect(convertedElement.attribute['name']).toBeDefined();
       expect(convertedElement.attribute['name']).toEqual('testUnit1');
       // Check children
-      expect(convertedElement.attribute['unit'].length).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][0].description.reference
-      ).toEqual('second');
-      expect(
-        convertedElement.attribute['unit'][0].description.imported
-      ).toEqual('');
-      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
-        'milli'
-      );
-      expect(
-        convertedElement.attribute['unit'][0].description.exponent
-      ).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][0].description.multiplier
-      ).toEqual(-1000);
+      expect(convertedElement.unit.length).toEqual(1);
+      expect(convertedElement.unit[0].description.reference).toEqual('second');
+      expect(convertedElement.unit[0].description.imported).toEqual('');
+      expect(convertedElement.unit[0].description.prefix).toEqual('milli');
+      expect(convertedElement.unit[0].description.exponent).toEqual(1);
+      expect(convertedElement.unit[0].description.multiplier).toEqual(-1000);
       // TODO: Enable test after libcellml parent() binding is fixed
       // expect(convertedElement.parent.type).toEqual(Elements.model);
     });
@@ -253,26 +233,15 @@ describe('Converting CellML Component into property format', () => {
 
       // Check attributes of element are preserved
       expect(convertedElement.type).toEqual(Elements.units);
-      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
       expect(convertedElement.attribute['name']).toBeDefined();
       expect(convertedElement.attribute['name']).toEqual('testUnit1');
       // Check children
-      expect(convertedElement.attribute['unit'].length).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][0].description.reference
-      ).toEqual('second');
-      expect(
-        convertedElement.attribute['unit'][0].description.imported
-      ).toEqual('');
-      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
-        ''
-      );
-      expect(
-        convertedElement.attribute['unit'][0].description.exponent
-      ).toEqual(12);
-      expect(
-        convertedElement.attribute['unit'][0].description.multiplier
-      ).toEqual(1);
+      expect(convertedElement.unit.length).toEqual(1);
+      expect(convertedElement.unit[0].description.reference).toEqual('second');
+      expect(convertedElement.unit[0].description.imported).toEqual('');
+      expect(convertedElement.unit[0].description.prefix).toEqual('');
+      expect(convertedElement.unit[0].description.exponent).toEqual(12);
+      expect(convertedElement.unit[0].description.multiplier).toEqual(1);
       // TODO: Enable test after libcellml parent() binding is fixed
       // expect(convertedElement.parent.type).toEqual(Elements.model);
     });
@@ -295,21 +264,21 @@ describe('Converting CellML Component into property format', () => {
     //   expect(convertedElement.attribute['name']).toBeDefined();
     //   expect(convertedElement.attribute['name']).toEqual('testUnit1');
     //   // Check children
-    //   expect(convertedElement.attribute['unit'].length).toEqual(1);
+    //   expect(convertedElement.unit.length).toEqual(1);
     //   expect(
-    //     convertedElement.attribute['unit'][0].description.reference
+    //     convertedElement.unit[0].description.reference
     //   ).toEqual('second');
     //   expect(
-    //     convertedElement.attribute['unit'][0].description.imported
+    //     convertedElement.unit[0].description.imported
     //   ).toEqual('');
-    //   expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
+    //   expect(convertedElement.unit[0].description.prefix).toEqual(
     //     ''
     //   );
     //   expect(
-    //     convertedElement.attribute['unit'][0].description.exponent
+    //     convertedElement.unit[0].description.exponent
     //   ).toEqual(12);
     //   expect(
-    //     convertedElement.attribute['unit'][0].description.multiplier
+    //     convertedElement.unit[0].description.multiplier
     //   ).toEqual(1);
     //   // TODO: Enable test after libcellml parent() binding is fixed
     //   // expect(convertedElement.parent.type).toEqual(Elements.model);
@@ -332,41 +301,20 @@ describe('Converting CellML Component into property format', () => {
 
       // Check attributes of element are preserved
       expect(convertedElement.type).toEqual(Elements.units);
-      expect(Object.keys(convertedElement.attribute).length).toEqual(2);
       expect(convertedElement.attribute['name']).toBeDefined();
       expect(convertedElement.attribute['name']).toEqual('testUnit1');
       // Check children
-      expect(convertedElement.attribute['unit'].length).toEqual(2);
-      expect(
-        convertedElement.attribute['unit'][0].description.reference
-      ).toEqual('second');
-      expect(
-        convertedElement.attribute['unit'][0].description.imported
-      ).toEqual('');
-      expect(convertedElement.attribute['unit'][0].description.prefix).toEqual(
-        ''
-      );
-      expect(
-        convertedElement.attribute['unit'][0].description.exponent
-      ).toEqual(12);
-      expect(
-        convertedElement.attribute['unit'][0].description.multiplier
-      ).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][1].description.reference
-      ).toEqual('second');
-      expect(
-        convertedElement.attribute['unit'][1].description.imported
-      ).toEqual('');
-      expect(convertedElement.attribute['unit'][1].description.prefix).toEqual(
-        'milli'
-      );
-      expect(
-        convertedElement.attribute['unit'][1].description.exponent
-      ).toEqual(1);
-      expect(
-        convertedElement.attribute['unit'][1].description.multiplier
-      ).toEqual(-1000);
+      expect(convertedElement.unit.length).toEqual(2);
+      expect(convertedElement.unit[0].description.reference).toEqual('second');
+      expect(convertedElement.unit[0].description.imported).toEqual('');
+      expect(convertedElement.unit[0].description.prefix).toEqual('');
+      expect(convertedElement.unit[0].description.exponent).toEqual(12);
+      expect(convertedElement.unit[0].description.multiplier).toEqual(1);
+      expect(convertedElement.unit[1].description.reference).toEqual('second');
+      expect(convertedElement.unit[1].description.imported).toEqual('');
+      expect(convertedElement.unit[1].description.prefix).toEqual('milli');
+      expect(convertedElement.unit[1].description.exponent).toEqual(1);
+      expect(convertedElement.unit[1].description.multiplier).toEqual(-1000);
 
       // TODO: Enable test after libcellml parent() binding is fixed
       // expect(convertedElement.parent.type).toEqual(Elements.model);

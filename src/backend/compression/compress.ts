@@ -37,18 +37,22 @@ const parseReset = (reset: IElement) => {
 const parseComponent = (elms: IElement[]) => {
   let math = '';
   const newElm: IElement[] = [];
-  elms.map((elm: IElement) => {
-    // When facing Math
-    if (elm.name === 'math') {
-      // Take Math
-      // Stringify it
-      math += xml.json2xml(elm);
-    } else if (elm.name === 'reset') {
-      newElm.push(parseReset(elm));
-    } else {
-      newElm.push(elm);
-    }
-  });
+  if (elms) {
+    elms.map((elm: IElement) => {
+      // When facing Math
+      if (elm.name === 'math') {
+        // Take Math
+        // Stringify it
+        math += xml.json2xml(elm);
+      } else if (elm.name === 'reset') {
+        newElm.push(parseReset(elm));
+      } else {
+        newElm.push(elm);
+      }
+    });
+  } else {
+    console.log('Error: No elm given in func parseComponent');
+  }
   return { newElm, math };
 };
 
@@ -86,30 +90,35 @@ const compressCellml = (s: string) => {
   const componentMap: Record<string, any> = [];
   const newElements: IElement[] = [];
 
-  parsed.elements[0].elements.map((elm: IElement) => {
-    // For child of model
-    if (elm.name === 'component') {
-      const { newElm, math } = parseComponent(elm.elements || []);
-      elm.elements = newElm;
-      // Assign math as an attribute
-      elm.attributes.math = math;
-      // newElements.push(elm);
-      componentMap[elm.attributes.name] = elm;
-    } else if (elm.name === 'import') {
-      // Reduce imports
-      elm.elements.map((childElm: IElement) => {
-        const newElm = childElm;
-        newElm.name = `imported-${newElm.name}`;
-        newElm.attributes['xlink:href'] = elm.attributes['xlink:href'];
-        newElm.attributes['xmlns:xlink'] = elm.attributes['xmlns:xlink'];
-        newElements.push(newElm);
-      });
-    } else if (elm.name === 'connection' || elm.name === 'map_variable') {
-      // empty
-    } else {
-      newElements.push(elm);
-    }
-  });
+  if (parsed.elements[0].elements) {
+    parsed.elements[0].elements.map((elm: IElement) => {
+      // For child of model
+      if (elm.name === 'component') {
+        const { newElm, math } = parseComponent(elm.elements || []);
+        elm.elements = newElm;
+        // Assign math as an attribute
+        elm.attributes.math = math;
+        // newElements.push(elm);
+        componentMap[elm.attributes.name] = elm;
+      } else if (elm.name === 'import') {
+        // Reduce imports
+        elm.elements.map((childElm: IElement) => {
+          const newElm = childElm;
+          newElm.name = `imported-${newElm.name}`;
+          newElm.attributes['xlink:href'] = elm.attributes['xlink:href'];
+          newElm.attributes['xmlns:xlink'] = elm.attributes['xmlns:xlink'];
+          newElements.push(newElm);
+        });
+      } else if (elm.name === 'connection' || elm.name === 'map_variable') {
+        // empty
+      } else {
+        newElements.push(elm);
+      }
+    });
+  } else {
+    console.log('Error: No element available to map in func compressCellml');
+    console.log(parsed.elements);
+  }
 
   let finalElements: IElement[] = [];
 

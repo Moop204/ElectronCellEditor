@@ -49,9 +49,14 @@ export default class FileManagement {
   // variableParentList: string[];
 
   constructor() {
-    this.content = '';
+    this.content = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" 
+xmlns:cellml="http://www.cellml.org/cellml/2.0#" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
+
+</model>`;
     this.currentComponent = null;
-    this.type = Elements.model;
+    this.type = Elements.none;
     // this.variableList = [];
     // this.variableParentList = [];
     this._cellmlLoaded = false;
@@ -65,7 +70,16 @@ export default class FileManagement {
 
   async updateContent(s: string) {
     this.content = s;
+    if (!this._cellmlLoaded) {
+      await this.init();
+    }
+    const validator = await validateModel(this, s);
+    if (this.type === Elements.none && validator.issueCount() === 0) {
+      const parser: Parser = new this._cellml.Parser();
+      this.setCurrentComponent(parser.parseModel(this.content), Elements.model);
+    }
     console.log(`updateContent` + s);
+    ipcMain.emit('update-content-B', this.getContent());
   }
 
   async setContent(s: string) {
@@ -206,6 +220,13 @@ export default class FileManagement {
 
   // Run once to set up handlers
   setupHandlers() {
+    ipcMain.on(
+      'save-content',
+      async (event: IpcMainEvent, newContent: string) => {
+        await this.updateContent(newContent);
+      }
+    );
+
     // Used in Spatial view
     // Assume starting valid
     ipcMain.on(
@@ -326,7 +347,24 @@ export default class FileManagement {
       const validator = await validateModel(this, file);
       event.reply('validated-file', validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
+      console.log('Validated File');
       console.log(issues);
+      if (issues.length === 0 && this.type === Elements.none) {
+        this.type = Elements.model;
+        const libcellml = this._cellml;
+        const parser: Parser = new libcellml.Parser();
+        const m: Model = parser.parseModel(file);
+        this.currentComponent = m;
+        const prop = convertSelectedElement(
+          this.type,
+          this.getCurrentComponent()
+        );
+        console.log('FILE IS AOK AND WE GONNA THROW DOWN A NEW ONE');
+        event.reply('res-get-element', prop);
+      } else {
+        console.log(`Issue length: ${issues.length}`);
+        console.log(`Current Type: ${this.type}`);
+      }
       event.reply('error-reply', issues);
     });
 

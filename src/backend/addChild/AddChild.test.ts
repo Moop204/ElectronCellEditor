@@ -259,11 +259,11 @@ describe('Adding child of type Reset', () => {
     const child: IChildDetail = {
       type: Elements.reset,
       attribute: {
-        variable: tVariable,
-        variableTest: tVariableTest,
+        reset_variable: tVariable,
+        test_variable: tVariableTest,
         order: tOrder,
-        resetValue: tResetValue,
-        testValue: tTestValue,
+        reset_value: tResetValue,
+        test_value: tTestValue,
       },
     };
     const parent: ISearch = {

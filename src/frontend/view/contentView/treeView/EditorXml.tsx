@@ -3,67 +3,42 @@ import Builder from 'react-xml-editor/lib/Builder';
 import React, { useState } from 'react';
 import { docSpec } from './Specification';
 import './css/xonomy.css';
+import { FunctionComponent } from 'react';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
-export default class EditorXml extends React.Component<
-  { xmlInput: string },
-  { xml: string }
-> {
-  private ref: React.RefObject<XmlEditor>;
+interface IEditor {
+  xmlInput: string;
+}
 
-  //timerUpdate: NodeJS.Timeout;
-
-  public constructor(props: { xmlInput: string }) {
-    const { xmlInput } = props;
-    super(props);
-    this.ref = React.createRef();
-    this.onClickHarvest = this.onClickHarvest.bind(this);
-    this.state = {
-      xml: xmlInput,
-    };
-  }
-
-  // componentDidMount() {
-  //   this.timerUpdate = setInterval(() => this.newUpdate(), 1000);
-  // }
-
-  // componentWillUnmount() {
-  //   clearInterval(this.timerUpdate);
-  // }
-
-  // private newUpdate() {
-  //   this.setState((state, prop) => {
-  //     prop.xmlInput;
-  //   });
-  // }
-
-  private onClickHarvest(): void {
-    if (this.ref.current) {
+const EditorXml: FunctionComponent<IEditor> = ({ xmlInput }) => {
+  const editorRef = useRef<XmlEditor | null>(null);
+  const [xml, setXml] = useState(xmlInput);
+  console.log('>>> XML INPUT <<<');
+  console.log(xmlInput);
+  const onClickHarvest = () => {
+    if (editorRef.current) {
       const builder = new Builder({});
-      const xml = this.ref.current.getXml();
+      const xml = editorRef.current.getXml();
       if (xml) {
-        this.setState({
-          xml: builder.buildObject(xml),
-        });
+        setXml(builder.buildObject(xml));
       }
     }
-  }
+  };
 
-  public render(): React.ReactNode {
-    return (
-      <>
-        <div>
-          <XmlEditor
-            docSpec={docSpec}
-            ref={this.ref}
-            xml={this.state.xml}
-            mode="laic"
-          />
-          {/* <button onClick={this.onClickHarvest}>Harvest</button>
-        </div>
-        <div>
-          <pre>{this.state.xml}</pre> */}
-        </div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div>
+        <XmlEditor
+          key={xmlInput}
+          docSpec={docSpec}
+          ref={editorRef}
+          xml={xmlInput}
+          mode="laic"
+        />
+      </div>
+    </>
+  );
+};
+
+export default EditorXml;

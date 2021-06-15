@@ -41,9 +41,17 @@ const localStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface AttributeChange {
+  type: Elements;
+  name: string;
+  attribute: string;
+  attributeValue: string;
+}
+
 const PropertiesWidget = () => {
   const styles = localStyles();
   const [abstractModel, setAbstractModel] = useState<IProperties>();
+  const [diffSet, setDiffSet] = useState<AttributeChange[]>([]);
 
   useEffect(() => {
     // Handles when it receives details about the selected element.
@@ -63,10 +71,20 @@ const PropertiesWidget = () => {
               'ABSTRACTMODEL: Failed to contain requisite properties upon res-get-element'
             );
             console.log(`Type: ` + cellmlModel.type);
-            console.log(`Attribute: ` + cellmlModel.attribute);
-            console.log(`Children ` + cellmlModel.children);
-            console.log(`Parent ` + cellmlModel.parent);
+            console.log(`Attribute: `);
+            console.log(cellmlModel.attribute);
+            console.log(`Children `);
+            console.log(cellmlModel.children);
+            console.log(`Parent `);
+            console.log(cellmlModel.parent);
           }
+          console.log(`Type: ` + cellmlModel.type);
+          console.log(`Attribute: `);
+          console.log(cellmlModel.attribute);
+          console.log(`Children `);
+          console.log(cellmlModel.children);
+          console.log(`Parent `);
+          console.log(cellmlModel.parent);
           setAbstractModel(cellmlModel);
         }
       }
@@ -131,8 +149,9 @@ const PropertiesWidget = () => {
 
   // Before a file is loaded
   if (!abstractModel) {
+    ipcRenderer.send('get-element');
     return (
-      <Grid item>
+      <Grid item className={styles.plainText}>
         <Heading title="Properties" />
         LOADING ...
       </Grid>
@@ -159,10 +178,36 @@ const PropertiesWidget = () => {
         'ABSTRACTMODEL: Failed to contain requisite properties upon handling change'
       );
     }
-
     setAbstractModel(newAbstractModel);
-    dbUpdateAttr(abstractModel.type, compName, attrType, attrVal);
-    console.log('MODEL PROPERTIES: Updated attribute');
+
+    ////////
+    const change: AttributeChange = {
+      type: abstractModel.type,
+      attribute: attrType,
+      attributeValue: attrVal,
+      name: compName,
+    };
+
+    let newChangeFlag = true;
+    for (let i = 0; i < diffSet.length; i++) {
+      const existingChange = diffSet[i];
+      if (existingChange.attribute === change.attribute) {
+        diffSet[i] = change;
+        newChangeFlag = false;
+      }
+    }
+    if (newChangeFlag) diffSet.push(change);
+
+    //    dbUpdateAttr(abstractModel.type, compName, attrType, attrVal);
+    // console.log('MODEL PROPERTIES: Updated attribute');
+  };
+
+  const sendAttributeUpdate = () => {
+    for (const { type, name, attribute, attributeValue } of diffSet) {
+      dbUpdateAttr(type, name, attribute, attributeValue);
+    }
+    console.log(diffSet);
+    setDiffSet([]);
   };
 
   return (
@@ -179,6 +224,7 @@ const PropertiesWidget = () => {
           attribute={abstractModel.attribute}
           handleChange={handleChange}
         />
+        <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
         <UnitWidget unitMap={abstractModel.unit} />
         <ChildrenWidget
           abstractChildren={abstractModel.children}

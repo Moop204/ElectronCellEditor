@@ -17,7 +17,14 @@ import Paper from '@material-ui/core/Paper';
 import { ContentTracing } from 'electron';
 import Alert from '@material-ui/lab/Alert';
 import _ from 'lodash';
-import { Math } from '../components/math/Math';
+import { Math, PresentationMath } from '../components/math/Math';
+import { VerticalOptionWidget } from '../optionSelect/VerticleOptionWidget';
+//import { PDFReader } from 'reactjs-pdf-reader';
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const localStyles = makeStyles((theme) =>
   createStyles({
@@ -40,9 +47,26 @@ const localStyles = makeStyles((theme) =>
 const Dashboard = () => {
   const styles = localStyles();
   // Chuck in React Contexts
-  const [contentExist, setContentExist] = useState('');
-  const [valid, setValid] = useState(false);
+  const [
+    contentExist,
+    setContentExist,
+  ] = useState(`<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" 
+xmlns:cellml="http://www.cellml.org/cellml/2.0#" 
+xmlns:xlink="http://www.w3.org/1999/xlink">
 
+</model>`);
+  const [valid, setValid] = useState(false);
+  const [viewSidebar, setViewSidebar] = useState(false);
+
+  const switchSidebar = () => {
+    console.log('Switching sidebar to ' + viewSidebar);
+    setViewSidebar(!viewSidebar);
+  };
+
+  const [view, setView] = useState(false);
+
+  const switchView = () => setView(!view);
   // const contentCallback = useCallback(() => {
   //   return getContentExists();
   // }, []);
@@ -66,7 +90,7 @@ const Dashboard = () => {
 
     ipcRenderer.on('validated-file', validatedFile);
     return () => {
-      ipcRenderer.removeListener('update-content', updateContentFn);
+      // ipcRenderer.removeListener('update-content', updateContentFn);
       ipcRenderer.removeListener('init-content', initContentFn);
       ipcRenderer.removeListener('validated-file', validatedFile);
     };
@@ -87,17 +111,59 @@ const Dashboard = () => {
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
+  const [pageNum, setPageNum] = useState(1);
+  const [open, setOpen] = useState(false);
+  // return (
+  //   <div>
+  //     <Button onClick={() => setOpen(true)}>Help</Button>
+  //     <Dialog
+  //       disableBackdropClick
+  //       disableEscapeKeyDown
+  //       open={open}
+  //       onClose={() => setOpen(false)}
+  //     >
+  //       <DialogTitle>
+  //         Test PDF
+  //       </DialogTitle>
+  //       <DialogContent>
+  //         <Button onClick={() => setPageNum(pageNum - 1)}>{"<<<"}</Button>
+  //         <Button onClick={() => setPageNum(pageNum + 1)}>>>></Button>
+  //         <Document file="../src/frontend/media/cellml_2_0_normative_specification.pdf">
+  //           <Page pageNumber={pageNum} />
+  //         </Document>
+  //       </DialogContent>
+  //     </Dialog>
+  //   </div>
+  // );
+
   return (
     <div className={styles.root}>
       <Router>
         <Grid container spacing={1}>
-          <Grid item md={3}>
-            <OptionWidget valid={valid} />
+          {viewSidebar && (
+            <Grid item md={3}>
+              <OptionWidget
+                content={contentExist}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+              />
 
-            <PropertiesWidget />
-            <IssuesWidget />
-          </Grid>
-          <Grid item md={9}>
+              <PropertiesWidget />
+              <IssuesWidget expanded={viewSidebar} />
+            </Grid>
+          )}
+          {!viewSidebar && (
+            <Grid item md={1}>
+              <VerticalOptionWidget
+                content={contentExist}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+              />
+              <IssuesWidget expanded={viewSidebar} />
+            </Grid>
+          )}
+
+          <Grid item md={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
               <Paper className={styles.tabbing}>
                 {/* <button>ABC</button>

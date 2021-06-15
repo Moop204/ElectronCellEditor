@@ -49,6 +49,8 @@ const convertSelectedElement = (
         );
     }
   }
+  console.log('Converter prop');
+  console.log(prop);
   return prop;
 };
 

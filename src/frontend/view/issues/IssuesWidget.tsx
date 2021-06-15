@@ -26,7 +26,7 @@ const useStyle = makeStyles((theme: Theme) =>
   })
 );
 
-const IssuesWidget = () => {
+const IssuesWidget = ({ expanded }: { expanded: boolean }) => {
   const [issues, setIssues] = useState<IIssue[]>([]);
   const [errorMode, setErrorMode] = useState<boolean>(true);
   const [warningMode, setWarningMode] = useState<boolean>(true);
@@ -50,58 +50,62 @@ const IssuesWidget = () => {
     <Grid container item>
       <Grid item md={12}>
         <Heading title="Issues" />
-        <span>
-          <IconButton
-            color="inherit"
-            className={styles.issueButtons}
-            onClick={() => {
-              if (errorMode && warningMode && hintMode) {
-                setErrorMode(false);
-                setHintMode(false);
-                setWarningMode(false);
-              } else {
-                setErrorMode(true);
-                setHintMode(true);
-                setWarningMode(true);
-              }
-            }}
-          >
-            <BugIcon />
-          </IconButton>
-        </span>
-        <span>
-          <IconButton
-            color="inherit"
-            className={styles.issueButtons}
-            onClick={() => {
-              setErrorMode(!errorMode);
-            }}
-          >
-            <ErrorIcon />
-          </IconButton>
-        </span>
-        <span>
-          <IconButton
-            color="inherit"
-            className={styles.issueButtons}
-            onClick={() => {
-              setWarningMode(!warningMode);
-            }}
-          >
-            <WarningIcon />
-          </IconButton>
-        </span>
-        <span>
-          <IconButton
-            color="inherit"
-            className={styles.issueButtons}
-            onClick={() => {
-              setHintMode(!hintMode);
-            }}
-          >
-            <HintIcon />
-          </IconButton>
-        </span>
+        {expanded && (
+          <span>
+            <span>
+              <IconButton
+                color="primary"
+                className={styles.issueButtons}
+                onClick={() => {
+                  if (errorMode && warningMode && hintMode) {
+                    setErrorMode(false);
+                    setHintMode(false);
+                    setWarningMode(false);
+                  } else {
+                    setErrorMode(true);
+                    setHintMode(true);
+                    setWarningMode(true);
+                  }
+                }}
+              >
+                <BugIcon />
+              </IconButton>
+            </span>
+            <span>
+              <IconButton
+                color="primary"
+                className={styles.issueButtons}
+                onClick={() => {
+                  setErrorMode(!errorMode);
+                }}
+              >
+                <ErrorIcon />
+              </IconButton>
+            </span>
+            <span>
+              <IconButton
+                color="primary"
+                className={styles.issueButtons}
+                onClick={() => {
+                  setWarningMode(!warningMode);
+                }}
+              >
+                <WarningIcon />
+              </IconButton>
+            </span>
+            <span>
+              <IconButton
+                color="primary"
+                className={styles.issueButtons}
+                onClick={() => {
+                  setHintMode(!hintMode);
+                }}
+              >
+                <HintIcon />
+              </IconButton>
+            </span>
+          </span>
+        )}
       </Grid>
 
       <Grid item md={12}>
