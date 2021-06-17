@@ -11,7 +11,7 @@ const ModelHelp = () => {
   </model>
   `;
   return (
-    <Help pageRef={14}>
+    <Help pageRef={8}>
       <Heading title={'About CellML Model'} />
       <br />
       In CellML it is the outermost tag for every CellML file. Describes a

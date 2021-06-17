@@ -3,15 +3,18 @@ import { Elements, elmToStr } from '../../../types/Elements';
 import { SubHeader } from '../../components/SubHeader';
 import { AddChildSelect } from './forms/AddChildSelect';
 import Grid from '@material-ui/core/Grid';
+import { ElementHelp } from '../../components/helper/ElementHelp';
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
-    <AddChildSelect
-      childElement={childElm}
-      parentElement={parent}
-      parentName={parentName}
-      key={elmToStr(childElm)}
-    />
+    <Grid item direction={'column'}>
+      <AddChildSelect
+        childElement={childElm}
+        parentElement={parent}
+        parentName={parentName}
+        key={elmToStr(childElm)}
+      />
+    </Grid>
   );
 };
 
