@@ -217,7 +217,13 @@ const PropertiesWidget = () => {
       <Heading title="Properties" />
       <Grid container item className={styles.plainText}>
         <Grid item className={styles.elementType} xs={2}>
-          <Button>Parent</Button>
+          <Button
+            onClick={() => {
+              ipcRenderer.send('resetParent');
+            }}
+          >
+            Parent
+          </Button>
         </Grid>
         <Grid item className={styles.elementType} xs={10}>
           {capitaliseFirst(elmToStr(abstractModel.type))}
