@@ -20,6 +20,14 @@ export default {
             cacheDirectory: true,
           },
         },
+        test: /\.pdf$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            cacheDirectory: true,
+          },
+        },
       },
     ],
   },
