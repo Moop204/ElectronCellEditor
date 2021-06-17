@@ -17,6 +17,8 @@ import { AddChildrenWidget } from './AddChildrenWidget';
 import { AttributeWidget } from './AttributeWidget';
 import { ChildrenWidget } from './ChildrenWidget';
 import { UnitWidget } from './UnitWidget';
+import { ComponentHelp } from '../../components/helper/ComponentHelp';
+import { ElementHelp } from '../../components/helper/ElementHelp';
 
 const localStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -219,6 +221,7 @@ const PropertiesWidget = () => {
         </Grid>
         <Grid item className={styles.elementType} xs={10}>
           {capitaliseFirst(elmToStr(abstractModel.type))}
+          <ElementHelp type={abstractModel.type} />
         </Grid>
         <AttributeWidget
           attribute={abstractModel.attribute}

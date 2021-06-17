@@ -111,31 +111,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
-  const [pageNum, setPageNum] = useState(1);
-  const [open, setOpen] = useState(false);
-  // return (
-  //   <div>
-  //     <Button onClick={() => setOpen(true)}>Help</Button>
-  //     <Dialog
-  //       disableBackdropClick
-  //       disableEscapeKeyDown
-  //       open={open}
-  //       onClose={() => setOpen(false)}
-  //     >
-  //       <DialogTitle>
-  //         Test PDF
-  //       </DialogTitle>
-  //       <DialogContent>
-  //         <Button onClick={() => setPageNum(pageNum - 1)}>{"<<<"}</Button>
-  //         <Button onClick={() => setPageNum(pageNum + 1)}>>>></Button>
-  //         <Document file="../src/frontend/media/cellml_2_0_normative_specification.pdf">
-  //           <Page pageNumber={pageNum} />
-  //         </Document>
-  //       </DialogContent>
-  //     </Dialog>
-  //   </div>
-  // );
-
   return (
     <div className={styles.root}>
       <Router>
