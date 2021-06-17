@@ -13,6 +13,8 @@ import { UnitsChildForm } from './forms/form-type/UnitsChildForm';
 import { UnitChildForm } from './forms/form-type/UnitChildForm';
 import { VariableChildForm } from './forms/form-type/VariableChildForm';
 import { ResetChildForm } from './forms/form-type/ResetChildForm';
+import { ElementHelp } from '../../components/helper/ElementHelp';
+import Grid from '@material-ui/core/Grid';
 
 interface IAddChild {
   childElement: Elements;
@@ -44,15 +46,21 @@ const ComponentForm = (prop: IAddChild) => {
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>+ {elmToStr(childElement)}</Button>
+      <Button fullWidth onClick={handleClickOpen}>
+        + {elmToStr(childElement)}
+      </Button>
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown
         open={open}
         onClose={handleClose}
+        fullWidth
       >
         <DialogTitle>
-          Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
+          <Grid container item>
+            Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
+            <ElementHelp type={childElement} />
+          </Grid>
         </DialogTitle>
         <DialogContent>
           {childElement === Elements.component && (

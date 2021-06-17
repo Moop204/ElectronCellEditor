@@ -8,6 +8,7 @@ import { Elements, elmToStr } from '../../../../../types/Elements';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { ElementHelp } from '../../../../components/helper/ElementHelp';
 
 const nameValidation = (curComponents: string[]) =>
   yup.object({
