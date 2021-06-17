@@ -92,6 +92,21 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     this.currentComponent = parser.parseModel(this.content);
   }
 
+  async resetToModel() {
+    if (!this._cellmlLoaded) {
+      await this.init();
+    }
+    const parser: Parser = new this._cellml.Parser();
+    this.currentComponent = parser.parseModel(this.content);
+    this.type = Elements.model;
+    const resetProp = convertSelectedElement(
+      this.type,
+      this.getCurrentComponent()
+    );
+    console.log('RESET ME PLEASE');
+    return resetProp;
+  }
+
   // Getters and Setters
 
   getContent() {
@@ -324,6 +339,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         event.reply('res-select-element', selection);
       }
     );
+
+    ipcMain.on('resetParent', async (event: IpcMainEvent) => {
+      const resetProp = await this.resetToModel();
+      event.reply('res-get-element', resetProp);
+    });
 
     // Takes the currently selected element
     // INPUT

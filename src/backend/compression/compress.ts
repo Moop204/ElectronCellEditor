@@ -60,7 +60,8 @@ const parseComponent = (elms: IElement[]) => {
 // Elms are the elements of the parent
 const parseEncapsulationReferences = (
   elms: IElement[],
-  componentMap: Record<string, any>
+  componentMap: Record<string, any>,
+  encapsulationIncluded: Record<string, any>
 ) => {
   if (elms === undefined || elms === []) {
     return [];
@@ -71,10 +72,15 @@ const parseEncapsulationReferences = (
     // Replace with component
     if (elm.attributes.component) {
       const conciseComponent: IElement = componentMap[elm.attributes.component];
+      encapsulationIncluded[elm.attributes.component] = true;
       // Append rest as children recursively
       conciseComponent.elements = [
         ...(conciseComponent ? conciseComponent.elements : []),
-        ...parseEncapsulationReferences(elms ? elm.elements : [], componentMap),
+        ...parseEncapsulationReferences(
+          elms ? elm.elements : [],
+          componentMap,
+          encapsulationIncluded
+        ),
       ];
       res.push(conciseComponent);
     }
@@ -121,6 +127,11 @@ const compressCellml = (s: string) => {
   }
 
   let finalElements: IElement[] = [];
+  let encapsulationIncluded: Record<string, any> = {};
+  const componentKeys = Object.keys(componentMap);
+  for (let i = 0; i < componentKeys.length; i++) {
+    encapsulationIncluded[componentKeys[i]] = false;
+  }
 
   for (let i = 0; i < newElements.length; i += 1) {
     const newElm = newElements[i];
@@ -132,12 +143,22 @@ const compressCellml = (s: string) => {
       const compressedComponents = parseEncapsulationReferences(
         newElm.elements,
         // elm.elements,
-        componentMap
+        componentMap,
+        encapsulationIncluded
       );
       finalElements = [...finalElements, ...compressedComponents];
     }
   }
+
+  for (const elm of componentKeys) {
+    if (!encapsulationIncluded[elm]) {
+      finalElements.push(componentMap[elm]);
+    }
+  }
+
   parsed.elements[0].elements = finalElements;
+
+  console.log(encapsulationIncluded);
 
   // Parse to remove encapsulation and sub variables
   const result = xml.json2xml(parsed, { spaces: 4 });

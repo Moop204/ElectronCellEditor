@@ -2,6 +2,27 @@ import '@testing-library/jest-dom';
 import { compressCellml } from './compress';
 
 describe('Compressing XML', () => {
+  test('should retain top-level components where no encapsulation exists', () => {
+    const validFile = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="replace_components" id="replace_components">
+  <component name="root"/>
+  <component name="L1_c1"/>
+  <component name="L1_L2_c1"/>
+  <component name="L1_c2"/>
+</model>`;
+
+    const result = compressCellml(validFile);
+
+    const expectedResult = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="replace_components" id="replace_components">
+    <component name="root" math=""/>
+    <component name="L1_c1" math=""/>
+    <component name="L1_L2_c1" math=""/>
+    <component name="L1_c2" math=""/>
+</model>`;
+
+    expect(result).toBe(expectedResult);
+  });
   test('should remove encapsulated components and replace with the components referenced', () => {
     const validFile = `<?xml version="1.0" encoding="UTF-8"?>
 <model xmlns="http://www.cellml.org/cellml/2.0#" name="replace_components" id="replace_components">
@@ -33,6 +54,37 @@ describe('Compressing XML', () => {
 
     expect(result).toBe(expectedResult);
   });
+  test('should compress encapsulation and also retain top-level non-encapsulated components', () => {
+    const validFile = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="replace_components" id="replace_components">
+  <component name="root"/>
+  <component name="L1_c1"/>
+  <component name="L1_L2_c1"/>
+  <component name="L1_c2"/>
+  <encapsulation>
+    <component_ref component="root">
+      <component_ref component="L1_c1">
+        <component_ref component="L1_L2_c1"/>
+      </component_ref>
+    </component_ref>
+  </encapsulation>
+</model>`;
+
+    const result = compressCellml(validFile);
+
+    const expectedResult = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="replace_components" id="replace_components">
+    <component name="root" math="">
+        <component name="L1_c1" math="">
+            <component name="L1_L2_c1" math=""/>
+        </component>
+    </component>
+    <component name="L1_c2" math=""/>
+</model>`;
+
+    expect(result).toBe(expectedResult);
+  });
+
   test('should display content of imported elements', () => {
     const validFile = `<?xml version="1.0" encoding="UTF-8"?>
           <model xmlns="http://www.cellml.org/cellml/2.0#" name="MembraneModel">
