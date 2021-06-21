@@ -1,10 +1,10 @@
-import { Component } from '../../types/ILibcellml';
-import { Elements } from '../../types/Elements';
-import { IProperties } from '../../types/IProperties';
+import { Component } from "../../types/ILibcellml";
+import { Elements } from "../../types/Elements";
+import { IProperties } from "../../types/IProperties";
 
 const convertComponent = (component: Component) => {
   if (component === null) {
-    console.log('ConvertComponent: Given component is null');
+    console.log("ConvertComponent: Given component is null");
   }
   const resetNum = component.resetCount();
   const varNum = component.variableCount();
@@ -36,7 +36,7 @@ const convertComponent = (component: Component) => {
     parent: {
       type: hasParent ? Elements.component : Elements.model,
       // TODO: Temporary fix until libcellml updates parent() binding
-      name: hasParent ? '' : '', //(component.parent() as Model | Component).name() : '',
+      name: hasParent ? "" : "", //(component.parent() as Model | Component).name() : '',
     },
     children: {
       reset: listReset.map((name: string, index: number) => {

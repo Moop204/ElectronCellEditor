@@ -1,7 +1,7 @@
-import { Component } from '../../types/ILibcellml';
-import { Elements } from '../../types/Elements';
-import { Variable } from '../../types/ILibcellml';
-import { IProperties } from '../../types/IProperties';
+import { Component } from "../../types/ILibcellml";
+import { Elements } from "../../types/Elements";
+import { Variable } from "../../types/ILibcellml";
+import { IProperties } from "../../types/IProperties";
 
 const convertVariable = (variable: Variable) => {
   const eqVarCount: number = variable.equivalentVariableCount();

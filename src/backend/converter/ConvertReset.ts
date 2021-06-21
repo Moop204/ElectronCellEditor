@@ -1,7 +1,7 @@
-import { Component } from '../../types/ILibcellml';
-import { Elements } from '../../types/Elements';
-import { Reset } from '../../types/ILibcellml';
-import { IProperties } from '../../types/IProperties';
+import { Component } from "../../types/ILibcellml";
+import { Elements } from "../../types/Elements";
+import { Reset } from "../../types/ILibcellml";
+import { IProperties } from "../../types/IProperties";
 
 const convertReset = (element: Reset) => {
   const resetProp: IProperties = {

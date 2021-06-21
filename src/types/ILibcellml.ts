@@ -378,10 +378,10 @@ enum InterfaceType {
 }
 
 const InterfaceTypeString = {
-  NONE: 'none',
-  PRIVATE: 'private',
-  PUBLIC: 'public',
-  PUBLIC_AND_PRIVATE: 'public_and_private',
+  NONE: "none",
+  PRIVATE: "private",
+  PUBLIC: "public",
+  PUBLIC_AND_PRIVATE: "public_and_private",
 };
 
 interface Variable extends NamedEntity {

@@ -1,5 +1,5 @@
-import { Elements } from '../../types/Elements';
-import { IChildDetail } from '../../types/IChildDetail';
+import { Elements } from "../../types/Elements";
+import { ChildDetail } from "../../types/ChildDetail";
 import {
   Variable,
   InterfaceType,
@@ -7,14 +7,14 @@ import {
   Parser,
   Component,
   InterfaceTypeString,
-} from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
-import FileManagement from '../FileManagement';
+} from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
+import FileManagement from "../FileManagement";
 
 const AddChildVariable = async (
   fm: FileManagement,
   parent: ISearch,
-  child: IChildDetail
+  child: ChildDetail
 ) => {
   // Create Variable
   const libcellml = fm._cellml;
@@ -35,7 +35,7 @@ const AddChildVariable = async (
     newVariable.setInitialValueByString(initialValue as string);
   }
 
-  console.log('Before replacing');
+  console.log("Before replacing");
   console.log(printer.printModel(m, false));
   console.log(`Search for ` + parent.name);
   // Add to Model
@@ -44,7 +44,7 @@ const AddChildVariable = async (
 
   m.replaceComponentByName(parent.name as string, parentComponent, true);
 
-  console.log('Where updatecontent would be');
+  console.log("Where updatecontent would be");
   console.log(printer.printModel(m, false));
 
   await fm.updateContent(printer.printModel(m, false));

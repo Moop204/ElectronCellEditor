@@ -1,14 +1,7 @@
-import { Elements } from '../../types/Elements';
-import { Units, Model } from '../../types/ILibcellml';
-import { IProperties } from '../../types/IProperties';
-
-interface UnitDescriptor {
-  reference: string;
-  prefix: string;
-  exponent: number;
-  multiplier: number;
-  imported: string;
-}
+import { UnitDescriptor } from "../../types/UnitDescriptor";
+import { Elements } from "../../types/Elements";
+import { Units, Model } from "../../types/ILibcellml";
+import { IProperties } from "../../types/IProperties";
 
 const convertUnits = (unitsElement: Units) => {
   const unitNum = unitsElement.unitCount();
@@ -21,7 +14,7 @@ const convertUnits = (unitsElement: Units) => {
       exponent: unitsElement.unitAttributeExponent(i),
       multiplier: unitsElement.unitAttributeMultiplier(i),
       // TODO: Renable after ImportedEntity issue is resolved
-      imported: '', // unitsElement.isImport() ? unitsElement.importReference() : '',
+      imported: "", // unitsElement.isImport() ? unitsElement.importReference() : '',
     };
     listUnit.push(unitDescriptor);
   }
@@ -37,7 +30,7 @@ const convertUnits = (unitsElement: Units) => {
     parent: {
       // TODO: Re-enable once bindings for .parent() function from libcellml is fixed
       type: Elements.model, //parentType,
-      name: '', //parentElement.name(),
+      name: "", //parentElement.name(),
     },
     attribute: {
       name: unitsElement.name(),
@@ -51,4 +44,4 @@ const convertUnits = (unitsElement: Units) => {
   return units;
 };
 
-export { convertUnits, UnitDescriptor };
+export { convertUnits };

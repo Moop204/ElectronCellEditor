@@ -1,25 +1,20 @@
-import { Elements } from '../../types/Elements';
-import { IChildDetail } from '../../types/IChildDetail';
-import { Model, Parser, Reset } from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
-import FileManagement from '../FileManagement';
+import { Elements } from "../../types/Elements";
+import { ChildDetail } from "../../types/ChildDetail";
+import { Model, Parser, Reset } from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
+import FileManagement from "../FileManagement";
 
 const AddChildReset = async (
   fm: FileManagement,
-  child: IChildDetail,
+  child: ChildDetail,
   parent: ISearch
 ) => {
   const libcellml = fm._cellml;
   const newReset: Reset = new libcellml.Reset();
   const printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
-  const {
-    reset_variable,
-    test_variable,
-    order,
-    reset_value,
-    test_value,
-  } = child.attribute;
+  const { reset_variable, test_variable, order, reset_value, test_value } =
+    child.attribute;
   console.log(child.attribute);
   // Make reset element
   const m: Model = parser.parseModel(fm.getContent());
