@@ -1,14 +1,14 @@
 /* eslint-disable no-case-declarations */
-import { Elements } from '../../types/Elements';
-import { ICurrentElement } from '../../types/ICurrentElement';
+import { Elements } from "../../types/Elements";
+import { EditorElement } from "../../types/EditorElement";
 import {
   Model,
   Reset,
   Units,
   Variable,
   Component,
-} from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
+} from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
 
 // Definitely name attribute search
 // model => the complete cellml file as a model
@@ -22,7 +22,7 @@ const updateMath = (
   select: ISearch,
   parentSelect: ISearch,
   value: any,
-  currentElement: ICurrentElement
+  currentElement: EditorElement
 ) => {
   const modelCopy = model.clone();
 
@@ -40,7 +40,7 @@ const updateMath = (
       );
 
       if (currentElement === null) {
-        console.log('FM: CurrentComponent is null when setting name');
+        console.log("FM: CurrentComponent is null when setting name");
       } else {
         (currentElement as Component).setMath(value);
       }

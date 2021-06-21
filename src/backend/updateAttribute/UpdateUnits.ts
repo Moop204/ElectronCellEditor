@@ -1,14 +1,14 @@
 /* eslint-disable no-case-declarations */
-import { Elements } from '../../types/Elements';
-import { ICurrentElement } from '../../types/ICurrentElement';
+import { Elements } from "../../types/Elements";
+import { EditorElement } from "../../types/EditorElement";
 import {
   Model,
   Reset,
   Units,
   Variable,
   Component,
-} from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
+} from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
 
 // Definitely name attribute search
 const updateUnits = (
@@ -17,7 +17,7 @@ const updateUnits = (
   select: ISearch,
   parentSelect: ISearch,
   value: any,
-  currentElement: ICurrentElement
+  currentElement: EditorElement
 ) => {
   const modelCopy = model.clone();
   switch (element) {
@@ -33,7 +33,7 @@ const updateUnits = (
       model.replaceComponentByName(select.name as string, parentElement, true);
 
       if (currentElement === null) {
-        console.log('FM: CurrentComponent is null when setting name');
+        console.log("FM: CurrentComponent is null when setting name");
       } else {
         (currentElement as Variable).setUnitsByName(value);
       }
@@ -46,4 +46,4 @@ const updateUnits = (
   return { newModel, newCurrentElement };
 };
 
-export default updateUnits;
+export { updateUnits };

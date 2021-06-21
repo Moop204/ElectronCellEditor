@@ -1,4 +1,4 @@
-import { InterfaceType } from '../types/ILibcellml';
+import { InterfaceType } from "../types/ILibcellml";
 
 const AllInterfaceType = () => {
   const interfaceType = Object.values(InterfaceType);

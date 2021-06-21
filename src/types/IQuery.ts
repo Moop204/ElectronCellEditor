@@ -1,5 +1,5 @@
-import { Elements } from './Elements';
-import { IProperties } from './IProperties';
+import { Elements } from "./Elements";
+import { IProperties } from "./IProperties";
 
 interface ISelect {
   element: Elements;

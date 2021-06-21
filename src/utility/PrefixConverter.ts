@@ -1,4 +1,4 @@
-import { Prefix } from '../types/ILibcellml';
+import { Prefix } from "../types/ILibcellml";
 
 const AllPrefix = () => {
   const values = Object.values(Prefix);
