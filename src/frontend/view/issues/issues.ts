@@ -60,7 +60,11 @@ const obtainIssues = async (v: Validator) => {
   const warnings = formatWarnings(v);
   const hints = formatHints(v);
 
-  const formattedErrors = errors.concat(warnings).concat(hints);
+  let formattedErrors: any[] = [];
+  formattedErrors = formattedErrors
+    .concat(errors)
+    .concat(warnings)
+    .concat(hints);
   return formattedErrors;
 };
 

@@ -3,7 +3,6 @@ import { Elements, elmToStr } from '../../../types/Elements';
 import { SubHeader } from '../../components/SubHeader';
 import { AddChildSelect } from './forms/AddChildSelect';
 import Grid from '@material-ui/core/Grid';
-import { ElementHelp } from '../../components/helper/ElementHelp';
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
@@ -34,7 +33,6 @@ const AddChildrenWidget = (prop: { element: Elements; name: string }) => {
     default:
       return <div></div>;
   }
-  console.log(children);
   return (
     <Grid item xs={12}>
       {children.length > 0 && <SubHeader title="Add Children" />}

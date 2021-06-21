@@ -57,15 +57,9 @@ const IssuesWidget = ({ expanded }: { expanded: boolean }) => {
                 color="primary"
                 className={styles.issueButtons}
                 onClick={() => {
-                  if (errorMode && warningMode && hintMode) {
-                    setErrorMode(false);
-                    setHintMode(false);
-                    setWarningMode(false);
-                  } else {
-                    setErrorMode(true);
-                    setHintMode(true);
-                    setWarningMode(true);
-                  }
+                  setErrorMode(true);
+                  setHintMode(true);
+                  setWarningMode(true);
                 }}
               >
                 <BugIcon />
@@ -107,13 +101,9 @@ const IssuesWidget = ({ expanded }: { expanded: boolean }) => {
           </span>
         )}
       </Grid>
-
-      <Grid item md={12}>
-        <IssueText issues={issues} />
-      </Grid>
+      <IssueText issues={issues} />
     </Grid>
   );
 };
 
-// todo chuck it all in issuetext
 export { IssuesWidget };

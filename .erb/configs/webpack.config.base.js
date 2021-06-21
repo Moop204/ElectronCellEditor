@@ -7,7 +7,11 @@ import webpack from 'webpack';
 import { dependencies as externals } from '../../src/package.json';
 
 export default {
-  externals: [...Object.keys(externals || {})],
+  externals: [
+    ...Object.keys(externals || {}),
+    { 'utf-8-validate': 'commonjs utf-8-validate' },
+    { bufferutil: 'commonjs bufferutil' },
+  ],
 
   module: {
     rules: [
@@ -20,6 +24,8 @@ export default {
             cacheDirectory: true,
           },
         },
+      },
+      {
         test: /\.pdf$/,
         exclude: /node_modules/,
         use: {
@@ -28,6 +34,10 @@ export default {
             cacheDirectory: true,
           },
         },
+      },
+      {
+        test: /\.wasm$/,
+        type: 'asset/resource',
       },
     ],
   },

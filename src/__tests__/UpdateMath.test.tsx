@@ -2,8 +2,7 @@ import '@testing-library/jest-dom';
 import { Elements } from '../types/Elements';
 import { Component, Model } from '../types/ILibcellml';
 import updateMath from '../backend/updateAttribute/UpdateMath';
-
-const libcellModule = require('libcellml.js/libcellml.common');
+import * as libcellModule from 'libcellml.js/libcellml.common';
 
 describe('Updating maths with components', () => {
   test('For a component directly under model', async () => {

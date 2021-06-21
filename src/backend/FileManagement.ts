@@ -27,8 +27,9 @@ import { addChild } from './addChild/AddChild';
 import { IChildDetail } from '../types/IChildDetail';
 
 const fs = require('fs');
-
-const libcellModule = require('libcellml.js/libcellml.common');
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+import libCellMLModule from 'libcellml.js';
+import libCellMLWasm from 'libcellml.js/libcellml.wasm';
 
 // Command Pattern
 // Handles the truth in the backend
@@ -64,7 +65,14 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   }
 
   async init() {
-    this._cellml = await libcellModule();
+    this._cellml = await new libCellMLModule({
+      locateFile(path: string, prefix: string) {
+        if (path.endsWith('.wasm')) {
+          return prefix + libCellMLWasm;
+        }
+        return prefix + path;
+      },
+    });
     this._cellmlLoaded = true;
   }
 

@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import StorageIcon from '@material-ui/icons/Storage';
 
-const SpatialViewButton = () => {
+const SpatialViewButton = ({ onClick }: { onClick: any }) => {
   return (
     <Tooltip title="Concise View">
       <Link to="/spatial">

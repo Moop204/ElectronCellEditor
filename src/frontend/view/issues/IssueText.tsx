@@ -81,13 +81,13 @@ const IssueText = (props: IIssueTextProp) => {
       );
     });
     return (
-      <div className={styles.plainText} key="issue-text">
+      <Grid item className={styles.plainText} key="issue-text" xs={12}>
         {mapIssues}
-      </div>
+      </Grid>
     );
   }
   return (
-    <Grid item className={styles.plainText}>
+    <Grid item className={styles.plainText} xs={12}>
       No problems!
     </Grid>
   );

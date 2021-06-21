@@ -1,11 +1,11 @@
-import { BrowserWindow, dialog } from 'electron';
+import { MenuItem, BrowserWindow, dialog } from 'electron';
 import FileManagement from '../FileManagement';
 const fs = require('fs');
 
 const ActionOpen = (mainWindow: BrowserWindow, fm: FileManagement) => {
   return {
     label: 'Open File',
-    acceleration: 'Ctrl+O',
+    accelerator: 'Ctrl+O',
     click: async () => {
       const filePath = dialog.showOpenDialogSync({});
       if (filePath) {

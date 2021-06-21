@@ -73,4 +73,4 @@ const updateName = (
   return { newModel, newCurrentElement };
 };
 
-export default updateName;
+export { updateName };
