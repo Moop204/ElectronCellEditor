@@ -12,7 +12,7 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
   view,
 }) => {
   return (
-    <Grid item md={1}>
+    <Grid item xs={1}>
       <VerticalOptionWidget
         content={content}
         switchSidebar={switchSidebar}

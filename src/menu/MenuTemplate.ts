@@ -9,7 +9,7 @@ import { MacWindowItem, NonMacWindowItem } from "./WindowItem";
 
 const isMac = process.platform === "darwin";
 
-const menuTemplate = (mainWindow: BrowserWindow, fm: FileManagement) => {
+const menuTemplate = (mainWindow: BrowserWindow, fm: FileManagement): any => {
   return [
     ...(isMac
       ? [

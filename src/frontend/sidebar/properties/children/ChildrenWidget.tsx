@@ -42,7 +42,6 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
       )}
 
       {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
-        console.log(childrenType);
         return (
           <div key={parentKey}>
             <Divider variant="middle" />

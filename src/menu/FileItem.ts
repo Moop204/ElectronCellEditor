@@ -46,7 +46,7 @@ const FileItem = (
   isMac: boolean,
   mainWindow: BrowserWindow,
   fm: FileManagement
-): MenuItem => {
+) => {
   return {
     label: "File",
     submenu: [

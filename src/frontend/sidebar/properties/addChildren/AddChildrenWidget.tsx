@@ -6,7 +6,7 @@ import { Typography } from "@material-ui/core";
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
-    <Grid item direction={"column"}>
+    <Grid item xs={12} key={parentName + elmToStr(childElm)}>
       <AddChildSelect
         childElement={childElm}
         parentElement={parent}
