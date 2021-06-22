@@ -65,4 +65,4 @@ const updateMath = (
   return { newModel, newCurrentElement };
 };
 
-export default updateMath;
+export { updateMath };

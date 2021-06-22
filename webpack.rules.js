@@ -38,4 +38,12 @@ module.exports = [
     test: /\.wasm$/,
     type: "asset/resource",
   },
+  {
+    test: /\.gif$/,
+    type: "asset/resource",
+  },
+  {
+    test: /\.png$/,
+    type: "asset/resource",
+  },
 ];

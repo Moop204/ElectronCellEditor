@@ -47,7 +47,7 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
         onClose={() => setOpenHelp(false)}
       >
         <DialogTitle>
-          <Grid container item>
+          <Grid container item xs={12}>
             <Grid item xs={10}>
               <Typography variant="h4" style={{ paddingLeft: "5px" }}>
                 {title}
@@ -73,7 +73,7 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
             maxWidth={"lg"}
           >
             <DialogTitle>
-              <Grid className={style.documentInterface} xs={12}>
+              <Grid item className={style.documentInterface} xs={12}>
                 <Button onClick={() => setPageNum(pageNum - 1)}>{"<<<"}</Button>
                 <Button onClick={() => setPageNum(pageNum + 1)}>{">>>"}</Button>
                 <Button

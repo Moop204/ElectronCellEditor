@@ -23,7 +23,7 @@ const IssueText: FunctionComponent<IssueList> = ({ issues }) => {
     const mapIssues = issues.map((record: IssueDescriptor) => {
       const { desc, cause, type } = record;
       return (
-        <Grid item key={desc}>
+        <Grid item key={desc} xs={12}>
           <Divider />
           {type === Level.ERROR && <ErrorComponent desc={desc} />}
           {type === Level.WARNING && <WarningComponent desc={desc} />}
@@ -38,7 +38,7 @@ const IssueText: FunctionComponent<IssueList> = ({ issues }) => {
     );
   }
   return (
-    <Grid item className={styles.plainText}>
+    <Grid item className={styles.plainText} xs={12}>
       <Divider />
       <Typography variant="body1" style={{ paddingLeft: "5px" }}>
         No problems!

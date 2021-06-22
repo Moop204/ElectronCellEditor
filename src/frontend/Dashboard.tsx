@@ -117,17 +117,17 @@ const Dashboard: FunctionComponent = () => {
             />
           )}
 
-          <Grid item md={viewSidebar ? 9 : 11}>
+          <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
               <Paper className={styles.tabbing}></Paper>
               <Switch>
-                <Route exact path="/spatial">
+                <Route exact path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
                     <ConciseView
                       contentExist={contentExist}
                       setContentExist={setContentExist}
-                      key="spatial-view"
+                      key="concise-view"
                     />
                   )}
                 </Route>

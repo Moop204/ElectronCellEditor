@@ -7,7 +7,7 @@ import StorageIcon from "@material-ui/icons/Storage";
 const SpatialViewButton = ({ onClick }: { onClick: any }) => {
   return (
     <Tooltip title="Concise View">
-      <Link to="/spatial">
+      <Link to="/concise">
         <IconButton aria-label="Concise View" color="primary">
           <StorageIcon />
         </IconButton>

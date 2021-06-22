@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="van_der_pol_oscillator" 	
+xmlns:cellml="http://www.cellml.org/cellml/2.0#" 
+xmlns:xlink="http://www.w3.org/1999/xlink" 
+id="van_der_pol_oscillator" 
+xmlns="http://www.cellml.org/cellml/2.0#" >
+  <units name="ms">
+    <unit prefix="milli" units="second" />
+  </units>
+  <units name="per_ms">
+    <unit exponent="-1" units="ms" />
+  </units>
+  <units name="ms_squared">
+    <unit exponent="2" units="ms" />
+  </units>
+
+  <component name="change_x" > 
+    <variable id="t" name="t" units="second" interface="public_and_private"/>
+    <variable id="x" name="x" units="dimensionless" interface="public_and_private"/>
+    <variable id="y" name="y" units="ms" interface="public_and_private"/>
+    <variable id="u" name="u" units="per_ms" interface="public_and_private"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/> 
+        <apply><diff/>
+          <bvar><ci>t</ci></bvar>
+          <ci>x</ci>
+        </apply>
+        <ci>y</ci>
+      </apply>
+      <apply><eq/> 
+        <apply><diff/>
+          <bvar><ci>t</ci></bvar>
+          <ci>y</ci>
+        </apply>
+        <apply><minus/>
+          <apply><times/>
+            <ci>u</ci>
+            <apply><minus/>
+              <cn cellml:units="ms_squared">1</cn> 
+              <apply><power/> 
+                <ci>x</ci>
+                <cn cellml:units="dimensionless">2</cn>
+              </apply>
+            </apply> 
+            <ci>y</ci>
+          </apply> 
+          <ci>x</ci>
+        </apply> 
+      </apply>
+    </math>
+  </component> 
+</model>

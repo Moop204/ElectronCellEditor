@@ -12,7 +12,6 @@ interface IUnitForm {
 
 const UnitEditForm = ({ unit }: IUnitForm) => {
   const { reference, prefix, exponent, multiplier, imported } = unit;
-  console.log(prefix);
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,7 +49,6 @@ interface IUnitWidget {
 }
 
 const UnitWidget: FunctionComponent<IUnitWidget> = ({ unitMap }) => {
-  console.log(unitMap);
   return (
     <Grid item container xs={12}>
       <Grid item xs={12}>

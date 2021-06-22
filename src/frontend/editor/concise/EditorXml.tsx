@@ -11,17 +11,13 @@ const EditorXml: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
   const editorRef = useRef<XmlEditor | null>(null);
 
   return (
-    <>
-      <div>
-        <XmlEditor
-          key={xmlInput}
-          docSpec={{}}
-          ref={editorRef}
-          xml={xmlInput}
-          mode="laic"
-        />
-      </div>
-    </>
+    <XmlEditor
+      key={xmlInput}
+      docSpec={{}}
+      ref={editorRef}
+      xml={xmlInput}
+      mode="laic"
+    />
   );
 };
 

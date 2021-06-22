@@ -38,8 +38,6 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
   useEffect(() => {
     const errorReplyFn = (event: Event, issues: IssueDescriptor[]) => {
       setIssues(issues || []);
-      console.log("ERROR RECEIVED");
-      console.log(issues);
     };
     const dbErrorReplyFn = errorReplyFn;
     window.api.receive("error-reply", dbErrorReplyFn);
@@ -47,68 +45,72 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
 
   return (
     <Paper style={{ height: expanded ? "30%" : "80%" }}>
-      <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-        Issues
-      </Typography>
-      <Grid container item xs={12}>
-        <br />
-        <Grid item md={12}>
-          {expanded && (
-            <span>
+      <Grid container>
+        <Grid item xs={5}>
+          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+            Issues
+          </Typography>
+        </Grid>
+        <Grid container item xs={7}>
+          <br />
+          <Grid item md={12}>
+            {expanded && (
               <span>
-                <IconButton
-                  color="primary"
-                  className={styles.issueButtons}
-                  onClick={() => {
-                    if (errorMode && warningMode && hintMode) {
-                      setErrorMode(false);
-                      setHintMode(false);
-                      setWarningMode(false);
-                    } else {
-                      setErrorMode(true);
-                      setHintMode(true);
-                      setWarningMode(true);
-                    }
-                  }}
-                >
-                  <BugIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    color="primary"
+                    className={styles.issueButtons}
+                    onClick={() => {
+                      if (errorMode && warningMode && hintMode) {
+                        setErrorMode(false);
+                        setHintMode(false);
+                        setWarningMode(false);
+                      } else {
+                        setErrorMode(true);
+                        setHintMode(true);
+                        setWarningMode(true);
+                      }
+                    }}
+                  >
+                    <BugIcon />
+                  </IconButton>
+                </span>
+                <span>
+                  <IconButton
+                    color="primary"
+                    className={styles.issueButtons}
+                    onClick={() => {
+                      setErrorMode(!errorMode);
+                    }}
+                  >
+                    <ErrorIcon />
+                  </IconButton>
+                </span>
+                <span>
+                  <IconButton
+                    color="primary"
+                    className={styles.issueButtons}
+                    onClick={() => {
+                      setWarningMode(!warningMode);
+                    }}
+                  >
+                    <WarningIcon />
+                  </IconButton>
+                </span>
+                <span>
+                  <IconButton
+                    color="primary"
+                    className={styles.issueButtons}
+                    onClick={() => {
+                      setHintMode(!hintMode);
+                    }}
+                  >
+                    <HintIcon />
+                  </IconButton>
+                </span>
               </span>
-              <span>
-                <IconButton
-                  color="primary"
-                  className={styles.issueButtons}
-                  onClick={() => {
-                    setErrorMode(!errorMode);
-                  }}
-                >
-                  <ErrorIcon />
-                </IconButton>
-              </span>
-              <span>
-                <IconButton
-                  color="primary"
-                  className={styles.issueButtons}
-                  onClick={() => {
-                    setWarningMode(!warningMode);
-                  }}
-                >
-                  <WarningIcon />
-                </IconButton>
-              </span>
-              <span>
-                <IconButton
-                  color="primary"
-                  className={styles.issueButtons}
-                  onClick={() => {
-                    setHintMode(!hintMode);
-                  }}
-                >
-                  <HintIcon />
-                </IconButton>
-              </span>
-            </span>
-          )}
+            )}
+          </Grid>
         </Grid>
 
         <Grid item md={12}>

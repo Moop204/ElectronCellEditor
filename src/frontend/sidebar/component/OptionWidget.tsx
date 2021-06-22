@@ -24,25 +24,25 @@ const OptionWidget: React.FunctionComponent<IOptionButtonProp> = ({
   }, []);
 
   return (
-    <Grid container item>
+    <Grid container item xs={12}>
       <Paper>
-        <Grid container item>
-          <Grid item md={2}>
+        <Grid container item xs={12}>
+          <Grid item xs={2}>
             <TextViewButton onClick={switchView} />
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2}>
             <SpatialViewButton onClick={switchView} />
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2}>
             <VisibilityButton onClick={switchSidebar} />
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2}>
             <UndoButton />
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2}>
             <RedoButton />
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2}>
             <Tooltip title="Redo">
               <IconButton
                 aria-label="Redo Action"

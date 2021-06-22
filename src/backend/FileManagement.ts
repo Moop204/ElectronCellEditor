@@ -17,8 +17,8 @@ import {
   validateModel,
 } from "../frontend/sidebar/issues/IssueUtilities";
 import { updateName } from "./updateAttribute/updateName/UpdateName";
-// import updateUnits from "./updateAttribute/UpdateUnits";
-import updateMath from "./updateAttribute/UpdateMath";
+import { updateUnits } from "./updateAttribute/UpdateUnits";
+import { updateMath } from "./updateAttribute/UpdateMath";
 import { EditorElement } from "../types/EditorElement";
 import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
@@ -29,7 +29,6 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import libCellMLModule from "libcellml.js";
 import libCellMLWasm from "libcellml.js/libcellml.wasm";
 import { IProperties } from "../types/IProperties";
-import { updateUnits } from "./updateAttribute/UpdateUnits";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
 
 interface FileIssues {

@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const rules = require("./webpack.rules");
 const plugins = require("./webpack.plugins").default;
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 rules.push({
-  test: /\.css$/,
-  use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+  test: /\.css$/i,
+  use: ["style-loader", "css-loader", "postcss-loader"],
 });
 
 rules.push({
@@ -13,10 +15,10 @@ rules.push({
 });
 
 module.exports = {
+  plugins: [new ForkTsCheckerWebpackPlugin(), new MiniCssExtractPlugin()],
   module: {
     rules,
   },
-  plugins: plugins,
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".pdf"],
   },
