@@ -30,6 +30,9 @@ import libCellMLModule from "libcellml.js";
 import libCellMLWasm from "libcellml.js/libcellml.wasm";
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
+import { getAllVariableNames } from "./utility/GetAllVariableNames";
+import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
+import { getAllComponentNames } from "./utility/GetAllComponentNames";
 
 interface FileIssues {
   model: string;
@@ -202,7 +205,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     const libcellml = this._cellml;
     const parser = new libcellml.Parser();
     const model = parser.parseModel(content);
-    console.log("Components");
     for (let i = 0; i < model.componentCount(); i += 1) {
       console.log(model.componentByIndex(i).name());
     }
@@ -219,9 +221,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   // Public
 
   async openedFile(filePath: string, mainWindow: BrowserWindow): Promise<void> {
-    console.log("MENU: Importing file");
     const { model, issues } = await this.importFile(filePath);
-    console.log("MENU: Sending information");
     mainWindow.webContents.send("init-content", model);
     mainWindow.webContents.send("error-reply", {
       issues,
@@ -253,11 +253,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
           const parser = new libcellml.Parser();
           const printer = new libcellml.Printer();
 
-          console.log("THIS CONTENT");
-          console.log(this.getContent());
           const model: Model = parser.parseModel(this.getContent());
-
-          console.log(`FILE MANAGEMENT: Updating ${attribute}:${value}`);
 
           let newModel: Model;
           let newCurrentElement: EditorElement;
@@ -298,7 +294,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
           }
           this.setCurrentComponent(newCurrentElement, this.type);
           await this.updateContent(printer.printModel(newModel, false));
-          event.reply("update-content-B", this.getContent());
+          event.reply("update-content-b", this.getContent());
         };
         const dbUpdate = update;
 
@@ -322,7 +318,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       "add-child",
       async (event: IpcMainEvent, { child, parent, parentType }: IAddChild) => {
         await AddChild(this, child, parent, parentType);
-        event.reply("update-content-B", this.getContent());
+        event.reply("update-content-b", this.getContent());
       }
     );
 
@@ -334,8 +330,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       "find-element-from-children",
       (event: IpcMainEvent, { element, select }: ISelect) => {
         this.findElement(select, element);
-        console.log(`Finding element`);
-        console.log(select);
         const selection = this.getCurrentAsSelection(element);
         event.reply("res-select-element", selection);
       }
@@ -368,8 +362,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       const validator = await validateModel(this, file);
       event.reply("validated-file", validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
-      console.log("Validated File");
-      console.log(issues);
       if (issues.length === 0 && this.type === Elements.none) {
         this.type = Elements.model;
         const libcellml = this._cellml;
@@ -389,18 +381,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       event.reply("error-reply", issues);
     });
 
-    // Gathers all component names from a model recursively
-    const getAllComponentNames = (res: string[], parent: ComponentEntity) => {
-      console.log("GETALLCOMPONENTS");
-      const componentCount = parent.componentCount();
-      for (let i = 0; i < componentCount; i++) {
-        const cur = parent.componentByIndex(i);
-        res = getAllComponentNames(res, cur);
-        res.push(cur.name());
-      }
-      return res;
-    };
-
     ipcMain.on("all-components", async (event: IpcMainEvent) => {
       if (!this._cellmlLoaded) {
         await this.init();
@@ -413,42 +393,16 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       event.returnValue = res;
     });
 
-    const getAllUnitsNames = async () => {
-      console.log("GETALLUNITS");
-      if (!this._cellmlLoaded) {
-        await this.init();
-      }
-      const libcellml = this._cellml;
-      const parser: Parser = new libcellml.Parser();
-      const model = parser.parseModel(this.content);
-      const res = [];
-      const unitsCount = model.unitsCount();
-      for (let i = 0; i < unitsCount; i++) {
-        res.push(model.unitsByIndex(i).name());
-      }
-      return res;
-    };
-
+    // Returns a list of all units for the model
     ipcMain.on("all-units", async (event: IpcMainEvent) => {
-      event.returnValue = await getAllUnitsNames();
+      event.returnValue = await getAllUnitsNames(this);
     });
 
-    const getAllVariableNames = async () => {
-      console.log("GETALLVARIABLES");
-      if (!this._cellmlLoaded) {
-        await this.init();
-      }
-      const current = this.getCurrentComponent() as Component;
-      const varCount = current.variableCount();
-      const res: string[] = [];
-      for (let i = 0; i < varCount; i++) {
-        res.push(current.variableByIndex(i).name());
-      }
-      return res;
-    };
-
+    // Returns a list of all valid variables for the currently selected element
+    // Assertions:
+    // Currently selected element is a component
     ipcMain.on("all-variable", async (event: IpcMainEvent) => {
-      event.returnValue = await getAllVariableNames();
+      event.returnValue = await getAllVariableNames(this);
     });
   }
 }

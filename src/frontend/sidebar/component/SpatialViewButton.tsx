@@ -1,18 +1,35 @@
 import Tooltip from "@material-ui/core/Tooltip";
-import React from "react";
+import React, { FunctionComponent } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import { Link } from "react-router-dom";
 import StorageIcon from "@material-ui/icons/Storage";
+import { Typography } from "@material-ui/core";
+import { textStyle } from "./textStyle";
 
-const SpatialViewButton = ({ onClick }: { onClick: any }) => {
+interface ISpatialViewButton {
+  onClick: any;
+  expanded: boolean;
+}
+
+const SpatialViewButton: FunctionComponent<ISpatialViewButton> = ({
+  onClick,
+  expanded,
+}) => {
+  const style = textStyle();
   return (
-    <Tooltip title="Concise View">
-      <Link to="/concise">
-        <IconButton aria-label="Concise View" color="primary">
-          <StorageIcon />
-        </IconButton>
-      </Link>
-    </Tooltip>
+    <div>
+      <Tooltip title="Concise View">
+        <Link to="/concise">
+          <IconButton
+            aria-label="Concise View"
+            color="primary"
+            onClick={onClick}
+          >
+            <StorageIcon />
+          </IconButton>
+        </Link>
+      </Tooltip>
+    </div>
   );
 };
 

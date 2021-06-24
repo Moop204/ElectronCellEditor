@@ -1,17 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { Save as SaveIcon } from "@material-ui/icons";
-import {
-  Grid,
-  Tooltip,
-  IconButton,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { TextViewButton } from "./TextViewButton";
 import { SpatialViewButton } from "./SpatialViewButton";
 import { VisibilityButton } from "./VisibilityButton";
 import { ISidebar } from "../ISidebar";
+import { SaveButton } from "./SaveButton";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -32,59 +26,39 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
   return (
     <Paper
       style={{
-        height: "30%",
+        height: "40%",
         color: "#353433",
       }}
     >
       <Grid
         container
         item
-        direction="column"
+        direction="row"
         justify="space-around"
         style={{ height: "95%" }}
       >
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-          Views
-        </Typography>
+        <Grid container item>
+          <Typography variant="h6" style={{ paddingLeft: "5px" }}>
+            Views
+          </Typography>
+        </Grid>
 
         {view && (
-          <Grid item>
-            <TextViewButton onClick={switchView} />
-            <span className={style.optionText}>
-              <Typography variant="button"> Raw </Typography>
-            </span>
+          <Grid item container direction="row" justify="center" xs={12}>
+            <TextViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
         {!view && (
-          <Grid item>
-            <SpatialViewButton onClick={switchView} />
-            <span className={style.optionText}>
-              <Typography variant="button">Concise</Typography>
-            </span>
+          <Grid item container direction="row" justify="center" xs={12}>
+            <SpatialViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
-        <Grid item>
-          <VisibilityButton onClick={switchSidebar} />
-          <span className={style.optionText}>
-            <Typography variant="button">Expand</Typography>
-          </span>
-        </Grid>
-        <Grid item>
-          <Tooltip title="Save">
-            <IconButton
-              aria-label="Save Action"
-              color="primary"
-              onClick={() => {
-                window.api.send("save-content", content);
-              }}
-            >
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
-          <span className={style.optionText}>
-            <Typography variant="button">Save</Typography>
-          </span>
-        </Grid>
+        <div>
+          <VisibilityButton onClick={switchSidebar} expanded={false} />
+        </div>
+        <div>
+          <SaveButton content={content} expanded={false} color={"primary"} />
+        </div>
       </Grid>
     </Paper>
   );

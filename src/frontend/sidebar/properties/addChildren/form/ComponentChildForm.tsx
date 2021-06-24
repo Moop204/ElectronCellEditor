@@ -20,6 +20,14 @@ const nameValidation = (curComponents: string[]) =>
       )
       .required('Attribute "name" is required')
       .notOneOf(curComponents, "Cannot be an existing component"),
+    source: yup.string().ensure().when("imported", {
+      is: true,
+      then: yup.string().required(),
+    }),
+    component_ref: yup.string().ensure().when("imported", {
+      is: true,
+      then: yup.string().required(),
+    }),
   });
 
 interface IPopup {
@@ -34,7 +42,6 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
   handleClose,
 }) => {
   const namespaces = window.api.sendSync("all-components");
-  console.log(namespaces);
   const validationSchema = nameValidation(namespaces);
 
   const formik = useFormik({

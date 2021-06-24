@@ -6,6 +6,7 @@ declare global {
       send: (channel: string, data?: unknown) => void;
       receive: (channel: string, func: any) => void;
       sendSync: (channel: string, data?: unknown) => any;
+      remove: (channel: string, func: any) => void;
     };
   }
 }
@@ -31,17 +32,28 @@ contextBridge.exposeInMainWorld("api", {
     // whitelist channels
     // if (true || validChannels.includes(channel)) {
     ipcRenderer.send(channel, data);
+    console.log(`SENDING ${channel}`);
+    console.log(data);
     // }
   },
   sendSync: (channel: string, data?: unknown) => {
     // whitelist channels
     // if (true || validChannels.includes(channel)) {
+    console.log(`SENDING SYNC ${channel}`);
+    console.log(data);
     return ipcRenderer.sendSync(channel, data);
     // }
   },
   receive: (channel: string, func: any) => {
     // if (true || validChannels.includes(channel)) {
+    console.log(`RECEIVING ${channel}`);
     ipcRenderer.on(channel, (event, ...args) => func(event, ...args));
     // }
+  },
+
+  remove: (channel: string, func: any) => {
+    ipcRenderer.removeListener(channel, (event, ...args) =>
+      func(event, ...args)
+    );
   },
 });
