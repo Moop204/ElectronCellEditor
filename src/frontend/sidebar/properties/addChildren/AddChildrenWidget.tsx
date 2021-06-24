@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Elements, elmToStr } from "../../../../types/Elements";
 import { AddChildSelect } from "./AddChildSelect";
 import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
@@ -39,14 +39,16 @@ const AddChildrenWidget: FunctionComponent<IAddChild> = ({ element, name }) => {
   }
   return (
     <Grid item xs={12}>
-      {children.length > 0 && (
-        <Typography variant="h5" style={{ paddingLeft: "5px" }}>
-          Add Children
-        </Typography>
-      )}
-      {children.map((elm) => {
-        return AddChild(elm, element, name);
-      })}
+      <Paper style={{ height: "100%" }}>
+        {children.length > 0 && (
+          <Typography variant="h5" style={{ paddingLeft: "5px" }}>
+            Add Children
+          </Typography>
+        )}
+        {children.map((elm) => {
+          return AddChild(elm, element, name);
+        })}
+      </Paper>
     </Grid>
   );
 };

@@ -26,7 +26,6 @@ const AddChild = async (
   if (!fm._cellmlLoaded) {
     await fm.init();
   }
-
   switch (child.type) {
     case Elements.component:
       await AddChildComponent(fm, parent, parentType, child);

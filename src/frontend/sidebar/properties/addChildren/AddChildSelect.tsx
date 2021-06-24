@@ -1,7 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import React, { FunctionComponent } from "react";
 import { Elements } from "../../../../types/Elements";
-//import { ElementHelp } from "../../../components/helper/ElementHelp";
+import { ElementHelp } from "../../help/ElementHelp";
 import { ElementForm } from "./ElementForm";
 
 interface IAddChild {
@@ -28,7 +28,7 @@ const AddChildSelect: FunctionComponent<IAddChild> = ({
         />
       </Grid>
       <Grid item xs={2}>
-        {/* <ElementHelp type={childElement} /> */}
+        <ElementHelp type={childElement} />
       </Grid>
     </Grid>
   );

@@ -60,14 +60,19 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     <div>
       <Grid container item direction="row">
         {!isMathAttribute(title) && (
-          <div>
-            <InputLabel>{title}</InputLabel>
-            <TextField
-              value={value}
-              onChange={(e) => onChange(title, e.target.value)}
-              rows={mathSelect ? 5 : 1}
-            />
-          </div>
+          <Grid container item xs={12}>
+            <Grid item xs={2}>
+              <InputLabel>{title}</InputLabel>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                value={value}
+                onChange={(e) => onChange(title, e.target.value)}
+                rows={mathSelect ? 5 : 1}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
         )}
         {isMathAttribute(title) && (
           <Card>

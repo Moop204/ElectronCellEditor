@@ -19,6 +19,14 @@ const nameValidation = (curComponents: string[]) =>
       )
       .required('Attribute "name" is required')
       .notOneOf(curComponents, "Cannot be an existing Units"),
+    source: yup.string().ensure().when("imported", {
+      is: true,
+      then: yup.string().required(),
+    }),
+    component_ref: yup.string().ensure().when("imported", {
+      is: true,
+      then: yup.string().required(),
+    }),
   });
 
 interface IPopup {

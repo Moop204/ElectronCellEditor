@@ -9,7 +9,7 @@ import { IProperties } from "../../../types/IProperties";
 import { Elements, elmToStr } from "../../../types/Elements";
 import { ISelection, IUpdate } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
-import { Paper, Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { AttributeWidget } from "./AttributeWidget";
 import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
 import { UnitWidget } from "./UnitWidget";
@@ -125,6 +125,19 @@ const PropertiesWidget: FunctionComponent = () => {
     );
   }
 
+  if (abstractModel.type === Elements.none) {
+    return (
+      <Grid item className={styles.plainText} style={{ height: "60%" }}>
+        <Paper className={styles.propertyWidget} style={{ height: "100%" }}>
+          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+            Properties
+          </Typography>
+          No CellML element available to select ...
+        </Paper>
+      </Grid>
+    );
+  }
+
   // abstractModel.type
   // After a file is loaded
   const handleChange = (attrType: string, attrVal: string) => {
@@ -165,44 +178,57 @@ const PropertiesWidget: FunctionComponent = () => {
   };
 
   return (
-    <Paper className={styles.propertyWidget}>
-      <Grid container item className={styles.properties} xs={12}>
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-          Properties
-        </Typography>
-        <Grid container item className={styles.plainText}>
-          <Grid item className={styles.elementType} xs={2}>
-            <Button
-              onClick={() => {
-                window.api.send("resetParent");
-              }}
-            >
-              Parent
-            </Button>
+    <Grid
+      container
+      item
+      className={styles.properties}
+      xs={12}
+      style={{ height: "60%" }}
+    >
+      <Box
+        component="div"
+        className={styles.propertyWidget}
+        style={{ height: "100%", overflowX: "hidden" }}
+        overflow="scroll"
+      >
+        <Paper style={{ height: "100%" }}>
+          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+            Properties
+          </Typography>
+          <Grid container item className={styles.plainText}>
+            <Grid item className={styles.elementType} xs={2}>
+              <Button
+                onClick={() => {
+                  window.api.send("resetParent");
+                }}
+              >
+                Parent
+              </Button>
+            </Grid>
+            <Grid item className={styles.elementType} xs={10}>
+              <Typography variant="h5" style={{ paddingRight: "5px" }}>
+                {capitaliseFirst(elmToStr(abstractModel.type))}
+              </Typography>
+              <ElementHelp type={abstractModel.type} />
+            </Grid>
+            <AttributeWidget
+              attribute={abstractModel.attribute}
+              handleChange={handleChange}
+            />
+            <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
+            <UnitWidget unitMap={abstractModel.unit} />
+            <ChildrenWidget
+              abstractChildren={abstractModel.children}
+              parentType={abstractModel.type}
+            />
+            <AddChildrenWidget
+              element={abstractModel.type}
+              name={abstractModel.attribute.name}
+            />
           </Grid>
-          <Grid item className={styles.elementType} xs={10}>
-            <Typography variant="h5" style={{ paddingRight: "5px" }}>
-              {capitaliseFirst(elmToStr(abstractModel.type))}
-            </Typography>
-            <ElementHelp type={abstractModel.type} />
-          </Grid>
-          <AttributeWidget
-            attribute={abstractModel.attribute}
-            handleChange={handleChange}
-          />
-          <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
-          <UnitWidget unitMap={abstractModel.unit} />
-          <ChildrenWidget
-            abstractChildren={abstractModel.children}
-            parentType={abstractModel.type}
-          />
-          <AddChildrenWidget
-            element={abstractModel.type}
-            name={abstractModel.attribute.name}
-          />
-        </Grid>
-      </Grid>
-    </Paper>
+        </Paper>
+      </Box>
+    </Grid>
   );
 };
 

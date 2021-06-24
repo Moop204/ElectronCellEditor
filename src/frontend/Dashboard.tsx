@@ -77,6 +77,12 @@ const Dashboard: FunctionComponent = () => {
       setValid(res);
     };
     window.api.receive("validated-file", validatedFile);
+
+    return () => {
+      window.api.remove("init-content", initContentFn);
+      window.api.remove("update-content-b", updateContentFn);
+      window.api.remove("validated-file", validatedFile);
+    };
   }, []);
 
   const validateFile = (c: string) => {

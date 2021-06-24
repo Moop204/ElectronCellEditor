@@ -10,13 +10,16 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
   switchSidebar,
   switchView,
   viewSidebar,
+  view,
 }) => {
   return (
-    <Grid item md={3}>
+    <Grid item xs={3}>
       <OptionWidget
         content={content}
         switchSidebar={switchSidebar}
         switchView={switchView}
+        viewSidebar={viewSidebar}
+        view={view}
       />
 
       <PropertiesWidget />
