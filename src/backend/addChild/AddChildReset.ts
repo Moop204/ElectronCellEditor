@@ -13,17 +13,25 @@ const AddChildReset = async (
   const newReset: Reset = new libcellml.Reset();
   const printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
-  const { reset_variable, test_variable, order, reset_value, test_value } =
-    child.attribute;
+  const {
+    reset_variable,
+    test_variable,
+    order,
+    reset_value,
+    test_value,
+  } = child.attribute;
   console.log(child.attribute);
   // Make reset element
   const m: Model = parser.parseModel(fm.getContent());
 
   // Find the variables
   // NOTE: Valid variables are within the same component
+  console.log("Looking for parent " + parent.name);
   const parentComponent = m.componentByName(parent.name as string, true);
   const v = parentComponent.variableByName(reset_variable);
+  console.log("got first one");
   const vTest = parentComponent.variableByName(test_variable);
+  console.log("got both");
 
   // Detail Reset element
   // NOTE: All are mandatory

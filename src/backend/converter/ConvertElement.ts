@@ -1,4 +1,4 @@
-import { Elements } from "../../types/Elements";
+import { Elements, elmToStr } from "../../types/Elements";
 import {
   Model,
   Units,
@@ -9,16 +9,20 @@ import {
   Reset,
 } from "../../types/ILibcellml";
 import { IProperties } from "../../types/IProperties";
+import FileManagement from "../FileManagement";
 import { convertComponent } from "./ConvertComponent";
 import { convertModel } from "./ConvertModel";
 import { convertReset } from "./ConvertReset";
 import { convertUnits } from "./ConvertUnits";
 import { convertVariable } from "./ConvertVariable";
 
+// TODO: Remove the filemanagement parameter once .parent() working
 const convertSelectedElement = (
   selectedElement: Elements,
-  curElm: Component | Model | Reset | Units | Variable | null
+  curElm: Component | Model | Reset | Units | Variable | null,
+  fm: FileManagement
 ) => {
+  console.log("Converting selected element " + elmToStr(selectedElement));
   let prop: IProperties = {
     type: Elements.none,
     attribute: {},
@@ -38,7 +42,7 @@ const convertSelectedElement = (
         prop = convertUnits(curElm as Units);
         break;
       case Elements.reset:
-        prop = convertReset(curElm as Reset);
+        prop = convertReset(curElm as Reset, fm);
         break;
       case Elements.variable:
         prop = convertVariable(curElm as Variable);
@@ -49,8 +53,6 @@ const convertSelectedElement = (
         );
     }
   }
-  console.log("Converter prop");
-  console.log(prop);
   return prop;
 };
 

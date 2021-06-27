@@ -41,6 +41,9 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     };
     const dbErrorReplyFn = errorReplyFn;
     window.api.receive("error-reply", dbErrorReplyFn);
+    return () => {
+      window.api.remove("error-reply", dbErrorReplyFn);
+    };
   }, []);
   if (!expanded) {
     return <Paper style={{ height: "60%" }}>uwu</Paper>;

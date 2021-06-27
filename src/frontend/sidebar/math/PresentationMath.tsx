@@ -10,9 +10,7 @@ interface IMath {
 // MathML written in cellml is always content type
 const convertToPresentation = (mathml: string) => {
   const parser = new DOMParser();
-  console.log(`MathML: ` + mathml);
   const documentSource = parser.parseFromString(mathml, "text/xml");
-  console.log(`ctop: ` + ctop);
   const transform = parser.parseFromString(ctop, "text/xml");
   const xsltProcessor = new XSLTProcessor();
   xsltProcessor.importStylesheet(transform);

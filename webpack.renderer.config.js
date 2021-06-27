@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 rules.push({
   test: /\.css$/i,
-  use: ["style-loader", "css-loader", "postcss-loader"],
+  use: ["style-loader", "css-loader"],
 });
 
 rules.push({

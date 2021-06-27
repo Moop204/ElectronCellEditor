@@ -30,11 +30,11 @@ const formatWarnings = (v: Validator) => {
   return warnings;
 };
 
-const formatHints = (v: Validator) => {
-  const noHint = v.hintCount();
+const formatMessage = (v: Validator) => {
+  const noHint = v.messageCount();
   const hints = [];
   for (let i = 0; i < noHint; i += 1) {
-    const hint = v.hint(i);
+    const hint = v.message(i);
     hints.push({
       desc: hint.description(),
       cause: hint.referenceHeading(),
@@ -62,7 +62,7 @@ const validateModel = async (
 const obtainIssues = async (v: Validator): Promise<IssueDescriptor[]> => {
   const errors = formatErrors(v);
   const warnings = formatWarnings(v);
-  const hints = formatHints(v);
+  const hints = formatMessage(v);
 
   const formattedErrors: IssueDescriptor[] = errors
     .concat(warnings)

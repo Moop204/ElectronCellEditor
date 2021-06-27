@@ -53,12 +53,12 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
             <SpatialViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
-        <div>
+        <Grid item container direction="row" justify="center" xs={12}>
           <VisibilityButton onClick={switchSidebar} expanded={false} />
-        </div>
-        <div>
+        </Grid>
+        <Grid item container direction="row" justify="center" xs={12}>
           <SaveButton content={content} expanded={false} color={"primary"} />
-        </div>
+        </Grid>
       </Grid>
     </Paper>
   );
