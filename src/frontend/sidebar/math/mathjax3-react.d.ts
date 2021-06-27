@@ -1,7 +1,8 @@
 declare module "mathjax3-react" {
-  const content = {
+  const MathJax = {
     Provider: React.Component,
     Html: React.Component,
+    Formula: React.Component,
   };
-  export default content;
+  export default MathJax;
 }

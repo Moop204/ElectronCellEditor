@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { useFormik } from "formik";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
@@ -15,6 +15,28 @@ import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { AllPrefix } from "../../../../../utility/PrefixConverter";
 import { IPopup } from "../IPopup";
+import { IUnitForm } from "../../UnitWidget";
+import { UnitDescriptor } from "../../../../../types/UnitDescriptor";
+import { updateAttr } from "../../PropertiesWidget";
+import { IUpdate } from "../../../../../types/IQuery";
+
+interface IUnitEdit extends IPopup {
+  unit: UnitDescriptor;
+  index: number;
+}
+
+const updateUnitAttr = (index: number, attrType: string, attrVal: string) => {
+  window.api.send("update-attribute", {
+    element: Elements.units,
+    select: {
+      name: null,
+      index: index,
+    },
+    parentSelect: null,
+    attribute: attrType,
+    value: attrVal,
+  } as IUpdate);
+};
 
 const validation = (validPrefix: string[], validUnits: string[]) =>
   yup.object({
@@ -24,35 +46,41 @@ const validation = (validPrefix: string[], validUnits: string[]) =>
     units: yup.string().required().oneOf(validUnits),
   });
 
-const UnitEditForm: FunctionComponent<IPopup> = ({
+const UnitEditForm: FunctionComponent<IUnitEdit> = ({
   parent,
   parentName,
   handleClose,
+  index,
+  unit: { reference, prefix, exponent, multiplier },
 }) => {
   let validUnits: string[] = AllStandardUnits();
   validUnits = [...validUnits, ...window.api.sendSync("all-units")];
   const validPrefix = AllPrefix();
   const validationSchema = validation(validPrefix, validUnits);
+  const [baseReference, setReference] = useState(reference);
+  const [baseExponent, setExponent] = useState(exponent);
+  const [basePrefix, setPrefix] = useState(prefix);
+  const [baseMultiplier, setMultiplier] = useState(multiplier);
 
   const formik = useFormik({
     initialValues: {
-      prefix: "",
-      multiplier: "",
-      exponent: "",
-      units: "",
+      prefix: prefix,
+      multiplier: multiplier,
+      exponent: exponent,
+      units: reference,
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.unit,
-          attribute: values,
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
+      Object.entries(values).map(([key, value]) => {
+        if (key === "units" && value !== baseReference) {
+          updateUnitAttr(index, "units_reference", value as string);
+        } else if (key === "prefix" && value !== basePrefix) {
+          updateUnitAttr(index, "prefix", value as string);
+        } else if (key === "multiplier" && value !== baseMultiplier) {
+          updateUnitAttr(index, "multiplier", value as string);
+        } else if (key === "exponent" && value !== baseExponent) {
+          updateUnitAttr(index, "exponent", value as string);
+        }
       });
     },
   });
@@ -156,7 +184,7 @@ const UnitEditForm: FunctionComponent<IPopup> = ({
             fullWidth
             onClick={handleClose}
           >
-            Close
+            Cancel
           </Button>
           <Button
             color="primary"
@@ -178,7 +206,7 @@ const UnitEditForm: FunctionComponent<IPopup> = ({
               }
             }}
           >
-            Add
+            Apply Change
           </Button>
         </DialogActions>
       </form>

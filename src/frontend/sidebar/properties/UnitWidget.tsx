@@ -5,12 +5,17 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import React, { useState, FunctionComponent } from "react";
 import { UnitDescriptor } from "../../../types/UnitDescriptor";
+import MathJax from "mathjax3-react";
+import { Elements } from "../../../types/Elements";
+import { UnitEditForm } from "./addChildren/form/UnitEditForm";
 
 interface IUnitForm {
+  parentName: string;
   unit: UnitDescriptor;
+  index: number;
 }
 
-const UnitEditForm = ({ unit }: IUnitForm) => {
+const UnitEdit = ({ unit, parentName, index }: IUnitForm) => {
   const { reference, prefix, exponent, multiplier, imported } = unit;
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -18,24 +23,26 @@ const UnitEditForm = ({ unit }: IUnitForm) => {
 
   return (
     <Grid item container xs={12}>
-      <Button fullWidth onClick={handleClickOpen}>
-        <Grid item xs={3}>
-          {prefix}
-          {reference}
-        </Grid>
-        <Grid item xs={4}>
-          Exponent: {exponent}
-        </Grid>
-        <Grid item xs={4}>
-          Multiplier: {multiplier}
-        </Grid>
+      <div style={{ width: "100%" }} onClick={handleClickOpen}>
+        <MathJax.Provider>
+          <MathJax.Formula
+            formula={`$$${
+              multiplier !== 1 ? multiplier.toString() + "*" : ""
+            }${prefix}${reference}^{${exponent !== 1 ? exponent : ""}}$$`}
+          />
+        </MathJax.Provider>
         <Grid item xs={1}>
           {imported && "I"}
         </Grid>
-      </Button>
+      </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Unit</DialogTitle>
-        <DialogContent>A</DialogContent>
+        <UnitEditForm
+          parentName={parentName}
+          handleClose={handleClose}
+          unit={unit}
+          parent={Elements.units}
+          index={index}
+        />
       </Dialog>
     </Grid>
   );
@@ -46,9 +53,13 @@ interface IUnitWidget {
     description: UnitDescriptor;
     index: number;
   }[];
+  parentName: string;
 }
 
-const UnitWidget: FunctionComponent<IUnitWidget> = ({ unitMap }) => {
+const UnitWidget: FunctionComponent<IUnitWidget> = ({
+  unitMap,
+  parentName,
+}) => {
   return (
     <Grid item container xs={12}>
       <Grid item xs={12}>
@@ -58,11 +69,15 @@ const UnitWidget: FunctionComponent<IUnitWidget> = ({ unitMap }) => {
           </Typography>
         )}
       </Grid>
-      {unitMap.map((unit) => (
-        <UnitEditForm unit={unit.description} />
+      {unitMap.map((unit, index) => (
+        <UnitEdit
+          unit={unit.description}
+          index={index}
+          parentName={parentName}
+        />
       ))}
     </Grid>
   );
 };
 
-export { UnitWidget };
+export { UnitWidget, IUnitForm };

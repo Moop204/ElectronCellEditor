@@ -31,11 +31,13 @@ interface Logger {
   removeAllIssues(): void;
   error(index: number): Issue;
   warning(index: number): Issue;
-  hint(index: number): Issue;
+  hint(index: number): Issue; // Remove when release 22 comes out
+  message(index: number): Issue;
   issueCount(): number;
   errorCount(): number;
   warningCount(): number;
-  hintCount(): number;
+  hintCount(): number; // Remove when release 22 comes out
+  messageCount(): number;
 }
 
 interface ComponentEntity extends NamedEntity {
@@ -209,7 +211,8 @@ interface Units extends ImportedEntity, NamedEntity {
   unitAttributeExponent(index: number): number;
   unitAttributeMultiplier(index: number): number;
   removeUnitByIndex(index: number): boolean;
-  removeUnitByName(reference: string): boolean;
+  removeUnitByName(reference: string): boolean; // Remove after release 22 comes out
+  removeUnitByReference(reference: string): boolean;
   removeUnitByStandardUnit(standardRef: StandardUnit): boolean;
   setSourceUnits(importSource: ImportSource, name: string): void;
   removeAllUnits(): void;

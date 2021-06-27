@@ -26,6 +26,8 @@ const AddChildUnit = async (
     console.log(parentUnits.unitAttributeReference(i));
   }
 
+  parentUnits.removeUnitByReference(units);
+
   if (prefix === "") {
     parentUnits.addUnitByReferenceExponent(
       units,

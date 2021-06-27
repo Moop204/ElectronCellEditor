@@ -51,6 +51,8 @@ const convertComponent = (component: Component) => {
     },
     unit: [],
   };
+  console.log("<<<<< >>>>>>>>>");
+  console.log(propertyFormat.children.reset);
   return propertyFormat;
 };
 

@@ -13,6 +13,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { EditorMonaco } from "../../editor/raw/EditorMonaco";
 import { PresentationMath } from "../math/PresentationMath";
+import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -34,6 +35,14 @@ const isMathAttribute = (attr: string) => {
     default:
       return false;
   }
+};
+
+const processAttribute = (title: string) => {
+  let words = title.split("_");
+
+  return words.reduce((prev, cur, _idx, _arr) => {
+    return capitaliseFirst(prev) + " " + capitaliseFirst(cur);
+  });
 };
 
 const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
@@ -62,7 +71,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         {!isMathAttribute(title) && (
           <Grid container item xs={12}>
             <Grid item xs={2}>
-              <InputLabel>{title}</InputLabel>
+              <InputLabel>{processAttribute(title)}</InputLabel>
             </Grid>
             <Grid item xs={10}>
               <TextField

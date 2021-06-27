@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { ipcMain, BrowserWindow, IpcMainEvent } from "electron";
 import { convertSelectedElement } from "./converter/ConvertElement";
-import { Elements } from "../types/Elements";
+import { Elements, elmToStr } from "../types/Elements";
 import {
   Component,
   ComponentEntity,
@@ -24,16 +24,27 @@ import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
 import fs from "fs";
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+//declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-import libCellMLModule from "libcellml.js";
-import libCellMLWasm from "libcellml.js/libcellml.wasm";
+// import libCellMLModule from "libcellml.js";
+// import libCellMLWasm from "libcellml.js/libcellml.wasm";
+
+import a from "./mainLibcellml/libcellml.js";
+import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
 import { getAllVariableNames } from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
+import { updateOrder } from "./updateAttribute/UpdateOrder";
+import { ModelHelp } from "../frontend/sidebar/help/ModelHelp";
+import { updatePrefix } from "./updateAttribute/UpdatePrefix";
+import { updateReference } from "./updateAttribute/UpdateReference";
+import { updateMultiplier } from "./updateAttribute/UpdateMultiplier";
+import { updateExponent } from "./updateAttribute/UpdateExponent";
 
+const libCellMLModule: (libCellML: any, ...args: any[]) => Model = a;
 interface FileIssues {
   model: string;
   issues: IssueDescriptor[];
@@ -59,6 +70,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   }
 
   async init(): Promise<void> {
+    // @ts-ignore
     this._cellml = await new libCellMLModule({
       locateFile(path: string, prefix: string) {
         if (path.endsWith(".wasm")) {
@@ -102,7 +114,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     this.type = Elements.model;
     const resetProp = convertSelectedElement(
       this.type,
-      this.getCurrentComponent()
+      this.getCurrentComponent(),
+      this
     );
     return resetProp;
   }
@@ -134,24 +147,44 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     switch (element) {
       case Elements.model:
       case Elements.component:
-        const curComp = this.currentComponent as ComponentEntity;
-        if (name != null) {
-          this.currentComponent = curComp.componentByName(name, false);
-        } else if (index != null) {
-          this.currentComponent = curComp.componentByIndex(index);
+        {
+          const curComp = this.currentComponent as ComponentEntity;
+          if (name != null) {
+            this.currentComponent = curComp.componentByName(name, false);
+          } else if (index != null) {
+            this.currentComponent = curComp.componentByIndex(index);
+          }
+          this.type = Elements.component;
         }
         break;
       case Elements.units:
-        // Parent
-        const curComp1 = this.currentComponent as Model;
-        if (name != null) {
-          if (curComp1.hasUnitsByName(name)) {
-            this.currentComponent = curComp1.unitsByName(name);
-          } else {
-            this.currentComponent = curComp1.unitsByName(name.slice(1));
+        {
+          // Parent
+          const curComp = this.currentComponent as Model;
+          if (name != null) {
+            if (curComp.hasUnitsByName(name)) {
+              this.currentComponent = curComp.unitsByName(name);
+            } else {
+              this.currentComponent = curComp.unitsByName(name.slice(1));
+            }
+          } else if (index != null) {
+            this.currentComponent = curComp.unitsByIndex(index);
           }
-        } else if (index != null) {
-          this.currentComponent = curComp1.unitsByIndex(index);
+          this.type = Elements.units;
+        }
+        break;
+      case Elements.reset:
+        {
+          // Require to find in parent
+          const curComp = this.currentComponent as Component;
+          if (index != null) {
+            this.currentComponent = curComp.reset(index);
+          } else {
+            console.log("NO INDEX given FOR A RESET");
+          }
+          this.type = Elements.reset;
+          console.log("ELEMENT OF TYPE RESET");
+          console.log(this.currentComponent);
         }
         break;
       default:
@@ -213,7 +246,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   // Internal
   getCurrentAsSelection(element: Elements): ISelection {
     this.type = element;
-    const prop = convertSelectedElement(element, this.getCurrentComponent());
+    const prop = convertSelectedElement(
+      element,
+      this.getCurrentComponent(),
+      this
+    );
     const selection: ISelection = { element, prop };
     return selection;
   }
@@ -255,8 +292,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
           const model: Model = parser.parseModel(this.getContent());
 
-          let newModel: Model;
-          let newCurrentElement: EditorElement;
+          let newModel: Model = model;
+          let newCurrentElement: EditorElement = this.getCurrentComponent();
 
           if (attribute === "name") {
             ({ newCurrentElement, newModel } = updateName(
@@ -285,9 +322,51 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
               value,
               this.getCurrentComponent()
             ));
+            // TODO: Requires working .parent()
+          } else if (attribute === "order") {
+            ({ newModel, newCurrentElement } = updateOrder(model, this, value));
+          } else if (attribute === "prefix") {
+            ({ newModel, newCurrentElement } = updatePrefix(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent(),
+              this
+            ));
+          } else if (attribute === "exponent") {
+            ({ newModel, newCurrentElement } = updateExponent(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent(),
+              this
+            ));
+          } else if (attribute === "multiplier") {
+            ({ newModel, newCurrentElement } = updateMultiplier(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent(),
+              this
+            ));
+          } else if (attribute === "units_reference") {
+            console.log("Byup");
+            ({ newModel, newCurrentElement } = updateReference(
+              model,
+              element,
+              select,
+              parentSelect as ISearch,
+              value,
+              this.getCurrentComponent(),
+              this
+            ));
           } else {
-            newCurrentElement = this.getCurrentComponent();
-            newModel = model;
             console.log(
               `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
             );
@@ -329,8 +408,13 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     ipcMain.on(
       "find-element-from-children",
       (event: IpcMainEvent, { element, select }: ISelect) => {
+        console.log(`Looking for ${elmToStr(element)}`);
+        console.log(select);
+
         this.findElement(select, element);
         const selection = this.getCurrentAsSelection(element);
+        console.log("LOO AT ME I AH ERE");
+        console.log(selection);
         event.reply("res-select-element", selection);
       }
     );
@@ -348,14 +432,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     // OUTPUT
     // Sets the raw truth directly to frontend
     ipcMain.on("get-element", (event: IpcMainEvent) => {
-      console.log(`LIBCELL: Get Element  ${this.type}`);
-      const prop = convertSelectedElement(
-        this.type,
-        this.getCurrentComponent()
-      );
+      const prop = this.getCurrentAsSelection(this.type);
       console.log("GetElement: On Get Element");
       console.log(this.getCurrentComponent());
-      event.reply("res-get-element", prop);
+      console.log(prop);
+      event.reply("res-get-element", prop.prop);
     });
 
     ipcMain.on("validate-file", async (event: IpcMainEvent, file: string) => {
@@ -368,12 +449,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         const parser: Parser = new libcellml.Parser();
         const m: Model = parser.parseModel(file);
         this.currentComponent = m;
-        const prop = convertSelectedElement(
-          this.type,
-          this.getCurrentComponent()
-        );
-        console.log("FILE IS AOK AND WE GONNA THROW DOWN A NEW ONE");
-        event.reply("res-get-element", prop);
+        const prop = this.getCurrentAsSelection(this.type);
+        event.reply("res-get-element", prop.prop);
       } else {
         console.log(`Issue length: ${issues.length}`);
         console.log(`Current Type: ${this.type}`);
@@ -404,5 +481,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     ipcMain.on("all-variable", async (event: IpcMainEvent) => {
       event.returnValue = await getAllVariableNames(this);
     });
+
+    // ipcMain.on("");
   }
 }
