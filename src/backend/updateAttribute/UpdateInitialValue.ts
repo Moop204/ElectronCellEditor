@@ -7,35 +7,46 @@ import {
   Units,
   Variable,
   Component,
-  NamedEntity,
 } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 
 // Definitely name attribute search
-const updateUnits = (
+const updateInitialValue = (
   model: Model,
   element: Elements,
   select: ISearch,
   value: any,
   currentElement: EditorElement
 ) => {
-  const parentName = (currentElement?.parent() as NamedEntity).name();
+  const modelCopy = model.clone();
+  const parentName = (currentElement?.parent() as Component).name();
   switch (element) {
     case Elements.variable:
-      const parentElement = model.componentByName(parentName, true);
+      // Obtain element
+      const parentElement = modelCopy.takeComponentByName(parentName, true);
       const variableElement = parentElement.takeVariableByName(
         select.name as string
       );
-      variableElement.setUnitsByName(value);
-      parentElement.addVariable(variableElement);
 
+      // Change
+      console.log("Update Initial Value");
+      console.log(value);
+      variableElement.setInitialValueByString(value.toString());
+
+      // Integrate change to model
+      parentElement.addVariable(variableElement);
       model.replaceComponentByName(parentName as string, parentElement, true);
+
+      console.log("Initial Value log");
+      console.log(select.name);
+      console.log(variableElement.name());
 
       if (currentElement === null) {
         console.log("FM: CurrentComponent is null when setting name");
       } else {
-        (currentElement as Variable).setUnitsByName(value);
+        (currentElement as Variable).setInitialValueByString(value.toString());
       }
+
       break;
     default:
       break;
@@ -45,4 +56,4 @@ const updateUnits = (
   return { newModel, newCurrentElement };
 };
 
-export { updateUnits };
+export { updateInitialValue };

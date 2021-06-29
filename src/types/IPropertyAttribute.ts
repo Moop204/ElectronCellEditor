@@ -1,6 +1,6 @@
 interface IPropertyAttribute {
   title: string;
-  value: string;
+  value: any;
   onChange: any;
 }
 

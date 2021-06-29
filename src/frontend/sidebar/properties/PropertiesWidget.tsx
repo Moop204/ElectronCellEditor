@@ -50,28 +50,35 @@ interface AttributeChange {
   attributeValue: string;
 }
 
-const updateAttr = (
-  type: Elements,
-  compName: string,
-  attrType: string,
-  attrVal: string
-) => {
-  window.api.send("update-attribute", {
-    element: type,
-    select: {
-      name: compName,
-      index: null,
-    },
-    parentSelect: null,
-    attribute: attrType,
-    value: attrVal,
-  } as IUpdate);
+const updateAttr = (changeSet: AttributeChange[]) => {
+  const processUpdate = ({
+    name,
+    type,
+    attribute,
+    attributeValue,
+  }: AttributeChange): IUpdate => {
+    return {
+      element: type,
+      select: {
+        name: name,
+        index: null,
+      },
+      attribute: attribute,
+      value: attributeValue,
+    };
+  };
+
+  window.api.send("update-attribute", changeSet.map(processUpdate));
 };
 
 const PropertiesWidget: FunctionComponent = () => {
   const styles = localStyles();
   const [abstractModel, setAbstractModel] = useState<IProperties>();
   const [diffSet, setDiffSet] = useState<AttributeChange[]>([]);
+
+  const resetChanges = () => {
+    setDiffSet([]);
+  };
 
   useEffect(() => {
     const handleReceiveSelectedElement = (
@@ -116,11 +123,11 @@ const PropertiesWidget: FunctionComponent = () => {
     };
   }, []);
 
-  const dbUpdateAttr = _.debounce(
-    (type: Elements, compName: string, attrType: string, attrVal: string) =>
-      updateAttr(type, compName, attrType, attrVal),
-    300
-  );
+  // const dbUpdateAttr = _.debounce(
+  //   (type: Elements, compName: string, attrType: string, attrVal: string) =>
+  //     updateAttr(type, compName, attrType, attrVal),
+  //   300
+  // );
 
   // Before a file is loaded
   if (!abstractModel) {
@@ -183,10 +190,25 @@ const PropertiesWidget: FunctionComponent = () => {
   };
 
   const sendAttributeUpdate = () => {
-    for (const { type, name, attribute, attributeValue } of diffSet) {
-      dbUpdateAttr(type, name, attribute, attributeValue);
+    // Delay name changes last so that other changes are accurate
+
+    const prioritySet = [];
+    const postSet = [];
+
+    for (const change of diffSet) {
+      const { attribute } = change;
+      if (attribute === "name") {
+        postSet.push(change);
+      } else {
+        prioritySet.push(change);
+      }
     }
+
+    // Update the set
+    console.log("DIFFSET BEFORE SENDING");
     console.log(diffSet);
+    const submitSet = [...prioritySet, ...postSet];
+    updateAttr(submitSet);
     setDiffSet([]);
   };
 
@@ -214,6 +236,7 @@ const PropertiesWidget: FunctionComponent = () => {
               <Grid item className={styles.elementType} xs={2}>
                 <Button
                   onClick={() => {
+                    resetChanges();
                     window.api.send("resetParent");
                   }}
                 >
@@ -238,6 +261,7 @@ const PropertiesWidget: FunctionComponent = () => {
               <ChildrenWidget
                 abstractChildren={abstractModel.children}
                 parentType={abstractModel.type}
+                resetChanges={resetChanges}
               />
               <AddChildrenWidget
                 element={abstractModel.type}

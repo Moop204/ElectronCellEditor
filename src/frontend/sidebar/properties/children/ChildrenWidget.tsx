@@ -16,6 +16,7 @@ const findElement = (elm: Elements, name: string, index: number) => {
     case Elements.component:
     case Elements.units:
     case Elements.reset:
+    case Elements.variable:
       window.api.send("find-element-from-children", query);
       break;
     default:
@@ -26,11 +27,13 @@ const findElement = (elm: Elements, name: string, index: number) => {
 interface IChildrenWidget {
   abstractChildren: Record<string, IChild[]>;
   parentType: Elements;
+  resetChanges: () => void;
 }
 
 const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   abstractChildren,
   parentType,
+  resetChanges,
 }) => {
   if (!abstractChildren) {
     return <div>NO CHILD</div>;
@@ -62,6 +65,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                         attrType.name ? attrType.name : "",
                         attrType.index
                       );
+                      resetChanges();
                     }}
                     element={parentKey}
                     key={attrType.name}

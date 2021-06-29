@@ -7,9 +7,8 @@ interface ISelect {
 }
 
 interface IUpdate {
-  element: Elements;
+  element: Elements; // Element of the item being updated, maybe redundant
   select: ISearch;
-  parentSelect: ISearch | null;
   attribute: string;
   value: any;
 }

@@ -46,4 +46,9 @@ module.exports = [
     test: /\.png$/,
     type: "asset/resource",
   },
+  {
+    test: /test\.ts$/,
+    use: "mocha-loader",
+    exclude: /node_modules/,
+  },
 ];

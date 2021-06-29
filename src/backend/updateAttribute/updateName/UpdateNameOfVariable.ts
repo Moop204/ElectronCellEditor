@@ -4,16 +4,15 @@ import { ISearch } from "../../../types/IQuery";
 
 const updateNameOfVariable = (
   model: Model,
-  parentSelect: ISearch,
   currentElement: EditorElement,
   select: ISearch,
   value: string
 ) => {
   const modelCopy = model.clone();
-  const c: Component = modelCopy.componentByName(
-    parentSelect.name as string,
-    true
-  );
+  console.log("NAME O VARS ");
+  console.log(currentElement);
+  const parentName = (currentElement?.parent() as Component).name();
+  const c: Component = modelCopy.componentByName(parentName, true);
   const v: Variable = c.variableByName(select.name as string);
   v.setName(value);
   (currentElement as Variable).setName(value);

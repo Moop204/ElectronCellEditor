@@ -7,34 +7,42 @@ import {
   Units,
   Variable,
   Component,
-  NamedEntity,
 } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 
 // Definitely name attribute search
-const updateUnits = (
+const updateInterface = (
   model: Model,
   element: Elements,
   select: ISearch,
   value: any,
-  currentElement: EditorElement
+  currentElement: Variable
 ) => {
-  const parentName = (currentElement?.parent() as NamedEntity).name();
+  const modelCopy = model.clone();
+  const parentName = (currentElement?.parent() as Component).name();
   switch (element) {
     case Elements.variable:
+      // Obtain element
       const parentElement = model.componentByName(parentName, true);
       const variableElement = parentElement.takeVariableByName(
         select.name as string
       );
-      variableElement.setUnitsByName(value);
-      parentElement.addVariable(variableElement);
 
-      model.replaceComponentByName(parentName as string, parentElement, true);
+      // Change
+      console.log("Update Interface");
+      console.log(variableElement.interfaceType());
+      console.log(value);
+      variableElement.setInterfaceTypeByString(value);
+      console.log(variableElement.interfaceType());
+
+      // Integrate change to model
+      parentElement.addVariable(variableElement);
+      model.replaceComponentByName(parentName, parentElement, true);
 
       if (currentElement === null) {
         console.log("FM: CurrentComponent is null when setting name");
       } else {
-        (currentElement as Variable).setUnitsByName(value);
+        (currentElement as Variable).setInterfaceTypeByString(value);
       }
       break;
     default:
@@ -45,4 +53,4 @@ const updateUnits = (
   return { newModel, newCurrentElement };
 };
 
-export { updateUnits };
+export { updateInterface };
