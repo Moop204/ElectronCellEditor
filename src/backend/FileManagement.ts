@@ -25,12 +25,13 @@ import { ChildDetail } from "../types/ChildDetail";
 import fs from "fs";
 
 //declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+const libcellModule = require("libcellml.js/libcellml.common");
 
 // import libCellMLModule from "libcellml.js";
 // import libCellMLWasm from "libcellml.js/libcellml.wasm";
 
-import a from "./mainLibcellml/libcellml.js";
-import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+// import libCellMLModule from "./mainLibcellml/libcellml.js";
+// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -43,8 +44,10 @@ import { updatePrefix } from "./updateAttribute/UpdatePrefix";
 import { updateReference } from "./updateAttribute/UpdateReference";
 import { updateMultiplier } from "./updateAttribute/UpdateMultiplier";
 import { updateExponent } from "./updateAttribute/UpdateExponent";
+import { updateInterface } from "./updateAttribute/UpdateInterface";
+import { updateInitialValue } from "./updateAttribute/UpdateInitialValue";
+import { updateEvent } from "./updateAttribute/UpdateEvent";
 
-const libCellMLModule: (libCellML: any, ...args: any[]) => Model = a;
 interface FileIssues {
   model: string;
   issues: IssueDescriptor[];
@@ -71,14 +74,15 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async init(): Promise<void> {
     // @ts-ignore
-    this._cellml = await new libCellMLModule({
-      locateFile(path: string, prefix: string) {
-        if (path.endsWith(".wasm")) {
-          return prefix + libCellMLWasm;
-        }
-        return prefix + path;
-      },
-    });
+    // this._cellml = await new libCellMLModule({
+    //   locateFile(path: string, prefix: string) {
+    //     if (path.endsWith(".wasm")) {
+    //       return prefix + libCellMLWasm;
+    //     }
+    //     return prefix + path;
+    //   },
+    // });
+    this._cellml = await libcellModule();
     this._cellmlLoaded = true;
   }
 
@@ -92,7 +96,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       const parser: Parser = new this._cellml.Parser();
       this.setCurrentComponent(parser.parseModel(this.content), Elements.model);
     }
-    ipcMain.emit("update-content-b", this.getContent());
+    if (ipcMain) ipcMain.emit("update-content-b", this.getContent());
   }
 
   async setContent(s: string): Promise<void> {
@@ -136,6 +140,29 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   }
 
   // Helpers
+
+  update = async (
+    updates: IUpdate[],
+    libcellml: any,
+    content: string,
+    curElm: EditorElement,
+    fm: FileManagement
+  ) => {
+    const parser = new libcellml.Parser();
+    const printer = new libcellml.Printer();
+
+    const model: Model = parser.parseModel(content);
+
+    for (const updateDescriptor of updates) {
+      const { newCurrentElement, newModel } = updateEvent(
+        model,
+        updateDescriptor,
+        curElm
+      );
+      fm.setCurrentComponent(newCurrentElement, fm.type);
+      await fm.updateContent(printer.printModel(newModel, false));
+    }
+  };
 
   // Find selected element
   findElement(select: ISearch, element: Elements): void {
@@ -187,7 +214,18 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
           console.log(this.currentComponent);
         }
         break;
+      case Elements.variable:
+        {
+          const curComp = this.getCurrentComponent() as Component;
+          this.setCurrentComponent(
+            curComp.variableByName(name as string),
+            Elements.variable
+          );
+        }
+        console.log("SET TYPE TO VARIABLE");
+        break;
       default:
+        console.log("findElement failed to figure out which element it was");
         break;
     }
   }
@@ -278,106 +316,22 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     // Assume starting valid
     ipcMain.on(
       "update-attribute",
-      async (
-        event: IpcMainEvent,
-        { element, select, parentSelect, value, attribute }: IUpdate
-      ) => {
-        const update = async () => {
-          if (!this._cellmlLoaded) {
-            await this.init();
-          }
-          const libcellml = this._cellml;
-          const parser = new libcellml.Parser();
-          const printer = new libcellml.Printer();
+      async (event: IpcMainEvent, updateDescription: IUpdate[]) => {
+        if (!this._cellmlLoaded) {
+          await this.init();
+        }
 
-          const model: Model = parser.parseModel(this.getContent());
-
-          let newModel: Model = model;
-          let newCurrentElement: EditorElement = this.getCurrentComponent();
-
-          if (attribute === "name") {
-            ({ newCurrentElement, newModel } = updateName(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent()
-            ));
-          } else if (attribute === "units") {
-            ({ newModel, newCurrentElement } = updateUnits(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent()
-            ));
-          } else if (attribute === "math") {
-            ({ newModel, newCurrentElement } = updateMath(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent()
-            ));
-            // TODO: Requires working .parent()
-          } else if (attribute === "order") {
-            ({ newModel, newCurrentElement } = updateOrder(model, this, value));
-          } else if (attribute === "prefix") {
-            ({ newModel, newCurrentElement } = updatePrefix(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent(),
-              this
-            ));
-          } else if (attribute === "exponent") {
-            ({ newModel, newCurrentElement } = updateExponent(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent(),
-              this
-            ));
-          } else if (attribute === "multiplier") {
-            ({ newModel, newCurrentElement } = updateMultiplier(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent(),
-              this
-            ));
-          } else if (attribute === "units_reference") {
-            console.log("Byup");
-            ({ newModel, newCurrentElement } = updateReference(
-              model,
-              element,
-              select,
-              parentSelect as ISearch,
-              value,
-              this.getCurrentComponent(),
-              this
-            ));
-          } else {
-            console.log(
-              `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
-            );
-          }
-          this.setCurrentComponent(newCurrentElement, this.type);
-          await this.updateContent(printer.printModel(newModel, false));
+        await this.update(
+          updateDescription,
+          this._cellml,
+          this.getContent(),
+          this.getCurrentComponent(),
+          this
+        );
+        if (ipcMain) {
           event.reply("update-content-b", this.getContent());
-        };
-        const dbUpdate = update;
-
-        await dbUpdate();
+          //event.returnValue("a");
+        }
       }
     );
 
@@ -412,6 +366,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         console.log(select);
 
         this.findElement(select, element);
+
+        console.log(`HEY LOOK ${elmToStr(this.type)}`);
         const selection = this.getCurrentAsSelection(element);
         console.log("LOO AT ME I AH ERE");
         console.log(selection);

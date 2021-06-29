@@ -20,7 +20,6 @@ const updateMath = (
   model: Model,
   element: Elements,
   select: ISearch,
-  parentSelect: ISearch,
   value: any,
   currentElement: EditorElement
 ) => {

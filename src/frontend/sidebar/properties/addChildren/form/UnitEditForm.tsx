@@ -26,16 +26,17 @@ interface IUnitEdit extends IPopup {
 }
 
 const updateUnitAttr = (index: number, attrType: string, attrVal: string) => {
-  window.api.send("update-attribute", {
-    element: Elements.units,
-    select: {
-      name: null,
-      index: index,
+  window.api.send("update-attribute", [
+    {
+      element: Elements.units,
+      select: {
+        name: null,
+        index: index,
+      },
+      attribute: attrType,
+      value: attrVal,
     },
-    parentSelect: null,
-    attribute: attrType,
-    value: attrVal,
-  } as IUpdate);
+  ]);
 };
 
 const validation = (validPrefix: string[], validUnits: string[]) =>

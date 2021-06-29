@@ -14,6 +14,12 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { EditorMonaco } from "../../editor/raw/EditorMonaco";
 import { PresentationMath } from "../math/PresentationMath";
 import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
+import { FormControl, Select, Input, FormHelperText } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { Units } from "../../../types/ILibcellml";
+import { AllStandardUnits } from "../../../utility/StandardUnitConverter";
+import { AllInterfaceType } from "../../../utility/InterfaceConverter";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -38,10 +44,17 @@ const isMathAttribute = (attr: string) => {
 };
 
 const processAttribute = (title: string) => {
+  if (title === "interfaceType") {
+    return "Interface";
+  } else if (title === "initialValue") {
+    return "Init. Value";
+  }
+
+  title = capitaliseFirst(title);
   let words = title.split("_");
 
   return words.reduce((prev, cur, _idx, _arr) => {
-    return capitaliseFirst(prev) + " " + capitaliseFirst(cur);
+    return prev + " " + capitaliseFirst(cur);
   });
 };
 
@@ -65,6 +78,73 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     console.log(`Setting true: ${mathSelect}`);
   };
   const style = useStyle();
+  let validUnits: string[] = AllStandardUnits();
+  validUnits = [...validUnits, ...window.api.sendSync("all-units")];
+
+  if (title === "interfaceType") {
+    const validInterface = AllInterfaceType();
+
+    return (
+      <Grid container item xs={12}>
+        <Grid item xs={2}>
+          <InputLabel>{processAttribute(title)}</InputLabel>
+        </Grid>
+        <Grid item xs={10}>
+          <FormControl fullWidth>
+            <Select
+              labelId="interface"
+              id="interface"
+              name="interface"
+              value={value}
+              onChange={(e) => onChange(title, e.target.value)}
+              label="units"
+              input={<Input />}
+            >
+              {validInterface.map((v: string) => {
+                return (
+                  <MenuItem key={v} value={v.toLowerCase()}>
+                    {v}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  if (title === "units") {
+    return (
+      <Grid container item xs={12}>
+        <Grid item xs={2}>
+          <InputLabel>{processAttribute(title)}</InputLabel>
+        </Grid>
+        <Grid item xs={10}>
+          <FormControl fullWidth>
+            <Select
+              labelId="units"
+              id="units"
+              name="units"
+              value={value}
+              onChange={(e) => onChange(title, e.target.value)}
+              label="units"
+              input={<Input />}
+            >
+              {validUnits.map((v: string) => {
+                return (
+                  <MenuItem key={v} value={v.toLowerCase()}>
+                    {v}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
     <div>
       <Grid container item direction="row">
@@ -85,14 +165,21 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         )}
         {isMathAttribute(title) && (
           <Card>
-            <div onClick={handleOpen}>
-              {value && (
-                <div>
-                  <PresentationMath mathml={value} />
-                </div>
-              )}
-              {!value && <TextField onSelect={handleOpen} />}
-            </div>
+            <Grid container item xs={12}>
+              <Grid item xs={2}>
+                <InputLabel>{processAttribute(title)}</InputLabel>
+              </Grid>
+              <Grid item xs={10}>
+                <span onClick={handleOpen}>
+                  {value && (
+                    <div>
+                      <PresentationMath mathml={value} />
+                    </div>
+                  )}
+                  {!value && <TextField onSelect={handleOpen} />}
+                </span>
+              </Grid>
+            </Grid>
             <Dialog
               open={mathSelect}
               onClose={handleClose}

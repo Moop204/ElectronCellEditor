@@ -7,6 +7,7 @@ import {
   Units,
   Variable,
   Component,
+  NamedEntity,
 } from "../../../types/ILibcellml";
 import { ISearch } from "../../../types/IQuery";
 import { updateNameOfComponent } from "./UpdateNameOfComponent";
@@ -19,7 +20,6 @@ const updateName = (
   model: Model,
   element: Elements,
   select: ISearch,
-  parentSelect: ISearch,
   value: string,
   currentElement: EditorElement
 ) => {
@@ -48,7 +48,6 @@ const updateName = (
   } else if (element === Elements.variable) {
     const { editedModel, editedCurrentElement } = updateNameOfVariable(
       model,
-      parentSelect,
       currentElement,
       select,
       value

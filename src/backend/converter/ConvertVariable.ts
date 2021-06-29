@@ -4,6 +4,7 @@ import { Variable } from "../../types/ILibcellml";
 import { IProperties } from "../../types/IProperties";
 
 const convertVariable = (variable: Variable) => {
+  console.log(variable);
   const eqVarCount: number = variable.equivalentVariableCount();
   const eqVarNameList: string[] = [];
   for (let i = 0; i < eqVarCount; i += 1) {
@@ -21,7 +22,7 @@ const convertVariable = (variable: Variable) => {
       name: variable.name(),
       interfaceType: variable.interfaceType(),
       initialValue: variable.initialValue(),
-      units: variable.units(),
+      units: variable.units().name(),
     },
     children: {
       connection: eqVarNameList.map((name: string, index: number) => {

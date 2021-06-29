@@ -21,10 +21,8 @@ const updateExponent = (
   model: Model,
   element: Elements,
   select: ISearch,
-  parentSelect: ISearch,
   value: any,
-  currentElement: EditorElement,
-  fm: FileManagement
+  currentElement: EditorElement
 ) => {
   const modelCopy = model.clone();
 
@@ -41,8 +39,6 @@ const updateExponent = (
       const oldReference = unitsElement.unitAttributeReference(
         select.index as number
       );
-
-      const libcellml = fm._cellml;
 
       // New unit
       unitsElement.removeUnitByIndex(select.index as number);
