@@ -8,16 +8,17 @@ const updateNameOfVariable = (
   select: ISearch,
   value: string
 ) => {
-  const modelCopy = model.clone();
-  console.log("NAME O VARS ");
-  console.log(currentElement);
   const parentName = (currentElement?.parent() as Component).name();
-  const c: Component = modelCopy.componentByName(parentName, true);
-  const v: Variable = c.variableByName(select.name as string);
+  const c: Component = model.componentByName(parentName, true);
+  const v: Variable = c.takeVariableByName(select.name as string);
   v.setName(value);
+
+  c.addVariable(v);
+  model.replaceComponentByName(parentName, c, true);
+
   (currentElement as Variable).setName(value);
-  const editedModel = modelCopy;
-  const editedCurrentElement = currentElement;
+  const editedModel = model;
+  const editedCurrentElement = v; //currentElement;
   return { editedModel, editedCurrentElement };
 };
 

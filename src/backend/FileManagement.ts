@@ -10,6 +10,7 @@ import {
   Units,
   Variable,
   Parser,
+  NamedEntity,
 } from "../types/ILibcellml";
 import { ISearch, ISelect, ISelection, IUpdate } from "../types/IQuery";
 import {
@@ -25,13 +26,13 @@ import { ChildDetail } from "../types/ChildDetail";
 import fs from "fs";
 
 //declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-const libcellModule = require("libcellml.js/libcellml.common");
+// const libcellModule = require("libcellml.js/libcellml.common");
 
 // import libCellMLModule from "libcellml.js";
 // import libCellMLWasm from "libcellml.js/libcellml.wasm";
 
-// import libCellMLModule from "./mainLibcellml/libcellml.js";
-// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+import libCellMLModule from "./mainLibcellml/libcellml.js";
+import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -74,15 +75,15 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async init(): Promise<void> {
     // @ts-ignore
-    // this._cellml = await new libCellMLModule({
-    //   locateFile(path: string, prefix: string) {
-    //     if (path.endsWith(".wasm")) {
-    //       return prefix + libCellMLWasm;
-    //     }
-    //     return prefix + path;
-    //   },
-    // });
-    this._cellml = await libcellModule();
+    this._cellml = await new libCellMLModule({
+      locateFile(path: string, prefix: string) {
+        if (path.endsWith(".wasm")) {
+          return prefix + libCellMLWasm;
+        }
+        return prefix + path;
+      },
+    });
+    // this._cellml = await libcellModule();
     this._cellmlLoaded = true;
   }
 
@@ -153,7 +154,17 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
     const model: Model = parser.parseModel(content);
 
+    // TODO: Jank fix, refactor properly
+
     for (const updateDescriptor of updates) {
+      if (updateDescriptor.attribute === "name") {
+        updateDescriptor.select = {
+          name: (this.getCurrentComponent() as NamedEntity).name(),
+          index: null,
+        };
+      }
+      console.log("descriptor");
+      console.log(updateDescriptor);
       const { newCurrentElement, newModel } = updateEvent(
         model,
         updateDescriptor,
@@ -320,7 +331,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         if (!this._cellmlLoaded) {
           await this.init();
         }
-
+        console.log("Update Received");
+        console.log(updateDescription);
         await this.update(
           updateDescription,
           this._cellml,

@@ -68,18 +68,8 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
   //     </Grid>
   //   );
   // }
-  const [mathSelect, setMathSelect] = useState(false);
-  const handleClose = () => {
-    setMathSelect(false);
-    console.log(`Setting false: ${mathSelect}`);
-  };
-  const handleOpen = () => {
-    setMathSelect(true);
-    console.log(`Setting true: ${mathSelect}`);
-  };
-  const style = useStyle();
-  let validUnits: string[] = AllStandardUnits();
-  validUnits = [...validUnits, ...window.api.sendSync("all-units")];
+
+  // const [originalValue, setOriginalValue] = useState(value);
 
   if (title === "interfaceType") {
     const validInterface = AllInterfaceType();
@@ -115,6 +105,8 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
   }
 
   if (title === "units") {
+    let validUnits: string[] = AllStandardUnits();
+    validUnits = [...validUnits, ...window.api.sendSync("all-units")];
     return (
       <Grid container item xs={12}>
         <Grid item xs={2}>
@@ -145,66 +137,80 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     );
   }
 
-  return (
-    <div>
+  if (isMathAttribute(title)) {
+    const [mathSelect, setMathSelect] = useState(false);
+    const handleClose = () => {
+      setMathSelect(false);
+      console.log(`Setting false: ${mathSelect}`);
+    };
+    const handleOpen = () => {
+      setMathSelect(true);
+      console.log(`Setting true: ${mathSelect}`);
+    };
+    const style = useStyle();
+
+    return (
       <Grid container item direction="row">
-        {!isMathAttribute(title) && (
+        <Card>
           <Grid container item xs={12}>
             <Grid item xs={2}>
               <InputLabel>{processAttribute(title)}</InputLabel>
             </Grid>
             <Grid item xs={10}>
-              <TextField
-                value={value}
-                onChange={(e) => onChange(title, e.target.value)}
-                rows={mathSelect ? 5 : 1}
-                fullWidth
-              />
+              <span onClick={handleOpen}>
+                {value && (
+                  <div>
+                    <PresentationMath mathml={value} />
+                  </div>
+                )}
+                {!value && <TextField onSelect={handleOpen} />}
+              </span>
             </Grid>
           </Grid>
-        )}
-        {isMathAttribute(title) && (
-          <Card>
-            <Grid container item xs={12}>
-              <Grid item xs={2}>
-                <InputLabel>{processAttribute(title)}</InputLabel>
+          <Dialog
+            open={mathSelect}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+            className={style.contentEdit}
+          >
+            <DialogTitle id="form-dialog-title">Edit MathML</DialogTitle>
+            <DialogContent className={style.mathEdit}>
+              <Grid container item xs={10}>
+                <EditorMonaco
+                  xmlInput={value}
+                  onChange={(val: string) => {
+                    onChange(title, val);
+                  }}
+                />
               </Grid>
-              <Grid item xs={10}>
-                <span onClick={handleOpen}>
-                  {value && (
-                    <div>
-                      <PresentationMath mathml={value} />
-                    </div>
-                  )}
-                  {!value && <TextField onSelect={handleOpen} />}
-                </span>
-              </Grid>
-            </Grid>
-            <Dialog
-              open={mathSelect}
-              onClose={handleClose}
-              aria-labelledby="form-dialog-title"
-              className={style.contentEdit}
-            >
-              <DialogTitle id="form-dialog-title">Edit MathML</DialogTitle>
-              <DialogContent className={style.mathEdit}>
-                <Grid container item xs={10}>
-                  <EditorMonaco
-                    xmlInput={value}
-                    onChange={(val: string) => {
-                      onChange(title, val);
-                    }}
-                  />
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Card>
-        )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Card>
+      </Grid>
+    );
+  }
+
+  return (
+    <div>
+      <Grid container item direction="row">
+        <Grid container item xs={12}>
+          <Grid item xs={2}>
+            <InputLabel>{processAttribute(title)}</InputLabel>
+          </Grid>
+          <Grid item xs={10}>
+            <TextField
+              value={value}
+              onChange={(e) => onChange(title, e.target.value)}
+              rows={1}
+              fullWidth
+            />
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );

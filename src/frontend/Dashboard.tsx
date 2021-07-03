@@ -18,6 +18,7 @@ import { ConciseView } from "./editor/concise/ConciseView";
 import { UnexpandedSidebar } from "./sidebar/UnexpandedSidebar";
 import { ExpandedSidebar } from "./sidebar/ExpandedSidebar";
 import _ from "lodash";
+import { PresentationMath } from "./sidebar/math/PresentationMath";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -38,6 +39,24 @@ const localStyles = makeStyles(() =>
 
 // // Describes the layout of the window
 const Dashboard: FunctionComponent = () => {
+  //   return (
+  //     <PresentationMath
+  //       mathml={`<math xmlns = "http://www.w3.org/1998/Math/MathML">
+
+  //     <mrow>
+  //        <msup><mi>a</mi><mn>2</mn></msup>
+  //        <mo>+</mo>
+
+  //        <msup><mi>b</mi><mn>2</mn></msup>
+  //        <mo> = </mo>
+
+  //        <msup><mi>c</mi><mn>2</mn></msup>
+  //     </mrow>
+
+  //  </math>`}
+  //     />
+  //   );
+
   const styles = localStyles();
   // Chuck in React Contexts
   const [contentExist, setContentExist] =
