@@ -20,11 +20,7 @@ const convertToPresentation = (mathml: string) => {
   const transformed = serializer.serializeToString(
     resultDocument.documentElement
   );
-  return (
-    '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
-    transformed +
-    "</math>"
-  );
+  console.log(convertToPresentation(mathml));
   return transformed;
 };
 

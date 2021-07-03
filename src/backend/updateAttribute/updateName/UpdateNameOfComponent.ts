@@ -14,11 +14,7 @@ const updateNameOfComponent = (
   }
   componentElement.setName(value);
 
-  // modelCopy.replaceComponentByName(
-  //   select.name as string,
-  //   componentElement,
-  //   true
-  // );
+  model.replaceComponentByName(select.name as string, componentElement, true);
   if (currentElement === null) {
     console.log("FM: CurrentComponent is null when setting name");
   } else {

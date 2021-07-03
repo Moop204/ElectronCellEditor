@@ -207,7 +207,7 @@ const PropertiesWidget: FunctionComponent = () => {
     // Update the set
     console.log("DIFFSET BEFORE SENDING");
     console.log(diffSet);
-    const submitSet = [...prioritySet, ...postSet];
+    const submitSet = [...postSet, ...prioritySet];
     updateAttr(submitSet);
     setDiffSet([]);
   };

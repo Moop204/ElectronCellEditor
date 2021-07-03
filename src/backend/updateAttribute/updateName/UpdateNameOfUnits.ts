@@ -8,12 +8,11 @@ const updateNameOfUnits = (
   currentElement: EditorElement,
   value: string
 ) => {
-  const modelCopy = model.clone();
-  const selectedUnit = modelCopy.unitsByName(select.name as string);
+  const selectedUnit = model.unitsByName(select.name as string);
   selectedUnit.setName(value);
-  modelCopy.replaceUnitsByName(select.name as string, selectedUnit);
+  model.replaceUnitsByName(select.name as string, selectedUnit);
   (currentElement as Units).setName(value);
-  const editedModel = modelCopy;
+  const editedModel = model;
   const editedCurrentElement = currentElement;
   return { editedModel, editedCurrentElement };
 };
