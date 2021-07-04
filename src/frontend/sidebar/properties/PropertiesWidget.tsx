@@ -48,6 +48,7 @@ interface AttributeChange {
   name: string;
   attribute: string;
   attributeValue: string;
+  index: number;
 }
 
 const updateAttr = (changeSet: AttributeChange[]) => {
@@ -56,12 +57,13 @@ const updateAttr = (changeSet: AttributeChange[]) => {
     type,
     attribute,
     attributeValue,
-  }: AttributeChange): IUpdate => {
+    index,
+  }: AttributeChange) => {
     return {
       element: type,
       select: {
         name: name,
-        index: null,
+        index: index,
       },
       attribute: attribute,
       value: attributeValue,
@@ -160,7 +162,11 @@ const PropertiesWidget: FunctionComponent = () => {
 
   // abstractModel.type
   // After a file is loaded
-  const handleAttributeChange = (attrType: string, attrVal: string) => {
+  const handleAttributeChange = (
+    attrType: string,
+    attrVal: string,
+    index: number
+  ) => {
     const newAbstractModel = {
       ...abstractModel,
       attribute: { ...abstractModel?.attribute, [attrType]: attrVal },
@@ -173,6 +179,7 @@ const PropertiesWidget: FunctionComponent = () => {
       attribute: attrType,
       attributeValue: attrVal,
       name: compName,
+      index: index,
     };
 
     let newChangeFlag = true;
@@ -320,4 +327,4 @@ const PropertiesWidget: FunctionComponent = () => {
   }
 };
 
-export { PropertiesWidget, updateAttr };
+export { PropertiesWidget, updateAttr, AttributeChange };

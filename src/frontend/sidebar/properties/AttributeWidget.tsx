@@ -4,7 +4,7 @@ import React, { FunctionComponent } from "react";
 import PropertyAttribute from "./PropertyAttribute";
 
 interface IAttributeWidget {
-  handleChange: (attrType: string, attrVal: string) => void;
+  handleChange: (attrType: string, attrVal: string, index: number) => void;
   attribute: Record<string, string>;
 }
 
@@ -17,11 +17,12 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
       <Typography variant="h5" style={{ paddingLeft: "5px" }}>
         Attributes
       </Typography>
-      {Object.entries(attribute).map(([attrTitle, attrVal]) => (
+      {Object.entries(attribute).map(([attrTitle, attrVal], idx) => (
         <PropertyAttribute
           title={attrTitle}
           value={attrVal}
           key={attrTitle}
+          index={idx}
           // onChange={(e) => handleChange(attrTitle, e.target.value)}
           onChange={handleChange}
         />

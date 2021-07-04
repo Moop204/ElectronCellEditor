@@ -39,24 +39,6 @@ const localStyles = makeStyles(() =>
 
 // // Describes the layout of the window
 const Dashboard: FunctionComponent = () => {
-  //   return (
-  //     <PresentationMath
-  //       mathml={`<math xmlns = "http://www.w3.org/1998/Math/MathML">
-
-  //     <mrow>
-  //        <msup><mi>a</mi><mn>2</mn></msup>
-  //        <mo>+</mo>
-
-  //        <msup><mi>b</mi><mn>2</mn></msup>
-  //        <mo> = </mo>
-
-  //        <msup><mi>c</mi><mn>2</mn></msup>
-  //     </mrow>
-
-  //  </math>`}
-  //     />
-  //   );
-
   const styles = localStyles();
   // Chuck in React Contexts
   const [contentExist, setContentExist] =
@@ -157,6 +139,28 @@ const Dashboard: FunctionComponent = () => {
                   )}
                 </Route>
                 <Route exact path="">
+                  {/* <PresentationMath
+                    mathml={`      <apply><eq/> 
+                    <apply><diff/>
+                      <bvar><ci>t</ci></bvar>
+                      <ci>N</ci>
+                    </apply>
+                    <apply><divide/>
+                      <apply><times/>
+                        <ci>r</ci>
+                        <ci>N</ci>
+                        <apply><minus/> 
+                          <ci>K</ci>
+                          <ci>N</ci>
+                        </apply> 
+                      </apply>
+                      <bvar><ci>K</ci></bvar>
+                    </apply>        
+                  </apply>
+            
+            `}  
+                  /> */}
+
                   {!valid && (
                     <Alert severity="error">
                       File is not in valid CellML. You cannot use Concise View

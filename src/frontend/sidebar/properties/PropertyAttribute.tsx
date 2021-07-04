@@ -59,7 +59,7 @@ const processAttribute = (title: string) => {
 };
 
 const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
-  const { title, value, onChange } = props;
+  const { title, value, onChange, index } = props;
   // if (title === 'math') {
   //   return (
   //     <Grid container item direction="row">
