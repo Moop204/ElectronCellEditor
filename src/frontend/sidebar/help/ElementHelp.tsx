@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Elements } from "../../../types/Elements";
 import { ComponentHelp } from "./ComponentHelp";
 import { ModelHelp } from "./ModelHelp";
+import { UnitHelp } from "./UnitHelp";
 import { UnitsHelp } from "./UnitsHelp";
 import { VariableHelp } from "./VariableHelp";
 
@@ -23,6 +24,9 @@ const ElementHelp: FunctionComponent<IElementHelp> = ({ type }) => {
       break;
     case Elements.variable:
       help = <VariableHelp />;
+      break;
+    case Elements.unit:
+      help = <UnitHelp />;
       break;
     default:
   }
