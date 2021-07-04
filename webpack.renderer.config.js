@@ -9,11 +9,6 @@ rules.push({
   use: ["style-loader", "css-loader"],
 });
 
-rules.push({
-  test: /\.pdf$/,
-  use: [{ loader: "file-loader" }],
-});
-
 module.exports = {
   plugins: [new ForkTsCheckerWebpackPlugin(), new MiniCssExtractPlugin()],
   module: {

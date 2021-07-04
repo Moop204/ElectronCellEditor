@@ -1,5 +1,5 @@
 import { EditorElement } from "./../../types/EditorElement";
-import { Model, Variable } from "./../../types/ILibcellml";
+import { Model, Reset, Variable } from "./../../types/ILibcellml";
 import { IUpdate } from "./../../types/IQuery";
 import { updateExponent } from "./UpdateExponent";
 import { updateInitialValue } from "./UpdateInitialValue";
@@ -20,6 +20,7 @@ const updateEvent = (
   let newModel = model;
   let newCurrentElement: EditorElement = curElm;
 
+  console.log("UPDATE EVENT " + attribute);
   if (attribute === "name") {
     ({ newCurrentElement, newModel } = updateName(
       model,
@@ -54,7 +55,13 @@ const updateEvent = (
     ));
     // TODO: Requires working .parent()
   } else if (attribute === "order") {
-    ({ newModel, newCurrentElement } = updateOrder(model, curElm, value));
+    console.log("Ye I'm in order");
+    ({ newModel, newCurrentElement } = updateOrder(
+      model,
+      curElm as Reset,
+      value,
+      select
+    ));
   } else if (attribute === "prefix") {
     ({ newModel, newCurrentElement } = updatePrefix(
       model,

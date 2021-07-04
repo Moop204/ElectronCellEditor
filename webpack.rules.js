@@ -25,16 +25,6 @@ module.exports = [
     },
   },
   {
-    test: /\.pdf$/,
-    exclude: /(node_modules|\.webpack)/,
-    use: {
-      loader: "file-loader",
-      options: {
-        cacheDirectory: true,
-      },
-    },
-  },
-  {
     test: /\.wasm$/,
     type: "asset/resource",
   },
@@ -50,5 +40,16 @@ module.exports = [
     test: /test\.ts$/,
     use: "mocha-loader",
     exclude: /node_modules/,
+  },
+  {
+    test: /\.(png|svg|jpg|gif|pdf)$/,
+    use: [
+      {
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+        },
+      },
+    ],
   },
 ];

@@ -39,14 +39,6 @@ import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
 import { getAllVariableNames } from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
-import { updateOrder } from "./updateAttribute/UpdateOrder";
-import { ModelHelp } from "../frontend/sidebar/help/ModelHelp";
-import { updatePrefix } from "./updateAttribute/UpdatePrefix";
-import { updateReference } from "./updateAttribute/UpdateReference";
-import { updateMultiplier } from "./updateAttribute/UpdateMultiplier";
-import { updateExponent } from "./updateAttribute/UpdateExponent";
-import { updateInterface } from "./updateAttribute/UpdateInterface";
-import { updateInitialValue } from "./updateAttribute/UpdateInitialValue";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 
 interface FileIssues {

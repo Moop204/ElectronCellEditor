@@ -17,9 +17,9 @@ module.exports = {
       ".tsx",
       ".css",
       ".json",
-      ".pdf",
       ".gif",
       ".png",
+      ".pdf",
     ],
   },
 };

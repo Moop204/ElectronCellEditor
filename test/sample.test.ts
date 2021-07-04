@@ -5,6 +5,7 @@ const libcellModule = require("libcellml.js/libcellml.common");
 
 import assert from "assert";
 import { Printer } from "../src/types/ILibcellml";
+import { stripMath } from "../src/frontend/sidebar/math/stripMath";
 
 describe("array", () => {
   it("does a lib", async () => {
@@ -18,8 +19,32 @@ describe("array", () => {
     const printer: Printer = new cellml.Printer();
     console.log(printer.printModel(m, false));
   });
-  it("makes filemanager", async () => {
-    const fm = new FileManagement();
-    await fm.init();
+  it("cuts down on math string", async () => {
+    const working = `<apply><eq/> <apply><diff/> <bvar><ci>t</ci></bvar> <ci>N</ci> </apply> <apply><divide/> <apply><times/> <ci>r</ci> <ci>N</ci> <apply><minus/> <ci>K</ci> <ci>N</ci> </apply> </apply> <bvar><ci>K</ci></bvar> </apply> </apply>`;
+    const bugged = `<math xmlns="http://www.w3.org/1998/Math/MathML"> 
+    <apply><eq/> 
+      <apply><diff/>
+        <bvar><ci>t</ci></bvar>
+        <ci>N</ci>
+      </apply>
+      <apply><divide/>
+        <apply><times/>
+          <ci>r</ci>
+          <ci>N</ci>
+          <apply><minus/> 
+            <ci>K</ci>
+            <ci>N</ci>
+          </apply> 
+        </apply>
+        <bvar><ci>K</ci></bvar>
+      </apply>        
+    </apply>
+  </math>`;
+    let pw = stripMath(working);
+    let pb = stripMath(bugged);
+    pw = pw.replace(/\s/g, "");
+
+    pb = pb.replace(/\s/g, "");
+    assert.strictEqual(pw.trim(), pb.trim());
   });
 });

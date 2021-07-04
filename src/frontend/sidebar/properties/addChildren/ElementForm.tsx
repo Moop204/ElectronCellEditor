@@ -13,6 +13,7 @@ import { ResetChildForm } from "./form/ResetChildForm";
 import { UnitsChildForm } from "./form/UnitsChildForm";
 import { VariableChildForm } from "./form/VariableChildForm";
 import { UnitChildForm } from "./form/UnitChildForm";
+import { ElementHelp } from "../../help/ElementHelp";
 
 interface IAddChild {
   childElement: Elements;
@@ -96,9 +97,13 @@ const ElementForm: FunctionComponent<IAddChild> = ({
         fullWidth
       >
         <DialogTitle>
-          <Grid container item>
-            Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
-            {/* <ElementHelp type={childElement} /> */}
+          <Grid container>
+            <Grid item xs={10}>
+              Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
+            </Grid>
+            <Grid item xs={2}>
+              <ElementHelp type={childElement} />
+            </Grid>
           </Grid>
         </DialogTitle>
         <DialogContent>{form}</DialogContent>

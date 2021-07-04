@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="logistic_model_of_bacterial_growth">
+  <units name="growth_rate">
+    <unit exponent="-1" units="second"/>
+  </units>
+  <component name="main">
+    <variable name="N" units="dimensionless" initial_value="24000000"/>
+    <variable name="r" units="growth_rate"/>
+    <variable name="t" units="second"/>
+    <variable name="K" units="dimensionless" initial_value="50000000"/>
+    <reset variable="r" test_variable="t" order="1">
+      <test_value>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci>t</ci>
+        </math>
+      </test_value>
+      <reset_value>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci>N</ci>
+        </math>
+      </reset_value>
+    </reset>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>t</ci>
+          </bvar>
+          <ci>N</ci>
+        </apply>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <ci>r</ci>
+            <ci>N</ci>
+            <apply>
+              <minus/>
+              <ci>K</ci>
+              <ci>N</ci>
+            </apply>
+          </apply>
+          <bvar>
+            <ci>K</ci>
+          </bvar>
+        </apply>
+      </apply>
+    </math>
+  </component>
+</model>
