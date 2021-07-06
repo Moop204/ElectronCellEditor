@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="m">
+  <component name="c1">
+    <variable name="v1" units="second" interface="private"/>
+  </component>
+  <component name="c2">
+    <variable name="v2" units="second" interface="public"/>
+  </component>
+  <connection component_1="c1" component_2="c2">
+    <map_variables variable_1="v1" variable_2="v2"/>
+  </connection>
+  <encapsulation>
+    <component_ref component="c1">
+      <component_ref component="c2"/>
+    </component_ref>
+  </encapsulation>
+</model>

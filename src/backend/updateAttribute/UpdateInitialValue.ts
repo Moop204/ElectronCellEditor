@@ -18,12 +18,11 @@ const updateInitialValue = (
   value: any,
   currentElement: EditorElement
 ) => {
-  const modelCopy = model.clone();
   const parentName = (currentElement?.parent() as Component).name();
   switch (element) {
     case Elements.variable:
       // Obtain element
-      const parentElement = modelCopy.takeComponentByName(parentName, true);
+      const parentElement = model.componentByName(parentName, true);
       const variableElement = parentElement.takeVariableByName(
         select.name as string
       );
@@ -35,7 +34,7 @@ const updateInitialValue = (
 
       // Integrate change to model
       parentElement.addVariable(variableElement);
-      model.replaceComponentByName(parentName as string, parentElement, true);
+      model.replaceComponentByName(parentName, parentElement, true);
 
       console.log("Initial Value log");
       console.log(select.name);

@@ -26,7 +26,7 @@ import { ChildDetail } from "../types/ChildDetail";
 import fs from "fs";
 
 //declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-// const libcellModule = require("libcellml.js/libcellml.common");
+//const libcellModule = require("libcellml.js/libcellml.common");
 
 // import libCellMLModule from "libcellml.js";
 // import libCellMLWasm from "libcellml.js/libcellml.wasm";

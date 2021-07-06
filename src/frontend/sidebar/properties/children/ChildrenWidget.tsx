@@ -55,23 +55,26 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
               <Typography variant="h6" style={{ paddingLeft: "5px" }}>
                 {capitaliseFirst(parentKey)}
               </Typography>
-              {Object.values(childrenType).map((attrType: IChild) => {
-                return (
-                  <PropertyIcon
-                    title={attrType.name}
-                    onClick={() => {
-                      findElement(
-                        Elements[parentKey as keyof typeof Elements],
-                        attrType.name ? attrType.name : "",
-                        attrType.index
-                      );
-                      resetChanges();
-                    }}
-                    element={parentKey}
-                    key={attrType.name}
-                  />
-                );
-              })}
+              {Object.values(childrenType).map(
+                (attrType: IChild, index: number) => {
+                  return (
+                    <PropertyIcon
+                      title={attrType.name}
+                      onClick={() => {
+                        findElement(
+                          Elements[parentKey as keyof typeof Elements],
+                          attrType.name ? attrType.name : "",
+                          attrType.index
+                        );
+                        resetChanges();
+                      }}
+                      element={parentKey}
+                      key={attrType.name}
+                      index={index}
+                    />
+                  );
+                }
+              )}
             </div>
           );
         })}

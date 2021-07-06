@@ -16,6 +16,7 @@ import { UnitWidget } from "./UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { ElementHelp } from "../help/ElementHelp";
+import { ConnectionWidget } from "./ConnectionWidget";
 
 const localStyles = makeStyles(() =>
   createStyles({
