@@ -10,7 +10,8 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { IssueText } from "./IssueText";
 import { IssueDescriptor } from "./Issue";
-import { Paper, Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
+import { Level } from "../../../types/ILibcellml";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -35,6 +36,19 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
 
   const styles = useStyle();
 
+  let errorCount = 0;
+  let warningCount = 0;
+  let hintCount = 0;
+  issues.map((val) => {
+    if (val.type === Level.ERROR) {
+      errorCount++;
+    } else if (val.type === Level.WARNING) {
+      warningCount++;
+    } else {
+      hintCount++;
+    }
+  });
+
   useEffect(() => {
     const errorReplyFn = (event: Event, issues: IssueDescriptor[]) => {
       setIssues(issues || []);
@@ -46,7 +60,45 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     };
   }, []);
   if (!expanded) {
-    return <Paper style={{ height: "60%" }}>uwu</Paper>;
+    return (
+      <Box style={{ height: "60%", backgroundColor: "#ffff" }}>
+        <Grid container direction="row" style={{ height: "45%" }}>
+          <Grid item container direction="row" justify="center" xs={12}>
+            <IconButton
+              color="primary"
+              disableRipple
+              disableTouchRipple
+              style={{ backgroundColor: "transparent" }}
+              disabled={errorCount === 0}
+            >
+              <ErrorIcon /> {errorCount}
+            </IconButton>
+          </Grid>
+          <Grid item container direction="row" justify="center" xs={12}>
+            <IconButton
+              color="primary"
+              disableRipple
+              disableTouchRipple
+              style={{ backgroundColor: "transparent" }}
+              disabled={warningCount === 0}
+            >
+              <WarningIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container direction="row" justify="center" xs={12}>
+            <IconButton
+              color="primary"
+              disableRipple
+              disableTouchRipple
+              style={{ backgroundColor: "transparent" }}
+              disabled={hintCount === 0}
+            >
+              <HintIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
+    );
   }
   return (
     <Paper style={{ height: expanded ? "30%" : "80%" }}>

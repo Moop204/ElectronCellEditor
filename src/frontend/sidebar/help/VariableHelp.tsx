@@ -26,10 +26,9 @@ const VariableHelp: FunctionComponent = () => {
         <br />
         <i>Public Interface</i> - Defines which other variables interact with
         it. Public interfaces allow variables from components that share the
-        same parent or encapsulate the component of a variable to reference it.
-        Private interfaces only allow variables from encapsulated components to
-        be reference this variable. None interfaces prevent the variable from
-        being referenced.
+        same parent. Private interfaces only allow variables from encapsulated
+        components to be reference this variable. None interfaces prevent the
+        variable from being referenced.
         <br />
         <i>Units*</i> - A physical unit used to describe the Variable.
         <br />
