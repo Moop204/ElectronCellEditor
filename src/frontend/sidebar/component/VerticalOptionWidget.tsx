@@ -21,6 +21,7 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
   switchSidebar,
   switchView,
   view,
+  valid,
 }) => {
   const style = localStyles();
   return (
@@ -43,12 +44,12 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
           </Typography>
         </Grid>
 
-        {view && (
+        {!view && (
           <Grid item container direction="row" justify="center" xs={12}>
             <TextViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
-        {!view && (
+        {view && (
           <Grid item container direction="row" justify="center" xs={12}>
             <SpatialViewButton onClick={switchView} expanded={false} />
           </Grid>

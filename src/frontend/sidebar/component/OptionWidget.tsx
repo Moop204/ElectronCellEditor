@@ -24,6 +24,7 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   switchSidebar,
   switchView,
   view,
+  valid,
 }) => {
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
@@ -35,12 +36,12 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
     <Grid container item xs={12} className={style.padding}>
       <Paper style={{ width: "100%" }}>
         <Grid container item xs={12}>
-          {view && (
+          {!view && (
             <Grid item xs={2}>
               <TextViewButton onClick={switchView} expanded={true} />
             </Grid>
           )}
-          {!view && (
+          {view && (
             <Grid item xs={2}>
               <SpatialViewButton onClick={switchView} expanded={true} />
             </Grid>

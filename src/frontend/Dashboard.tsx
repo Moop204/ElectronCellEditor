@@ -58,7 +58,9 @@ const Dashboard: FunctionComponent = () => {
 
   const [view, setView] = useState(false);
 
-  const switchView = () => setView(!view);
+  const switchView = () => {
+    if (valid) setView(!view);
+  };
   // const contentCallback = useCallback(() => {
   //   return getContentExists();
   // }, []);
@@ -112,6 +114,7 @@ const Dashboard: FunctionComponent = () => {
               switchView={switchView}
               viewSidebar={viewSidebar}
               view={view}
+              valid={valid}
             />
           )}
           {!viewSidebar && (
@@ -121,6 +124,7 @@ const Dashboard: FunctionComponent = () => {
               switchView={switchView}
               viewSidebar={viewSidebar}
               view={view}
+              valid={valid}
             />
           )}
 
