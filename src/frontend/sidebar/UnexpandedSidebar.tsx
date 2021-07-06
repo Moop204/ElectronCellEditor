@@ -10,6 +10,7 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
   switchView,
   viewSidebar,
   view,
+  valid,
 }) => {
   return (
     <Grid item xs={1}>
@@ -19,8 +20,9 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
         switchView={switchView}
         viewSidebar={viewSidebar}
         view={view}
+        valid={valid}
       />
-      <IssuesWidget expanded={viewSidebar} />
+      {view && <IssuesWidget expanded={viewSidebar} />}
     </Grid>
   );
 };
