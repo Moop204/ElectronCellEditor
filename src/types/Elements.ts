@@ -10,19 +10,19 @@ enum Elements {
 
 const strToElm = (s: string) => {
   switch (s) {
-    case 'model':
+    case "model":
       return Elements.model;
-    case 'component':
+    case "component":
       return Elements.component;
-    case 'units':
+    case "units":
       return Elements.units;
-    case 'reset':
+    case "reset":
       return Elements.reset;
-    case 'variable':
+    case "variable":
       return Elements.variable;
-    case 'unit':
+    case "unit":
       return Elements.unit;
-    case 'none':
+    case "none":
       return Elements.none;
     default:
       console.log(`ELEMENTS: Failed to identify ${s} as an Element`);
@@ -33,24 +33,24 @@ const strToElm = (s: string) => {
 const elmToStr = (e: Elements): string => {
   switch (e) {
     case Elements.model:
-      return 'model';
+      return "model";
     case Elements.component:
-      return 'component';
+      return "component";
     case Elements.units:
-      return 'units';
+      return "units";
     case Elements.reset:
-      return 'reset';
+      return "reset";
     case Elements.variable:
-      return 'variable';
+      return "variable";
     case Elements.unit:
-      return 'unit';
+      return "unit";
     case Elements.none:
-      return 'none';
+      return "none";
 
     default:
       console.log(`ELEMENTS: Failed to identify ${e} as an Element`);
   }
-  return '';
+  return "";
 };
 
 export { Elements, strToElm, elmToStr };

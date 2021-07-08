@@ -1,12 +1,12 @@
-import { Elements } from '../../types/Elements';
-import { IChildDetail } from '../../types/IChildDetail';
-import { Model, Parser, Reset } from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
-import FileManagement from '../FileManagement';
+import { Elements } from "../../types/Elements";
+import { ChildDetail } from "../../types/ChildDetail";
+import { Model, Parser, Reset } from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
+import FileManagement from "../FileManagement";
 
 const AddChildReset = async (
   fm: FileManagement,
-  child: IChildDetail,
+  child: ChildDetail,
   parent: ISearch
 ) => {
   const libcellml = fm._cellml;
@@ -26,9 +26,12 @@ const AddChildReset = async (
 
   // Find the variables
   // NOTE: Valid variables are within the same component
+  console.log("Looking for parent " + parent.name);
   const parentComponent = m.componentByName(parent.name as string, true);
   const v = parentComponent.variableByName(reset_variable);
+  console.log("got first one");
   const vTest = parentComponent.variableByName(test_variable);
+  console.log("got both");
 
   // Detail Reset element
   // NOTE: All are mandatory

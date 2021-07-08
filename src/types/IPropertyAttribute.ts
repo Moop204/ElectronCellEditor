@@ -1,10 +1,8 @@
-import { ChangeEventHandler } from 'react';
-
 interface IPropertyAttribute {
   title: string;
-  value: string;
+  value: any;
   onChange: any;
-  // updateAttribute: any;
+  index: number;
 }
 
 export default IPropertyAttribute;

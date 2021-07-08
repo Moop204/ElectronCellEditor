@@ -1,10 +1,10 @@
-import { Elements } from '../../types/Elements';
-import { Model } from '../../types/ILibcellml';
-import { IProperties } from '../../types/IProperties';
+import { Elements } from "../../types/Elements";
+import { Model } from "../../types/ILibcellml";
+import { IProperties } from "../../types/IProperties";
 
 const convertModel = (model: Model) => {
   if (model === null) {
-    console.log('ConvertModel: Given model is null');
+    console.log("ConvertModel: Given model is null");
   }
   const unitsNum = model.unitsCount();
   const componentNum = model.componentCount();
@@ -24,7 +24,7 @@ const convertModel = (model: Model) => {
       name: model.name(),
     },
     parent: {
-      name: '',
+      name: "",
       type: Elements.none,
     },
     children: {

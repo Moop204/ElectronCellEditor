@@ -1,5 +1,5 @@
-import { UnitDescriptor } from '../backend/converter/ConvertUnits';
-import { Elements } from './Elements';
+import { UnitDescriptor } from "./UnitDescriptor";
+import { Elements } from "./Elements";
 
 interface IProperties {
   type: Elements;
@@ -15,6 +15,7 @@ interface IProperties {
 interface IChild {
   name: string;
   index: number;
+  parentName?: string;
 }
 
 interface IModelProperties extends IProperties {

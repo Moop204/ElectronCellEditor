@@ -31,11 +31,13 @@ interface Logger {
   removeAllIssues(): void;
   error(index: number): Issue;
   warning(index: number): Issue;
-  hint(index: number): Issue;
+  hint(index: number): Issue; // Remove when release 22 comes out
+  message(index: number): Issue;
   issueCount(): number;
   errorCount(): number;
   warningCount(): number;
-  hintCount(): number;
+  hintCount(): number; // Remove when release 22 comes out
+  messageCount(): number;
 }
 
 interface ComponentEntity extends NamedEntity {
@@ -209,7 +211,8 @@ interface Units extends ImportedEntity, NamedEntity {
   unitAttributeExponent(index: number): number;
   unitAttributeMultiplier(index: number): number;
   removeUnitByIndex(index: number): boolean;
-  removeUnitByName(reference: string): boolean;
+  removeUnitByName(reference: string): boolean; // Remove after release 22 comes out
+  removeUnitByReference(reference: string): boolean;
   removeUnitByStandardUnit(standardRef: StandardUnit): boolean;
   setSourceUnits(importSource: ImportSource, name: string): void;
   removeAllUnits(): void;
@@ -220,6 +223,7 @@ interface Units extends ImportedEntity, NamedEntity {
   importSource(): ImportSource;
   setImportSource(importSource: ImportSource): void;
   setImportReference(reference: string): void;
+  compatible(units1: Units, units2: Units): boolean;
 }
 
 interface ImportSource extends Entity {
@@ -378,10 +382,10 @@ enum InterfaceType {
 }
 
 const InterfaceTypeString = {
-  NONE: 'none',
-  PRIVATE: 'private',
-  PUBLIC: 'public',
-  PUBLIC_AND_PRIVATE: 'public_and_private',
+  NONE: "none",
+  PRIVATE: "private",
+  PUBLIC: "public",
+  PUBLIC_AND_PRIVATE: "public_and_private",
 };
 
 interface Variable extends NamedEntity {

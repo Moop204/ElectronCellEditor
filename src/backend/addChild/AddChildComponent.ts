@@ -1,20 +1,20 @@
-import { Elements } from '../../types/Elements';
-import { IChildDetail } from '../../types/IChildDetail';
+import { Elements } from "../../types/Elements";
+import { ChildDetail } from "../../types/ChildDetail";
 import {
   Component,
   ImportSource,
   Model,
   Parser,
   Printer,
-} from '../../types/ILibcellml';
-import { ISearch } from '../../types/IQuery';
-import FileManagement from '../FileManagement';
+} from "../../types/ILibcellml";
+import { ISearch } from "../../types/IQuery";
+import FileManagement from "../FileManagement";
 
 const AddChildComponent = async (
   fm: FileManagement,
   parent: ISearch,
   parentType: Elements,
-  child: IChildDetail
+  child: ChildDetail
 ) => {
   const libcellml = fm._cellml;
   const printer: Printer = new libcellml.Printer();

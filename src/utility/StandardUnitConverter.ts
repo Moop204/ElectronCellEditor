@@ -1,4 +1,4 @@
-import { StandardUnit } from '../types/ILibcellml';
+import { StandardUnit } from "../types/ILibcellml";
 
 const AllStandardUnits = () => {
   const standardValues = Object.values(StandardUnit);

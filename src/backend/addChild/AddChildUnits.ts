@@ -1,15 +1,15 @@
-import { Elements } from '../../types/Elements';
-import { IChildDetail } from '../../types/IChildDetail';
+import { Elements } from "../../types/Elements";
+import { ChildDetail } from "../../types/ChildDetail";
 import {
   Model,
   Units,
   Printer,
   Parser,
   ImportSource,
-} from '../../types/ILibcellml';
-import FileManagement from '../FileManagement';
+} from "../../types/ILibcellml";
+import FileManagement from "../FileManagement";
 
-const AddChildUnits = async (fm: FileManagement, child: IChildDetail) => {
+const AddChildUnits = async (fm: FileManagement, child: ChildDetail) => {
   const { name, imported, source, component_ref } = child.attribute;
 
   // Initialised by caller

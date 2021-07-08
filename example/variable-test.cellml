@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" name="MyModel1" id="MyModel1">
-  <component name="component_name">
-    <variable name="variable_name" units="ampere"/>
-  </component>
-</model>
-
