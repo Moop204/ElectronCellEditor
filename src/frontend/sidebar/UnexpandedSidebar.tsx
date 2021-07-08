@@ -22,7 +22,7 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
         view={view}
         valid={valid}
       />
-      {view && <IssuesWidget expanded={viewSidebar} />}
+      <IssuesWidget expanded={viewSidebar} />
     </Grid>
   );
 };

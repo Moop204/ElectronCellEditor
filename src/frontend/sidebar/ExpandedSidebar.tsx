@@ -24,8 +24,8 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
         valid={valid}
       />
 
-      <PropertiesWidget />
-      {view && <IssuesWidget expanded={viewSidebar} />}
+      {view && <PropertiesWidget />}
+      {!view && <IssuesWidget expanded={viewSidebar} />}
     </Grid>
   );
 };

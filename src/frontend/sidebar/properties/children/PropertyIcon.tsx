@@ -15,12 +15,14 @@ import {
 } from "@material-ui/core";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
+import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
 
 interface IPropertyIcon {
   title: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
   element: string;
   index: number;
+  parentName?: string;
 }
 
 const useStyle = makeStyles(() =>
@@ -36,7 +38,7 @@ const useStyle = makeStyles(() =>
 );
 
 const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
-  const { onClick, title, element, index } = props;
+  const { onClick, title, element, index, parentName } = props;
   const style = useStyle();
   let icon;
 
@@ -67,28 +69,34 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
 
   if (element === "connection") {
     return (
-      <Grid item container xs={12}>
-        <Button
-          variant="outlined"
-          onClick={handleOpen}
-          fullWidth
-          className={style.button}
-        >
-          {icon}
-          {title}
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>
-            <Grid container item direction="row">
-              <Grid item xs={10}>
-                <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-                  Edit Connection
-                </Typography>
-              </Grid>
-            </Grid>
-          </DialogTitle>
-          <div className={style.buffer}>EDIT STUFF</div>
-        </Dialog>
+      <Grid item container xs={10}>
+        <Grid item xs={10}>
+          <Button
+            variant="outlined"
+            onClick={handleOpen}
+            fullWidth
+            className={style.button}
+          >
+            {icon}
+            {title}
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            onClick={() => {
+              window.api.send("update-attribute", [
+                {
+                  element: Elements.variable,
+                  select: { name: title, index: index },
+                  attribute: "connection",
+                  value: parentName,
+                },
+              ]);
+            }}
+          >
+            X
+          </Button>
+        </Grid>
       </Grid>
     );
   }

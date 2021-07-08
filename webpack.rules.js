@@ -42,14 +42,7 @@ module.exports = [
     exclude: /node_modules/,
   },
   {
-    test: /\.(png|svg|jpg|gif|pdf)$/,
-    use: [
-      {
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]",
-        },
-      },
-    ],
+    test: /\.pdf$/,
+    type: "asset/resource",
   },
 ];

@@ -86,7 +86,7 @@ const ElementForm: FunctionComponent<IAddChild> = ({
 
   return (
     <div>
-      <Button fullWidth onClick={handleClickOpen}>
+      <Button variant="outlined" fullWidth onClick={handleClickOpen}>
         + {elmToStr(childElement)}
       </Button>
       <Dialog
