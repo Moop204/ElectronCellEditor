@@ -61,8 +61,13 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
   }, []);
   if (!expanded) {
     return (
-      <Box style={{ height: "60%", backgroundColor: "#ffff" }}>
-        <Grid container direction="row" style={{ height: "45%" }}>
+      <Box style={{ height: "58%", backgroundColor: "#ffff" }}>
+        <Grid
+          container
+          direction="row"
+          style={{ height: "45%" }}
+          justify="space-around"
+        >
           <Grid item container direction="row" justify="center" xs={12}>
             <IconButton
               color="primary"
@@ -101,7 +106,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     );
   }
   return (
-    <Paper style={{ height: expanded ? "30%" : "80%" }}>
+    <Paper style={{ height: "94%" }}>
       <Grid container>
         <Grid item xs={5}>
           <Typography variant="h4" style={{ paddingLeft: "5px" }}>

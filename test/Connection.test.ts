@@ -17,6 +17,8 @@ import {
 import { IUpdate } from "../src/types/IQuery";
 import { isVariableDeclaration } from "typescript";
 import { Elements } from "../src/types/Elements";
+import { findPrivateVariables } from "../src/utility/FindPrivateVariables";
+import { findPublicVariables } from "../src/utility/FindPublicVariables";
 
 describe("Public interfaces", () => {
   it("Connects two sibling variables", async () => {
@@ -108,66 +110,37 @@ describe("Private interfaces", () => {
   });
 });
 
-const findPublicVariables = (
-  sharedParentElm: ComponentEntity,
-  exclude?: string,
-  units: Units
-) => {
-  const validVariables = [];
-  const compNum = sharedParentElm.componentCount();
-  for (let i = 0; i < compNum; i++) {
-    const curComp = sharedParentElm.componentByIndex(i);
-    const varNum = curComp.variableCount();
-    const parentName = curComp.name();
-    if (parentName === exclude) continue;
-    for (let j = 0; j < varNum; j++) {
-      const curVar = curComp.variableByIndex(j);
-      const interfaceType = curVar.interfaceType();
-      switch (interfaceType) {
-        case "public":
-        case "public_and_private":
-          if(curVar.units().)
-          const varName = curVar.name();
-          validVariables.push({ parent: parentName, variable: varName });
-          break;
-      }
-    }
-  }
-  return validVariables;
-};
+// const findPublicVariables = (
+//   sharedParentElm: ComponentEntity,
+//   exclude?: string,
+// ) => {
+//   const validVariables = [];
+//   const compNum = sharedParentElm.componentCount();
+//   for (let i = 0; i < compNum; i++) {
+//     const curComp = sharedParentElm.componentByIndex(i);
+//     const varNum = curComp.variableCount();
+//     const parentName = curComp.name();
+//     if (parentName === exclude) continue;
+//     for (let j = 0; j < varNum; j++) {
+//       const curVar = curComp.variableByIndex(j);
+//       const interfaceType = curVar.interfaceType();
+//       switch (interfaceType) {
+//         case "public":
+//         case "public_and_private":
+//           if(curVar.units().)
+//           const varName = curVar.name();
+//           validVariables.push({ parent: parentName, variable: varName });
+//           break;
+//       }
+//     }
+//   }
+//   return validVariables;
+// };
 
 interface IVarIdentifier {
   parent: string;
   variable: string;
 }
-
-const findPrivateVariables = (
-  currentElm: ComponentEntity
-): IVarIdentifier[] => {
-  const validVariables = [];
-  const compNum = currentElm.componentCount();
-  for (let i = 0; i < compNum; i++) {
-    const curComp = currentElm.componentByIndex(i);
-    const varNum = curComp.variableCount();
-    const parentName = curComp.name();
-    for (let j = 0; j < varNum; j++) {
-      const curVar = curComp.variableByIndex(j);
-      const interfaceType = curVar.interfaceType();
-      switch (interfaceType) {
-        case "public":
-        case "public_and_private":
-          const varName = curVar.name();
-          validVariables.push({ parent: parentName, variable: varName });
-          break;
-      }
-    }
-    const subPrivateVars = findPrivateVariables(curComp);
-    for (const subVar of subPrivateVars) {
-      validVariables.push(subVar);
-    }
-  }
-  return validVariables;
-};
 
 describe("Identify public variables", () => {
   it("finds all public variables", async () => {
@@ -209,8 +182,7 @@ describe("Identify public variables", () => {
     m.addComponent(c1);
     m.addComponent(c3);
 
-    const res = findPublicVariables(m, c3.name());
-    console.log(res);
+    const res = findPublicVariables(m, v3, c3.name());
     assert.strictEqual(res.length, 1);
   });
 });
@@ -224,7 +196,7 @@ describe("Identify private variables", () => {
     const v1: Variable = new cellml.Variable();
     v1.setName("v1");
     v1.setUnitsByName("second");
-    v1.setInterfaceTypeByString("public");
+    v1.setInterfaceTypeByString("public_and_private");
 
     const v2: Variable = new cellml.Variable();
     v2.setName("v2");
@@ -234,12 +206,12 @@ describe("Identify private variables", () => {
     const v3: Variable = new cellml.Variable();
     v3.setName("v3");
     v3.setUnitsByName("second");
-    v3.setInterfaceTypeByString("private");
+    v3.setInterfaceTypeByString("public_and_private");
 
     const v4: Variable = new cellml.Variable();
     v4.setName("v4");
     v4.setUnitsByName("second");
-    v4.setInterfaceTypeByString("public");
+    v4.setInterfaceTypeByString("public_and_private");
 
     const m: Model = new cellml.Model();
     m.setName("m");
@@ -265,7 +237,7 @@ describe("Identify private variables", () => {
     c1.addComponent(c3);
     m.addComponent(c1);
 
-    const res = findPrivateVariables(c1);
+    const res = findPrivateVariables(c1, v1);
     console.log(res);
     assert.strictEqual(res.length, 2);
   });

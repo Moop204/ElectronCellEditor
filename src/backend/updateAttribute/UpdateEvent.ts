@@ -10,6 +10,7 @@ import { updateName } from "./updateName/UpdateName";
 import { updateOrder } from "./UpdateOrder";
 import { updatePrefix } from "./UpdatePrefix";
 import { updateReference } from "./UpdateReference";
+import { updateRemoveConnection } from "./UpdateRemoveConnection";
 import { updateUnits } from "./UpdateUnits";
 
 const updateEvent = (
@@ -110,6 +111,16 @@ const updateEvent = (
       value,
       curElm
     ));
+  } else if (attribute === "connection") {
+    if (value === "remove") {
+      ({ newModel, newCurrentElement } = updateRemoveConnection(
+        model,
+        element,
+        select,
+        value,
+        curElm
+      ));
+    }
   } else {
     console.log(
       `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`

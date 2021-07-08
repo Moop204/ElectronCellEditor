@@ -21,46 +21,41 @@ import { updateAttr } from "../../PropertiesWidget";
 import { IUpdate } from "../../../../../types/IQuery";
 import { InterfaceType } from "../../../../../types/ILibcellml";
 
-interface IUnitEdit extends IPopup {
-  unit: UnitDescriptor;
+interface IConnectionEdit {
   index: number;
-  interface: InterfaceType;
+  handleClose: any;
 }
 
-const updateUnitAttr = (index: number, attrType: string, attrVal: string) => {
-  window.api.send("update-connection", [
-    {
-      element: Elements.units,
-      select: {
-        name: null,
-        index: index,
-      },
-      attribute: attrType,
-      value: attrVal,
-    },
-  ]);
-};
+interface IConnectionDescriptor {
+  component: string; // Name of the parent component
+  variable: string; // Name of the variable
+}
 
-const validation = (validUnits: string[]) =>
+const validation = (validVariables: string[], validComponents: string[]) =>
   yup.object({
-    variable: yup.string().required().oneOf(validUnits),
+    variable: yup.string().required().oneOf(validVariables),
+    component: yup.string().oneOf(validComponents),
   });
 
-const ConnectionEditForm: FunctionComponent<IUnitEdit> = ({
-  handleClose,
+const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
   index,
+  handleClose,
 }) => {
-  let validUnits: string[] = AllStandardUnits();
-  validUnits = [...validUnits, ...window.api.sendSync("all-units")];
-  const validPrefix = AllPrefix();
-  const validationSchema = validation(validPrefix);
+  const validVariables = window.api.sendSync("all-equivalent-variables");
+  const validComponents = [
+    "any",
+    ...window.api.sendSync("all-equivalent-components"),
+  ];
+  const validationSchema = validation(validVariables, validComponents);
 
   const formik = useFormik({
     initialValues: {
       variable: null,
+      component: "any",
     },
     validationSchema,
     onSubmit: (values) => {
+      window.api.send("add-connection", {});
       console.log(values);
     },
   });
@@ -70,6 +65,37 @@ const ConnectionEditForm: FunctionComponent<IUnitEdit> = ({
       <form onSubmit={formik.handleSubmit} style={{ width: "70vw" }}>
         <Grid container>
           <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel
+                id="component"
+                error={Boolean(formik.errors.component)}
+              >
+                Component
+              </InputLabel>
+              <Select
+                labelId="component"
+                id="component"
+                name="component"
+                value={formik.values.component}
+                onChange={formik.handleChange}
+                label="component"
+                input={<Input />}
+                error={
+                  formik.touched.component && Boolean(formik.errors.component)
+                }
+              >
+                {validComponents.map((v: string) => {
+                  return (
+                    <MenuItem key={v} value={v.toLowerCase()}>
+                      {v}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+              <FormHelperText error>
+                {formik.touched.component && formik.errors.component}
+              </FormHelperText>
+            </FormControl>
             <FormControl fullWidth>
               <InputLabel id="variable" error={Boolean(formik.errors.variable)}>
                 Variable
@@ -86,13 +112,24 @@ const ConnectionEditForm: FunctionComponent<IUnitEdit> = ({
                   formik.touched.variable && Boolean(formik.errors.variable)
                 }
               >
-                {validPrefix.map((v: string) => {
-                  return (
-                    <MenuItem key={v} value={v.toLowerCase()}>
-                      {v}
-                    </MenuItem>
-                  );
-                })}
+                {validVariables
+                  .filter((variable: IConnectionDescriptor) => {
+                    if (formik.values.component === "any") {
+                      return true;
+                    } else {
+                      return formik.values.component === variable.component;
+                    }
+                  })
+                  .map((v: IConnectionDescriptor) => {
+                    return (
+                      <MenuItem
+                        key={v.component + v.variable}
+                        value={v.variable.toLowerCase()}
+                      >
+                        {v.variable}
+                      </MenuItem>
+                    );
+                  })}
               </Select>
               <FormHelperText error>
                 {formik.touched.variable && formik.errors.variable}
@@ -101,6 +138,34 @@ const ConnectionEditForm: FunctionComponent<IUnitEdit> = ({
           </Grid>
         </Grid>
       </form>
+      <DialogActions>
+        <Button
+          color="primary"
+          variant="contained"
+          fullWidth
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          fullWidth
+          type="submit"
+          onClick={() => {
+            if (
+              !(
+                Boolean(formik.errors.component) ||
+                Boolean(formik.errors.variable)
+              )
+            ) {
+              return handleClose();
+            }
+          }}
+        >
+          Apply Change
+        </Button>
+      </DialogActions>
     </Grid>
   );
 };

@@ -223,6 +223,7 @@ interface Units extends ImportedEntity, NamedEntity {
   importSource(): ImportSource;
   setImportSource(importSource: ImportSource): void;
   setImportReference(reference: string): void;
+  compatible(units1: Units, units2: Units): boolean;
 }
 
 interface ImportSource extends Entity {

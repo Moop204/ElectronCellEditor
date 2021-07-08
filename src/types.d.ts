@@ -11,3 +11,5 @@ declare module "libcellml.js" {
 declare module "libcellml.js/libcellml.common";
 
 declare module "mathjax3-react";
+
+declare module "*.pdf";

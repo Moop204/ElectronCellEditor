@@ -15,6 +15,7 @@ interface IProperties {
 interface IChild {
   name: string;
   index: number;
+  parentName?: string;
 }
 
 interface IModelProperties extends IProperties {

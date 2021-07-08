@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import HelpIcon from "@material-ui/icons/Help";
 import React, { useState, FunctionComponent } from "react";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
-//import documentationPdf from "./cellml_2_0_normative_specification.pdf";
+import documentationPdf from "./cellml_2_0_normative_specification.pdf";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Grid from "@material-ui/core/Grid";
@@ -95,7 +95,7 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
               </Grid>
             </DialogTitle>
             <DialogContent>
-              <Document file="./cellml_2_0_normative_specification.pdf">
+              <Document file={documentationPdf}>
                 <Page pageNumber={pageNum} scale={pageScale} width={2000} />
               </Document>
             </DialogContent>

@@ -228,7 +228,7 @@ const PropertiesWidget: FunctionComponent = () => {
         item
         className={styles.properties}
         xs={12}
-        style={{ height: "60%" }}
+        style={{ height: "99%" }}
       >
         <Box
           component="div"

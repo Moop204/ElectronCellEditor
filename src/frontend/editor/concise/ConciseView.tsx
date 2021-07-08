@@ -17,7 +17,7 @@ const localStyles = makeStyles(() =>
     },
     notLoaded: {
       textAlign: "center",
-      height: "40vh",
+      height: "80vh",
     },
   })
 );

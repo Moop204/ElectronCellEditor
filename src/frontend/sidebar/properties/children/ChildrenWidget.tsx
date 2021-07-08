@@ -4,7 +4,7 @@ import { IChild } from "../../../../types/IProperties";
 import { ISearch, ISelect } from "../../../../types/IQuery";
 import PropertyIcon from "./PropertyIcon";
 import Grid from "@material-ui/core/Grid";
-import { Divider, Paper, Typography } from "@material-ui/core";
+import { Box, Divider, Paper, Typography } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
 
 const findElement = (elm: Elements, name: string, index: number) => {
@@ -41,7 +41,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
 
   return (
     <Grid item xs={12}>
-      <Paper style={{ height: "100%" }}>
+      <Box style={{ height: "100%", backgroundColor: "#fff" }}>
         {Object.entries(abstractChildren).length > 0 && (
           <Typography variant="h5" style={{ paddingLeft: "5px" }}>
             Children
@@ -71,6 +71,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                       element={parentKey}
                       key={attrType.name}
                       index={index}
+                      parentName={attrType.parentName}
                     />
                   );
                 }
@@ -78,7 +79,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
             </div>
           );
         })}
-      </Paper>
+      </Box>
     </Grid>
   );
 };
