@@ -44,7 +44,6 @@ const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
           }
         />
       </MathJax.Provider>
-      {mathml}
     </div>
   );
 };

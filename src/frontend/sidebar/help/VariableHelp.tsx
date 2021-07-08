@@ -9,7 +9,7 @@ const VariableHelp: FunctionComponent = () => {
   units="second"/>`;
 
   return (
-    <HelpPopup pageRef={13} title="About CellML Variable">
+    <HelpPopup pageRef={15} title="About CellML Variable">
       <br />
       <Typography variant="body1">
         A measure of something that can be changed.

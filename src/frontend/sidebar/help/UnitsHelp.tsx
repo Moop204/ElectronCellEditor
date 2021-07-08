@@ -9,7 +9,7 @@ const UnitsHelp: FunctionComponent = () => {
 </units>`;
 
   return (
-    <HelpPopup pageRef={10} title="About CellML Units">
+    <HelpPopup pageRef={12} title="About CellML Units">
       <br />
       <Typography variant="body1">
         A type of measurement. For example kilometres per minute. Can be
