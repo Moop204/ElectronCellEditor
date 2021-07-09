@@ -39,15 +39,16 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
   let errorCount = 0;
   let warningCount = 0;
   let hintCount = 0;
-  issues.map((val) => {
-    if (val.type === Level.ERROR) {
-      errorCount++;
-    } else if (val.type === Level.WARNING) {
-      warningCount++;
-    } else {
-      hintCount++;
-    }
-  });
+  issues.length > 0 &&
+    issues.map((val) => {
+      if (val.type === Level.ERROR) {
+        errorCount++;
+      } else if (val.type === Level.WARNING) {
+        warningCount++;
+      } else {
+        hintCount++;
+      }
+    });
 
   useEffect(() => {
     const errorReplyFn = (event: Event, issues: IssueDescriptor[]) => {
