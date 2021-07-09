@@ -1,7 +1,5 @@
 import { MenuItem, dialog, BrowserWindow } from "electron";
-import { Object } from "lodash";
 import FileManagement from "../backend/FileManagement";
-const fs = require("fs");
 
 const ActionOpen = (mainWindow: BrowserWindow, fm: FileManagement) => {
   return {
@@ -23,21 +21,7 @@ const ActionSave = (mainWindow: BrowserWindow, fm: FileManagement) => {
     label: "Save File",
     accelerator: "Ctrl+S",
     click: () => {
-      const options = {
-        title: "Save file",
-        buttonLabel: "Save",
-
-        filters: [{ name: "All Files", extensions: ["*"] }],
-      };
-
-      dialog
-        .showSaveDialog(mainWindow, options)
-        .then(({ filePath }) => {
-          fs.writeFileSync(filePath, fm.getContent(), "utf-8");
-        })
-        .catch((e) => {
-          console.log("Failed to save");
-        });
+      fm.saveFile();
     },
   };
 };
