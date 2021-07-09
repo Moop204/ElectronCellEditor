@@ -54,6 +54,7 @@ export default class FileManagement {
   type: Elements;
   _cellml: any;
   _cellmlLoaded: boolean;
+  selectedFile: string;
 
   constructor() {
     this.content = `<?xml version="1.0" encoding="UTF-8"?>
@@ -65,6 +66,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     this.currentComponent = null;
     this.type = Elements.none;
     this._cellmlLoaded = false;
+    this.selectedFile = "";
     this.init();
   }
 
@@ -258,6 +260,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         model: file,
         issues: issues,
       };
+      this.selectedFile = file;
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
@@ -309,8 +312,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     });
   }
 
-  saveFile() {
-    SaveAs(this.getContent());
+  async saveFile() {
+    console.log("GAVE THIS " + this.selectedFile);
+    const fileName = await SaveAs(this.getContent(), this.selectedFile);
+    console.log("GOT THIS " + fileName);
+    this.selectedFile = fileName;
   }
 
   // Run once to set up handlers
