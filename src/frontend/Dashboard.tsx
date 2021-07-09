@@ -44,10 +44,10 @@ const Dashboard: FunctionComponent = () => {
   const [contentExist, setContentExist] =
     useState(`<?xml version="1.0" encoding="UTF-8"?>
   <model xmlns="http://www.cellml.org/cellml/2.0#"
-  xmlns:cellml="http://www.cellml.org/cellml/2.0#"
-  xmlns:xlink="http://www.w3.org/1999/xlink">
+  xmlns:cellml="http://www.cellml.org/cellml/2.0#">
 
   </model>`);
+  const [baseContent, setBaseContent] = useState(contentExist);
   const [valid, setValid] = useState(false);
   const [viewSidebar, setViewSidebar] = useState(false);
 
@@ -115,16 +115,19 @@ const Dashboard: FunctionComponent = () => {
               viewSidebar={viewSidebar}
               view={view}
               valid={valid}
+              updateBaseContent={setBaseContent}
             />
           )}
           {!viewSidebar && (
             <UnexpandedSidebar
               content={contentExist}
+              baseContent={baseContent}
               switchSidebar={switchSidebar}
               switchView={switchView}
               viewSidebar={viewSidebar}
               view={view}
               valid={valid}
+              updateBaseContent={setBaseContent}
             />
           )}
 

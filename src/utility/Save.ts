@@ -16,7 +16,6 @@ const SaveAs = async (content: string, recentFile: string) => {
     fs.writeFileSync(recentFile, content, "utf-8");
     return recentFile;
   } else {
-    let file = "";
     const res = await dialog
       .showSaveDialog(mainWindow, options)
       .then(({ filePath }) => {

@@ -12,6 +12,7 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
   viewSidebar,
   view,
   valid,
+  updateBaseContent,
 }) => {
   return (
     <Grid item xs={3}>
@@ -22,6 +23,7 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
         viewSidebar={viewSidebar}
         view={view}
         valid={valid}
+        updateBaseContent={updateBaseContent}
       />
 
       {view && <PropertiesWidget />}
