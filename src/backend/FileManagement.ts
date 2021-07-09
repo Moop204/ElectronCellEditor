@@ -23,7 +23,7 @@ import { updateMath } from "./updateAttribute/UpdateMath";
 import { EditorElement } from "../types/EditorElement";
 import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
-import fs from "fs";
+const fs = require("fs");
 
 //declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 const libcellModule = require("libcellml.js/libcellml.common");
@@ -42,6 +42,7 @@ import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveComponent } from "./removeChild/removeComponent";
 import { RemoveElement } from "./removeChild/removeElement";
+import { SaveAs } from "./../utility/Save";
 
 interface FileIssues {
   model: string;
@@ -308,12 +309,17 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     });
   }
 
+  saveFile() {
+    SaveAs(this.getContent());
+  }
+
   // Run once to set up handlers
   setupHandlers(): void {
     ipcMain.on(
       "save-content",
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
+        this.saveFile();
       }
     );
 
