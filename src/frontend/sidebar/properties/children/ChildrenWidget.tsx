@@ -1,10 +1,10 @@
 import React, { FunctionComponent, MouseEventHandler } from "react";
-import { Elements, elmToStr } from "../../../../types/Elements";
+import { Elements, elmToStr, strToElm } from "../../../../types/Elements";
 import { IChild } from "../../../../types/IProperties";
 import { ISearch, ISelect } from "../../../../types/IQuery";
 import PropertyIcon from "./PropertyIcon";
 import Grid from "@material-ui/core/Grid";
-import { Box, Divider, Paper, Typography } from "@material-ui/core";
+import { Box, Button, Divider, Paper, Typography } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
 
 const findElement = (elm: Elements, name: string, index: number) => {
@@ -40,7 +40,19 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   }
 
   return (
-    <Grid item xs={12}>
+    <Grid
+      item
+      xs={12}
+      // key={Object.entries(abstractChildren)
+      //   .map(([parentKey, childrenType]) => {
+      //     return childrenType
+      //       .map((attrType: IChild) => {
+      //         return attrType.name;
+      //       })
+      //       .join("-");
+      //   })
+      //   .join("-")}
+    >
       <Box style={{ height: "100%", backgroundColor: "#fff" }}>
         {Object.entries(abstractChildren).length > 0 && (
           <Typography variant="h5" style={{ paddingLeft: "5px" }}>
@@ -58,21 +70,37 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
               {Object.values(childrenType).map(
                 (attrType: IChild, index: number) => {
                   return (
-                    <PropertyIcon
-                      title={attrType.name}
-                      onClick={() => {
-                        findElement(
-                          Elements[parentKey as keyof typeof Elements],
-                          attrType.name ? attrType.name : "",
-                          attrType.index
-                        );
-                        resetChanges();
-                      }}
-                      element={parentKey}
-                      key={attrType.name}
-                      index={index}
-                      parentName={attrType.parentName}
-                    />
+                    <Grid container key={parentKey + "-" + attrType.name}>
+                      <Grid item xs={10}>
+                        <PropertyIcon
+                          title={attrType.name}
+                          onClick={() => {
+                            findElement(
+                              Elements[parentKey as keyof typeof Elements],
+                              attrType.name ? attrType.name : "",
+                              attrType.index
+                            );
+                            resetChanges();
+                          }}
+                          element={parentKey}
+                          key={attrType.name}
+                          index={index}
+                          parentName={attrType.parentName}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Button
+                          onClick={() => {
+                            window.api.send("delete-element", {
+                              element: strToElm(parentKey),
+                              select: { name: attrType.name, index: index },
+                            });
+                          }}
+                        >
+                          AYAYAYA
+                        </Button>
+                      </Grid>
+                    </Grid>
                   );
                 }
               )}

@@ -40,6 +40,8 @@ import { getAllVariableNames } from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
+import { RemoveComponent } from "./removeChild/removeComponent";
+import { RemoveElement } from "./removeChild/removeElement";
 
 interface FileIssues {
   model: string;
@@ -393,9 +395,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     // Sets the raw truth directly to frontend
     ipcMain.on("get-element", (event: IpcMainEvent) => {
       const prop = this.getCurrentAsSelection(this.type);
-      console.log("GetElement: On Get Element");
-      console.log(this.getCurrentComponent());
-      console.log(prop);
       event.reply("res-get-element", prop.prop);
     });
 
@@ -442,10 +441,16 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       event.returnValue = await getAllVariableNames(this);
     });
 
-    // TODO: Complete implementation
-    ipcMain.on("add-connection", async () => {});
-
-    ipcMain.on("remove-connection", async () => {});
+    // TODO: Complete implementation. Similar to find-element-from-children
+    ipcMain.on(
+      "delete-element",
+      async (event: IpcMainEvent, { element, select }: ISelect) => {
+        RemoveElement(this, element, select);
+        const prop = this.getCurrentAsSelection(this.type);
+        event.reply("res-get-element", prop.prop);
+        event.reply("update-content-b", this.getContent());
+      }
+    );
 
     // ipcMain.on("");
   }

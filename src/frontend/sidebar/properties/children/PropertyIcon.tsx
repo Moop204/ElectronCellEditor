@@ -28,8 +28,8 @@ interface IPropertyIcon {
 const useStyle = makeStyles(() =>
   createStyles({
     button: {
-      margin: "0.5vh",
-      marginLeft: "2vw",
+      //      margin: "0.5vh",
+      marginLeft: "1vw",
     },
     buffer: {
       padding: "3vh",
