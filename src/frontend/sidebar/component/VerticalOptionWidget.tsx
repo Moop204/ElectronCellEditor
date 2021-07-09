@@ -18,12 +18,16 @@ const localStyles = makeStyles(() =>
 
 const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
   content,
+  baseContent,
+  updateBaseContent,
   switchSidebar,
   switchView,
   view,
   valid,
 }) => {
   const style = localStyles();
+  console.log(baseContent);
+  console.log(content);
   return (
     <Paper
       style={{
@@ -58,7 +62,12 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
           <VisibilityButton onClick={switchSidebar} expanded={false} />
         </Grid>
         <Grid item container direction="row" justify="center" xs={12}>
-          <SaveButton content={content} expanded={false} color={"primary"} />
+          <SaveButton
+            content={content}
+            expanded={false}
+            color={baseContent === content ? "primary" : "secondary"}
+            updateBaseContent={updateBaseContent}
+          />
         </Grid>
       </Grid>
     </Paper>

@@ -7,14 +7,17 @@ interface ISaveButton {
   content: string;
   expanded: boolean;
   color: "primary" | "secondary";
+  updateBaseContent: (content: string) => void;
 }
 
 const SaveButton: FunctionComponent<ISaveButton> = ({
   content,
   expanded,
   color,
+  updateBaseContent,
 }) => {
   const style = textStyle();
+
   return (
     <div>
       <Tooltip title="Save">
@@ -23,6 +26,7 @@ const SaveButton: FunctionComponent<ISaveButton> = ({
           color={color}
           onClick={() => {
             window.api.send("save-content", content);
+            updateBaseContent(content);
           }}
         >
           <SaveIcon />

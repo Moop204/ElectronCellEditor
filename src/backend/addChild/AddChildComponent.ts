@@ -1,15 +1,14 @@
 import { Elements } from "../../types/Elements";
 import { ChildDetail } from "../../types/ChildDetail";
-import {
-  Component,
-  ImportSource,
-  Model,
-  Parser,
-  Printer,
-} from "../../types/ILibcellml";
+import { Component, ImportSource, Model } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
+import { generateModel } from "./generateModel";
+import { modelToString } from "./modelToString";
 
+// Responsibility: Add a Component to the currently selected element (Model, Component).
+// @fm - Manages the model of the program
+// @parent -
 const AddChildComponent = async (
   fm: FileManagement,
   parent: ISearch,
@@ -17,9 +16,7 @@ const AddChildComponent = async (
   child: ChildDetail
 ) => {
   const libcellml = fm._cellml;
-  const printer: Printer = new libcellml.Printer();
-  const parser: Parser = new libcellml.Parser();
-  const m: Model = parser.parseModel(fm.getContent());
+  const m = generateModel(fm._cellml, fm.getContent());
   const { name, imported, source, component_ref } = child.attribute;
 
   // Create new component
@@ -38,14 +35,15 @@ const AddChildComponent = async (
     m.addComponent(newComp);
     fm.setCurrentComponent(m.clone(), Elements.model);
   } else {
-    const parentComponent = m.componentByName(parent.name as string, true);
+    const parentName = (fm.getCurrentComponent() as Model | Component).name();
+    const parentComponent = m.componentByName(parentName, true);
     parentComponent.addComponent(newComp);
-    m.replaceComponentByName(parent.name as string, parentComponent, true);
+    m.replaceComponentByName(parentName as string, parentComponent, true);
 
-    const curComp = m.componentByName(parent.name as string, true);
+    const curComp = m.componentByName(parentName as string, true);
     fm.setCurrentComponent(curComp, Elements.component);
   }
-  await fm.updateContent(printer.printModel(m, false));
+  await fm.updateContent(modelToString(libcellml, m));
 };
 
 export { AddChildComponent };

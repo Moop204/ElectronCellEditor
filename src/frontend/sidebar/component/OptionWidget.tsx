@@ -25,6 +25,7 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   switchView,
   view,
   valid,
+  updateBaseContent,
 }) => {
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
@@ -54,6 +55,7 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
               color={baseContent === content ? "primary" : "secondary"}
               expanded={true}
               content={content}
+              updateBaseContent={updateBaseContent}
             />
           </Grid>
         </Grid>
