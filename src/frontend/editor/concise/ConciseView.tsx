@@ -1,3 +1,4 @@
+// @ts-ignore
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
 import React from "react";
