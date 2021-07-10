@@ -97,7 +97,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                             });
                           }}
                         >
-                          AYAYAYA
+                          X
                         </Button>
                       </Grid>
                     </Grid>

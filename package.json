@@ -1,6 +1,6 @@
 {
   "name": "electroncelleditor",
-  "productName": "ElectronCellEditor",
+  "productName": "electroncelleditor",
   "version": "1.0.0",
   "description": "Thesis project for Software Engineering degree.",
   "main": ".webpack/main",
@@ -14,8 +14,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "Andrew Nguyen",
-    "email": "andrew.nguyen2045@outlook.com"
+    "name": "Moop204",
+    "email": "z5162792@unsw.edu.au"
   },
   "license": "MIT",
   "config": {

@@ -17,16 +17,13 @@ import {
   obtainIssues,
   validateModel,
 } from "../frontend/sidebar/issues/IssueUtilities";
-import { updateName } from "./updateAttribute/updateName/UpdateName";
-import { updateUnits } from "./updateAttribute/UpdateUnits";
-import { updateMath } from "./updateAttribute/UpdateMath";
 import { EditorElement } from "../types/EditorElement";
 import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
 const fs = require("fs");
 
-//declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-const libcellModule = require("libcellml.js/libcellml.common");
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+// const libcellModule = require("libcellml.js/libcellml.common");
 
 // import libCellMLModule from "libcellml.js";
 // import libCellMLWasm from "libcellml.js/libcellml.wasm";
@@ -40,7 +37,6 @@ import { getAllVariableNames } from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
-import { RemoveComponent } from "./removeChild/removeComponent";
 import { RemoveElement } from "./removeChild/removeElement";
 import { SaveAs } from "./../utility/Save";
 
@@ -242,6 +238,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async importFile(fileLoc: string): Promise<FileIssues> {
     const file: string = fs.readFileSync(fileLoc, "utf8");
+    this.selectedFile = fileLoc;
     try {
       const validator = await validateModel(this, file);
       const issues = await obtainIssues(validator);
@@ -260,7 +257,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         model: file,
         issues: issues,
       };
-      this.selectedFile = file;
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
