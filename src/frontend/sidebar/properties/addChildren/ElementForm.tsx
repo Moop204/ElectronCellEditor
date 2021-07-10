@@ -89,13 +89,7 @@ const ElementForm: FunctionComponent<IAddChild> = ({
       <Button variant="outlined" fullWidth onClick={handleClickOpen}>
         + {elmToStr(childElement)}
       </Button>
-      <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        open={open}
-        onClose={handleClose}
-        fullWidth
-      >
+      <Dialog disableEscapeKeyDown open={open} onClose={handleClose} fullWidth>
         <DialogTitle>
           <Grid container>
             <Grid item xs={10}>

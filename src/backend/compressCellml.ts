@@ -76,10 +76,11 @@ const parseEncapsulationReferences = (
     // Replace with component
     if (elm.attributes.component) {
       const conciseComponent: IElement = componentMap[elm.attributes.component];
+      console.log("CompressCellML Looking for " + elm.attributes.component);
       encapsulationIncluded[elm.attributes.component] = true;
       // Append rest as children recursively
       conciseComponent.elements = [
-        ...(conciseComponent ? conciseComponent.elements : []),
+        ...(conciseComponent.elements ? conciseComponent.elements : []),
         ...parseEncapsulationReferences(
           elms ? elm.elements : [],
           componentMap,
@@ -113,6 +114,10 @@ const compressCellml = (s: string) => {
       } else if (elm.name === "import") {
         // Reduce imports
         elm.elements.map((childElm: IElement) => {
+          if (childElm.name === "component") {
+            console.log("Adding entry to " + childElm.attributes.name);
+            componentMap[childElm.attributes.name] = childElm;
+          }
           const newElm = childElm;
           newElm.name = `imported-${newElm.name}`;
           newElm.attributes["xlink:href"] = elm.attributes["xlink:href"];
