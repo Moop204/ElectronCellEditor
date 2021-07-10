@@ -3,7 +3,7 @@ import { ChildDetail } from "../../types/ChildDetail";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { AddComponent } from "./AddComponent";
-import { AddChildReset } from "./AddChildReset";
+import { AddReset } from "./AddReset";
 import { AddChildUnit } from "./AddChildUnit";
 import { AddChildUnits } from "./AddChildUnits";
 import { AddChildVariable } from "./AddChildVariable";
@@ -29,7 +29,7 @@ const AddChild = async (
       break;
     }
     case Elements.reset: {
-      await AddChildReset(fm, child, parent);
+      await AddReset(fm, child);
       break;
     }
     case Elements.unit: {

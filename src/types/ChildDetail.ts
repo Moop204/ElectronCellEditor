@@ -14,4 +14,14 @@ interface ChildComponentDetail extends ChildDetail {
   };
 }
 
-export { ChildDetail, ChildComponentDetail };
+interface ChildResetDetail extends ChildDetail {
+  attribute: {
+    reset_variable: string;
+    test_variable: string;
+    order: number;
+    reset_value: string;
+    test_value: string;
+  };
+}
+
+export { ChildDetail, ChildComponentDetail, ChildResetDetail };
