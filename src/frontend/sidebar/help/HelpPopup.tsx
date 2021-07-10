@@ -41,7 +41,6 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
         <HelpIcon />
       </Button>
       <Dialog
-        disableBackdropClick
         disableEscapeKeyDown
         open={openHelp}
         onClose={() => setOpenHelp(false)}
@@ -66,7 +65,6 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
             Read the documentation
           </Button>
           <Dialog
-            disableBackdropClick
             disableEscapeKeyDown
             open={openDocument}
             onClose={() => setOpenDocument(false)}
