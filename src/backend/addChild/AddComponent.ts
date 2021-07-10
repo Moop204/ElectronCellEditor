@@ -1,25 +1,19 @@
 import { Elements } from "../../types/Elements";
-import { ChildDetail } from "../../types/ChildDetail";
+import { ChildComponentDetail } from "../../types/ChildDetail";
 import { Component, ImportSource, Model } from "../../types/ILibcellml";
-import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { generateModel } from "./generateModel";
 import { modelToString } from "./modelToString";
 
-// Responsibility: Add a Component to the currently selected element (Model, Component).
-// @fm - Manages the model of the program
-// @parent -
-const AddChildComponent = async (
+// Creates a component
+const makeComponent = (
   fm: FileManagement,
-  parent: ISearch,
-  parentType: Elements,
-  child: ChildDetail
-) => {
+  name: string,
+  imported: boolean,
+  source: string,
+  component_ref: string
+): Component => {
   const libcellml = fm._cellml;
-  const m = generateModel(fm._cellml, fm.getContent());
-  const { name, imported, source, component_ref } = child.attribute;
-
-  // Create new component
   const newComp: Component = new libcellml.Component();
   newComp.setName(name as string);
   if (imported) {
@@ -27,23 +21,37 @@ const AddChildComponent = async (
     importSource.setUrl(source);
     newComp.setSourceComponent(importSource, component_ref);
   }
+  return newComp;
+};
 
-  // Update current component
-  // (this.currentComponent as Model | Component).addComponent(newComp);
-  // Update the truth
+// Add a Component to the currently selected element (Model, Component).
+// @fm - Manages the model of the program
+// @parentType -
+const AddComponent = async (
+  fm: FileManagement,
+  parentType: Elements,
+  child: ChildComponentDetail
+) => {
+  const libcellml = fm._cellml;
+  const m = generateModel(fm._cellml, fm.getContent());
+  const { name, imported, source, component_ref } = child.attribute;
+  const newComponent = makeComponent(fm, name, imported, source, component_ref);
+
+  // Update current component and model, either a Model or a Component
   if (parentType === Elements.model) {
-    m.addComponent(newComp);
+    m.addComponent(newComponent);
     fm.setCurrentComponent(m.clone(), Elements.model);
   } else {
     const parentName = (fm.getCurrentComponent() as Model | Component).name();
     const parentComponent = m.componentByName(parentName, true);
-    parentComponent.addComponent(newComp);
+    parentComponent.addComponent(newComponent);
     m.replaceComponentByName(parentName as string, parentComponent, true);
 
     const curComp = m.componentByName(parentName as string, true);
     fm.setCurrentComponent(curComp, Elements.component);
   }
+  console.log(modelToString(libcellml, m));
   await fm.updateContent(modelToString(libcellml, m));
 };
 
-export { AddChildComponent };
+export { AddComponent };

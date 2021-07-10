@@ -5,4 +5,13 @@ interface ChildDetail {
   attribute: any;
 }
 
-export { ChildDetail };
+interface ChildComponentDetail extends ChildDetail {
+  attribute: {
+    name: string;
+    imported: boolean;
+    source: string | null;
+    component_ref: string | null;
+  };
+}
+
+export { ChildDetail, ChildComponentDetail };

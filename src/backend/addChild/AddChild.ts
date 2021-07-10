@@ -1,17 +1,8 @@
 import { Elements } from "../../types/Elements";
 import { ChildDetail } from "../../types/ChildDetail";
-import {
-  Parser,
-  Printer,
-  Model,
-  Units,
-  Variable,
-  InterfaceType,
-  Component,
-} from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
-import { AddChildComponent } from "./AddChildComponent";
+import { AddComponent } from "./AddComponent";
 import { AddChildReset } from "./AddChildReset";
 import { AddChildUnit } from "./AddChildUnit";
 import { AddChildUnits } from "./AddChildUnits";
@@ -28,7 +19,7 @@ const AddChild = async (
   }
   switch (child.type) {
     case Elements.component:
-      await AddChildComponent(fm, parent, parentType, child);
+      await AddComponent(fm, parentType, child);
       break;
     case Elements.units:
       await AddChildUnits(fm, child);
