@@ -24,4 +24,28 @@ interface ChildResetDetail extends ChildDetail {
   };
 }
 
-export { ChildDetail, ChildComponentDetail, ChildResetDetail };
+interface ChildUnitDetail extends ChildDetail {
+  attribute: {
+    prefix: string;
+    multiplier: string;
+    exponent: string;
+    units: string;
+  };
+}
+
+interface ChildUnitsDetail extends ChildDetail {
+  attribute: {
+    name: string;
+    imported: boolean;
+    source: string;
+    component_ref: string;
+  };
+}
+
+export {
+  ChildDetail,
+  ChildComponentDetail,
+  ChildResetDetail,
+  ChildUnitDetail,
+  ChildUnitsDetail,
+};

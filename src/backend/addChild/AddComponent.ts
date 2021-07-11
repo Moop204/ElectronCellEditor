@@ -51,7 +51,6 @@ const AddComponent = async (
     const curComp = m.componentByName(parentName as string, true);
     fm.setCurrentComponent(curComp, Elements.component);
   }
-  console.log(modelToString(libcellml, m));
   await fm.updateContent(modelToString(libcellml, m));
 };
 
