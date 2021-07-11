@@ -42,10 +42,20 @@ interface ChildUnitsDetail extends ChildDetail {
   };
 }
 
+interface ChildVariableDetail extends ChildDetail {
+  attribute: {
+    name: string;
+    varInterface: string;
+    initialValue: string;
+    units: string;
+  };
+}
+
 export {
   ChildDetail,
   ChildComponentDetail,
   ChildResetDetail,
   ChildUnitDetail,
   ChildUnitsDetail,
+  ChildVariableDetail,
 };
