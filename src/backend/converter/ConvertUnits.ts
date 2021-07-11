@@ -27,11 +27,6 @@ const convertUnits = (unitsElement: Units) => {
   // Name refers to both name attribute, the name of the attribute of name and name of units
   const units: IProperties = {
     type: Elements.units,
-    parent: {
-      // TODO: Re-enable once bindings for .parent() function from libcellml is fixed
-      type: Elements.model, //parentType,
-      name: "", //parentElement.name(),
-    },
     attribute: {
       name: unitsElement.name(),
     },

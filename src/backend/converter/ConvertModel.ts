@@ -23,10 +23,6 @@ const convertModel = (model: Model) => {
     attribute: {
       name: model.name(),
     },
-    parent: {
-      name: "",
-      type: Elements.none,
-    },
     children: {
       component: listComponentName.map((name: string, index: number) => {
         return { name, index };
