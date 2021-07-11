@@ -6,7 +6,7 @@ import { AddComponent } from "./AddComponent";
 import { AddReset } from "./AddReset";
 import { AddUnit } from "./AddUnit";
 import { AddUnits } from "./AddUnits";
-import { AddChildVariable } from "./AddChildVariable";
+import { AddVariable } from "./AddVariable";
 
 const AddChild = async (
   fm: FileManagement,
@@ -25,7 +25,7 @@ const AddChild = async (
       await AddUnits(fm, child);
       break;
     case Elements.variable: {
-      await AddChildVariable(fm, parent, child);
+      await AddVariable(fm, child);
       break;
     }
     case Elements.reset: {
