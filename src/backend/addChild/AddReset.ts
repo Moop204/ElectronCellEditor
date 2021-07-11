@@ -27,7 +27,7 @@ const makeReset = (
   return newReset;
 };
 
-// Add a Component to the currently selected element (Model, Component).
+// Add a Reset to the currently selected Component.
 // @fm - Manages the model of the program
 // @child - Describes details of the new component
 const AddReset = async (fm: FileManagement, child: ChildResetDetail) => {
