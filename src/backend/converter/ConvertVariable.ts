@@ -20,10 +20,6 @@ const convertVariable = (variable: Variable) => {
 
   const varProp: IProperties = {
     type: Elements.variable,
-    parent: {
-      type: Elements.component,
-      name: (variable.parent() as Component).name(),
-    },
     attribute: {
       name: variable.name(),
       interfaceType: variable.interfaceType(),

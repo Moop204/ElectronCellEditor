@@ -3,8 +3,6 @@ import {
   Model,
   Units,
   Component,
-  NamedEntity,
-  ComponentEntity,
   Variable,
   Reset,
 } from "../../types/ILibcellml";
@@ -22,12 +20,10 @@ const convertSelectedElement = (
   curElm: Component | Model | Reset | Units | Variable | null,
   fm: FileManagement
 ) => {
-  console.log("Converting selected element " + elmToStr(selectedElement));
   let prop: IProperties = {
     type: Elements.none,
     attribute: {},
     children: {},
-    parent: { name: "", type: Elements.none },
     unit: [],
   };
   if (curElm) {

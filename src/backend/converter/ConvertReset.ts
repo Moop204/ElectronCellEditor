@@ -9,10 +9,6 @@ const convertReset = (element: Reset, fm: FileManagement) => {
   console.log(element);
   const resetProp: IProperties = {
     type: Elements.reset,
-    parent: {
-      type: Elements.component,
-      name: "", //(element.parent() as Component).name(),
-    },
     attribute: {
       variable: element.variable(),
       test_variable: element.testVariable(),
