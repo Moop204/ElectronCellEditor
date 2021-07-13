@@ -1,5 +1,4 @@
 import FileManagement from "../../../src/backend/FileManagement";
-//import trimNewlines from "trim-newlines";
 import assert from "assert";
 import {
   Component,

@@ -97,6 +97,7 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          required
           fullWidth
           id="name"
           name="name"

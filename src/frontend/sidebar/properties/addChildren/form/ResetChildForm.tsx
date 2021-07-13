@@ -77,6 +77,7 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          required
           fullWidth
           id="order"
           name="order"
@@ -98,6 +99,7 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
                 Variable
               </InputLabel>
               <Select
+                required
                 labelId="reset_variable"
                 id="reset_variable"
                 name="reset_variable"
@@ -155,7 +157,9 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
                   );
                 })}
                 {validVariable.length === 0 && (
-                  <div> No Variable Available </div>
+                  <MenuItem key="" value="">
+                    No Variable Available
+                  </MenuItem>
                 )}
               </Select>
               <FormHelperText error>
@@ -217,7 +221,6 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
                 ) &&
                 formik.values.order
               ) {
-                console.log(">>> <<<<");
                 return handleClose();
               }
             }}

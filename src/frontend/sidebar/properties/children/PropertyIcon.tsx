@@ -13,6 +13,7 @@ import {
   DialogTitle,
   Typography,
 } from "@material-ui/core";
+import { RulerIcon } from "../../../assets/RulerIcon";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
 import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
@@ -54,7 +55,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
       icon = <RotateLeftIcon />;
       break;
     case "units":
-      icon = <CropSquareIcon />;
+      icon = <RulerIcon />;
       break;
     case "variable":
       icon = <ChangeHistoryIcon />;

@@ -14,8 +14,8 @@ describe("array", () => {
     const cellml = fm._cellml;
     const m = new cellml.Model();
     const c1 = new cellml.Component();
-    console.log(typeof c1 === typeof m);
-    assert.strictEqual(typeof c1, typeof new cellml.Model());
+    console.log(c1 instanceof fm._cellml.Component);
+    assert.strictEqual(JSON.stringify(c1), JSON.stringify(m));
   });
   // it("cuts down on math string", async () => {
   //   const working = `<apply><eq/> <apply><diff/> <bvar><ci>t</ci></bvar> <ci>N</ci> </apply> <apply><divide/> <apply><times/> <ci>r</ci> <ci>N</ci> <apply><minus/> <ci>K</ci> <ci>N</ci> </apply> </apply> <bvar><ci>K</ci></bvar> </apply> </apply>`;

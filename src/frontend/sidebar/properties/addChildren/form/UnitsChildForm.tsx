@@ -71,6 +71,7 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          required
           fullWidth
           id="name"
           name="name"
@@ -94,6 +95,7 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
         {formik.values.imported && (
           <div>
             <TextField
+              required
               fullWidth
               id="source"
               name="source"
@@ -104,6 +106,7 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
               helperText={formik.touched.source && formik.errors.source}
             />
             <TextField
+              required
               fullWidth
               id="component_ref"
               name="component_ref"

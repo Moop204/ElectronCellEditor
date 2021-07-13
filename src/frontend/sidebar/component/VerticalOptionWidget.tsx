@@ -39,7 +39,7 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
         container
         item
         direction="row"
-        justify="space-around"
+        justifyContent="space-around"
         style={{ height: "95%" }}
       >
         <Grid container item>
@@ -49,19 +49,19 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
         </Grid>
 
         {view && (
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <TextViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
         {!view && (
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <SpatialViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
-        <Grid item container direction="row" justify="center" xs={12}>
+        <Grid item container direction="row" justifyContent="center" xs={12}>
           <VisibilityButton onClick={switchSidebar} expanded={false} />
         </Grid>
-        <Grid item container direction="row" justify="center" xs={12}>
+        <Grid item container direction="row" justifyContent="center" xs={12}>
           <SaveButton
             content={content}
             expanded={false}
