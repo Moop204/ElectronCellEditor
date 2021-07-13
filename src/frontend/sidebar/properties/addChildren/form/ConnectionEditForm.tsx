@@ -61,7 +61,7 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
   });
 
   return (
-    <Grid container xs={12}>
+    <Grid container>
       <form onSubmit={formik.handleSubmit} style={{ width: "70vw" }}>
         <Grid container>
           <Grid item xs={6}>
@@ -73,6 +73,7 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
                 Component
               </InputLabel>
               <Select
+                required
                 labelId="component"
                 id="component"
                 name="component"
@@ -101,6 +102,7 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
                 Variable
               </InputLabel>
               <Select
+                required
                 labelId="variable"
                 id="variable"
                 name="variable"

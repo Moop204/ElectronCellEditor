@@ -4,7 +4,15 @@ import { IChild } from "../../../../types/IProperties";
 import { ISearch, ISelect } from "../../../../types/IQuery";
 import PropertyIcon from "./PropertyIcon";
 import Grid from "@material-ui/core/Grid";
-import { Box, Button, Divider, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  createStyles,
+  Divider,
+  makeStyles,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
 
 const findElement = (elm: Elements, name: string, index: number) => {
@@ -30,6 +38,14 @@ interface IChildrenWidget {
   resetChanges: () => void;
 }
 
+const useStyle = makeStyles(() =>
+  createStyles({
+    childCategory: {
+      marginTop: "1vh",
+    },
+  })
+);
+
 const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   abstractChildren,
   parentType,
@@ -39,6 +55,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
     return <div>NO CHILD</div>;
   }
 
+  const styles = useStyle();
   return (
     <Grid
       item
@@ -61,51 +78,52 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
         )}
 
         {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
-          return (
-            <div key={parentKey}>
-              <Divider variant="middle" />
-              <Typography variant="h6" style={{ paddingLeft: "5px" }}>
-                {capitaliseFirst(parentKey)}
-              </Typography>
-              {Object.values(childrenType).map(
-                (attrType: IChild, index: number) => {
-                  return (
-                    <Grid container key={parentKey + "-" + attrType.name}>
-                      <Grid item xs={10}>
-                        <PropertyIcon
-                          title={attrType.name}
-                          onClick={() => {
-                            findElement(
-                              Elements[parentKey as keyof typeof Elements],
-                              attrType.name ? attrType.name : "",
-                              attrType.index
-                            );
-                            resetChanges();
-                          }}
-                          element={parentKey}
-                          key={attrType.name}
-                          index={index}
-                          parentName={attrType.parentName}
-                        />
+          if (childrenType.length > 0)
+            return (
+              <div key={parentKey} className={styles.childCategory}>
+                <Divider variant="middle" />
+                <Typography variant="h6" style={{ paddingLeft: "5px" }}>
+                  {capitaliseFirst(parentKey)}
+                </Typography>
+                {Object.values(childrenType).map(
+                  (attrType: IChild, index: number) => {
+                    return (
+                      <Grid container key={parentKey + "-" + attrType.name}>
+                        <Grid item xs={10}>
+                          <PropertyIcon
+                            title={attrType.name}
+                            onClick={() => {
+                              findElement(
+                                Elements[parentKey as keyof typeof Elements],
+                                attrType.name ? attrType.name : "",
+                                attrType.index
+                              );
+                              resetChanges();
+                            }}
+                            element={parentKey}
+                            key={attrType.name}
+                            index={index}
+                            parentName={attrType.parentName}
+                          />
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Button
+                            onClick={() => {
+                              window.api.send("delete-element", {
+                                element: strToElm(parentKey),
+                                select: { name: attrType.name, index: index },
+                              });
+                            }}
+                          >
+                            X
+                          </Button>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={2}>
-                        <Button
-                          onClick={() => {
-                            window.api.send("delete-element", {
-                              element: strToElm(parentKey),
-                              select: { name: attrType.name, index: index },
-                            });
-                          }}
-                        >
-                          X
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  );
-                }
-              )}
-            </div>
-          );
+                    );
+                  }
+                )}
+              </div>
+            );
         })}
       </Box>
     </Grid>

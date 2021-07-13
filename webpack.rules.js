@@ -45,4 +45,9 @@ module.exports = [
     test: /\.pdf$/,
     type: "asset/resource",
   },
+  {
+    test: /\.svg$/,
+    type: "asset/resource",
+    use: ["@svgr/webpack"],
+  },
 ];

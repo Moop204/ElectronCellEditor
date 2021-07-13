@@ -67,9 +67,9 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
           container
           direction="row"
           style={{ height: "45%" }}
-          justify="space-around"
+          justifyContent="space-around"
         >
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple
@@ -80,7 +80,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
               <ErrorIcon /> {errorCount}
             </IconButton>
           </Grid>
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple
@@ -91,7 +91,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
               <WarningIcon />
             </IconButton>
           </Grid>
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple

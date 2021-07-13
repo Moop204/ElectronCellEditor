@@ -38,9 +38,9 @@ const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
       <MathJax.Provider>
         <MathJax.Html
           html={
-            `<p style="color:red; text-align:center;">` +
+            `<div style="color:red; text-align:center;">` +
             convertToPresentation(mathml) +
-            `</p>`
+            `</div>`
           }
         />
       </MathJax.Provider>

@@ -49,7 +49,7 @@ const Dashboard: FunctionComponent = () => {
   </model>`);
   const [baseContent, setBaseContent] = useState(contentExist);
   const [valid, setValid] = useState(false);
-  const [viewSidebar, setViewSidebar] = useState(false);
+  const [viewSidebar, setViewSidebar] = useState(true);
 
   const switchSidebar = () => {
     console.log("Switching sidebar to " + viewSidebar);

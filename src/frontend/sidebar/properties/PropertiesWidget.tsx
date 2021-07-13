@@ -41,6 +41,9 @@ const localStyles = makeStyles(() =>
       width: "100%",
       alignContent: "flex-start",
     },
+    updateAttribute: {
+      marginTop: "2vh",
+    },
   })
 );
 
@@ -147,7 +150,7 @@ const PropertiesWidget: FunctionComponent = () => {
 
   if (abstractModel.type === Elements.none) {
     return (
-      <Grid item className={styles.plainText} style={{ height: "60%" }}>
+      <Grid item className={styles.plainText} style={{ height: "100%" }}>
         <Paper className={styles.propertyWidget} style={{ height: "100%" }}>
           <Typography variant="h4" style={{ paddingLeft: "5px" }}>
             Properties
@@ -213,14 +216,11 @@ const PropertiesWidget: FunctionComponent = () => {
     }
 
     // Update the set
-    console.log("DIFFSET BEFORE SENDING");
-    console.log(diffSet);
     const submitSet = [...postSet, ...prioritySet];
     updateAttr(submitSet);
     setDiffSet([]);
   };
 
-  console.log(abstractModel);
   if (abstractModel.attribute.name) {
     return (
       <Grid
@@ -240,7 +240,7 @@ const PropertiesWidget: FunctionComponent = () => {
             <Typography variant="h4" style={{ paddingLeft: "5px" }}>
               Properties
             </Typography>
-            <Grid container item className={styles.plainText}>
+            <Grid container item className={styles.plainText} direction="row">
               <Grid item className={styles.elementType} xs={2}>
                 <Button
                   onClick={() => {
@@ -257,11 +257,22 @@ const PropertiesWidget: FunctionComponent = () => {
                 </Typography>
                 <ElementHelp type={abstractModel.type} />
               </Grid>
-              <AttributeWidget
-                attribute={abstractModel.attribute}
-                handleChange={handleAttributeChange}
-              />
-              <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
+              <Grid item className={styles.elementType} xs={12}>
+                <AttributeWidget
+                  attribute={abstractModel.attribute}
+                  handleChange={handleAttributeChange}
+                />
+              </Grid>
+              <Grid item xs={12} className={styles.updateAttribute}>
+                <Button
+                  variant="outlined"
+                  onClick={sendAttributeUpdate}
+                  fullWidth
+                >
+                  Update Attribute
+                </Button>
+              </Grid>
+
               <UnitWidget
                 unitMap={abstractModel.unit}
                 parentName={abstractModel.attribute.name}
@@ -319,7 +330,9 @@ const PropertiesWidget: FunctionComponent = () => {
                 attribute={abstractModel.attribute}
                 handleChange={handleAttributeChange}
               />
-              <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
+              <Grid item className={styles.updateAttribute}>
+                <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
+              </Grid>
             </Grid>
           </Paper>
         </Box>
