@@ -44,6 +44,9 @@ const localStyles = makeStyles(() =>
     updateAttribute: {
       marginTop: "2vh",
     },
+    headerSeparator: {
+      marginTop: "1vh",
+    },
   })
 );
 
@@ -273,19 +276,25 @@ const PropertiesWidget: FunctionComponent = () => {
                 </Button>
               </Grid>
 
-              <UnitWidget
-                unitMap={abstractModel.unit}
-                parentName={abstractModel.attribute.name}
-              />
-              <ChildrenWidget
-                abstractChildren={abstractModel.children}
-                parentType={abstractModel.type}
-                resetChanges={resetChanges}
-              />
-              <AddChildrenWidget
-                element={abstractModel.type}
-                name={abstractModel.attribute.name}
-              />
+              <div className={styles.headerSeparator}>
+                <UnitWidget
+                  unitMap={abstractModel.unit}
+                  parentName={abstractModel.attribute.name}
+                />
+              </div>
+              <div className={styles.headerSeparator}>
+                <ChildrenWidget
+                  abstractChildren={abstractModel.children}
+                  parentType={abstractModel.type}
+                  resetChanges={resetChanges}
+                />
+              </div>
+              <div className={styles.headerSeparator}>
+                <AddChildrenWidget
+                  element={abstractModel.type}
+                  name={abstractModel.attribute.name}
+                />
+              </div>
             </Grid>
           </Paper>
         </Box>

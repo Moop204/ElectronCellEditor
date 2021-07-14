@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
+import { DeleteButton } from "./DeleteChildren";
 
 const findElement = (elm: Elements, name: string, index: number) => {
   const select: ISearch = { index, name };
@@ -80,9 +81,13 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
         {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
           if (childrenType.length > 0)
             return (
-              <div key={parentKey} className={styles.childCategory}>
+              <div
+                key={parentKey}
+                className={styles.childCategory}
+                style={{ paddingLeft: "1vw" }}
+              >
                 <Divider variant="middle" />
-                <Typography variant="h6" style={{ paddingLeft: "5px" }}>
+                <Typography variant="h5">
                   {capitaliseFirst(parentKey)}
                 </Typography>
                 {Object.values(childrenType).map(
@@ -107,16 +112,11 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                           />
                         </Grid>
                         <Grid item xs={2}>
-                          <Button
-                            onClick={() => {
-                              window.api.send("delete-element", {
-                                element: strToElm(parentKey),
-                                select: { name: attrType.name, index: index },
-                              });
-                            }}
-                          >
-                            X
-                          </Button>
+                          <DeleteButton
+                            elementType={strToElm(parentKey)}
+                            name={attrType.name}
+                            index={index}
+                          />
                         </Grid>
                       </Grid>
                     );
