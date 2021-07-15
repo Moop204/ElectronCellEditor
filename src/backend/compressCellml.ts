@@ -108,7 +108,9 @@ const compressCellml = (s: string) => {
         const { newElm, math } = parseComponent(elm.elements || []);
         elm.elements = newElm;
         // Assign math as an attribute
-        elm.attributes.math = math;
+        if (math && math != "") {
+          elm.attributes.math = "...";
+        }
         // newElements.push(elm);
         componentMap[elm.attributes.name] = elm;
       } else if (elm.name === "import") {

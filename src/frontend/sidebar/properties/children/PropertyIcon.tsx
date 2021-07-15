@@ -17,6 +17,7 @@ import { RulerIcon } from "../../../assets/RulerIcon";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
 import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
+import { DeleteButton } from "./DeleteChildren";
 
 interface IPropertyIcon {
   title: string;
@@ -29,11 +30,8 @@ interface IPropertyIcon {
 const useStyle = makeStyles(() =>
   createStyles({
     button: {
-      //      margin: "0.5vh",
-      marginLeft: "1vw",
-    },
-    buffer: {
-      padding: "3vh",
+      marginTop: "0.5vh",
+      //marginLeft: "1vw",
     },
   })
 );
@@ -78,8 +76,14 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
             fullWidth
             className={style.button}
           >
-            {icon}
-            {title}
+            <Grid container>
+              <Grid item xs={2}>
+                {icon}
+              </Grid>
+              <Grid item xs={10}>
+                {title}
+              </Grid>
+            </Grid>
           </Button>
         </Grid>
         <Grid item xs={2}>
@@ -103,16 +107,26 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   }
 
   return (
-    <Grid item xs={10}>
-      <Button
-        variant="outlined"
-        onClick={onClick}
-        className={style.button}
-        fullWidth
-      >
-        {icon}
-        {title}
-      </Button>
+    <Grid container direction="row" key={element + title}>
+      <Grid item xs={11} className={style.button}>
+        <Button variant="outlined" onClick={onClick} fullWidth>
+          <Grid container>
+            <Grid item xs={1}>
+              {icon}
+            </Grid>
+            <Grid item xs={10}>
+              {title}
+            </Grid>
+          </Grid>
+        </Button>
+      </Grid>
+      <Grid item xs={1} className={style.button}>
+        <DeleteButton
+          elementType={strToElm(element)}
+          name={title}
+          index={index}
+        />
+      </Grid>
     </Grid>
   );
 };
