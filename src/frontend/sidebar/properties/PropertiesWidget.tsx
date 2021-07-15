@@ -9,7 +9,7 @@ import { IProperties } from "../../../types/IProperties";
 import { Elements, elmToStr } from "../../../types/Elements";
 import { ISelection, IUpdate } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Box, IconButton, Paper, Typography } from "@material-ui/core";
 import { AttributeWidget } from "./AttributeWidget";
 import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
 import { UnitWidget } from "./UnitWidget";
@@ -17,6 +17,7 @@ import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { ElementHelp } from "../help/ElementHelp";
 import { ConnectionWidget } from "./ConnectionWidget";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -231,7 +232,7 @@ const PropertiesWidget: FunctionComponent = () => {
         item
         className={styles.properties}
         xs={12}
-        style={{ height: "99%" }}
+        style={{ height: "100%" }}
       >
         <Box
           component="div"
@@ -245,14 +246,13 @@ const PropertiesWidget: FunctionComponent = () => {
             </Typography>
             <Grid container item className={styles.plainText} direction="row">
               <Grid item className={styles.elementType} xs={2}>
-                <Button
+                <IconButton
                   onClick={() => {
-                    resetChanges();
                     window.api.send("resetParent");
                   }}
                 >
-                  Parent
-                </Button>
+                  <ArrowBackIosIcon />
+                </IconButton>
               </Grid>
               <Grid item className={styles.elementType} xs={10}>
                 <Typography variant="h5" style={{ paddingRight: "5px" }}>
@@ -321,13 +321,13 @@ const PropertiesWidget: FunctionComponent = () => {
             </Typography>
             <Grid container item className={styles.plainText}>
               <Grid item className={styles.elementType} xs={2}>
-                <Button
+                <IconButton
                   onClick={() => {
                     window.api.send("resetParent");
                   }}
                 >
-                  Parent
-                </Button>
+                  <ArrowBackIosIcon />
+                </IconButton>
               </Grid>
               <Grid item className={styles.elementType} xs={10}>
                 <Typography variant="h5" style={{ paddingRight: "5px" }}>

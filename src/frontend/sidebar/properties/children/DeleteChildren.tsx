@@ -8,7 +8,8 @@ import {
 } from "@material-ui/core";
 import React, { FunctionComponent, useState } from "react";
 import { Elements, elmToStr, strToElm } from "../../../../types/Elements";
-
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 interface IDeleteButton {
   elementType: Elements;
   name: string;
@@ -25,9 +26,9 @@ const DeleteButton: FunctionComponent<IDeleteButton> = ({
   const handleOpen = () => setOpen(true);
   return (
     <span>
-      <Button variant="outlined" onClick={handleOpen}>
-        X
-      </Button>
+      <IconButton aria-label={`delete-${name}`} onClick={handleOpen}>
+        <DeleteIcon />
+      </IconButton>
       <Dialog
         open={open}
         onClose={handleClose}

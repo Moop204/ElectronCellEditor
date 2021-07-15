@@ -1,7 +1,6 @@
 import { XmlEditor } from "react-xml-editor";
 import React, { FunctionComponent } from "react";
 import { useRef } from "react";
-import { IEditorProp } from "../IEditorProp";
 import { Box } from "@material-ui/core";
 
 interface IEditorXml {
