@@ -227,13 +227,7 @@ const PropertiesWidget: FunctionComponent = () => {
 
   if (abstractModel.attribute.name) {
     return (
-      <Grid
-        container
-        item
-        className={styles.properties}
-        xs={12}
-        style={{ height: "100%" }}
-      >
+      <Grid container className={styles.properties} style={{ height: "100vh" }}>
         <Box
           component="div"
           className={styles.propertyWidget}
@@ -260,42 +254,42 @@ const PropertiesWidget: FunctionComponent = () => {
                 </Typography>
                 <ElementHelp type={abstractModel.type} />
               </Grid>
-              <Grid item className={styles.elementType} xs={12}>
-                <AttributeWidget
-                  attribute={abstractModel.attribute}
-                  handleChange={handleAttributeChange}
-                />
-              </Grid>
-              <Grid item xs={12} className={styles.updateAttribute}>
-                <Button
-                  variant="outlined"
-                  onClick={sendAttributeUpdate}
-                  fullWidth
-                >
-                  Update Attribute
-                </Button>
-              </Grid>
-
-              <div className={styles.headerSeparator}>
-                <UnitWidget
-                  unitMap={abstractModel.unit}
-                  parentName={abstractModel.attribute.name}
-                />
-              </div>
-              <div className={styles.headerSeparator}>
-                <ChildrenWidget
-                  abstractChildren={abstractModel.children}
-                  parentType={abstractModel.type}
-                  resetChanges={resetChanges}
-                />
-              </div>
-              <div className={styles.headerSeparator}>
-                <AddChildrenWidget
-                  element={abstractModel.type}
-                  name={abstractModel.attribute.name}
-                />
-              </div>
             </Grid>
+            <Grid item className={styles.elementType} xs={12}>
+              <AttributeWidget
+                attribute={abstractModel.attribute}
+                handleChange={handleAttributeChange}
+              />
+            </Grid>
+            <Grid item xs={12} className={styles.updateAttribute}>
+              <Button
+                variant="outlined"
+                onClick={sendAttributeUpdate}
+                fullWidth
+              >
+                Update Attribute
+              </Button>
+            </Grid>
+
+            <div className={styles.headerSeparator}>
+              <UnitWidget
+                unitMap={abstractModel.unit}
+                parentName={abstractModel.attribute.name}
+              />
+            </div>
+            <div className={styles.headerSeparator}>
+              <ChildrenWidget
+                abstractChildren={abstractModel.children}
+                parentType={abstractModel.type}
+                resetChanges={resetChanges}
+              />
+            </div>
+            <div className={styles.headerSeparator}>
+              <AddChildrenWidget
+                element={abstractModel.type}
+                name={abstractModel.attribute.name}
+              />
+            </div>
           </Paper>
         </Box>
       </Grid>

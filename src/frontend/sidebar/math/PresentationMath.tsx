@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { ctop } from "./ctop";
 import MathJax from "mathjax3-react";
 import { stripMath } from "./stripMath";
+import { splitMath } from "./splitMath";
 
 interface IMath {
   mathml: string;
@@ -32,17 +33,26 @@ const convertToPresentation = (mathml: string) => {
   );
 };
 
+const PresentFormula: FunctionComponent<IMath> = ({ mathml }) => {
+  return (
+    <MathJax.Html
+      html={
+        `<div style="color:red; text-align:center;">` +
+        convertToPresentation(mathml) +
+        `</div>`
+      }
+    />
+  );
+};
+
 const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
+  const formulas = splitMath(mathml);
   return (
     <div>
       <MathJax.Provider>
-        <MathJax.Html
-          html={
-            `<div style="color:red; text-align:center;">` +
-            convertToPresentation(mathml) +
-            `</div>`
-          }
-        />
+        {formulas.map((formula) => (
+          <PresentFormula mathml={formula} />
+        ))}
       </MathJax.Provider>
     </div>
   );

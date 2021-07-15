@@ -8,20 +8,20 @@ interface IDecl {
   };
 }
 
-interface IElement {
+interface IXmlElement {
   type: string;
   name: string;
   attributes: any;
-  elements: IElement[];
+  elements: IXmlElement[];
 }
 
 interface IXmlJs {
   declaration: IDecl;
-  elements: IElement[];
+  elements: IXmlElement[];
 }
 
-const parseReset = (reset: IElement) => {
-  (reset.elements as IElement[]).map((elm: IElement) => {
+const parseReset = (reset: IXmlElement) => {
+  (reset.elements as IXmlElement[]).map((elm: IXmlElement) => {
     if (elm.name === "reset_value") {
       reset.attributes.reset_value = xml.json2xml(
         JSON.stringify(elm.elements[0])
@@ -38,11 +38,11 @@ const parseReset = (reset: IElement) => {
 };
 
 // Inside components
-const parseComponent = (elms: IElement[]) => {
+const parseComponent = (elms: IXmlElement[]) => {
   let math = "";
-  const newElm: IElement[] = [];
+  const newElm: IXmlElement[] = [];
   if (elms) {
-    elms.map((elm: IElement) => {
+    elms.map((elm: IXmlElement) => {
       // When facing Math
       if (elm.name === "math") {
         // Take Math
@@ -63,7 +63,7 @@ const parseComponent = (elms: IElement[]) => {
 // ComponentMap refers to the list of all components
 // Elms are the elements of the parent
 const parseEncapsulationReferences = (
-  elms: IElement[],
+  elms: IXmlElement[],
   componentMap: Record<string, any>,
   encapsulationIncluded: Record<string, any>
 ) => {
@@ -75,7 +75,8 @@ const parseEncapsulationReferences = (
     const elm = elms[i];
     // Replace with component
     if (elm.attributes.component) {
-      const conciseComponent: IElement = componentMap[elm.attributes.component];
+      const conciseComponent: IXmlElement =
+        componentMap[elm.attributes.component];
       console.log("CompressCellML Looking for " + elm.attributes.component);
       encapsulationIncluded[elm.attributes.component] = true;
       // Append rest as children recursively
@@ -99,10 +100,10 @@ const compressCellml = (s: string) => {
   );
 
   const componentMap: Record<string, any> = [];
-  const newElements: IElement[] = [];
+  const newElements: IXmlElement[] = [];
 
   if (parsed.elements[0].elements) {
-    parsed.elements[0].elements.map((elm: IElement) => {
+    parsed.elements[0].elements.map((elm: IXmlElement) => {
       // For child of model
       if (elm.name === "component") {
         const { newElm, math } = parseComponent(elm.elements || []);
@@ -115,7 +116,7 @@ const compressCellml = (s: string) => {
         componentMap[elm.attributes.name] = elm;
       } else if (elm.name === "import") {
         // Reduce imports
-        elm.elements.map((childElm: IElement) => {
+        elm.elements.map((childElm: IXmlElement) => {
           if (childElm.name === "component") {
             console.log("Adding entry to " + childElm.attributes.name);
             componentMap[childElm.attributes.name] = childElm;
@@ -137,7 +138,7 @@ const compressCellml = (s: string) => {
     console.log(parsed.elements);
   }
 
-  let finalElements: IElement[] = [];
+  let finalElements: IXmlElement[] = [];
   const encapsulationIncluded: Record<string, any> = {};
   const componentKeys = Object.keys(componentMap);
   for (let i = 0; i < componentKeys.length; i++) {
@@ -168,12 +169,9 @@ const compressCellml = (s: string) => {
   }
 
   parsed.elements[0].elements = finalElements;
-
-  console.log(encapsulationIncluded);
-
   // Parse to remove encapsulation and sub variables
   const result = xml.json2xml(JSON.stringify(parsed), { spaces: 4 });
   return result;
 };
 
-export { compressCellml };
+export { compressCellml, IXmlJs, IXmlElement };

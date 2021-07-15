@@ -106,7 +106,7 @@ const Dashboard: FunctionComponent = () => {
   return (
     <div className={styles.root}>
       <Router>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} direction="row">
           {viewSidebar && (
             <ExpandedSidebar
               content={contentExist}
@@ -130,6 +130,18 @@ const Dashboard: FunctionComponent = () => {
               updateBaseContent={setBaseContent}
             />
           )}
+          {/* <Grid item xs={viewSidebar ? 3 : 1}>
+            <SidebarManager
+              viewSidebar={viewSidebar}
+              view={view}
+              valid={valid}
+              content={contentExist}
+              baseContent={baseContent}
+              setBaseContent={setBaseContent}
+              switchSidebar={switchSidebar}
+              switchView={switchView}
+            />
+          </Grid> */}
 
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
@@ -145,6 +157,7 @@ const Dashboard: FunctionComponent = () => {
                     />
                   )}
                 </Route>
+
                 <Route exact path="">
                   {/* <PresentationMath
                     mathml={`      <apply><eq/> 

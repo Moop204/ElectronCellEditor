@@ -1,10 +1,18 @@
+import { IXmlElement, IXmlJs } from "../../../backend/compressCellml";
+import xml from "xml-js";
+import { removeCellMl } from "./removeCellMl";
+
+// Remove the Math element for transformation
 const stripMath = (mathml: string) => {
-  mathml = mathml.replace(
-    /\< ?math xmlns="http:\/\/www.w3.org\/1998\/Math\/MathML" ?\>/g,
-    ""
+  const parsed: IXmlJs = JSON.parse(
+    xml.xml2json(mathml, { compact: false, spaces: 4 })
   );
-  mathml = mathml.replace(/\<\/ ?math ?\>/g, "");
-  return mathml;
+  parsed.elements.forEach((elements) => removeCellMl(elements));
+  parsed.elements = parsed.elements[0].elements;
+  const stripped = xml.json2xml(JSON.stringify(parsed), {
+    spaces: 4,
+  });
+  return stripped;
 };
 
 export { stripMath };

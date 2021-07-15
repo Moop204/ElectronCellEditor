@@ -152,16 +152,16 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     return (
       <Grid container item direction="row">
         <Card>
-          <Grid container item xs={12}>
+          <Grid container>
             <Grid item xs={2}>
               <InputLabel>{processAttribute(title)}</InputLabel>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={10} justifyContent="center">
               <span onClick={handleOpen}>
                 {value && (
-                  <div>
+                  <Button fullWidth>
                     <PresentationMath mathml={value} />
-                  </div>
+                  </Button>
                 )}
                 {!value && <TextField onSelect={handleOpen} />}
               </span>
