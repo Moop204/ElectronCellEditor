@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" name="van_der_pol_oscillator" id="van_der_pol_oscillator">
-  <units name="ms">
-    <unit prefix="milli" units="second"/>
-  </units>
-  <units name="per_ms">
-    <unit exponent="-1" units="ms"/>
-  </units>
-  <units name="ms_squared">
-    <unit exponent="2" units="ms"/>
-  </units>
-</model>
+  <model xmlns="http://www.cellml.org/cellml/2.0#"
+  xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+
+  </model>

@@ -37,17 +37,10 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
     >
       <Grid
         container
-        item
         direction="row"
         justifyContent="space-around"
         style={{ height: "95%" }}
       >
-        <Grid container item>
-          <Typography variant="h6" style={{ paddingLeft: "5px" }}>
-            Views
-          </Typography>
-        </Grid>
-
         {view && (
           <Grid item container direction="row" justifyContent="center" xs={12}>
             <TextViewButton onClick={switchView} expanded={false} />
