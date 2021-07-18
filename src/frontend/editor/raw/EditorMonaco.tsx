@@ -41,7 +41,7 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
 
   return (
     <Editor
-      height="90vh"
+      height="95vh"
       defaultLanguage="xml"
       defaultValue=""
       value={xmlInput}

@@ -15,7 +15,7 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
   updateBaseContent,
 }) => {
   return (
-    <Grid item xs={1}>
+    <span>
       <VerticalOptionWidget
         content={content}
         baseContent={baseContent}
@@ -27,7 +27,7 @@ const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
         updateBaseContent={updateBaseContent}
       />
       <IssuesWidget expanded={viewSidebar} />
-    </Grid>
+    </span>
   );
 };
 

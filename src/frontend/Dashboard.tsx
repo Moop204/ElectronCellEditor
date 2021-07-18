@@ -19,6 +19,7 @@ import { UnexpandedSidebar } from "./sidebar/UnexpandedSidebar";
 import { ExpandedSidebar } from "./sidebar/ExpandedSidebar";
 import _ from "lodash";
 import { PresentationMath } from "./sidebar/math/PresentationMath";
+import { SidebarManager } from "./sidebar/SidebarManager";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -103,33 +104,49 @@ const Dashboard: FunctionComponent = () => {
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
+  // return (
+  //   <Router>
+  //     <ExpandedSidebar
+  //       content={contentExist}
+  //       switchSidebar={switchSidebar}
+  //       switchView={switchView}
+  //       viewSidebar={true}
+  //       view={true}
+  //       valid={true}
+  //       updateBaseContent={setBaseContent}
+  //     />
+  //   </Router>
+  // );
+
   return (
     <div className={styles.root}>
       <Router>
         <Grid container spacing={1} direction="row">
-          {viewSidebar && (
-            <ExpandedSidebar
-              content={contentExist}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
-              updateBaseContent={setBaseContent}
-            />
-          )}
-          {!viewSidebar && (
-            <UnexpandedSidebar
-              content={contentExist}
-              baseContent={baseContent}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
-              updateBaseContent={setBaseContent}
-            />
-          )}
+          <Grid item xs={viewSidebar ? 3 : 1}>
+            {viewSidebar && (
+              <ExpandedSidebar
+                content={contentExist}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+            {!viewSidebar && (
+              <UnexpandedSidebar
+                content={contentExist}
+                baseContent={baseContent}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+          </Grid>
           {/* <Grid item xs={viewSidebar ? 3 : 1}>
             <SidebarManager
               viewSidebar={viewSidebar}

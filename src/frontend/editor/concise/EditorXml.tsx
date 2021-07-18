@@ -13,7 +13,7 @@ const EditorXml: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
   return (
     <Box
       component="div"
-      style={{ height: "100%", overflowX: "hidden" }}
+      style={{ height: "95vh", overflowX: "hidden" }}
       overflow="scroll"
     >
       <XmlEditor

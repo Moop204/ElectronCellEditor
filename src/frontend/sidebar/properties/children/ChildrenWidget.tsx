@@ -62,8 +62,10 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   const styles = useStyle();
   return (
     <Grid
-      item
-      xs={12}
+      container
+      direction="column"
+      // item
+      // xs={12}
       // key={Object.entries(abstractChildren)
       //   .map(([parentKey, childrenType]) => {
       //     return childrenType
@@ -74,28 +76,27 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
       //   })
       //   .join("-")}
     >
-      <Box style={{ height: "100%", backgroundColor: "#fff" }}>
-        {Object.entries(abstractChildren).length > 0 && (
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Children
-          </Typography>
-        )}
+      {/* <Box style={{ height: "100%", backgroundColor: "#fff" }}> */}
+      {Object.entries(abstractChildren).length > 0 && (
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Children
+        </Typography>
+      )}
 
-        {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
-          if (childrenType.length > 0)
-            return (
-              <div
-                key={parentKey}
-                className={styles.childCategory}
-                style={{ paddingLeft: "1vw" }}
-              >
-                <Divider variant="middle" />
-                <Typography variant="h5">
-                  {capitaliseFirst(parentKey)}
-                </Typography>
-                {Object.values(childrenType).map(
-                  (attrType: IChild, index: number) => {
-                    return (
+      {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
+        if (childrenType.length > 0)
+          return (
+            <div
+              key={parentKey}
+              className={styles.childCategory}
+              style={{ paddingLeft: "2vw" }}
+            >
+              <Divider variant="middle" />
+              <Typography variant="h5">{capitaliseFirst(parentKey)}</Typography>
+              {Object.values(childrenType).map(
+                (attrType: IChild, index: number) => {
+                  return (
+                    <Grid container direction="row-reverse">
                       <PropertyIcon
                         title={attrType.name}
                         onClick={() => {
@@ -111,13 +112,14 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                         index={index}
                         parentName={attrType.parentName}
                       />
-                    );
-                  }
-                )}
-              </div>
-            );
-        })}
-      </Box>
+                    </Grid>
+                  );
+                }
+              )}
+            </div>
+          );
+      })}
+      {/* </Box> */}
     </Grid>
   );
 };
