@@ -7,6 +7,7 @@ enum Elements {
   variable, // TODO: Remove maybe?
   connection,
   none, // For Model parents
+  math,
 }
 
 const strToElm = (s: string) => {
