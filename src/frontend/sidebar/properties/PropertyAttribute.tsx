@@ -20,6 +20,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Units } from "../../../types/ILibcellml";
 import { AllStandardUnits } from "../../../utility/StandardUnitConverter";
 import { AllInterfaceType } from "../../../utility/InterfaceConverter";
+import { ElementHelp } from "../help/ElementHelp";
+import { Elements } from "../../../types/Elements";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -28,6 +30,9 @@ const useStyle = makeStyles(() =>
     },
     contentEdit: {
       width: "100%",
+    },
+    formHeader: {
+      justifyContent: "space-between",
     },
   })
 );
@@ -156,7 +161,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             <Grid item xs={2}>
               <InputLabel>{processAttribute(title)}</InputLabel>
             </Grid>
-            <Grid item xs={10} justifyContent="center">
+            <Grid item xs={10}>
               <span onClick={handleOpen}>
                 {value && (
                   <Button fullWidth>
@@ -173,7 +178,21 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             aria-labelledby="form-dialog-title"
             className={style.contentEdit}
           >
-            <DialogTitle id="form-dialog-title">Edit MathML</DialogTitle>
+            <DialogTitle id="form-dialog-title" className={style.formHeader}>
+              <Grid container>
+                <Grid item xs={8}>
+                  Edit MathML
+                </Grid>
+                <Grid item xs={2}>
+                  <ElementHelp type={Elements.math} />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button onClick={handleClose} color="primary">
+                    Close
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogTitle>
             <DialogContent className={style.mathEdit}>
               <Grid container item xs={10}>
                 <EditorMonaco
@@ -184,11 +203,6 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
                 />
               </Grid>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Close
-              </Button>
-            </DialogActions>
           </Dialog>
         </Card>
       </Grid>
