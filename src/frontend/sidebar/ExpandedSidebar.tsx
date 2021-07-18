@@ -30,7 +30,7 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
         valid={valid}
         updateBaseContent={updateBaseContent}
       />
-      {primaryContent}
+      {view && valid ? <PropertiesWidget /> : <IssuesWidget expanded={true} />}
     </div>
   );
 };
