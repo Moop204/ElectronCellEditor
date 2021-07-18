@@ -13,8 +13,9 @@ import { ISidebar } from "../ISidebar";
 
 const useStyle = makeStyles(() =>
   createStyles({
-    padding: {
+    options: {
       padding: "0px",
+      height: "5vh",
     },
   })
 );
@@ -34,32 +35,30 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   }, []);
 
   return (
-    <Grid container item xs={12} className={style.padding}>
-      <Paper style={{ width: "100%" }}>
-        <Grid container item xs={12}>
-          {view && (
-            <Grid item xs={2}>
-              <TextViewButton onClick={switchView} expanded={true} />
-            </Grid>
-          )}
-          {!view && (
-            <Grid item xs={2}>
-              <SpatialViewButton onClick={switchView} expanded={true} />
-            </Grid>
-          )}
+    <Grid container item xs={12} className={style.options}>
+      <Grid container item xs={12}>
+        {view && (
           <Grid item xs={2}>
-            <VisibilityButton onClick={switchSidebar} expanded={true} />
+            <TextViewButton onClick={switchView} expanded={true} />
           </Grid>
+        )}
+        {!view && (
           <Grid item xs={2}>
-            <SaveButton
-              color={baseContent === content ? "primary" : "secondary"}
-              expanded={true}
-              content={content}
-              updateBaseContent={updateBaseContent}
-            />
+            <SpatialViewButton onClick={switchView} expanded={true} />
           </Grid>
+        )}
+        <Grid item xs={2}>
+          <VisibilityButton onClick={switchSidebar} expanded={true} />
         </Grid>
-      </Paper>
+        <Grid item xs={2}>
+          <SaveButton
+            color={baseContent === content ? "primary" : "secondary"}
+            expanded={true}
+            content={content}
+            updateBaseContent={updateBaseContent}
+          />
+        </Grid>
+      </Grid>
     </Grid>
   );
 };

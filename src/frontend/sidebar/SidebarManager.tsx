@@ -28,33 +28,32 @@ const SidebarManager: FunctionComponent<ISidebarManager> = ({
   switchSidebar,
   switchView,
 }) => {
-  return (
-    <div>
-      {viewSidebar && (
-        <ExpandedSidebar
-          content={content}
-          switchSidebar={switchSidebar}
-          switchView={switchView}
-          viewSidebar={viewSidebar}
-          view={view}
-          valid={valid}
-          updateBaseContent={setBaseContent}
-        />
-      )}
-      {!viewSidebar && (
-        <UnexpandedSidebar
-          content={content}
-          baseContent={baseContent}
-          switchSidebar={switchSidebar}
-          switchView={switchView}
-          viewSidebar={viewSidebar}
-          view={view}
-          valid={valid}
-          updateBaseContent={setBaseContent}
-        />
-      )}
-    </div>
-  );
+  if (viewSidebar) {
+    return (
+      <ExpandedSidebar
+        content={content}
+        switchSidebar={switchSidebar}
+        switchView={switchView}
+        viewSidebar={viewSidebar}
+        view={view}
+        valid={valid}
+        updateBaseContent={setBaseContent}
+      />
+    );
+  } else {
+    return (
+      <UnexpandedSidebar
+        content={content}
+        baseContent={baseContent}
+        switchSidebar={switchSidebar}
+        switchView={switchView}
+        viewSidebar={viewSidebar}
+        view={view}
+        valid={valid}
+        updateBaseContent={setBaseContent}
+      />
+    );
+  }
 };
 
 export { SidebarManager };

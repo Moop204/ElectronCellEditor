@@ -52,6 +52,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
 
   useEffect(() => {
     const errorReplyFn = (event: Event, issues: IssueDescriptor[]) => {
+      console.log(issues);
       setIssues(issues || []);
     };
     const dbErrorReplyFn = errorReplyFn;
@@ -107,12 +108,10 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     );
   }
   return (
-    <Paper style={{ height: "94%" }}>
-      <Grid container>
+    <Paper style={{ height: "95vh" }}>
+      <Grid container style={{ padding: "5px" }}>
         <Grid item xs={5}>
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Issues
-          </Typography>
+          <Typography variant="h4">Issues</Typography>
         </Grid>
         <Grid container item xs={7}>
           <br />

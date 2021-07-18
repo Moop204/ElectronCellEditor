@@ -33,8 +33,20 @@ const useStyle = makeStyles(() =>
       marginTop: "0.5vh",
       //marginLeft: "1vw",
     },
+    root: {
+      flexGrow: 1,
+    },
   })
 );
+
+const truncateText = (s: string) => {
+  const len = s.length;
+  if (s.length > 28) {
+    return s.substr(0, 25) + "...";
+  } else {
+    return s;
+  }
+};
 
 const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   const { onClick, title, element, index, parentName } = props;
@@ -68,7 +80,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
 
   if (element === "connection") {
     return (
-      <Grid item container xs={10}>
+      <Grid container className={style.root}>
         <Grid item xs={10}>
           <Button
             variant="outlined"
@@ -81,7 +93,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
                 {icon}
               </Grid>
               <Grid item xs={10}>
-                {title}
+                {truncateText(title)}
               </Grid>
             </Grid>
           </Button>
@@ -115,7 +127,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
               {icon}
             </Grid>
             <Grid item xs={10}>
-              {title}
+              {truncateText(title)}
             </Grid>
           </Grid>
         </Button>

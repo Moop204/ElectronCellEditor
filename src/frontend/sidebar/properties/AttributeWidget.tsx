@@ -1,4 +1,9 @@
-import { Typography } from "@material-ui/core";
+import {
+  Button,
+  createStyles,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import React, { FunctionComponent } from "react";
 import PropertyAttribute from "./PropertyAttribute";
@@ -6,12 +11,25 @@ import PropertyAttribute from "./PropertyAttribute";
 interface IAttributeWidget {
   handleChange: (attrType: string, attrVal: string, index: number) => void;
   attribute: Record<string, string>;
+  updateAttribute: any;
 }
+
+const useStyle = makeStyles(() =>
+  createStyles({
+    updateButton: {
+      height: "50px",
+      marginTop: "0.5vh",
+    },
+  })
+);
 
 const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
   handleChange,
   attribute,
+  updateAttribute,
 }) => {
+  const styles = useStyle();
+
   return (
     <Grid item xs={12}>
       <Typography variant="h5" style={{ paddingLeft: "5px" }}>
@@ -27,6 +45,14 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
           onChange={handleChange}
         />
       ))}
+      <Button
+        variant="outlined"
+        onClick={updateAttribute}
+        fullWidth
+        className={styles.updateButton}
+      >
+        Update Attribute
+      </Button>
     </Grid>
   );
 };

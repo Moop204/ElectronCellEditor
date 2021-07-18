@@ -4,30 +4,30 @@ import _ from "lodash";
 import { Theme } from "@material-ui/core/styles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Button from "@material-ui/core/Button";
 import { IProperties } from "../../../types/IProperties";
-import { Elements, elmToStr } from "../../../types/Elements";
-import { ISelection, IUpdate } from "../../../types/IQuery";
+import { Elements } from "../../../types/Elements";
+import { ISelection } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
-import { Box, IconButton, Paper, Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { AttributeWidget } from "./AttributeWidget";
-import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
 import { UnitWidget } from "./UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
-import { ElementHelp } from "../help/ElementHelp";
-import { ConnectionWidget } from "./ConnectionWidget";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
 
 const localStyles = makeStyles(() =>
   createStyles({
     propertyWidget: {
-      leftPadding: "5px",
+      leftPadding: "1wv",
+      rightPading: "1wv",
     },
     subElementType: {
       display: "flex",
       justifyContent: "flex-end",
       fontSize: "1.2em",
+    },
+    updateButton: {
+      height: "50px",
     },
     plainText: {
       color: "black",
@@ -39,14 +39,19 @@ const localStyles = makeStyles(() =>
     },
     properties: {
       height: "70vh",
-      width: "100%",
-      alignContent: "flex-start",
+      leftPadding: "1wv",
+      rightPading: "1wv",
+
+      //      alignContent: "flex-start",
     },
     updateAttribute: {
       marginTop: "2vh",
     },
     headerSeparator: {
-      marginTop: "1vh",
+      marginTop: "0.5vh",
+    },
+    childrenHeader: {
+      marginRight: "8px",
     },
   })
 );
@@ -154,16 +159,17 @@ const PropertiesWidget: FunctionComponent = () => {
 
   if (abstractModel.type === Elements.none) {
     return (
-      <Grid item className={styles.plainText} style={{ height: "100%" }}>
-        <Paper className={styles.propertyWidget} style={{ height: "100%" }}>
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Properties
-          </Typography>
-          <Typography variant="body1" style={{ paddingLeft: "5px" }}>
-            No CellML element available to select. Please use a valid CellML
-            file.
-          </Typography>
-        </Paper>
+      <Grid
+        item
+        className={styles.plainText + styles.propertyWidget}
+        style={{ height: "100%" }}
+      >
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Properties
+        </Typography>
+        <Typography variant="body1" style={{ paddingLeft: "5px" }}>
+          No CellML element available to select. Please use a valid CellML file.
+        </Typography>
       </Grid>
     );
   }
@@ -227,72 +233,51 @@ const PropertiesWidget: FunctionComponent = () => {
 
   if (abstractModel.attribute.name) {
     return (
-      <Grid container className={styles.properties} style={{ height: "100vh" }}>
-        <Box
-          component="div"
-          className={styles.propertyWidget}
-          style={{ height: "100%", overflowX: "hidden" }}
-          overflow="scroll"
-        >
-          <Paper style={{ height: "100%" }}>
+      <Box
+        component="div"
+        className={styles.propertyWidget}
+        style={{ height: "95vh", overflowX: "hidden" }}
+        overflow="scroll"
+      >
+        <Paper style={{ height: "95vh" }}>
+          <Grid
+            container
+            className={styles.properties}
+            spacing={1}
+            justifyContent="flex-start"
+          >
             <Typography variant="h4" style={{ paddingLeft: "5px" }}>
               Properties
             </Typography>
-            <Grid container item className={styles.plainText} direction="row">
-              <Grid item className={styles.elementType} xs={2}>
-                <IconButton
-                  onClick={() => {
-                    window.api.send("resetParent");
-                  }}
-                >
-                  <ArrowBackIosIcon />
-                </IconButton>
-              </Grid>
-              <Grid item className={styles.elementType} xs={10}>
-                <Typography variant="h5" style={{ paddingRight: "5px" }}>
-                  {capitaliseFirst(elmToStr(abstractModel.type))}
-                </Typography>
-                <ElementHelp type={abstractModel.type} />
-              </Grid>
-            </Grid>
-            <Grid item className={styles.elementType} xs={12}>
-              <AttributeWidget
-                attribute={abstractModel.attribute}
-                handleChange={handleAttributeChange}
-              />
-            </Grid>
-            <Grid item xs={12} className={styles.updateAttribute}>
-              <Button
-                variant="outlined"
-                onClick={sendAttributeUpdate}
-                fullWidth
-              >
-                Update Attribute
-              </Button>
-            </Grid>
+            <PropertiesWidgetTop type={abstractModel.type} />
+            <AttributeWidget
+              attribute={abstractModel.attribute}
+              handleChange={handleAttributeChange}
+              updateAttribute={sendAttributeUpdate}
+            />
 
-            <div className={styles.headerSeparator}>
+            {abstractModel.unit.length > 0 && (
               <UnitWidget
                 unitMap={abstractModel.unit}
                 parentName={abstractModel.attribute.name}
               />
-            </div>
-            <div className={styles.headerSeparator}>
-              <ChildrenWidget
-                abstractChildren={abstractModel.children}
-                parentType={abstractModel.type}
-                resetChanges={resetChanges}
-              />
-            </div>
-            <div className={styles.headerSeparator}>
-              <AddChildrenWidget
-                element={abstractModel.type}
-                name={abstractModel.attribute.name}
-              />
-            </div>
-          </Paper>
-        </Box>
-      </Grid>
+            )}
+            {Object.entries(abstractModel.children).length > 0 && (
+              <span className={styles.childrenHeader}>
+                <ChildrenWidget
+                  abstractChildren={abstractModel.children}
+                  parentType={abstractModel.type}
+                  resetChanges={resetChanges}
+                />
+              </span>
+            )}
+            <AddChildrenWidget
+              element={abstractModel.type}
+              name={abstractModel.attribute.name}
+            />
+          </Grid>
+        </Paper>
+      </Box>
     );
   } else {
     return (
@@ -313,29 +298,13 @@ const PropertiesWidget: FunctionComponent = () => {
             <Typography variant="h4" style={{ paddingLeft: "5px" }}>
               Properties
             </Typography>
+            <PropertiesWidgetTop type={abstractModel.type} />
             <Grid container item className={styles.plainText}>
-              <Grid item className={styles.elementType} xs={2}>
-                <IconButton
-                  onClick={() => {
-                    window.api.send("resetParent");
-                  }}
-                >
-                  <ArrowBackIosIcon />
-                </IconButton>
-              </Grid>
-              <Grid item className={styles.elementType} xs={10}>
-                <Typography variant="h5" style={{ paddingRight: "5px" }}>
-                  {capitaliseFirst(elmToStr(abstractModel.type))}
-                </Typography>
-                <ElementHelp type={abstractModel.type} />
-              </Grid>
               <AttributeWidget
                 attribute={abstractModel.attribute}
                 handleChange={handleAttributeChange}
+                updateAttribute={sendAttributeUpdate}
               />
-              <Grid item className={styles.updateAttribute}>
-                <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
-              </Grid>
             </Grid>
           </Paper>
         </Box>

@@ -239,6 +239,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async importFile(fileLoc: string): Promise<FileIssues> {
     const file: string = fs.readFileSync(fileLoc, "utf8");
+    console.log(file);
     this.selectedFile = fileLoc;
     try {
       const validator = await validateModel(this, file);
@@ -258,6 +259,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         model: file,
         issues: issues,
       };
+      console.log(this.content);
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
