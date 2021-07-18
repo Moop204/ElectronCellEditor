@@ -26,6 +26,8 @@ const localStyles = makeStyles(() =>
     root: {
       flexGrow: 1,
       marginLeft: 0,
+      // width: "100vh",
+      // overflowY: "hidden",
     },
     contentView: {
       height: "100vh",

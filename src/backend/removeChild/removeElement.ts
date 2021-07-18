@@ -12,6 +12,8 @@ import {
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { RemoveComponent } from "./removeComponent";
+import { RemoveUnits } from "./removeUnits";
+import { RemoveVariable } from "./removeVariable";
 
 const RemoveElement = async (
   fm: FileManagement,
@@ -26,7 +28,11 @@ const RemoveElement = async (
       await RemoveComponent(fm, child);
       break;
     case Elements.units:
+      await RemoveUnits(fm, child);
+      break;
     case Elements.variable:
+      await RemoveVariable(fm, child);
+      break;
     case Elements.reset:
     case Elements.unit:
     default:
