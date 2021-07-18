@@ -177,6 +177,7 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
           value={formik.values.reset_value}
           multiline
           rows={4}
+          required
           onChange={formik.handleChange}
           error={
             formik.touched.reset_value && Boolean(formik.errors.reset_value)
@@ -191,6 +192,7 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
           value={formik.values.test_value}
           multiline
           rows={4}
+          required
           onChange={formik.handleChange}
           error={formik.touched.test_value && Boolean(formik.errors.test_value)}
           helperText={formik.touched.test_value && formik.errors.test_value}

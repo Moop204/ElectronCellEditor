@@ -139,7 +139,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
           )}
         </Grid>
 
-        <FormControl fullWidth>
+        <FormControl fullWidth required>
           <InputLabel id="units" error={Boolean(formik.errors.units)}>
             Units
           </InputLabel>
@@ -149,6 +149,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
             name="units"
             value={formik.values.units}
             onChange={formik.handleChange}
+            required
             label="units"
             input={<Input />}
             error={formik.touched.units && Boolean(formik.errors.units)}

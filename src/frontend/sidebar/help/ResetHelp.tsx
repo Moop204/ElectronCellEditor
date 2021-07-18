@@ -34,6 +34,9 @@ const ResetHelp: FunctionComponent = () => {
       <i>Test Variable*</i> - The name of a Variable whose value triggers the
       change.
       <br />
+      <i>Order*</i> - The priority of this Reset element. A higher number means
+      the reset will be applied after Resets with lower order.
+      <br />
       <br />
       <b>Children</b>
       <br />
