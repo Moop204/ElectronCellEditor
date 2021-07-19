@@ -14,11 +14,15 @@ import MathJax from "mathjax3-react";
 import { Elements } from "../../../types/Elements";
 import { UnitEditForm } from "./addChildren/form/UnitEditForm";
 import { ElementHelp } from "../help/ElementHelp";
+import { DeleteButton } from "./children/DeleteButton";
+import { Description } from "@material-ui/icons";
 
 interface IUnitForm {
   parentName: string;
-  unit: UnitDescriptor;
-  index: number;
+  units: {
+    description: UnitDescriptor;
+    index: number;
+  }[];
 }
 
 const useStyle = makeStyles(() =>
@@ -29,49 +33,96 @@ const useStyle = makeStyles(() =>
   })
 );
 
-const UnitEdit = ({ unit, parentName, index }: IUnitForm) => {
-  const { reference, prefix, exponent, multiplier, imported } = unit;
+interface IUnitMath {
+  description: UnitDescriptor;
+  parentName: string;
+  index: number;
+  onClick: () => void;
+}
+
+const UnitMath: FunctionComponent<IUnitMath> = ({
+  description: { prefix, reference, exponent, multiplier, imported },
+  onClick,
+  parentName,
+  index,
+}) => {
+  return (
+    <Grid container style={{ width: "100%" }}>
+      <Grid item xs={1}>
+        {imported && "I"}
+      </Grid>
+      <Grid item xs={10} onClick={onClick}>
+        <MathJax.Formula
+          formula={`$$ ${
+            multiplier !== 1 ? multiplier.toString() + "*" : ""
+          }${prefix}${
+            reference.length > 30 ? reference.substr(0, 27) + "..." : reference
+          }^{${exponent !== 1 ? exponent : ""}} $$`}
+        />
+      </Grid>
+      <Grid item xs={1}>
+        <DeleteButton
+          elementType={Elements.unit}
+          name={parentName}
+          index={index}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
+const UnitHeading = () => {
+  return (
+    <Grid container item direction="row">
+      <Grid item xs={9} style={{ backgroundColor: "#236" }}>
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Edit Unit
+        </Typography>
+      </Grid>
+      <Grid item xs={3} style={{ backgroundColor: "#712" }}>
+        {/* <ElementHelp type={Elements.unit} /> */}X{" "}
+      </Grid>
+    </Grid>
+  );
+};
+
+const UnitEdit = ({ units, parentName }: IUnitForm) => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const style = useStyle();
   return (
     <Grid item container xs={12}>
-      <div style={{ width: "100%" }} onClick={handleClickOpen}>
-        <MathJax.Provider>
-          <MathJax.Formula
-            formula={`$$${
-              multiplier !== 1 ? multiplier.toString() + "*" : ""
-            }${prefix}${reference}^{${exponent !== 1 ? exponent : ""}}$$`}
-          />
-        </MathJax.Provider>
-        <Grid item xs={1}>
-          {imported && "I"}
-        </Grid>
-      </div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          <Grid container item direction="row">
-            <Grid item xs={10}>
-              <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-                Edit Unit
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <ElementHelp type={Elements.unit} />
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <div className={style.buffer}>
-          <UnitEditForm
-            parentName={parentName}
-            handleClose={handleClose}
-            unit={unit}
-            parent={Elements.units}
-            index={index}
-          />
-        </div>
-      </Dialog>
+      <MathJax.Provider>
+        {units.map((description, index) => {
+          return (
+            <div>
+              <div style={{ width: "100%" }}>
+                <UnitMath
+                  description={description.description}
+                  onClick={handleClickOpen}
+                  parentName={parentName}
+                  index={index}
+                />
+              </div>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                  <UnitHeading />
+                </DialogTitle>
+                <div className={style.buffer}>
+                  <UnitEditForm
+                    parentName={parentName}
+                    handleClose={handleClose}
+                    unit={description.description}
+                    parent={Elements.units}
+                    index={index}
+                  />
+                </div>
+              </Dialog>
+            </div>
+          );
+        })}
+      </MathJax.Provider>
     </Grid>
   );
 };
@@ -102,13 +153,7 @@ const UnitWidget: FunctionComponent<IUnitWidget> = ({
           </Grid>
         </Grid>
       )}
-      {unitMap.map((unit, index) => (
-        <UnitEdit
-          unit={unit.description}
-          index={index}
-          parentName={parentName}
-        />
-      ))}
+      <UnitEdit units={unitMap} parentName={parentName} />
     </Grid>
   );
 };

@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
-import { DeleteButton } from "./DeleteChildren";
 
 const findElement = (elm: Elements, name: string, index: number) => {
   const select: ISearch = { index, name };
