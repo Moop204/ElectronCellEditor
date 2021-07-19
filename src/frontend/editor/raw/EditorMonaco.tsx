@@ -41,6 +41,10 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
               "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
             decreaseIndentPattern: "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$",
           },
+          surroundingPairs: [
+            ["<", ">"],
+            ['"', '"'],
+          ],
         };
       },
     });

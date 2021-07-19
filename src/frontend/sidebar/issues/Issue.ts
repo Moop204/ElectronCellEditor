@@ -4,6 +4,7 @@ interface IssueDescriptor {
   desc: string;
   cause: string;
   type: Level;
+  url: string;
 }
 
 interface IssueList {

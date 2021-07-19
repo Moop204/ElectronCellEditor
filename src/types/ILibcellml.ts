@@ -343,6 +343,7 @@ interface Issue {
   setVariable(variable: Variable): void;
   reset(): Reset;
   setReset(reset: Reset): void;
+  url(): string;
 }
 
 interface Component extends ComponentEntity, ImportedEntity {
