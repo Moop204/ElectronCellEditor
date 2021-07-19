@@ -4,17 +4,20 @@ import { Component, Model, Reset } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 
-// Generate new model and current Reset
-const updateOrder = (
-  model: Model,
-  curElm: Reset,
-  value: string,
-  search: ISearch
-) => {
+// Change the variable referenced for Reset
+const updateVariable = (model: Model, curElm: Reset, value: string) => {
   console.log("UPDATING ATTRIBUTE: Updating Order");
   console.log("Order " + value + typeof value);
+  const variable = value;
+  // Find variable
+  const parent = curElm.parent() as Component;
+  const parentName = parent.name();
+  const newVar = model
+    .componentByName(parentName, true)
+    .variableByName(variable);
+
   if (curElm) {
-    (curElm as Reset).setOrder(parseInt(value));
+    (curElm as Reset).setVariable(newVar);
     console.log(curElm);
     const parent = curElm.parent() as Component;
     const parentName = parent.name();
@@ -34,9 +37,8 @@ const updateOrder = (
     }
     model
       .componentByName(parentName, true)
-
       .reset(resetIndex)
-      .setOrder(parseInt(value));
+      .setVariable(newVar);
     return {
       newModel: model,
       newCurrentElement: curElm as Reset,
@@ -48,4 +50,4 @@ const updateOrder = (
   };
 };
 
-export { updateOrder };
+export { updateVariable };

@@ -8,20 +8,21 @@ import Card from "@material-ui/core/Card";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import React, { useState, FunctionComponent } from "react";
-import IPropertyAttribute from "../../../types/IPropertyAttribute";
+import IPropertyAttribute from "../../../../types/IPropertyAttribute";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { EditorMonaco } from "../../editor/raw/EditorMonaco";
-import { PresentationMath } from "../math/PresentationMath";
-import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
+import { EditorMonaco } from "../../../editor/raw/EditorMonaco";
+import { PresentationMath } from "../../math/PresentationMath";
+import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
 import { FormControl, Select, Input, FormHelperText } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { Units } from "../../../types/ILibcellml";
-import { AllStandardUnits } from "../../../utility/StandardUnitConverter";
-import { AllInterfaceType } from "../../../utility/InterfaceConverter";
-import { ElementHelp } from "../help/ElementHelp";
-import { Elements } from "../../../types/Elements";
+import { Units } from "../../../../types/ILibcellml";
+import { AllStandardUnits } from "../../../../utility/StandardUnitConverter";
+import { AllInterfaceType } from "../../../../utility/InterfaceConverter";
+import { ElementHelp } from "../../help/ElementHelp";
+import { Elements } from "../../../../types/Elements";
+import { VariableAttr } from "./VariableAttr";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -65,6 +66,7 @@ const processAttribute = (title: string) => {
 
 const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
   const { title, value, onChange, index } = props;
+  const [error, setError] = useState(false);
   // if (title === 'math') {
   //   return (
   //     <Grid container item direction="row">
@@ -91,7 +93,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
               id="interface"
               name="interface"
               value={value}
-              onChange={(e) => onChange(title, e.target.value)}
+              onChange={(e) => onChange(title, e.target.value, index)}
               label="units"
               input={<Input />}
             >
@@ -124,7 +126,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
               id="units"
               name="units"
               value={value}
-              onChange={(e) => onChange(title, e.target.value)}
+              onChange={(e) => onChange(title, e.target.value, index)}
               label="units"
               input={<Input />}
             >
@@ -140,9 +142,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         </Grid>
       </Grid>
     );
-  }
-
-  if (isMathAttribute(title)) {
+  } else if (isMathAttribute(title)) {
     const [mathSelect, setMathSelect] = useState(false);
     const handleClose = () => {
       setMathSelect(false);
@@ -198,7 +198,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
                 <EditorMonaco
                   xmlInput={value}
                   onChange={(val: string) => {
-                    onChange(title, val);
+                    onChange(title, val, index);
                   }}
                 />
               </Grid>
@@ -207,27 +207,55 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         </Card>
       </Grid>
     );
-  }
+  } else {
+    let form = (
+      <TextField
+        error={error}
+        id={title}
+        value={value}
+        onChange={(e) => {
+          if (e.target.value.match(/[^a-zA-Z_]/)) {
+            setError(true);
+          } else {
+            setError(false);
+            onChange(title, e.target.value, index);
+          }
+        }}
+        helperText={
+          error && "Only alphabetical letters and _ are valid characters."
+        }
+        rows={1}
+        fullWidth
+      />
+    );
+    switch (title) {
+      case "variable":
+      case "test_variable":
+        form = (
+          <VariableAttr
+            title={title}
+            value={value}
+            index={index}
+            onChange={onChange}
+          />
+        );
+    }
 
-  return (
-    <div>
-      <Grid container item direction="row">
-        <Grid container item xs={12}>
-          <Grid item xs={2}>
-            <InputLabel>{processAttribute(title)}</InputLabel>
-          </Grid>
-          <Grid item xs={10}>
-            <TextField
-              value={value}
-              onChange={(e) => onChange(title, e.target.value)}
-              rows={1}
-              fullWidth
-            />
+    return (
+      <div>
+        <Grid container item direction="row">
+          <Grid container item xs={12}>
+            <Grid item xs={2}>
+              <InputLabel id={title}>{processAttribute(title)}</InputLabel>
+            </Grid>
+            <Grid item xs={10}>
+              {form}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default PropertyAttribute;

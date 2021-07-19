@@ -1,10 +1,5 @@
-import { Grid, Button } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { ExpandedSidebar } from "./ExpandedSidebar";
-import { AddChildrenWidget } from "./properties/addChildren/AddChildrenWidget";
-import { AttributeWidget } from "./properties/AttributeWidget";
-import { ChildrenWidget } from "./properties/children/ChildrenWidget";
-import { UnitWidget } from "./properties/UnitWidget";
 import { UnexpandedSidebar } from "./UnexpandedSidebar";
 
 interface ISidebarManager {

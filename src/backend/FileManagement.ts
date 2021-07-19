@@ -23,17 +23,18 @@ import { ChildDetail } from "../types/ChildDetail";
 const fs = require("fs");
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-// const libcellModule = require("libcellml.js/libcellml.common");
 
-// import libCellMLModule from "libcellml.js";
-// import libCellMLWasm from "libcellml.js/libcellml.wasm";
+// const libcellModule = require("libcellml.js/libcellml.common");
 
 import libCellMLModule from "./mainLibcellml/libcellml.js";
 import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
-import { getAllVariableNames } from "./utility/GetAllVariableNames";
+import {
+  getAllVariableNames,
+  getGlobalVariableNames,
+} from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
@@ -452,6 +453,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       event.returnValue = await getAllVariableNames(this);
     });
 
+    // Returns a list of all variables in the model
+    // Placeholder until bindings for equivalence is completed
+    ipcMain.on("global-variable", async (event: IpcMainEvent) => {
+      event.returnValue = await getGlobalVariableNames(this);
+    });
+
     // TODO: Complete implementation. Similar to find-element-from-children
     ipcMain.on(
       "delete-element",
@@ -463,7 +470,11 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       }
     );
 
-    // ipcMain.on("");
+    ipcMain.on("parent-name", (event: IpcMainEvent) => {
+      event.returnValue = (
+        this.getCurrentComponent().parent() as NamedEntity
+      ).name();
+    });
   }
 
   destroyHandlers(): void {

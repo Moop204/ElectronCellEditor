@@ -4,21 +4,17 @@ import { Component, Model, Reset } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 
-// Generate new model and current Reset
-const updateOrder = (
-  model: Model,
-  curElm: Reset,
-  value: string,
-  search: ISearch
-) => {
-  console.log("UPDATING ATTRIBUTE: Updating Order");
-  console.log("Order " + value + typeof value);
+// Change the reset value for Reset
+const updateTestValue = (model: Model, curElm: Reset, value: string) => {
+  console.log("UPDATING ATTRIBUTE: Updating Test Value");
+  console.log(value);
+
   if (curElm) {
-    (curElm as Reset).setOrder(parseInt(value));
-    console.log(curElm);
+    // Updating current element
+    (curElm as Reset).setTestValue(value);
+    // Find Reset index
     const parent = curElm.parent() as Component;
     const parentName = parent.name();
-    // Find Reset index
     let resetIndex = 0;
     for (let i = 0; i < parent.resetCount(); i++) {
       if (
@@ -32,11 +28,11 @@ const updateOrder = (
         console.log(curElm.order() + " " + parent.reset(i).order());
       }
     }
+    // Updating model
     model
       .componentByName(parentName, true)
-
       .reset(resetIndex)
-      .setOrder(parseInt(value));
+      .setTestValue(value);
     return {
       newModel: model,
       newCurrentElement: curElm as Reset,
@@ -48,4 +44,4 @@ const updateOrder = (
   };
 };
 
-export { updateOrder };
+export { updateTestValue };
