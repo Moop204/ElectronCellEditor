@@ -1,5 +1,6 @@
 import React, { useState, FunctionComponent } from "react";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
+import { autoFill } from "./autofill/Autofill";
 // import { Path } from "history";
 // import { autoFill } from "./autofill/Autofill";
 // import path from "path";
@@ -15,6 +16,7 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
 }) => {
   const handleBeforeMount = (monaco: Monaco) => {
     monaco.languages.registerCompletionItemProvider("xml", {
+      //@ts-ignore
       provideCompletionItems(model, position, context, token) {
         // // Provide stronger context
         // // find out if we are completing a property in the 'dependencies' object.
@@ -24,19 +26,25 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
         // //   endLineNumber: position.lineNumber,
         // //   endColumn: position.column,
         // // });
-        // const word = model.getWordUntilPosition(position);
-        // const range = new monaco.Range(
-        //   position.lineNumber,
-        //   word.startColumn,
-        //   position.lineNumber,
-        //   word.endColumn
-        // );
-        return null;
-        // {
-        //   suggestions: autoFill(range, monaco),
-        // };
+        const word = model.getWordUntilPosition(position);
+        const range = new monaco.Range(
+          position.lineNumber,
+          word.startColumn,
+          position.lineNumber,
+          word.endColumn
+        );
+        // return null;
+        return {
+          suggestions: autoFill(range, monaco),
+          indentationRules: {
+            increaseIndentPattern:
+              "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
+            decreaseIndentPattern: "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$",
+          },
+        };
       },
     });
+    monaco.languages.IndentAction;
   };
 
   return (

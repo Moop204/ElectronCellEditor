@@ -4,17 +4,24 @@ import { Component, Model, Reset } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 
-// Generate new model and current Reset
-const updateOrder = (
-  model: Model,
-  curElm: Reset,
-  value: string,
-  search: ISearch
-) => {
-  console.log("UPDATING ATTRIBUTE: Updating Order");
-  console.log("Order " + value + typeof value);
+// Change the test variable referenced for Reset
+// @model - Model that will be changed
+// @curElm - Currently selected reset
+// @value - Name of the variable. Variable must exist within the current Element.
+const updateTestVariable = (model: Model, curElm: Reset, value: string) => {
+  console.log("UPDATING ATTRIBUTE: Updating Test Variable");
+  console.log(value);
+
+  const variable = value;
+  // Find variable
+  const parent = curElm.parent() as Component;
+  const parentName = parent.name();
+  const newVar = model
+    .componentByName(parentName, true)
+    .variableByName(variable);
+
   if (curElm) {
-    (curElm as Reset).setOrder(parseInt(value));
+    (curElm as Reset).setTestVariable(newVar);
     console.log(curElm);
     const parent = curElm.parent() as Component;
     const parentName = parent.name();
@@ -34,9 +41,8 @@ const updateOrder = (
     }
     model
       .componentByName(parentName, true)
-
       .reset(resetIndex)
-      .setOrder(parseInt(value));
+      .setTestVariable(newVar);
     return {
       newModel: model,
       newCurrentElement: curElm as Reset,
@@ -48,4 +54,4 @@ const updateOrder = (
   };
 };
 
-export { updateOrder };
+export { updateTestVariable };

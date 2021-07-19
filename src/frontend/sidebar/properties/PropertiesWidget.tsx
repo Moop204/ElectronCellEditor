@@ -9,7 +9,7 @@ import { Elements } from "../../../types/Elements";
 import { ISelection } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
 import { Box, Paper, Typography } from "@material-ui/core";
-import { AttributeWidget } from "./AttributeWidget";
+import { AttributeWidget } from "./attributes/AttributeWidget";
 import { UnitWidget } from "./UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
@@ -135,6 +135,7 @@ const PropertiesWidget: FunctionComponent = () => {
     return () => {
       window.api.remove("res-select-element", handleUpdateAbstractModel);
       window.api.remove("init-content", handleInitContent);
+      window.api.remove("res-get-element", handleReceiveSelectedElement);
     };
   }, []);
 
@@ -231,86 +232,79 @@ const PropertiesWidget: FunctionComponent = () => {
     setDiffSet([]);
   };
 
+  let propertyContent;
   if (abstractModel.attribute.name) {
-    return (
-      <Box
-        component="div"
-        className={styles.propertyWidget}
-        style={{ height: "95vh", overflowX: "hidden" }}
-        overflow="scroll"
-      >
-        <Paper style={{ height: "95vh" }}>
-          <Grid
-            container
-            className={styles.properties}
-            spacing={1}
-            justifyContent="flex-start"
-          >
-            <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-              Properties
-            </Typography>
-            <PropertiesWidgetTop type={abstractModel.type} />
-            <AttributeWidget
-              attribute={abstractModel.attribute}
-              handleChange={handleAttributeChange}
-              updateAttribute={sendAttributeUpdate}
-            />
-
-            {abstractModel.unit.length > 0 && (
-              <UnitWidget
-                unitMap={abstractModel.unit}
-                parentName={abstractModel.attribute.name}
-              />
-            )}
-            {Object.entries(abstractModel.children).length > 0 && (
-              <span className={styles.childrenHeader}>
-                <ChildrenWidget
-                  abstractChildren={abstractModel.children}
-                  parentType={abstractModel.type}
-                  resetChanges={resetChanges}
-                />
-              </span>
-            )}
-            <AddChildrenWidget
-              element={abstractModel.type}
-              name={abstractModel.attribute.name}
-            />
-          </Grid>
-        </Paper>
-      </Box>
-    );
-  } else {
-    return (
+    propertyContent = (
       <Grid
         container
-        item
         className={styles.properties}
-        xs={12}
-        style={{ height: "60%" }}
+        spacing={1}
+        justifyContent="flex-start"
       >
-        <Box
-          component="div"
-          className={styles.propertyWidget}
-          style={{ height: "100%", overflowX: "hidden" }}
-          overflow="scroll"
-        >
-          <Paper style={{ height: "100%" }}>
-            <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-              Properties
-            </Typography>
-            <PropertiesWidgetTop type={abstractModel.type} />
-            <Grid container item className={styles.plainText}>
-              <AttributeWidget
-                attribute={abstractModel.attribute}
-                handleChange={handleAttributeChange}
-                updateAttribute={sendAttributeUpdate}
-              />
-            </Grid>
-          </Paper>
-        </Box>
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Properties
+        </Typography>
+        <PropertiesWidgetTop type={abstractModel.type} />
+        <AttributeWidget
+          attribute={abstractModel.attribute}
+          handleChange={handleAttributeChange}
+          updateAttribute={sendAttributeUpdate}
+        />
+
+        {abstractModel.unit.length > 0 && (
+          <UnitWidget
+            unitMap={abstractModel.unit}
+            parentName={abstractModel.attribute.name}
+          />
+        )}
+        {Object.entries(abstractModel.children).length > 0 && (
+          <span className={styles.childrenHeader}>
+            <ChildrenWidget
+              abstractChildren={abstractModel.children}
+              parentType={abstractModel.type}
+              resetChanges={resetChanges}
+            />
+          </span>
+        )}
+        <AddChildrenWidget
+          element={abstractModel.type}
+          name={abstractModel.attribute.name}
+        />
+      </Grid>
+    );
+  } else {
+    propertyContent = (
+      <Grid
+        container
+        className={styles.properties}
+        spacing={1}
+        justifyContent="flex-start"
+      >
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Properties
+        </Typography>
+        <PropertiesWidgetTop type={abstractModel.type} />
+        <Grid container item className={styles.plainText}>
+          <AttributeWidget
+            attribute={abstractModel.attribute}
+            handleChange={handleAttributeChange}
+            updateAttribute={sendAttributeUpdate}
+          />
+        </Grid>
       </Grid>
     );
   }
+
+  return (
+    <Box
+      component="div"
+      className={styles.propertyWidget}
+      style={{ height: "95vh", overflowX: "hidden" }}
+      overflow="scroll"
+    >
+      <Paper style={{ height: "95vh" }}>{propertyContent}</Paper>
+    </Box>
+  );
 };
 
 export { PropertiesWidget, updateAttr, AttributeChange };

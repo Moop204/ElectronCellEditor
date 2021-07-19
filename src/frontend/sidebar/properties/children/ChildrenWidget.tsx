@@ -95,7 +95,11 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
               {Object.values(childrenType).map(
                 (attrType: IChild, index: number) => {
                   return (
-                    <Grid container direction="row-reverse">
+                    <Grid
+                      container
+                      direction="row-reverse"
+                      key={parentKey + attrType.name}
+                    >
                       <PropertyIcon
                         title={attrType.name}
                         onClick={() => {
