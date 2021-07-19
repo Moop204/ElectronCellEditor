@@ -17,7 +17,7 @@ import { RulerIcon } from "../../../assets/RulerIcon";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
 import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
-import { DeleteButton } from "./DeleteChildren";
+import { DeleteButton } from "./DeleteButton";
 
 interface IPropertyIcon {
   title: string;

@@ -15,6 +15,7 @@ import { RemoveComponent } from "./removeComponent";
 import { RemoveUnits } from "./removeUnits";
 import { RemoveVariable } from "./removeVariable";
 import { RemoveReset } from "./removeReset";
+import { RemoveUnit } from "./RemoveUnit";
 
 const RemoveElement = async (
   fm: FileManagement,
@@ -37,6 +38,7 @@ const RemoveElement = async (
     case Elements.reset:
       await RemoveReset(fm, child);
     case Elements.unit:
+      await RemoveUnit(fm, child);
     default:
       console.log("FM: Remove child - should not reach here");
       console.log(elmToStr(type));

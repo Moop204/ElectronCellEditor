@@ -55,7 +55,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
   unit: { reference, prefix, exponent, multiplier },
 }) => {
   let validUnits: string[] = AllStandardUnits();
-  validUnits = [...validUnits, ...window.api.sendSync("all-units")];
+  validUnits = [...window.api.sendSync("all-units"), ...validUnits];
   const validPrefix = AllPrefix();
   const validationSchema = validation(validPrefix, validUnits);
   const [baseReference, setReference] = useState(reference);
