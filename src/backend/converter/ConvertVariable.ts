@@ -8,8 +8,10 @@ interface IEquivalentVar {
   parentName: string;
 }
 
+// Convert Variable into property-ready format
 const convertVariable = (variable: Variable) => {
-  console.log(variable);
+  // Obtain equivalent variable details
+  // Equivalent to variables with Connections
   const eqVarCount: number = variable.equivalentVariableCount();
   const eqVarNameList: IEquivalentVar[] = [];
   for (let i = 0; i < eqVarCount; i += 1) {
@@ -17,7 +19,7 @@ const convertVariable = (variable: Variable) => {
     const parentName = (v.parent() as Component).name();
     eqVarNameList.push({ name: v.name(), parentName });
   }
-
+  // Formatting information
   const varProp: IProperties = {
     type: Elements.variable,
     attribute: {
@@ -35,7 +37,6 @@ const convertVariable = (variable: Variable) => {
     },
     unit: [],
   };
-
   return varProp;
 };
 

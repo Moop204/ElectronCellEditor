@@ -1,14 +1,4 @@
 import { Elements, elmToStr } from "../../types/Elements";
-import { ChildDetail } from "../../types/ChildDetail";
-import {
-  Parser,
-  Printer,
-  Model,
-  Units,
-  Variable,
-  InterfaceType,
-  Component,
-} from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { RemoveComponent } from "./removeComponent";
