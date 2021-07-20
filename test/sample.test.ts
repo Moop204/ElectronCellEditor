@@ -1,22 +1,28 @@
-import React from "react";
 import FileManagement from "../src/backend/FileManagement";
 
 const libcellModule = require("libcellml.js/libcellml.common");
 
 import assert from "assert";
-import { Printer } from "../src/types/ILibcellml";
+import { Printer, Units } from "../src/types/ILibcellml";
 import { stripMath } from "../src/frontend/sidebar/math/stripMath";
 
 describe("array", () => {
-  it("checking type", async () => {
+  it("checks for imported", async () => {
     const fm = new FileManagement();
     await fm.init();
-    const cellml = fm._cellml;
-    const m = new cellml.Model();
-    const c1 = new cellml.Component();
-    console.log(c1 instanceof fm._cellml.Component);
-    assert.strictEqual(JSON.stringify(c1), JSON.stringify(m));
+    const u: Units = new fm._cellml.Units();
+    u.setName("a");
+    assert.strictEqual(u.isImport(), false);
   });
+  // it("checking type", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+  //   const cellml = fm._cellml;
+  //   const m = new cellml.Model();
+  //   const c1 = new cellml.Component();
+  //   console.log(c1 instanceof fm._cellml.Component);
+  //   assert.strictEqual(JSON.stringify(c1), JSON.stringify(m));
+  // });
   // it("cuts down on math string", async () => {
   //   const working = `<apply><eq/> <apply><diff/> <bvar><ci>t</ci></bvar> <ci>N</ci> </apply> <apply><divide/> <apply><times/> <ci>r</ci> <ci>N</ci> <apply><minus/> <ci>K</ci> <ci>N</ci> </apply> </apply> <bvar><ci>K</ci></bvar> </apply> </apply>`;
   //   const bugged = `<math xmlns="http://www.w3.org/1998/Math/MathML">
