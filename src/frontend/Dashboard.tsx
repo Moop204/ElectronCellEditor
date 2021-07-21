@@ -21,6 +21,8 @@ import _ from "lodash";
 import { PresentationMath } from "./sidebar/math/PresentationMath";
 import { SidebarManager } from "./sidebar/SidebarManager";
 
+global.Buffer = global.Buffer || require("buffer").Buffer;
+
 const localStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -120,34 +122,34 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <div className={styles.root}>
-      <Router>
-        <Grid container spacing={1} direction="row">
-          <Grid item xs={viewSidebar ? 3 : 1}>
-            {viewSidebar && (
-              <ExpandedSidebar
-                content={contentExist}
-                switchSidebar={switchSidebar}
-                switchView={switchView}
-                viewSidebar={viewSidebar}
-                view={view}
-                valid={valid}
-                updateBaseContent={setBaseContent}
-              />
-            )}
-            {!viewSidebar && (
-              <UnexpandedSidebar
-                content={contentExist}
-                baseContent={baseContent}
-                switchSidebar={switchSidebar}
-                switchView={switchView}
-                viewSidebar={viewSidebar}
-                view={view}
-                valid={valid}
-                updateBaseContent={setBaseContent}
-              />
-            )}
-          </Grid>
-          {/* <Grid item xs={viewSidebar ? 3 : 1}>
+      {/* <Router> */}
+      <Grid container spacing={1} direction="row">
+        <Grid item xs={viewSidebar ? 3 : 1}>
+          {viewSidebar && (
+            <ExpandedSidebar
+              content={contentExist}
+              switchSidebar={switchSidebar}
+              switchView={switchView}
+              viewSidebar={viewSidebar}
+              view={view}
+              valid={valid}
+              updateBaseContent={setBaseContent}
+            />
+          )}
+          {!viewSidebar && (
+            <UnexpandedSidebar
+              content={contentExist}
+              baseContent={baseContent}
+              switchSidebar={switchSidebar}
+              switchView={switchView}
+              viewSidebar={viewSidebar}
+              view={view}
+              valid={valid}
+              updateBaseContent={setBaseContent}
+            />
+          )}
+        </Grid>
+        {/* <Grid item xs={viewSidebar ? 3 : 1}>
             <SidebarManager
               viewSidebar={viewSidebar}
               view={view}
@@ -160,10 +162,10 @@ const Dashboard: FunctionComponent = () => {
             />
           </Grid> */}
 
-          <Grid item xs={viewSidebar ? 9 : 11}>
-            <Paper className={styles.contentView}>
-              <Paper className={styles.tabbing}></Paper>
-              <Switch>
+        <Grid item xs={viewSidebar ? 9 : 11}>
+          <Paper className={styles.contentView}>
+            <Paper className={styles.tabbing}></Paper>
+            {/* <Switch>
                 <Route exact path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
@@ -176,27 +178,6 @@ const Dashboard: FunctionComponent = () => {
                 </Route>
 
                 <Route exact path="">
-                  {/* <PresentationMath
-                    mathml={`      <apply><eq/> 
-                    <apply><diff/>
-                      <bvar><ci>t</ci></bvar>
-                      <ci>N</ci>
-                    </apply>
-                    <apply><divide/>
-                      <apply><times/>
-                        <ci>r</ci>
-                        <ci>N</ci>
-                        <apply><minus/> 
-                          <ci>K</ci>
-                          <ci>N</ci>
-                        </apply> 
-                      </apply>
-                      <bvar><ci>K</ci></bvar>
-                    </apply>        
-                  </apply>            
-            `}  
-                  /> */}
-
                   {!valid && (
                     <Alert severity="error">
                       File is not in valid CellML. You cannot use Concise View
@@ -209,11 +190,11 @@ const Dashboard: FunctionComponent = () => {
                     key="raw-view"
                   />
                 </Route>
-              </Switch>
-            </Paper>
-          </Grid>
+              </Switch> */}
+          </Paper>
         </Grid>
-      </Router>
+      </Grid>
+      {/* </Router> */}
     </div>
   );
 };

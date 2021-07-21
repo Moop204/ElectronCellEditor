@@ -19,15 +19,11 @@ const SpatialViewButton: FunctionComponent<ISpatialViewButton> = ({
   return (
     <div>
       <Tooltip title="Concise View">
-        <Link to="/concise">
-          <IconButton
-            aria-label="Concise View"
-            color="primary"
-            onClick={onClick}
-          >
-            <StorageIcon />
-          </IconButton>
-        </Link>
+        {/* <Link to="/concise"> */}
+        <IconButton aria-label="Concise View" color="primary" onClick={onClick}>
+          <StorageIcon />
+        </IconButton>
+        {/* </Link> */}
       </Tooltip>
     </div>
   );

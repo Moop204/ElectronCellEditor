@@ -20,6 +20,9 @@ const localStyles = makeStyles(() =>
     propertyWidget: {
       leftPadding: "1wv",
     },
+    root: {
+      flexGrow: 1,
+    },
   })
 );
 
@@ -28,7 +31,12 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
 }) => {
   const style = localStyles();
   return (
-    <Grid container direction="row">
+    <Grid
+      container
+      direction="row"
+      alignContent="space-between"
+      className={style.root}
+    >
       <Grid item xs={1}>
         <IconButton
           onClick={() => {
@@ -38,13 +46,23 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
           <ArrowBackIosIcon />
         </IconButton>
       </Grid>
-      <Grid item xs={11}>
-        <Typography variant="h5" style={{ paddingRight: "5px" }}>
-          {capitaliseFirst(elmToStr(type))}
-        </Typography>
-        <span>
-          <ElementHelp type={type} />
-        </span>
+      <Grid
+        item
+        container
+        xs={11}
+        alignContent="space-between"
+        direction="row-reverse"
+      >
+        <Grid item>
+          <Typography variant="h5" style={{ paddingRight: "5px" }}>
+            {capitaliseFirst(elmToStr(type))}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <span>
+            <ElementHelp type={type} />
+          </span>
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -5,12 +5,9 @@ import { ISearch, ISelect } from "../../../../types/IQuery";
 import PropertyIcon from "./PropertyIcon";
 import Grid from "@material-ui/core/Grid";
 import {
-  Box,
-  Button,
   createStyles,
   Divider,
   makeStyles,
-  Paper,
   Typography,
 } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
@@ -62,20 +59,10 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   return (
     <Grid
       container
+      item
       direction="column"
-      // item
-      // xs={12}
-      // key={Object.entries(abstractChildren)
-      //   .map(([parentKey, childrenType]) => {
-      //     return childrenType
-      //       .map((attrType: IChild) => {
-      //         return attrType.name;
-      //       })
-      //       .join("-");
-      //   })
-      //   .join("-")}
+      style={{ paddingRight: "20px", display: "grid" }}
     >
-      {/* <Box style={{ height: "100%", backgroundColor: "#fff" }}> */}
       {Object.entries(abstractChildren).length > 0 && (
         <Typography variant="h4" style={{ paddingLeft: "5px" }}>
           Children
@@ -122,7 +109,6 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
             </div>
           );
       })}
-      {/* </Box> */}
     </Grid>
   );
 };

@@ -156,55 +156,55 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
 
     return (
       <Grid container item direction="row">
-        <Card>
-          <Grid container>
-            <Grid item xs={2}>
-              <InputLabel>{processAttribute(title)}</InputLabel>
-            </Grid>
-            <Grid item xs={10}>
-              <span onClick={handleOpen}>
-                {value && (
-                  <Button fullWidth>
-                    <PresentationMath mathml={value} />
-                  </Button>
-                )}
-                {!value && <TextField onSelect={handleOpen} />}
-              </span>
-            </Grid>
+        {/* <Card> */}
+        <Grid container item>
+          <Grid item xs={2}>
+            <InputLabel>{processAttribute(title)}</InputLabel>
           </Grid>
-          <Dialog
-            open={mathSelect}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-            className={style.contentEdit}
-          >
-            <DialogTitle id="form-dialog-title" className={style.formHeader}>
-              <Grid container>
-                <Grid item xs={8}>
-                  Edit MathML
-                </Grid>
-                <Grid item xs={2}>
-                  <ElementHelp type={Elements.math} />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button onClick={handleClose} color="primary">
-                    Close
-                  </Button>
-                </Grid>
+          <Grid item xs={10}>
+            <span onClick={handleOpen}>
+              {value && (
+                <Button fullWidth>
+                  <PresentationMath mathml={value} />
+                </Button>
+              )}
+              {!value && <TextField onSelect={handleOpen} />}
+            </span>
+          </Grid>
+        </Grid>
+        <Dialog
+          open={mathSelect}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+          className={style.contentEdit}
+        >
+          <DialogTitle id="form-dialog-title" className={style.formHeader}>
+            <Grid container>
+              <Grid item xs={8}>
+                Edit MathML
               </Grid>
-            </DialogTitle>
-            <DialogContent className={style.mathEdit}>
-              <Grid container item xs={10}>
-                <EditorMonaco
-                  xmlInput={value}
-                  onChange={(val: string) => {
-                    onChange(title, val, index);
-                  }}
-                />
+              <Grid item xs={2}>
+                <ElementHelp type={Elements.math} />
               </Grid>
-            </DialogContent>
-          </Dialog>
-        </Card>
+              <Grid item xs={2}>
+                <Button onClick={handleClose} color="primary">
+                  Close
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogTitle>
+          <DialogContent className={style.mathEdit}>
+            <Grid container item xs={10}>
+              <EditorMonaco
+                xmlInput={value}
+                onChange={(val: string) => {
+                  onChange(title, val, index);
+                }}
+              />
+            </Grid>
+          </DialogContent>
+        </Dialog>
+        {/* </Card> */}
       </Grid>
     );
   } else {

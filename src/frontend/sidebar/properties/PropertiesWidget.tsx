@@ -41,7 +41,7 @@ const localStyles = makeStyles(() =>
       height: "70vh",
       leftPadding: "1wv",
       rightPading: "1wv",
-
+      alignContent: "start",
       //      alignContent: "flex-start",
     },
     updateAttribute: {
@@ -149,7 +149,7 @@ const PropertiesWidget: FunctionComponent = () => {
   if (!abstractModel) {
     window.api.send("get-element");
     return (
-      <Grid item className={styles.plainText}>
+      <Grid item className={styles.plainText} style={{ height: "100vh" }}>
         <Typography variant="h4" style={{ paddingLeft: "5px" }}>
           Properties
         </Typography>
@@ -163,7 +163,7 @@ const PropertiesWidget: FunctionComponent = () => {
       <Grid
         item
         className={styles.plainText + styles.propertyWidget}
-        style={{ height: "100%" }}
+        style={{ height: "100vh" }}
       >
         <Typography variant="h4" style={{ paddingLeft: "5px" }}>
           Properties
@@ -241,7 +241,7 @@ const PropertiesWidget: FunctionComponent = () => {
         spacing={1}
         justifyContent="flex-start"
       >
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+        <Typography variant="h2" style={{ paddingLeft: "5px" }}>
           Properties
         </Typography>
         <PropertiesWidgetTop type={abstractModel.type} />
@@ -258,13 +258,11 @@ const PropertiesWidget: FunctionComponent = () => {
           />
         )}
         {Object.entries(abstractModel.children).length > 0 && (
-          <span className={styles.childrenHeader}>
-            <ChildrenWidget
-              abstractChildren={abstractModel.children}
-              parentType={abstractModel.type}
-              resetChanges={resetChanges}
-            />
-          </span>
+          <ChildrenWidget
+            abstractChildren={abstractModel.children}
+            parentType={abstractModel.type}
+            resetChanges={resetChanges}
+          />
         )}
         <AddChildrenWidget
           element={abstractModel.type}
@@ -280,7 +278,7 @@ const PropertiesWidget: FunctionComponent = () => {
         spacing={1}
         justifyContent="flex-start"
       >
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+        <Typography variant="h2" style={{ paddingLeft: "5px" }}>
           Properties
         </Typography>
         <PropertiesWidgetTop type={abstractModel.type} />
@@ -302,7 +300,9 @@ const PropertiesWidget: FunctionComponent = () => {
       style={{ height: "95vh", overflowX: "hidden" }}
       overflow="scroll"
     >
-      <Paper style={{ height: "95vh" }}>{propertyContent}</Paper>
+      {/* <Paper elevation={0} style={{ height: "95vh" }}> */}
+      {propertyContent}
+      {/* </Paper> */}
     </Box>
   );
 };

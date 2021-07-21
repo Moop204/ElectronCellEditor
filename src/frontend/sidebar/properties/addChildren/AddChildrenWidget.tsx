@@ -41,7 +41,7 @@ const AddChildrenWidget: FunctionComponent<IAddChild> = ({ element, name }) => {
     <Grid item xs={12}>
       <Paper style={{ height: "100%" }}>
         {children.length > 0 && (
-          <Typography variant="h5" style={{ paddingLeft: "5px" }}>
+          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
             Add Children
           </Typography>
         )}
