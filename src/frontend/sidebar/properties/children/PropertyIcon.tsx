@@ -31,18 +31,28 @@ const useStyle = makeStyles(() =>
   createStyles({
     button: {
       marginTop: "0.5vh",
+      paddingLeft: "3px",
       //marginLeft: "1vw",
+      paddingRight: "0px",
+      maxWidth: "16vw",
     },
     root: {
       flexGrow: 1,
+    },
+    buttonText: {
+      paddingLeft: "8px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      justifyContent: "left",
+      textAlign: "justify",
+      textTransform: "none",
     },
   })
 );
 
 const truncateText = (s: string) => {
-  const len = s.length;
-  if (s.length > 28) {
-    return s.substr(0, 25) + "...";
+  if (s.length > 23) {
+    return s.substr(0, 20) + "...";
   } else {
     return s;
   }
@@ -121,13 +131,18 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   return (
     <Grid container direction="row" key={element + title}>
       <Grid item xs={11} className={style.button}>
-        <Button variant="outlined" onClick={onClick} fullWidth>
+        <Button
+          variant="outlined"
+          onClick={onClick}
+          fullWidth
+          className={style.button}
+        >
           <Grid container>
             <Grid item xs={1}>
               {icon}
             </Grid>
-            <Grid item xs={10}>
-              {truncateText(title)}
+            <Grid item xs={11} className={style.buttonText}>
+              {title}
             </Grid>
           </Grid>
         </Button>

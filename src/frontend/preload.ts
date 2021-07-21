@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-
+import { Buffer } from "buffer";
 declare global {
   interface Window {
     api: {

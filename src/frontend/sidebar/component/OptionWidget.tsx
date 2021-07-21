@@ -5,7 +5,7 @@ import { SpatialViewButton } from "./SpatialViewButton";
 import { VisibilityButton } from "./VisibilityButton";
 import { useState, useEffect } from "react";
 import { IOptionButtonProp } from "./IOptionButtonProp";
-import { Paper } from "@material-ui/core";
+import { Button, Paper } from "@material-ui/core";
 import { SaveButton } from "./SaveButton";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -30,6 +30,7 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
 }) => {
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
+  const [elementSearch, setElementSearch] = useState(false);
   useEffect(() => {
     setBaseContent(content);
   }, []);
@@ -57,6 +58,9 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
             content={content}
             updateBaseContent={updateBaseContent}
           />
+        </Grid>
+        <Grid item xs={2}>
+          <Button onClick={() => setElementSearch(true)}>FIND</Button>
         </Grid>
       </Grid>
     </Grid>

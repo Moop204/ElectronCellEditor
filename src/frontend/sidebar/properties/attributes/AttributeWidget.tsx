@@ -32,7 +32,7 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
 
   return (
     <Grid item xs={12}>
-      <Typography variant="h5" style={{ paddingLeft: "5px" }}>
+      <Typography variant="h4" style={{ paddingLeft: "5px" }}>
         Attributes
       </Typography>
       {Object.entries(attribute).map(([attrTitle, attrVal], idx) => (

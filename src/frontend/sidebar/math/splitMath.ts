@@ -1,8 +1,10 @@
 import { IXmlElement, IXmlJs } from "../../../backend/compressCellml";
 import xml from "xml-js";
+import { Buffer } from "buffer";
 import { string } from "yup/lib/locale";
 
 const splitMath = (mathml: string): string[] => {
+  // return [mathml];
   const parsed: IXmlJs = JSON.parse(
     xml.xml2json(mathml, { compact: false, spaces: 4 })
   );
