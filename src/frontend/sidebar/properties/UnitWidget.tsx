@@ -93,36 +93,34 @@ const UnitEdit = ({ units, parentName }: IUnitForm) => {
   const style = useStyle();
   return (
     <Grid item container xs={12}>
-      <MathJax.Provider>
-        {units.map((description, index) => {
-          return (
-            <div>
-              <div style={{ width: "100%" }}>
-                <UnitMath
-                  description={description.description}
-                  onClick={handleClickOpen}
+      {units.map((description, index) => {
+        return (
+          <div>
+            <div style={{ width: "100%" }}>
+              <UnitMath
+                description={description.description}
+                onClick={handleClickOpen}
+                parentName={parentName}
+                index={index}
+              />
+            </div>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>
+                <UnitHeading />
+              </DialogTitle>
+              <div className={style.buffer}>
+                <UnitEditForm
                   parentName={parentName}
+                  handleClose={handleClose}
+                  unit={description.description}
+                  parent={Elements.units}
                   index={index}
                 />
               </div>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>
-                  <UnitHeading />
-                </DialogTitle>
-                <div className={style.buffer}>
-                  <UnitEditForm
-                    parentName={parentName}
-                    handleClose={handleClose}
-                    unit={description.description}
-                    parent={Elements.units}
-                    index={index}
-                  />
-                </div>
-              </Dialog>
-            </div>
-          );
-        })}
-      </MathJax.Provider>
+            </Dialog>
+          </div>
+        );
+      })}
     </Grid>
   );
 };

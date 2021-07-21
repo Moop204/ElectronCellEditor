@@ -38,17 +38,15 @@ const AddChildrenWidget: FunctionComponent<IAddChild> = ({ element, name }) => {
       return <div></div>;
   }
   return (
-    <Grid item xs={12}>
-      <Paper style={{ height: "100%" }}>
-        {children.length > 0 && (
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Add Children
-          </Typography>
-        )}
-        {children.map((elm) => {
-          return AddChild(elm, element, name);
-        })}
-      </Paper>
+    <Grid container item>
+      {children.length > 0 && (
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Add Children
+        </Typography>
+      )}
+      {children.map((elm) => {
+        return AddChild(elm, element, name);
+      })}
     </Grid>
   );
 };

@@ -20,6 +20,7 @@ import { ExpandedSidebar } from "./sidebar/ExpandedSidebar";
 import _ from "lodash";
 import { PresentationMath } from "./sidebar/math/PresentationMath";
 import { SidebarManager } from "./sidebar/SidebarManager";
+import MathJax from "mathjax3-react";
 
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
@@ -122,34 +123,35 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <div className={styles.root}>
-      {/* <Router> */}
-      <Grid container spacing={1} direction="row">
-        <Grid item xs={viewSidebar ? 3 : 1}>
-          {viewSidebar && (
-            <ExpandedSidebar
-              content={contentExist}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
-              updateBaseContent={setBaseContent}
-            />
-          )}
-          {!viewSidebar && (
-            <UnexpandedSidebar
-              content={contentExist}
-              baseContent={baseContent}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
-              updateBaseContent={setBaseContent}
-            />
-          )}
-        </Grid>
-        {/* <Grid item xs={viewSidebar ? 3 : 1}>
+      <MathJax.Provider>
+        {/* <Router> */}
+        <Grid container spacing={1} direction="row">
+          <Grid item xs={viewSidebar ? 3 : 1}>
+            {viewSidebar && (
+              <ExpandedSidebar
+                content={contentExist}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+            {!viewSidebar && (
+              <UnexpandedSidebar
+                content={contentExist}
+                baseContent={baseContent}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+          </Grid>
+          {/* <Grid item xs={viewSidebar ? 3 : 1}>
             <SidebarManager
               viewSidebar={viewSidebar}
               view={view}
@@ -162,10 +164,10 @@ const Dashboard: FunctionComponent = () => {
             />
           </Grid> */}
 
-        <Grid item xs={viewSidebar ? 9 : 11}>
-          <Paper className={styles.contentView}>
-            <Paper className={styles.tabbing}></Paper>
-            {/* <Switch>
+          <Grid item xs={viewSidebar ? 9 : 11}>
+            <Paper className={styles.contentView}>
+              <Paper className={styles.tabbing}></Paper>
+              {/* <Switch>
                 <Route exact path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
@@ -191,10 +193,11 @@ const Dashboard: FunctionComponent = () => {
                   />
                 </Route>
               </Switch> */}
-          </Paper>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-      {/* </Router> */}
+        {/* </Router> */}
+      </MathJax.Provider>
     </div>
   );
 };

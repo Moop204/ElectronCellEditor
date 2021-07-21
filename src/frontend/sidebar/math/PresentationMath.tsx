@@ -8,15 +8,22 @@ interface IMath {
   mathml: string;
 }
 
+const ErrorMathMl: FunctionComponent = () => {
+  return <div>Invalid MathML Input</div>;
+};
+
 // Turns content mathml into presentation mathml
 // MathML written in cellml is always content type
 const convertToPresentation = (mathml: string) => {
   // Stripping mathml of math outer tag
-  mathml = stripMath(mathml);
+  const strippedMathml = stripMath(mathml);
+  if (mathml !== "" && strippedMathml === "") {
+    return <ErrorMathMl />;
+  }
   console.log(mathml);
   // Processing
   const parser = new DOMParser();
-  const documentSource = parser.parseFromString(mathml, "text/xml");
+  const documentSource = parser.parseFromString(strippedMathml, "text/xml");
   const transform = parser.parseFromString(ctop, "text/xml");
   const xsltProcessor = new XSLTProcessor();
   xsltProcessor.importStylesheet(transform);
@@ -47,13 +54,16 @@ const PresentFormula: FunctionComponent<IMath> = ({ mathml }) => {
 
 const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
   const formulas = splitMath(mathml);
+  if (formulas.length === 0) {
+    return <ErrorMathMl />;
+  }
   return (
     <div>
-      <MathJax.Provider>
-        {formulas.map((formula) => (
-          <PresentFormula mathml={formula} />
-        ))}
-      </MathJax.Provider>
+      {/* <MathJax.Provider> */}
+      {formulas.map((formula) => (
+        <PresentFormula mathml={formula} />
+      ))}
+      {/* </MathJax.Provider> */}
     </div>
   );
 };
