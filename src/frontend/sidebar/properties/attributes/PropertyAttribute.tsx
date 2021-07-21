@@ -23,14 +23,15 @@ import { AllInterfaceType } from "../../../../utility/InterfaceConverter";
 import { ElementHelp } from "../../help/ElementHelp";
 import { Elements } from "../../../../types/Elements";
 import { VariableAttr } from "./VariableAttr";
+import { EditMathDialog } from "./EditMathDialog";
 
 const useStyle = makeStyles(() =>
   createStyles({
     mathEdit: {
-      width: "80vw",
+      width: "100vw",
     },
     contentEdit: {
-      width: "100%",
+      width: "100vw",
     },
     formHeader: {
       justifyContent: "space-between",
@@ -156,7 +157,6 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
 
     return (
       <Grid container item direction="row">
-        {/* <Card> */}
         <Grid container item>
           <Grid item xs={2}>
             <InputLabel>{processAttribute(title)}</InputLabel>
@@ -172,18 +172,26 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             </span>
           </Grid>
         </Grid>
-        <Dialog
+        <EditMathDialog
+          open={mathSelect}
+          title={title}
+          index={index}
+          updateDetail={onChange}
+          handleClose={handleClose}
+          value={value}
+        />
+
+        {/* <Dialog
           open={mathSelect}
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
           className={style.contentEdit}
+          fullWidth
         >
           <DialogTitle id="form-dialog-title" className={style.formHeader}>
             <Grid container>
-              <Grid item xs={8}>
+              <Grid container item xs={10} direction="row">
                 Edit MathML
-              </Grid>
-              <Grid item xs={2}>
                 <ElementHelp type={Elements.math} />
               </Grid>
               <Grid item xs={2}>
@@ -194,7 +202,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             </Grid>
           </DialogTitle>
           <DialogContent className={style.mathEdit}>
-            <Grid container item xs={10}>
+            <Grid container item>
               <EditorMonaco
                 xmlInput={value}
                 onChange={(val: string) => {
@@ -203,7 +211,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
               />
             </Grid>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
         {/* </Card> */}
       </Grid>
     );
