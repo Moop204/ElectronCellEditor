@@ -12,7 +12,13 @@ import {
   Parser,
   NamedEntity,
 } from "../types/ILibcellml";
-import { ISearch, ISelect, ISelection, IUpdate } from "../types/IQuery";
+import {
+  IDirectSelect,
+  ISearch,
+  ISelect,
+  ISelection,
+  IUpdate,
+} from "../types/IQuery";
 import {
   obtainIssues,
   validateModel,
@@ -40,6 +46,8 @@ import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveElement } from "./removeChild/removeElement";
 import { SaveAs } from "./../utility/Save";
+import { findElement } from "./utility/FindElement";
+import { generateModel } from "./addChild/generateModel";
 
 interface FileIssues {
   model: string;
@@ -169,72 +177,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       await fm.updateContent(printer.printModel(newModel, false));
     }
   };
-
-  // Find selected element
-  findElement(select: ISearch, element: Elements): void {
-    if (!this.currentComponent) {
-      return;
-    }
-    const { name, index } = select;
-
-    switch (element) {
-      case Elements.model:
-      case Elements.component:
-        {
-          const curComp = this.currentComponent as ComponentEntity;
-          if (name != null) {
-            this.currentComponent = curComp.componentByName(name, false);
-          } else if (index != null) {
-            this.currentComponent = curComp.componentByIndex(index);
-          }
-          this.type = Elements.component;
-        }
-        break;
-      case Elements.units:
-        {
-          // Parent
-          const curComp = this.currentComponent as Model;
-          if (name != null) {
-            if (curComp.hasUnitsByName(name)) {
-              this.currentComponent = curComp.unitsByName(name);
-            } else {
-              this.currentComponent = curComp.unitsByName(name.slice(1));
-            }
-          } else if (index != null) {
-            this.currentComponent = curComp.unitsByIndex(index);
-          }
-          this.type = Elements.units;
-        }
-        break;
-      case Elements.reset:
-        {
-          // Require to find in parent
-          const curComp = this.currentComponent as Component;
-          if (index != null) {
-            this.currentComponent = curComp.reset(index);
-          } else {
-            console.log("NO INDEX given FOR A RESET");
-          }
-          this.type = Elements.reset;
-          console.log("ELEMENT OF TYPE RESET");
-          console.log(this.currentComponent);
-        }
-        break;
-      case Elements.variable:
-        {
-          const curComp = this.getCurrentComponent() as Component;
-          this.setCurrentComponent(
-            curComp.variableByName(name as string),
-            Elements.variable
-          );
-        }
-        console.log("SET TYPE TO VARIABLE");
-        break;
-      default:
-        console.log("findElement failed to figure out which element it was");
-        break;
-    }
-  }
 
   // Import File
 
@@ -383,12 +325,20 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         console.log(`Looking for ${elmToStr(element)}`);
         console.log(select);
 
-        this.findElement(select, element);
+        findElement(this, select, element, this.getCurrentComponent());
 
-        console.log(`HEY LOOK ${elmToStr(this.type)}`);
         const selection = this.getCurrentAsSelection(element);
-        console.log("LOO AT ME I AH ERE");
-        console.log(selection);
+        event.reply("res-select-element", selection);
+      }
+    );
+
+    ipcMain.on(
+      "direct-find-element",
+      (event: IpcMainEvent, { element, select, parent }: IDirectSelect) => {
+        const m = generateModel(this._cellml, this.getContent());
+        const c = m.componentByName(parent, false);
+        findElement(this, select, element, c);
+        const selection = this.getCurrentAsSelection(element);
         event.reply("res-select-element", selection);
       }
     );

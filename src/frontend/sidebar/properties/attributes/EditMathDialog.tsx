@@ -37,7 +37,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
       open={open}
       onClose={handleSavedClose}
       aria-labelledby="form-dialog-title"
-      // className={style.contentEdit}
+      maxWidth="xl"
       fullWidth
     >
       <DialogTitle id="form-dialog-title">
@@ -54,13 +54,14 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
         </Grid>
       </DialogTitle>
       {/* <DialogContent className={style.mathEdit}> */}
-      <DialogContent>
+      <DialogContent style={{ overflow: "hidden" }}>
         <Grid container item>
           <EditorMonaco
             xmlInput={value}
             onChange={(val: string) => {
               setContent(val);
             }}
+            option={{ cellml: false, mathml: true }}
           />
         </Grid>
       </DialogContent>

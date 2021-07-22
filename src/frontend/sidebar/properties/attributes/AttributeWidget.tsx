@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import React, { FunctionComponent } from "react";
-import PropertyAttribute from "./PropertyAttribute";
+import { PropertyAttribute } from "./PropertyAttribute";
 
 interface IAttributeWidget {
   handleChange: (attrType: string, attrVal: string, index: number) => void;

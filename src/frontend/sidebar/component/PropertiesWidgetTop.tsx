@@ -13,6 +13,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 interface IPropertiesWidgetTop {
   type: Elements;
+  onClick: () => void;
 }
 
 const localStyles = makeStyles(() =>
@@ -28,6 +29,7 @@ const localStyles = makeStyles(() =>
 
 const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
   type,
+  onClick,
 }) => {
   const style = localStyles();
   return (
@@ -40,6 +42,7 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
       <Grid item xs={1}>
         <IconButton
           onClick={() => {
+            onClick();
             window.api.send("resetParent");
           }}
         >
