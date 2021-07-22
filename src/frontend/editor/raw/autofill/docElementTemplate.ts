@@ -18,3 +18,5 @@ const docElementTemplate = (
     triggerCharacters: "<",
   };
 };
+
+export { docElementTemplate };

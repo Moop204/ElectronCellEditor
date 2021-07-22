@@ -3,6 +3,7 @@ import { ctop } from "./ctop";
 import MathJax from "mathjax3-react";
 import { stripMath } from "./stripMath";
 import { splitMath } from "./splitMath";
+import { Grid } from "@material-ui/core";
 
 interface IMath {
   mathml: string;
@@ -58,13 +59,13 @@ const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
     return <ErrorMathMl />;
   }
   return (
-    <div>
+    <Grid style={{ textTransform: "none" }}>
       {/* <MathJax.Provider> */}
       {formulas.map((formula) => (
         <PresentFormula mathml={formula} />
       ))}
       {/* </MathJax.Provider> */}
-    </div>
+    </Grid>
   );
 };
 

@@ -44,6 +44,8 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
         disableEscapeKeyDown
         open={openHelp}
         onClose={() => setOpenHelp(false)}
+        maxWidth="lg"
+        fullWidth
       >
         <DialogTitle>
           <Grid container item xs={12}>

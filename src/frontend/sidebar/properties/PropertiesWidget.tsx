@@ -232,6 +232,8 @@ const PropertiesWidget: FunctionComponent = () => {
     setDiffSet([]);
   };
 
+  const handleNonSave = () => setDiffSet([]);
+
   let propertyContent;
   if (abstractModel.attribute.name) {
     propertyContent = (
@@ -244,7 +246,10 @@ const PropertiesWidget: FunctionComponent = () => {
         <Typography variant="h2" style={{ paddingLeft: "5px" }}>
           Properties
         </Typography>
-        <PropertiesWidgetTop type={abstractModel.type} />
+        <PropertiesWidgetTop
+          type={abstractModel.type}
+          onClick={handleNonSave}
+        />
         <AttributeWidget
           attribute={abstractModel.attribute}
           handleChange={handleAttributeChange}
@@ -281,7 +286,10 @@ const PropertiesWidget: FunctionComponent = () => {
         <Typography variant="h2" style={{ paddingLeft: "5px" }}>
           Properties
         </Typography>
-        <PropertiesWidgetTop type={abstractModel.type} />
+        <PropertiesWidgetTop
+          type={abstractModel.type}
+          onClick={handleNonSave}
+        />
         <Grid container item className={styles.plainText}>
           <AttributeWidget
             attribute={abstractModel.attribute}

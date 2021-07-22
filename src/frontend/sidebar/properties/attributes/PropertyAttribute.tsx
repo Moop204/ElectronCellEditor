@@ -24,6 +24,7 @@ import { ElementHelp } from "../../help/ElementHelp";
 import { Elements } from "../../../../types/Elements";
 import { VariableAttr } from "./VariableAttr";
 import { EditMathDialog } from "./EditMathDialog";
+import { UnitsAttribute } from "./UnitsAttribute";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -112,38 +113,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     );
   }
 
-  if (title === "units") {
-    let validUnits: string[] = AllStandardUnits();
-    validUnits = [...validUnits, ...window.api.sendSync("all-units")];
-    return (
-      <Grid container item xs={12}>
-        <Grid item xs={2}>
-          <InputLabel>{processAttribute(title)}</InputLabel>
-        </Grid>
-        <Grid item xs={10}>
-          <FormControl fullWidth>
-            <Select
-              labelId="units"
-              id="units"
-              name="units"
-              value={value}
-              onChange={(e) => onChange(title, e.target.value, index)}
-              label="units"
-              input={<Input />}
-            >
-              {validUnits.map((v: string) => {
-                return (
-                  <MenuItem key={v} value={v.toLowerCase()}>
-                    {v}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-    );
-  } else if (isMathAttribute(title)) {
+  if (isMathAttribute(title)) {
     const [mathSelect, setMathSelect] = useState(false);
     const handleClose = () => {
       setMathSelect(false);
@@ -247,6 +217,16 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             onChange={onChange}
           />
         );
+        break;
+      case "units":
+        form = (
+          <UnitsAttribute
+            title={title}
+            index={index}
+            value={value}
+            onChange={onChange}
+          />
+        );
     }
 
     return (
@@ -266,4 +246,4 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
   }
 };
 
-export default PropertyAttribute;
+export { PropertyAttribute, processAttribute };

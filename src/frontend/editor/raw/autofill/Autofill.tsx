@@ -1,4 +1,5 @@
 import Range, { Monaco } from "@monaco-editor/loader";
+import { docElementTemplate } from "./docElementTemplate";
 import { ElementObject } from "./ElementObject";
 
 const documentationTemplate = (
@@ -7,129 +8,394 @@ const documentationTemplate = (
   monaco: Monaco
 ) => {
   const { label, insertion, tooltip } = elementObject;
+
   return {
     kind: monaco.languages.CompletionItemKind.Constant,
     label: label,
     insertText: insertion,
-    insertTextRules: monaco.languages.CompletionItemKind.Snippet,
-    description: tooltip,
-    documentation: tooltip,
+    insertTextRules: monaco.languages.CompletionItemKind.Class,
+    description: "TIS DESCRIPTION", //tooltip,
+    documentation: "YEAH ITS THE DOCO", //tooltip,
+    detail: tooltip,
     range: range,
   };
 };
 
+// Tooltips taken from W3 Org's Documentation on MathML 3
+// https://www.w3.org/TR/MathML3
+// www.w3.org/TR/MathML3/chapter4.html
+// Copyright © [10 April 2014] World Wide Web Consortium, (MIT, ERCIM, Keio, Beihang). http://www.w3.org/Consortium/Legal/2015/doc-license`,
+const mathList: ElementObject[] = [
+  {
+    label: "ci",
+    insertion: "ci",
+    tooltip: `Content identifier used to refer to variables.`,
+  },
+  {
+    label: "cn",
+    insertion: "cn",
+    tooltip: `Content number element used to represent numbers. Includes integers, real numbers, and double precision floating point numbers.`,
+  },
+  {
+    label: "sep",
+    insertion: "sep",
+    tooltip: `A separator with different meaning depending on its parent. Please refer to https://www.w3.org/TR/MathML3/chapter4.html.`,
+  },
+  {
+    label: "apply",
+    insertion: "apply",
+    tooltip: `Applies a function or operator to its children.`,
+  },
+  {
+    label: "piecewise",
+    insertion: "piecewise",
+    tooltip: `Declares a piecewise function`,
+  },
+  {
+    label: "piece",
+    insertion: "piece",
+    tooltip: `Declares a function of the piecewise function. Children describes expression taken from function and condition for function respectively.`,
+  },
+  {
+    label: "otherwise",
+    insertion: "otherwise",
+    tooltip: `Declares a default function for the piecewise expression.`,
+  },
+  {
+    label: "eq",
+    insertion: "eq",
+    tooltip: `Equality relationship for following arguments.`,
+  },
+  {
+    label: "neg",
+    insertion: "neq",
+    tooltip: `Inequality relationship for two arguments.`,
+  },
+  {
+    label: "gt",
+    insertion: "gt",
+    tooltip: `Greater than function. May be used on 2+ arguments for chain of inequalities.`,
+  },
+  {
+    label: "lt",
+    insertion: "lt",
+    tooltip: `Less than function. May be used on 2+ arguments for chain of inequalities.`,
+  },
+  {
+    label: "geq",
+    insertion: "geq",
+    tooltip: `Less than function. May be used on 2+ arguments for chain of inequalities.`,
+  },
+  {
+    label: "leq",
+    insertion: "leq",
+    tooltip: `Less than equal function. May be used on 2+ arguments for chain of inequalities.`,
+  },
+  {
+    label: "and",
+    insertion: "and",
+    tooltip: `Logical 'and' function for all arguments.`,
+  },
+  {
+    label: "or",
+    insertion: "or",
+    tooltip: `Logical 'and' function or all arguments.`,
+  },
+  {
+    label: "xor",
+    insertion: "xor",
+    tooltip: `Logical 'xor' function for all arguments.`,
+  },
+  { label: "not", insertion: "not", tooltip: `Logical 'not' function.` },
+  {
+    label: "plus",
+    insertion: "plus/>",
+    tooltip: `Addition operator is applied to all arguments.`,
+  },
+  {
+    label: "minus",
+    insertion: "minus/>",
+    tooltip: `Minus operator is applied to all arguments.`,
+  },
+  { label: "times", insertion: "times/>", tooltip: `Multiplication operator.` },
+  { label: "divide", insertion: "divide/>", tooltip: `Division operator.` },
+  {
+    label: "power",
+    insertion: "power/>",
+    tooltip: `Raises first argument to the power of the second.`,
+  },
+  { label: "root", insertion: "root/>", tooltip: `Root function.` },
+  { label: "abs", insertion: "abs/>", tooltip: `Absolute value function.` },
+  { label: "exp", insertion: "exp/>", tooltip: `Exponential function.` },
+  { label: "ln", insertion: "ln/>", tooltip: `Natural logarithm function.` },
+  {
+    label: "log",
+    insertion: "log/>",
+    tooltip: `Logarithm function with a specific base.`,
+  },
+  {
+    label: "floor",
+    insertion: "floor/>",
+    tooltip: `Floor function that rounds down to an integer towards negative infinity.`,
+  },
+  {
+    label: "ceiling",
+    insertion: "ceiling/>",
+    tooltip: `Ceiling function that rounds up to an integer towards positive infinity.`,
+  },
+  {
+    label: "min",
+    insertion: "min/>",
+    tooltip: `Minimum function that returns the smallest argument.`,
+  },
+  {
+    label: "max",
+    insertion: "max/>",
+    tooltip: `Maximum function that returns the largest argument.`,
+  },
+  { label: "rem", insertion: "rem/>", tooltip: `Modulus operator.` },
+  { label: "diff", insertion: "diff", tooltip: `Differentiation operator.` },
+  { label: "bvar", insertion: "bvar", tooltip: `Bound variable.` },
+  {
+    label: "logbase",
+    insertion: "logbase",
+    tooltip: `Specifies the base of a logarithmic function`,
+  },
+  {
+    label: "degree",
+    insertion: "degree",
+    tooltip: `Defines degree of root, moment and derivatives.`,
+  },
+  { label: "sin", insertion: "sin", tooltip: `Trigonometric sine function.` },
+  { label: "cos", insertion: "cos", tooltip: `Trigonometric cosine function.` },
+  {
+    label: "tan",
+    insertion: "tan",
+    tooltip: `Trigonometric tangent function.`,
+  },
+  { label: "sec", insertion: "sec", tooltip: `Trigonometric secant function.` },
+  {
+    label: "csc",
+    insertion: "csc",
+    tooltip: `Trigonometric cosecant function.`,
+  },
+  {
+    label: "cot",
+    insertion: "cot",
+    tooltip: `Trigonometric cotangent function.`,
+  },
+  { label: "sinh", insertion: "sinh", tooltip: `Hyperbolic sine function.` },
+  { label: "cosh", insertion: "cosh", tooltip: `Hyperbolic cosine function.` },
+  { label: "tanh", insertion: "tanh", tooltip: `Hyperbolic tangent function.` },
+  { label: "sech", insertion: "sech", tooltip: `Hyperbolic secant function.` },
+  {
+    label: "csch",
+    insertion: "csch",
+    tooltip: `Hyperbolic cosecant function.`,
+  },
+  {
+    label: "coth",
+    insertion: "coth",
+    tooltip: `Hyperbolic cotangent function.`,
+  },
+  { label: "arcsin", insertion: "arcsin", tooltip: `Inverse sine function.` },
+  { label: "arccos", insertion: "arccos", tooltip: `Inverse cosine function.` },
+  { label: "arctan", insertion: "arctan", tooltip: `Inverse sine function.` },
+  { label: "arcsec", insertion: "arcsec", tooltip: `Inverse secant function.` },
+  {
+    label: "arccsc",
+    insertion: "arccsc",
+    tooltip: `Inverse cosecant function.`,
+  },
+  {
+    label: "arccot",
+    insertion: "arccot",
+    tooltip: `Inverse cotangent function.`,
+  },
+  {
+    label: "arcsinh",
+    insertion: "arcsinh",
+    tooltip: `Inverse hyperbolic sine function.`,
+  },
+  {
+    label: "arccosh",
+    insertion: "arccosh",
+    tooltip: `Inverse hyperbolic cosine function.`,
+  },
+  {
+    label: "arctanh",
+    insertion: "arctanh",
+    tooltip: `Inverse hyperbolic tangent function.`,
+  },
+  {
+    label: "arcsech",
+    insertion: "arcsech",
+    tooltip: `Inverse hyperbolic secant function.`,
+  },
+  {
+    label: "arccsch",
+    insertion: "arccsch",
+    tooltip: `Inverse hyperbolic cosecant function.`,
+  },
+  {
+    label: "arccoth",
+    insertion: "arccoth",
+    tooltip: `Inverse hyperbolic cotangent function.`,
+  },
+  { label: "pi", insertion: "pi", tooltip: `Pi constant.` },
+  {
+    label: "exponentiale",
+    insertion: "exponentiale",
+    tooltip: `Base of natural log constant.`,
+  },
+  {
+    label: "notanumber",
+    insertion: "notanumber",
+    tooltip: `Represents not a number.`,
+  },
+  { label: "infinity", insertion: "infinity", tooltip: `Represents infinity.` },
+  { label: "true", insertion: "true", tooltip: `Boolean true.` },
+  { label: "false", insertion: "false", tooltip: `Boolean false.` },
+];
+
 const elementList: ElementObject[] = [
-  { label: "model", insertion: "model name=", tooltip: `wip` },
-  { label: "import", insertion: "import", tooltip: `wip` },
+  {
+    label: "model",
+    insertion: "model name=",
+    tooltip: `Model CellML Element. Describes a CellML model within.`,
+  },
+  {
+    label: "import",
+    insertion: "import",
+    tooltip: `Import CellML Element. Describes source of imported Units and Components.`,
+  },
   //  { label: 'units', insertion: 'units name="', tooltip: `wip` },
   //  { label: 'unit', insertion: 'unit units="', tooltip: `wip` },
-  { label: "component", insertion: 'component name="', tooltip: `wip` },
-  { label: "variable", insertion: 'variable name="', tooltip: `wip` },
-  { label: "reset", insertion: 'reset variable="', tooltip: `wip` },
-  { label: "reset_value", insertion: "reset_value", tooltip: `wip` },
-  { label: "test_value", insertion: "test_value", tooltip: `wip` },
-  { label: "math", insertion: "math", tooltip: `wip` },
-  { label: "ci", insertion: "ci", tooltip: `wip` },
-  { label: "cn", insertion: "cn", tooltip: `wip` },
-  { label: "sep", insertion: "sep", tooltip: `wip` },
-  { label: "apply", insertion: "apply", tooltip: `wip` },
-  { label: "piecewise", insertion: "piecewise", tooltip: `wip` },
-  { label: "piece", insertion: "piece", tooltip: `wip` },
-  { label: "otherwise", insertion: "otherwise", tooltip: `wip` },
-  { label: "eq", insertion: "eq", tooltip: `wip` },
-  { label: "neg", insertion: "neg", tooltip: `wip` },
-  { label: "gt", insertion: "gt", tooltip: `wip` },
-  { label: "lt", insertion: "lt", tooltip: `wip` },
-  { label: "geq", insertion: "geq", tooltip: `wip` },
-  { label: "leq", insertion: "leq", tooltip: `wip` },
-  { label: "and", insertion: "and", tooltip: `wip` },
-  { label: "or", insertion: "or", tooltip: `wip` },
-  { label: "xor", insertion: "xor", tooltip: `wip` },
-  { label: "not", insertion: "not", tooltip: `wip` },
-  { label: "plus", insertion: "plus", tooltip: `wip` },
-  { label: "minus", insertion: "minus", tooltip: `wip` },
-  { label: "times", insertion: "times", tooltip: `wip` },
-  { label: "divide", insertion: "divide", tooltip: `wip` },
-  { label: "power", insertion: "power", tooltip: `wip` },
-  { label: "root", insertion: "root", tooltip: `wip` },
-  { label: "abs", insertion: "abs", tooltip: `wip` },
-  { label: "exp", insertion: "exp", tooltip: `wip` },
-  { label: "ln", insertion: "ln", tooltip: `wip` },
-  { label: "log", insertion: "log", tooltip: `wip` },
-  { label: "floor", insertion: "floor", tooltip: `wip` },
-  { label: "ceiling", insertion: "ceiling", tooltip: `wip` },
-  { label: "min", insertion: "min", tooltip: `wip` },
-  { label: "max", insertion: "max", tooltip: `wip` },
-  { label: "rem", insertion: "rem", tooltip: `wip` },
-  { label: "diff", insertion: "diff", tooltip: `wip` },
-  { label: "bvar", insertion: "bvar", tooltip: `wip` },
-  { label: "logbase", insertion: "logbase", tooltip: `wip` },
-  { label: "degree", insertion: "degree", tooltip: `wip` },
-  { label: "sin", insertion: "sin", tooltip: `wip` },
-  { label: "cos", insertion: "cos", tooltip: `wip` },
-  { label: "tan", insertion: "tan", tooltip: `wip` },
-  { label: "sec", insertion: "sec", tooltip: `wip` },
-  { label: "csc", insertion: "csc", tooltip: `wip` },
-  { label: "cot", insertion: "cot", tooltip: `wip` },
-  { label: "sinh", insertion: "sinh", tooltip: `wip` },
-  { label: "cosh", insertion: "cosh", tooltip: `wip` },
-  { label: "tanh", insertion: "tanh", tooltip: `wip` },
-  { label: "sech", insertion: "sech", tooltip: `wip` },
-  { label: "csch", insertion: "csch", tooltip: `wip` },
-  { label: "coth", insertion: "coth", tooltip: `wip` },
-  { label: "arcsin", insertion: "arcsin", tooltip: `wip` },
-  { label: "arccos", insertion: "arccos", tooltip: `wip` },
-  { label: "arctan", insertion: "arctan", tooltip: `wip` },
-  { label: "arcsec", insertion: "arcsec", tooltip: `wip` },
-  { label: "arccsc", insertion: "arccsc", tooltip: `wip` },
-  { label: "arccot", insertion: "arccot", tooltip: `wip` },
-  { label: "arcsinh", insertion: "arcsinh", tooltip: `wip` },
-  { label: "arccosh", insertion: "arccosh", tooltip: `wip` },
-  { label: "arctanh", insertion: "arctanh", tooltip: `wip` },
-  { label: "arcsech", insertion: "arcsech", tooltip: `wip` },
-  { label: "arccsch", insertion: "arccsch", tooltip: `wip` },
-  { label: "arccoth", insertion: "arccoth", tooltip: `wip` },
-  { label: "pi", insertion: "pi", tooltip: `wip` },
-  { label: "exponentiale", insertion: "exponentiale", tooltip: `wip` },
-  { label: "notanumber", insertion: "notanumber", tooltip: `wip` },
-  { label: "infinity", insertion: "infinity", tooltip: `wip` },
-  { label: "true", insertion: "true", tooltip: `wip` },
-  { label: "false", insertion: "false", tooltip: `wip` },
-  { label: "encapsulation", insertion: 'encapsulation"', tooltip: `wip` },
+  {
+    label: "component",
+    insertion: 'component name="',
+    tooltip: `Component CellML Element.`,
+  },
+  {
+    label: "variable",
+    insertion: 'variable name="',
+    tooltip: `Variable CellML Element. Describes a variable of its parent Component.`,
+  },
+  {
+    label: "reset",
+    insertion: 'reset variable="',
+    tooltip: `Reset CellML Element. Describes mathematical operations on variable values based on triggers.`,
+  },
+  {
+    label: "reset_value",
+    insertion: "reset_value",
+    tooltip: `CellML Element that describes the new value of 'variable' attribute in Reset.`,
+  },
+  {
+    label: "test_value",
+    insertion: "test_value",
+    tooltip: `CellML Element that describes the value of 'test_variable which triggers the Reset element.`,
+  },
+  {
+    label: "math",
+    insertion: "math",
+    tooltip: `Describes a mathematical formula in MathML.`,
+  },
+  {
+    label: "encapsulation",
+    insertion: 'encapsulation"',
+    tooltip: `Describes relationship between Components.`,
+  },
   {
     label: "component_ref",
     insertion: 'component_ref component="',
-    tooltip: `wip`,
+    tooltip: `A reference to the name of a Component.`,
   },
   {
     label: "connection",
     insertion: 'connection component_1="',
-    tooltip: `wip`,
+    tooltip: `Describes connection between two Components.`,
   },
   {
     label: "map_variables",
     insertion: 'map_variables variable_1="',
-    tooltip: `wip`,
+    tooltip: `States equivalence of two Variables.`,
   },
 ];
 
 const attributesList = [
-  { label: "name", insertion: "name", tooltip: `wip` },
-  { label: "href", insertion: "href", tooltip: `wip` },
-  { label: "units_ref", insertion: "units_ref", tooltip: `wip` },
-  { label: "component_ref", insertion: "component_ref", tooltip: `wip` },
-  { label: "units", insertion: "units", tooltip: `wip` },
-  { label: "prefix", insertion: "prefix", tooltip: `wip` },
-  { label: "multiplier", insertion: "multiplier", tooltip: `wip` },
-  { label: "exponent", insertion: "exponent", tooltip: `wip` },
-  { label: "variable", insertion: "variable", tooltip: `wip` },
-  { label: "test_variable", insertion: "test_variable", tooltip: `wip` },
-  { label: "order", insertion: "order", tooltip: `wip` },
-  { label: "component", insertion: "component", tooltip: `wip` },
-  { label: "component_1", insertion: "component_1", tooltip: `wip` },
-  { label: "component_2", insertion: "component_2", tooltip: `wip` },
-  { label: "variable_1", insertion: "variable_1", tooltip: `wip` },
-  { label: "variable_2", insertion: "variable_2", tooltip: `wip` },
+  { label: "name", insertion: "name", tooltip: `Name of CellML Element.` },
+  { label: "href", insertion: "href", tooltip: `Reference to a resource.` },
+  {
+    label: "units_ref",
+    insertion: "units_ref",
+    tooltip: `Reference to name of a Units.`,
+  },
+  {
+    label: "component_ref",
+    insertion: "component_ref",
+    tooltip: `Reference to name of a Component.`,
+  },
+  {
+    label: "units",
+    insertion: "units",
+    tooltip: `Reference to a Standard International System of Units or name of custom Units.`,
+  },
+  {
+    label: "prefix",
+    insertion: "prefix",
+    tooltip: `Prefix of a Units. Describes the exponential of 10 which is then multiplied to the value of the Variable.`,
+  },
+  {
+    label: "multiplier",
+    insertion: "multiplier",
+    tooltip: `Real number which the value of the Unit will be multiplied by.`,
+  },
+  {
+    label: "exponent",
+    insertion: "exponent",
+    tooltip: `Real number which acts as the exponent of the Units.`,
+  },
+  {
+    label: "variable",
+    insertion: "variable",
+    tooltip: `Reference to a Variable which will have its value changed when the Reset is triggered.`,
+  },
+  {
+    label: "test_variable",
+    insertion: "test_variable",
+    tooltip: `Reference to a Variable which will trigger the Reset.`,
+  },
+  {
+    label: "order",
+    insertion: "order",
+    tooltip: `Priority of Resets being triggered. Lower values are prioritised first.`,
+  },
+  {
+    label: "component",
+    insertion: "component",
+    tooltip: `Reference to a Component.`,
+  },
+  {
+    label: "component_1",
+    insertion: "component_1",
+    tooltip: `Reference to a Component. Cannot be the same as component_2.`,
+  },
+  {
+    label: "component_2",
+    insertion: "component_2",
+    tooltip: `Reference to a Component. Cannot be the same as component_1.`,
+  },
+  {
+    label: "variable_1",
+    insertion: "variable_1",
+    tooltip: `Reference to a Variable that is equivalent to variable_2. Cannot be the same as variable_2.`,
+  },
+  {
+    label: "variable_2",
+    insertion: "variable_2",
+    tooltip: `Reference to a Variable that is equivalent to variable_1. Cannot be the same as variable_1.`,
+  },
 ];
 
 const constantsList = [
@@ -196,20 +462,36 @@ interface DocumentationTemplate {
   range: Range;
 }
 
-const autoFill = (range: any, monaco: Monaco): DocumentationTemplate[] => {
-  const result: DocumentationTemplate[] = [];
-  // const elms = elementList.map((element: elementObject) => {
-  //   result.push(docElementTemplate(element, range, monaco));
-  // });
-  // const consts = constantsList.map((element: elementObject) => {
-  //   result.push(documentationTemplate(element, range, monaco));
-  // });
+interface AutoFillOption {
+  cellml: boolean;
+  mathml: boolean;
+}
 
-  attributesList.map((element: ElementObject) => {
-    result.push(documentationTemplate(element, range, monaco));
-  });
+const autoFill = (
+  range: any,
+  monaco: Monaco,
+  option: AutoFillOption = { cellml: true, mathml: true }
+): DocumentationTemplate[] => {
+  const result: DocumentationTemplate[] = [];
+
+  if (option.cellml) {
+    attributesList.map((element: ElementObject) => {
+      result.push(documentationTemplate(element, range, monaco));
+    });
+    elementList.map((element: ElementObject) => {
+      result.push(docElementTemplate(element, range, monaco));
+    });
+  }
+  if (option.mathml) {
+    mathList.map((element: ElementObject) => {
+      result.push(documentationTemplate(element, range, monaco));
+    });
+    constantsList.map((element: ElementObject) => {
+      result.push(documentationTemplate(element, range, monaco));
+    });
+  }
 
   return result;
 };
 
-export { autoFill };
+export { autoFill, AutoFillOption };

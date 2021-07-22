@@ -63,7 +63,12 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
         <Grid item xs={2}>
           <Button onClick={() => setElementSearch(true)}>FIND</Button>
         </Grid>
-        <Dialog open={elementSearch} onClose={() => setElementSearch(false)}>
+        <Dialog
+          open={elementSearch}
+          onClose={() => setElementSearch(false)}
+          fullWidth
+          maxWidth="xl"
+        >
           <DialogContent>
             <SearchElement />
           </DialogContent>
