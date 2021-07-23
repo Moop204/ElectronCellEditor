@@ -32,6 +32,10 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
     updateDetail(title, content, index);
     handleClose();
   };
+  if (value === "") {
+    value = `<math xmlns="http://www.w3.org/1998/Math/MathML">
+</math>`;
+  }
   return (
     <Dialog
       open={open}

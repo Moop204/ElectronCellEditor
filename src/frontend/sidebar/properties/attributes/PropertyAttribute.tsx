@@ -192,7 +192,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         id={title}
         value={value}
         onChange={(e) => {
-          if (e.target.value.match(/[^a-zA-Z_]/)) {
+          if (e.target.value.match(/^[^a-zA-Z_][^a-zA-Z_0-9]*$/)) {
             setError(true);
           } else {
             setError(false);
@@ -200,13 +200,38 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
           }
         }}
         helperText={
-          error && "Only alphabetical letters and _ are valid characters."
+          error &&
+          "Only alphanumerical characters and _ are allowed and cannot start with a number"
         }
         rows={1}
         fullWidth
       />
     );
     switch (title) {
+      case "initialValue":
+        form = (
+          <TextField
+            error={error}
+            id={title}
+            value={value}
+            onChange={(e) => {
+              if (e.target.value.match(/[^a-zA-Z_0-9]/)) {
+                setError(true);
+              } else {
+                setError(false);
+                onChange(title, e.target.value, index);
+              }
+            }}
+            helperText={
+              error &&
+              "Only alphanumerical characters and _ are allowed and cannot start with a number"
+            }
+            rows={1}
+            fullWidth
+          />
+        );
+
+        break;
       case "variable":
       case "test_variable":
         form = (
@@ -227,6 +252,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             onChange={onChange}
           />
         );
+        break;
     }
 
     return (
