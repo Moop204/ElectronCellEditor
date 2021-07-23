@@ -19,7 +19,7 @@ const validChannels = [
   "all-units",
   "all-components",
   "validate-file",
-  "resetParent",
+  "reset-parent",
   "find-element-from-children",
   "add-child",
   "update-attribute",
