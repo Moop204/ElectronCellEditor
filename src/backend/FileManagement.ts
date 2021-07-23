@@ -264,6 +264,16 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   // Run once to set up handlers
   setupHandlers(): void {
     ipcMain.on(
+      "update-content",
+      async (event: IpcMainEvent, newContent: string) => {
+        await this.updateContent(newContent);
+        this.resetToModel();
+        const selection = this.getCurrentAsSelection(this.type);
+        event.reply("res-select-element", selection);
+      }
+    );
+
+    ipcMain.on(
       "save-content",
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
@@ -343,7 +353,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       }
     );
 
-    ipcMain.on("resetParent", async (event: IpcMainEvent) => {
+    ipcMain.on("reset-parent", async (event: IpcMainEvent) => {
       const resetProp = await this.resetToModel();
       event.reply("res-get-element", resetProp);
     });

@@ -46,7 +46,14 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
         )}
         {!view && (
           <Grid item xs={2}>
-            <SpatialViewButton onClick={switchView} expanded={true} />
+            <SpatialViewButton
+              onClick={() => {
+                switchView();
+                window.api.send("update-content", content);
+                window.api.send("get-element");
+              }}
+              expanded={true}
+            />
           </Grid>
         )}
         <Grid item xs={2}>
