@@ -1,6 +1,6 @@
 {
-  "name": "electroncelleditor",
-  "productName": "electroncelleditor",
+  "name": "cellml-editor",
+  "productName": "cellml-editor",
   "version": "1.0.0",
   "description": "Thesis project for Software Engineering degree.",
   "main": ".webpack/main",
