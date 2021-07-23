@@ -1,6 +1,6 @@
 {
-  "name": "electroncelleditor",
-  "productName": "ElectronCellEditor",
+  "name": "cellml-editor",
+  "productName": "cellml-editor",
   "version": "1.0.0",
   "description": "Thesis project for Software Engineering degree.",
   "main": ".webpack/main",
@@ -14,8 +14,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "Andrew Nguyen",
-    "email": "andrew.nguyen2045@outlook.com"
+    "name": "Moop204",
+    "email": "z5162792@unsw.edu.au"
   },
   "license": "MIT",
   "config": {
@@ -102,6 +102,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
+    "@fontsource/roboto": "^4.5.0",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",

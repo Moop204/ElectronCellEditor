@@ -25,8 +25,8 @@ import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
 const fs = require("fs");
 
-//declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-const libcellModule = require("libcellml.js/libcellml.common");
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+// const libcellModule = require("libcellml.js/libcellml.common");
 
 // import libCellMLModule from "libcellml.js";
 // import libCellMLWasm from "libcellml.js/libcellml.wasm";
@@ -242,6 +242,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async importFile(fileLoc: string): Promise<FileIssues> {
     const file: string = fs.readFileSync(fileLoc, "utf8");
+    this.selectedFile = fileLoc;
     try {
       const validator = await validateModel(this, file);
       const issues = await obtainIssues(validator);
@@ -260,7 +261,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         model: file,
         issues: issues,
       };
-      this.selectedFile = file;
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
