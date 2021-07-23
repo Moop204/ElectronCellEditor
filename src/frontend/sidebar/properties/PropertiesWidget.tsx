@@ -14,6 +14,8 @@ import { UnitWidget } from "./UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
+import { EmptyProperty } from "./content/EmptyProperty";
+import { LoadingProperty } from "./content/LoadingProperty";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -21,37 +23,18 @@ const localStyles = makeStyles(() =>
       leftPadding: "1wv",
       rightPading: "1wv",
     },
-    subElementType: {
-      display: "flex",
-      justifyContent: "flex-end",
-      fontSize: "1.2em",
-    },
-    updateButton: {
-      height: "50px",
-    },
     plainText: {
       color: "black",
     },
-    elementType: {
-      display: "flex",
-      justifyContent: "flex-end",
-      fontSize: "1.8em",
-    },
+
     properties: {
       height: "70vh",
       leftPadding: "1wv",
       rightPading: "1wv",
       alignContent: "start",
-      //      alignContent: "flex-start",
     },
     updateAttribute: {
       marginTop: "2vh",
-    },
-    headerSeparator: {
-      marginTop: "0.5vh",
-    },
-    childrenHeader: {
-      marginRight: "8px",
     },
   })
 );
@@ -82,7 +65,6 @@ const updateAttr = (changeSet: AttributeChange[]) => {
       value: attributeValue,
     };
   };
-
   window.api.send("update-attribute", changeSet.map(processUpdate));
 };
 
@@ -139,40 +121,14 @@ const PropertiesWidget: FunctionComponent = () => {
     };
   }, []);
 
-  // const dbUpdateAttr = _.debounce(
-  //   (type: Elements, compName: string, attrType: string, attrVal: string) =>
-  //     updateAttr(type, compName, attrType, attrVal),
-  //   300
-  // );
-
   // Before a file is loaded
   if (!abstractModel) {
     window.api.send("get-element");
-    return (
-      <Grid item className={styles.plainText} style={{ height: "100vh" }}>
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-          Properties
-        </Typography>
-        LOADING ...
-      </Grid>
-    );
+    return <LoadingProperty />;
   }
 
   if (abstractModel.type === Elements.none) {
-    return (
-      <Grid
-        item
-        className={styles.plainText + styles.propertyWidget}
-        style={{ height: "100vh" }}
-      >
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-          Properties
-        </Typography>
-        <Typography variant="body1" style={{ paddingLeft: "5px" }}>
-          No CellML element available to select. Please use a valid CellML file.
-        </Typography>
-      </Grid>
-    );
+    return <EmptyProperty />;
   }
 
   // abstractModel.type
@@ -206,9 +162,6 @@ const PropertiesWidget: FunctionComponent = () => {
       }
     }
     if (newChangeFlag) diffSet.push(change);
-
-    //    dbUpdateAttr(abstractModel.type, compName, attrType, attrVal);
-    // console.log('MODEL PROPERTIES: Updated attribute');
   };
 
   const sendAttributeUpdate = () => {
@@ -308,9 +261,7 @@ const PropertiesWidget: FunctionComponent = () => {
       style={{ height: "95vh", overflowX: "hidden" }}
       overflow="scroll"
     >
-      {/* <Paper elevation={0} style={{ height: "95vh" }}> */}
       {propertyContent}
-      {/* </Paper> */}
     </Box>
   );
 };
