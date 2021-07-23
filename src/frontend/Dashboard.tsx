@@ -107,24 +107,9 @@ const Dashboard: FunctionComponent = () => {
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
-  // return (
-  //   <Router>
-  //     <ExpandedSidebar
-  //       content={contentExist}
-  //       switchSidebar={switchSidebar}
-  //       switchView={switchView}
-  //       viewSidebar={true}
-  //       view={true}
-  //       valid={true}
-  //       updateBaseContent={setBaseContent}
-  //     />
-  //   </Router>
-  // );
-
   return (
     <div className={styles.root}>
-      <MathJax.Provider>
-        {/* <Router> */}
+      <Router>
         <Grid container spacing={1} direction="row">
           <Grid item xs={viewSidebar ? 3 : 1}>
             {viewSidebar && (
@@ -167,7 +152,7 @@ const Dashboard: FunctionComponent = () => {
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
               <Paper className={styles.tabbing}></Paper>
-              {/* <Switch>
+              <Switch>
                 <Route exact path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
@@ -192,12 +177,11 @@ const Dashboard: FunctionComponent = () => {
                     key="raw-view"
                   />
                 </Route>
-              </Switch> */}
+              </Switch>
             </Paper>
           </Grid>
         </Grid>
-        {/* </Router> */}
-      </MathJax.Provider>
+      </Router>
     </div>
   );
 };

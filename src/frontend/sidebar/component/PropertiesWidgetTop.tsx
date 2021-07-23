@@ -44,6 +44,7 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
           onClick={() => {
             onClick();
             window.api.send("resetParent");
+            window.api.send("get-element");
           }}
         >
           <ArrowBackIosIcon />

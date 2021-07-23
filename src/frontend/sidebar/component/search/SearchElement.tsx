@@ -12,7 +12,7 @@ const SearchElement = () => {
         <PropertiesWidget />
       </Grid>
       <Grid item xs={8}>
-        <PropertiesWidget />
+        Placeholder
       </Grid>
     </Grid>
   );

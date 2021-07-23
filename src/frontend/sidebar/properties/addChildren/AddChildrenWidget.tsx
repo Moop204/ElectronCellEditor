@@ -29,7 +29,7 @@ const AddChildrenWidget: FunctionComponent<IAddChild> = ({ element, name }) => {
       children = [Elements.component, Elements.units];
       break;
     case Elements.component:
-      children = [Elements.reset, Elements.variable, Elements.component];
+      children = [Elements.component, Elements.variable, Elements.reset];
       break;
     case Elements.units:
       children = [Elements.unit];
