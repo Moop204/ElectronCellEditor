@@ -43,7 +43,7 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
         <IconButton
           onClick={() => {
             onClick();
-            window.api.send("resetParent");
+            window.api.send("to-parent");
             window.api.send("get-element");
           }}
         >
