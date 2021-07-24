@@ -281,6 +281,30 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       }
     );
 
+    ipcMain.on("to-parent", async (event: IpcMainEvent) => {
+      const cur = this.getCurrentComponent();
+      const parent = cur.parent();
+      let newType = Elements.component;
+      console.log("Going back to parent");
+      console.log(elmToStr(this.type));
+      switch (this.type) {
+        case Elements.component:
+          if (parent instanceof this._cellml.Model) {
+            newType = Elements.model;
+          }
+          break;
+        case Elements.units:
+          newType = Elements.model;
+          break;
+      }
+      console.log("Looking for parent");
+      console.log((parent as NamedEntity).name());
+      console.log(parent);
+      this.setCurrentComponent(parent as EditorElement, newType);
+      const selection = this.getCurrentAsSelection(this.type);
+      event.reply("res-select-element", selection);
+    });
+
     // Used in Spatial view
     // Assume starting valid
     ipcMain.on(
