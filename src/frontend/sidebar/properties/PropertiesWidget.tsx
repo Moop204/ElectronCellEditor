@@ -258,7 +258,7 @@ const PropertiesWidget: FunctionComponent = () => {
     <Box
       component="div"
       className={styles.propertyWidget}
-      style={{ height: "95vh", overflowX: "hidden" }}
+      style={{ height: "95vh", overflowX: "hidden", paddingLeft: "5px" }}
       overflow="scroll"
     >
       {propertyContent}

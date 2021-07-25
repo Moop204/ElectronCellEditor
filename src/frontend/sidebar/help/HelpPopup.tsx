@@ -46,6 +46,7 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
         onClose={() => setOpenHelp(false)}
         maxWidth="lg"
         fullWidth
+        style={{ height: "90vh" }}
       >
         <DialogTitle>
           <Grid container item xs={12}>
@@ -54,8 +55,8 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
                 {title}
               </Typography>
             </Grid>
-            <Grid item xs={2}>
-              <Button onClick={() => setOpenHelp(false)}>X</Button>
+            <Grid container item xs={2} direction="row-reverse">
+              <Button onClick={() => setOpenHelp(false)}>Close</Button>
             </Grid>
           </Grid>
         </DialogTitle>
@@ -74,9 +75,13 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
           >
             <DialogTitle>
               <Grid item className={style.documentInterface} xs={12}>
-                <Button onClick={() => setPageNum(pageNum - 1)}>{"<<<"}</Button>
-                <Button onClick={() => setPageNum(pageNum + 1)}>{">>>"}</Button>
-                <Button
+                <Button onClick={() => setPageNum(pageNum - 1)}>
+                  {"<<< Prev Page"}
+                </Button>
+                <Button onClick={() => setPageNum(pageNum + 1)}>
+                  {"Next Page >>>"}
+                </Button>
+                {/* <Button
                   onClick={() =>
                     setPageScale(pageScale + 0.3 > 1.2 ? 1.2 : pageScale + 0.3)
                   }
@@ -90,13 +95,13 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
                 >
                   -
                 </Button>
-                {pageScale}
-                <Button onClick={() => setOpenDocument(false)}>X</Button>
+                {pageScale} */}
+                <Button onClick={() => setOpenDocument(false)}>Close</Button>
               </Grid>
             </DialogTitle>
             <DialogContent>
               <Document file={documentationPdf}>
-                <Page pageNumber={pageNum} scale={pageScale} width={2000} />
+                <Page pageNumber={pageNum} scale={0.6} width={2000} />
               </Document>
             </DialogContent>
           </Dialog>
