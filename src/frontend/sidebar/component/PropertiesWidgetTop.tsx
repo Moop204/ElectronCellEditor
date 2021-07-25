@@ -58,14 +58,14 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
         direction="row-reverse"
       >
         <Grid item>
-          <Typography variant="h5" style={{ paddingRight: "5px" }}>
-            {capitaliseFirst(elmToStr(type))}
-          </Typography>
-        </Grid>
-        <Grid item>
           <span>
             <ElementHelp type={type} />
           </span>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5" style={{ paddingRight: "5px" }}>
+            {capitaliseFirst(elmToStr(type))}
+          </Typography>
         </Grid>
       </Grid>
     </Grid>

@@ -25,11 +25,12 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
       brackets: [],
       autoClosingPairs: [
         // { open: "<", close: ">" },
-        { open: "'", close: "T" },
-        { open: '"', close: "K" },
+        { open: "'", close: "'" },
+        { open: '"', close: `"` },
+        { open: "<apply>", close: `</apply>` },
       ],
       surroundingPairs: [
-        // { open: '<', close: '>' },
+        { open: "<", close: ">" },
         { open: "'", close: "'" },
         { open: '"', close: '"' },
       ],
@@ -61,16 +62,6 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
             decreaseIndentPattern: "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$",
           },
           brackets: [],
-          autoClosingPairs: [
-            // { open: "<", close: ">" },
-            { open: "'", close: "T" },
-            { open: '"', close: "K" },
-          ],
-          surroundingPairs: [
-            // { open: '<', close: '>' },
-            { open: "'", close: "'" },
-            { open: '"', close: '"' },
-          ],
           formatOnPaste: true,
         };
       },
@@ -87,7 +78,9 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
           endColumn: position.column,
         });
 
-        const tag = codePre.match(/.*<(\w+)>$/)?.[1];
+        console.log("MATCHED ");
+        console.log(codePre.match(/.*<(\w+)[\w\s\"]*>$/));
+        const tag = codePre.match(/.*<(\w+)[\w\s\"]*>$/)?.[1];
         if (!tag) {
           return;
         }

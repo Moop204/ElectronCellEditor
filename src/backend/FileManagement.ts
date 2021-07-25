@@ -282,6 +282,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     );
 
     ipcMain.on("to-parent", async (event: IpcMainEvent) => {
+      if (this.type === Elements.model) return;
       const cur = this.getCurrentComponent();
       const parent = cur.parent();
       let newType = Elements.component;
