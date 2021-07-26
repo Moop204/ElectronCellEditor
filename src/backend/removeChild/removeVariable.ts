@@ -9,19 +9,19 @@ import {
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { EditorElement } from "../../types/EditorElement";
+import { generateModel } from "../addChild/generateModel";
 
-const RemoveVariable = async (fm: FileManagement, child: ISearch) => {
-  console.log("Removing Variables");
-  const libcellml = fm._cellml;
-  const printer: Printer = new libcellml.Printer();
-  const parser: Parser = new libcellml.Parser();
-  const m: Model = parser.parseModel(fm.getContent());
+// Removes Variable from Component
+// @fm - State management of model
+// @child - Identifies Variable to be removed by name
+const removeVariable = async (fm: FileManagement, child: ISearch) => {
+  const printer: Printer = new fm._cellml.Printer();
+  const m = generateModel(fm._cellml, fm.getContent());
   const name = child.name;
 
   // Remove element in properties
   let curElm = fm.getCurrentComponent() as Component;
   const componentName = curElm.name();
-  curElm = curElm.clone();
   curElm.removeVariableByName(name);
 
   // Remove element in editor
@@ -29,13 +29,10 @@ const RemoveVariable = async (fm: FileManagement, child: ISearch) => {
     .componentByName(componentName, true)
     .removeVariableByName(name);
   if (!removed) {
-    console.log("PROBLEMO REMOVIN");
+    console.log("Failed to remove Variable");
   }
-  console.log("Removing " + name);
-  console.log(printer.printModel(m, false));
   await fm.updateContent(printer.printModel(m, false));
-
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
 
-export { RemoveVariable };
+export { removeVariable };

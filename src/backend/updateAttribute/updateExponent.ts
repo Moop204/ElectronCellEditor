@@ -24,12 +24,10 @@ const updateExponent = (
   value: any,
   currentElement: EditorElement
 ) => {
-  const modelCopy = model.clone();
-
   switch (element) {
     case Elements.units:
       const unitsName = (currentElement as Units).name();
-      const unitsElement = modelCopy.unitsByName(unitsName);
+      const unitsElement = model.unitsByName(unitsName);
       const oldMultiplier = unitsElement.unitAttributeMultiplier(
         select.index as number
       );
