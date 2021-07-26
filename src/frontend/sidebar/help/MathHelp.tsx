@@ -12,7 +12,7 @@ const MathHelp: FunctionComponent = () => {
   </math>
   `;
   return (
-    <HelpPopup pageRef={8} title="About CellML Model">
+    <HelpPopup pageRef={19} title="About CellML Model">
       <br />
       MathML is a method of describing a formula using a XML-like structure. The
       outermost tag is ’math’. Each operand inside is defined as a constant, a

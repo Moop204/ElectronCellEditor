@@ -14,7 +14,7 @@ const nameValidation = (curComponents: string[]) =>
       .string()
       .min(1, "Require at least one character")
       .matches(
-        /^[a-zA-Z][a-z-A-Z0-9_]*$/,
+        /^[a-zA-Z][a-zA-Z0-9_]*$/,
         "Must start with an alphabetical character"
       )
       .required('Attribute "name" is required')

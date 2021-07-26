@@ -46,7 +46,7 @@ const AddVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
   await fm.updateContent(modelToString(libcellml, m));
 
   // Add to cur elm
-  fm.setCurrentComponent(parentComponent.clone(), Elements.component);
+  fm.setCurrentComponent(parentComponent, Elements.component);
 };
 
 export { AddVariable };
