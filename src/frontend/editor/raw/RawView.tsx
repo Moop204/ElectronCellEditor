@@ -10,7 +10,13 @@ const RawView: FunctionComponent<IEditorProp> = ({
     setContentExist(value);
   };
 
-  return <EditorMonaco xmlInput={contentExist} onChange={handleEditorChange} />;
+  return (
+    <EditorMonaco
+      xmlInput={contentExist}
+      onChange={handleEditorChange}
+      option={{ cellml: true, mathml: true }}
+    />
+  );
 };
 
 export { RawView };
