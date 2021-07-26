@@ -3,7 +3,7 @@ import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { RemoveComponent } from "./removeComponent";
 import { RemoveUnits } from "./removeUnits";
-import { RemoveVariable } from "./removeVariable";
+import { removeVariable } from "./removeVariable";
 import { RemoveReset } from "./removeReset";
 import { RemoveUnit } from "./RemoveUnit";
 
@@ -23,12 +23,14 @@ const RemoveElement = async (
       await RemoveUnits(fm, child);
       break;
     case Elements.variable:
-      await RemoveVariable(fm, child);
+      await removeVariable(fm, child);
       break;
     case Elements.reset:
       await RemoveReset(fm, child);
+      break;
     case Elements.unit:
       await RemoveUnit(fm, child);
+      break;
     default:
       console.log("FM: Remove child - should not reach here");
       console.log(elmToStr(type));

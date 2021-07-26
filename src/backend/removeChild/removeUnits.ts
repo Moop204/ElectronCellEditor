@@ -1,15 +1,11 @@
-import {
-  Component,
-  ComponentEntity,
-  ImportSource,
-  Model,
-  Parser,
-  Printer,
-} from "../../types/ILibcellml";
+import { Model, Parser, Printer } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { EditorElement } from "../../types/EditorElement";
 
+// Removes Units from model
+// @fm - State management of model
+// @child - Identifies Units to be removed by name
 const RemoveUnits = async (fm: FileManagement, child: ISearch) => {
   console.log("Removing Units");
   const libcellml = fm._cellml;
@@ -21,15 +17,12 @@ const RemoveUnits = async (fm: FileManagement, child: ISearch) => {
   // Remove component in editor
   const removed = m.removeUnitsByName(name);
   if (!removed) {
-    console.log("PROBLEMO REMOVIN");
+    console.log("Failed to remove Units");
   }
-  console.log("Removing " + name);
-  console.log(printer.printModel(m, false));
   await fm.updateContent(printer.printModel(m, false));
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Model;
-  curElm = curElm.clone();
   curElm.removeUnitsByName(name);
 
   fm.setCurrentComponent(curElm as EditorElement, fm.type);

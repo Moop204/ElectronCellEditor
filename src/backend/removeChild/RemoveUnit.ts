@@ -27,7 +27,6 @@ const RemoveUnit = async (fm: FileManagement, child: ISearch) => {
   // Remove element in properties
   let curElm = fm.getCurrentComponent() as Units;
   const componentName = curElm.name();
-  curElm = curElm.clone();
   curElm.removeUnitByIndex(index);
 
   // Remove element in editor

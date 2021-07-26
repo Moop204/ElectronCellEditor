@@ -1,7 +1,7 @@
 import { EditorElement } from "./../../types/EditorElement";
 import { Model, Reset, Variable } from "./../../types/ILibcellml";
 import { IUpdate } from "./../../types/IQuery";
-import { updateExponent } from "./UpdateExponent";
+import { updateExponent } from "./updateExponent";
 import { updateInitialValue } from "./UpdateInitialValue";
 import { updateInterface } from "./UpdateInterface";
 import { updateMath } from "./UpdateMath";
