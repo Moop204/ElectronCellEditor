@@ -45,7 +45,7 @@ import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveElement } from "./removeChild/removeElement";
-import { SaveAs } from "./../utility/Save";
+import { SaveAs, Save } from "./../utility/Save";
 import { findElement } from "./utility/FindElement";
 import { generateModel } from "./addChild/generateModel";
 
@@ -256,6 +256,13 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
 
   async saveFile() {
     console.log("GAVE THIS " + this.selectedFile);
+    const fileName = await Save(this.getContent(), this.selectedFile);
+    console.log("GOT THIS " + fileName);
+    this.selectedFile = fileName;
+  }
+
+  async saveAsFile() {
+    console.log("GAVE THIS " + this.selectedFile);
     const fileName = await SaveAs(this.getContent(), this.selectedFile);
     console.log("GOT THIS " + fileName);
     this.selectedFile = fileName;
@@ -399,6 +406,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       const validator = await validateModel(this, file);
       event.reply("validated-file", validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
+      await this.updateContent(file);
       if (issues.length === 0 && this.type === Elements.none) {
         this.type = Elements.model;
         const libcellml = this._cellml;
@@ -413,6 +421,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       }
       event.reply("error-reply", issues);
     });
+
+    //ipcMain.emit()
 
     ipcMain.on("all-components", async (event: IpcMainEvent) => {
       if (!this._cellmlLoaded) {

@@ -12,6 +12,28 @@ const SaveAs = async (content: string, recentFile: string) => {
 
   const mainWindow = BrowserWindow.getFocusedWindow();
 
+  const res = await dialog
+    .showSaveDialog(mainWindow, options)
+    .then(({ filePath }) => {
+      fs.writeFileSync(filePath, content, "utf-8");
+      return filePath;
+    })
+    .catch((e) => {
+      console.log("Failed to save new file");
+      return recentFile;
+    });
+  return res;
+};
+
+const Save = async (content: string, recentFile: string) => {
+  const options = {
+    title: "Save file",
+    buttonLabel: "Save",
+    filters: [{ name: "All Files", extensions: ["*"] }],
+  };
+
+  const mainWindow = BrowserWindow.getFocusedWindow();
+
   if (recentFile !== "") {
     fs.writeFileSync(recentFile, content, "utf-8");
     return recentFile;
@@ -30,4 +52,4 @@ const SaveAs = async (content: string, recentFile: string) => {
   }
 };
 
-export { SaveAs };
+export { SaveAs, Save };

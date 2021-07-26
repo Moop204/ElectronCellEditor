@@ -41,7 +41,7 @@ const AddComponent = async (
   // Update current component and model, either a Model or a Component
   if (parentType === Elements.model) {
     m.addComponent(newComponent);
-    fm.setCurrentComponent(m.clone(), Elements.model);
+    fm.setCurrentComponent(m, Elements.model);
   } else {
     const parentName = (fm.getCurrentComponent() as Model | Component).name();
     const parentComponent = m.componentByName(parentName, true);

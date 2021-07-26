@@ -68,7 +68,7 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
         </Grid>
         <Grid item xs={2}>
           <SaveButton
-            color={baseContent === content ? "primary" : "secondary"}
+            color={"primary"} //{baseContent === content ? "primary" : "secondary"}
             expanded={true}
             content={content}
             updateBaseContent={updateBaseContent}
