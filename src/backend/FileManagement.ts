@@ -305,9 +305,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
           newType = Elements.model;
           break;
       }
-      console.log("Looking for parent");
-      console.log((parent as NamedEntity).name());
-      console.log(parent);
       this.setCurrentComponent(parent as EditorElement, newType);
       const selection = this.getCurrentAsSelection(this.type);
       event.reply("res-select-element", selection);
