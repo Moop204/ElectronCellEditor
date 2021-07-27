@@ -4,8 +4,8 @@ import FileManagement from "../FileManagement";
 import { RemoveComponent } from "./removeComponent";
 import { RemoveUnits } from "./removeUnits";
 import { removeVariable } from "./removeVariable";
-import { RemoveReset } from "./removeReset";
-import { RemoveUnit } from "./RemoveUnit";
+import { removeReset } from "./removeReset";
+import { removeUnit } from "./removeUnit";
 
 const RemoveElement = async (
   fm: FileManagement,
@@ -26,10 +26,10 @@ const RemoveElement = async (
       await removeVariable(fm, child);
       break;
     case Elements.reset:
-      await RemoveReset(fm, child);
+      await removeReset(fm, child);
       break;
     case Elements.unit:
-      await RemoveUnit(fm, child);
+      await removeUnit(fm, child);
       break;
     default:
       console.log("FM: Remove child - should not reach here");

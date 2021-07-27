@@ -15,13 +15,12 @@ import { EditorElement } from "../../types/EditorElement";
 // @fm - Manages the state of the file
 // @child - Identifies parent Units name as well as reset index
 
-const RemoveUnit = async (fm: FileManagement, child: ISearch) => {
+const removeUnit = async (fm: FileManagement, child: ISearch) => {
   console.log("Removing Reset");
   const libcellml = fm._cellml;
   const printer: Printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
   const m: Model = parser.parseModel(fm.getContent());
-  const name = child.index;
   const index = child.index;
 
   // Remove element in properties
@@ -36,4 +35,4 @@ const RemoveUnit = async (fm: FileManagement, child: ISearch) => {
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
 
-export { RemoveUnit };
+export { removeUnit };

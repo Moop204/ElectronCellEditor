@@ -1,11 +1,4 @@
-import {
-  Component,
-  ComponentEntity,
-  ImportSource,
-  Model,
-  Parser,
-  Printer,
-} from "../../types/ILibcellml";
+import { Component, Printer } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { EditorElement } from "../../types/EditorElement";
