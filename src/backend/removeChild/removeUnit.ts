@@ -1,12 +1,4 @@
-import {
-  Component,
-  ComponentEntity,
-  ImportSource,
-  Model,
-  Parser,
-  Printer,
-  Units,
-} from "../../types/ILibcellml";
+import { Model, Parser, Printer, Units } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { EditorElement } from "../../types/EditorElement";
@@ -14,9 +6,7 @@ import { EditorElement } from "../../types/EditorElement";
 // Removes a Unit element from the currently selected Units
 // @fm - Manages the state of the file
 // @child - Identifies parent Units name as well as reset index
-
 const removeUnit = async (fm: FileManagement, child: ISearch) => {
-  console.log("Removing Reset");
   const libcellml = fm._cellml;
   const printer: Printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
@@ -26,8 +16,10 @@ const removeUnit = async (fm: FileManagement, child: ISearch) => {
   // Remove element in properties
   let curElm = fm.getCurrentComponent() as Units;
   const componentName = curElm.name();
-  curElm.removeUnitByIndex(index);
-
+  const removed = curElm.removeUnitByIndex(index);
+  if (!removed) {
+    console.log(`Failed to remove Unit at index ${index}.`);
+  }
   // Remove element in editor
   m.unitsByName(componentName).removeUnitByIndex(index);
   await fm.updateContent(printer.printModel(m, false));

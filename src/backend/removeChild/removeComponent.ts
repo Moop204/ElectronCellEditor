@@ -6,7 +6,7 @@ import { EditorElement } from "../../types/EditorElement";
 // Removes a Component from the currently selected Element (Model or Component)
 // @fm - Manages state
 // @child - Identifies the child to be removed
-const RemoveComponent = async (fm: FileManagement, child: ISearch) => {
+const removeComponent = async (fm: FileManagement, child: ISearch) => {
   const libcellml = fm._cellml;
   const printer: Printer = new libcellml.Printer();
   const parser: Parser = new libcellml.Parser();
@@ -28,4 +28,4 @@ const RemoveComponent = async (fm: FileManagement, child: ISearch) => {
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
 
-export { RemoveComponent };
+export { removeComponent };
