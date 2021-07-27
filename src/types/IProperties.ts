@@ -5,7 +5,12 @@ interface IProperties {
   type: Elements;
   attribute: Record<string, any>;
   children: Record<string, IChild[]>;
-  unit: { description: UnitDescriptor; index: number }[];
+  unit?: { description: UnitDescriptor; index: number }[];
+  connection?: {
+    name: string;
+    parentName: string;
+    index: number;
+  }[];
 }
 
 interface IChild {

@@ -12,6 +12,7 @@ import { Elements } from "../../../types/Elements";
 import { IChild } from "../../../types/IProperties";
 import { ElementHelp } from "../help/ElementHelp";
 import { UnitEditForm } from "./addChildren/form/UnitEditForm";
+import { RulerIcon } from "../../assets/RulerIcon";
 
 interface IConnection {
   connection: IChild[];
@@ -25,6 +26,14 @@ const useStyle = makeStyles(() =>
     button: {
       marginLeft: "2vh",
       marginRight: "7vh",
+    },
+    buttonText: {
+      paddingLeft: "8px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      justifyContent: "left",
+      textAlign: "justify",
+      textTransform: "none",
     },
   })
 );
@@ -50,7 +59,14 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
         fullWidth
         className={style.button}
       >
-        {name}
+        <Grid container>
+          <Grid item xs={2}>
+            <RulerIcon />
+          </Grid>
+          <Grid item xs={10} className={style.buttonText}>
+            {name}
+          </Grid>
+        </Grid>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
@@ -71,12 +87,27 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
   );
 };
 
+const AddConnection: FunctionComponent = () => {
+  return (
+    <Grid container>
+      <div> Component1 </div>
+      <div> Variable1 </div>
+      <div> Component2 </div>
+      <div> Variable2 </div>
+    </Grid>
+  );
+};
+
 const ConnectionWidget: FunctionComponent<IConnection> = ({ connection }) => {
   return (
     <Grid container>
+      <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+        Connection
+      </Typography>
       {connection.map(({ name, index }) => (
         <ConnectionButton name={name} index={index} />
       ))}
+      <div>Add Connection</div>
     </Grid>
   );
 };

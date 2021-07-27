@@ -192,11 +192,11 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         id={title}
         value={value}
         onChange={(e) => {
-          if (e.target.value.match(/^[^a-zA-Z_][^a-zA-Z_0-9]*$/)) {
-            setError(true);
-          } else {
+          if (e.target.value.match(/^[a-zA-Z_][a-zA-Z_0-9]*$/)) {
             setError(false);
             onChange(title, e.target.value, index);
+          } else {
+            setError(true);
           }
         }}
         helperText={

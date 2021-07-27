@@ -47,7 +47,7 @@ const UnitMath: FunctionComponent<IUnitMath> = ({
   index,
 }) => {
   return (
-    <Grid container style={{ width: "100%" }}>
+    <Grid container item direction="row">
       <Grid item xs={1}>
         {imported && "I"}
       </Grid>
@@ -74,12 +74,12 @@ const UnitMath: FunctionComponent<IUnitMath> = ({
 const UnitHeading = () => {
   return (
     <Grid container item direction="row">
-      <Grid item xs={9} style={{ backgroundColor: "#236" }}>
+      <Grid item xs={9}>
         <Typography variant="h4" style={{ paddingLeft: "5px" }}>
           Edit Unit
         </Typography>
       </Grid>
-      <Grid item xs={3} style={{ backgroundColor: "#712" }}>
+      <Grid item xs={3}>
         {/* <ElementHelp type={Elements.unit} /> */}X{" "}
       </Grid>
     </Grid>
@@ -104,7 +104,7 @@ const UnitEdit = ({ units, parentName }: IUnitForm) => {
                 index={index}
               />
             </div>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
               <DialogTitle>
                 <UnitHeading />
               </DialogTitle>
@@ -141,14 +141,9 @@ const UnitWidget: FunctionComponent<IUnitWidget> = ({
     <Grid item container xs={11}>
       {unitMap.length > 0 && (
         <Grid item xs={12}>
-          <Grid item xs={10}>
-            <Typography variant="h5" style={{ paddingLeft: "5px" }}>
-              Unit
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <ElementHelp type={Elements.unit} />
-          </Grid>
+          <Typography variant="h5" style={{ paddingLeft: "5px" }}>
+            Unit
+          </Typography>
         </Grid>
       )}
       <UnitEdit units={unitMap} parentName={parentName} />

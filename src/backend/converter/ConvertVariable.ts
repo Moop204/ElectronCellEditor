@@ -28,14 +28,13 @@ const convertVariable = (variable: Variable) => {
       initialValue: variable.initialValue(),
       units: variable.units().name(),
     },
-    children: {
-      connection: eqVarNameList.map(
-        ({ name, parentName }: IEquivalentVar, index: number) => {
-          return { name, parentName, index };
-        }
-      ),
-    },
+    children: {},
     unit: [],
+    connection: eqVarNameList.map(
+      ({ name, parentName }: IEquivalentVar, index: number) => {
+        return { name, parentName, index };
+      }
+    ),
   };
   return varProp;
 };

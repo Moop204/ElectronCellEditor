@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model xmlns="http://www.cellml.org/cellml/2.0#" name="van_der_pol_oscillator" id="van_der_pol_oscillator">
-  <units name="mslongasdfghjijfhtjgyestrdytygkuhchhgchgcnnccvcv">
+  <units name="millisecond">
     <unit prefix="milli" units="second"/>
   </units>
   <units name="per_ms">
-    <unit exponent="-1" units="mslongasdfghjijfhtjgyestrdytygkuhchhgchgcnnccvcv"/>
+    <unit exponent="-1" units="millisecond"/>
   </units>
   <units name="ms_squared">
-    <unit exponent="2" units="mslongasdfghjijfhtjgyestrdytygkuhchhgchgcnnccvcv"/>
+    <unit exponent="2" units="millisecond"/>
   </units>
   <component name="change_x">
     <variable name="t" units="second" interface="public_and_private" id="t"/>
     <variable name="x" units="dimensionless" interface="public_and_private" id="x"/>
-    <variable name="y" units="mslongasdfghjijfhtjgyestrdytygkuhchhgchgcnnccvcv" interface="public_and_private" id="y"/>
+    <variable name="y" units="millisecond" interface="public_and_private" id="y"/>
     <variable name="u" units="per_ms" interface="public_and_private" id="u"/>
     <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
       <apply>

@@ -16,6 +16,7 @@ import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
 import { EmptyProperty } from "./content/EmptyProperty";
 import { LoadingProperty } from "./content/LoadingProperty";
+import { ConnectionWidget } from "./ConnectionWidget";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -215,6 +216,11 @@ const PropertiesWidget: FunctionComponent = () => {
             parentName={abstractModel.attribute.name}
           />
         )}
+
+        {abstractModel.connection?.length > 0 && (
+          <ConnectionWidget connection={abstractModel.connection} />
+        )}
+
         {Object.entries(abstractModel.children).length > 0 && (
           <ChildrenWidget
             abstractChildren={abstractModel.children}

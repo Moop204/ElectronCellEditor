@@ -4,10 +4,12 @@ import {
   FormControl,
   Select,
   Input,
+  TextField,
 } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { FunctionComponent } from "react";
 import { VariableDescriptor } from "../../../../backend/utility/GetAllVariableNames";
+import { Autocomplete } from "@material-ui/lab";
 
 interface IVariableAttr {
   title: string;
@@ -29,7 +31,23 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
   const name = window.api.sendSync("parent-name");
   return (
     <FormControl fullWidth>
-      <Select
+      <Autocomplete
+        freeSolo
+        id="editingVariable"
+        options={validVariable.map((v: VariableDescriptor) => v.variable)}
+        defaultValue={value}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={title}
+            margin="normal"
+            variant="outlined"
+          />
+        )}
+        onChange={(e, v) => onChange(title, v, index)}
+      />
+
+      {/* <Select
         labelId="editingVariable"
         id="editingVariable"
         name="editingVariable"
@@ -45,7 +63,7 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
             </MenuItem>
           );
         })}
-      </Select>
+      </Select> */}
     </FormControl>
   );
 };
