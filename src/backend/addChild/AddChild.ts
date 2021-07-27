@@ -4,7 +4,7 @@ import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { AddComponent } from "./AddComponent";
 import { AddReset } from "./AddReset";
-import { AddUnit } from "./AddUnit";
+import { addUnit } from "./addUnit";
 import { AddUnits } from "./AddUnits";
 import { AddVariable } from "./AddVariable";
 
@@ -33,7 +33,7 @@ const AddChild = async (
       break;
     }
     case Elements.unit: {
-      await AddUnit(fm, child);
+      await addUnit(fm, child);
       break;
     }
     default:
