@@ -45,7 +45,7 @@ const AddUnits = async (fm: FileManagement, child: ChildUnitsDetail) => {
 
   // Get the truth and update it
   m.addUnits(newUnits);
-  fm.setCurrentComponent(m.clone(), Elements.model);
+  fm.setCurrentComponent(m, Elements.model);
   await fm.updateContent(modelToString(libcellml, m));
 };
 

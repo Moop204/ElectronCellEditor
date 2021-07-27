@@ -30,10 +30,10 @@ const fs = require("fs");
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-// const libcellModule = require("libcellml.js/libcellml.common");
+const libcellModule = require("libcellml.js/libcellml.common");
 
-import libCellMLModule from "./mainLibcellml/libcellml.js";
-import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+// import libCellMLModule from "./mainLibcellml/libcellml.js";
+// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -78,15 +78,15 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
   async init(): Promise<void> {
     if (this._cellmlLoaded) return;
     // @ts-ignore
-    this._cellml = await new libCellMLModule({
-      locateFile(path: string, prefix: string) {
-        if (path.endsWith(".wasm")) {
-          return prefix + libCellMLWasm;
-        }
-        return prefix + path;
-      },
-    });
-    // this._cellml = await libcellModule();
+    // this._cellml = await new libCellMLModule({
+    //   locateFile(path: string, prefix: string) {
+    //     if (path.endsWith(".wasm")) {
+    //       return prefix + libCellMLWasm;
+    //     }
+    //     return prefix + path;
+    //   },
+    // });
+    this._cellml = await libcellModule();
     this._cellmlLoaded = true;
   }
 

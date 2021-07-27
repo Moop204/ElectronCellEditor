@@ -7,7 +7,7 @@ import { EditorElement } from "../../types/EditorElement";
 // @fm - Manages the state of the file
 // @child - Identifies parent component name as well as reset index
 
-const RemoveReset = async (fm: FileManagement, child: ISearch) => {
+const removeReset = async (fm: FileManagement, child: ISearch) => {
   console.log("Removing Reset");
   const libcellml = fm._cellml;
   const printer: Printer = new libcellml.Printer();
@@ -18,7 +18,7 @@ const RemoveReset = async (fm: FileManagement, child: ISearch) => {
   // Remove element in properties
   let curElm = fm.getCurrentComponent() as Component;
   const componentName = curElm.name();
-  curElm = curElm.clone();
+  // curElm = curElm.clone();
   curElm.removeResetByIndex(index);
 
   // Remove element in editor
@@ -28,4 +28,4 @@ const RemoveReset = async (fm: FileManagement, child: ISearch) => {
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
 
-export { RemoveReset };
+export { removeReset };
