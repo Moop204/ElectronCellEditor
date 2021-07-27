@@ -113,7 +113,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
         <Grid item xs={5}>
           <Typography variant="h4">Issues</Typography>
         </Grid>
-        <Grid container item xs={7}>
+        {/* <Grid container item xs={7}>
           <br />
           <Grid item md={12}>
             {expanded && (
@@ -173,7 +173,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
               </span>
             )}
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <Grid item md={12}>
           <IssueText issues={issues} />

@@ -32,7 +32,6 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
   return (
     <FormControl fullWidth>
       <Autocomplete
-        freeSolo
         id="editingVariable"
         options={validVariable.map((v: VariableDescriptor) => v.variable)}
         defaultValue={value}
