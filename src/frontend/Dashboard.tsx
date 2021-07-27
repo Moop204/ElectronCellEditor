@@ -19,6 +19,10 @@ import { UnexpandedSidebar } from "./sidebar/UnexpandedSidebar";
 import { ExpandedSidebar } from "./sidebar/ExpandedSidebar";
 import _ from "lodash";
 import { PresentationMath } from "./sidebar/math/PresentationMath";
+import { SidebarManager } from "./sidebar/SidebarManager";
+import MathJax from "mathjax3-react";
+
+global.Buffer = global.Buffer || require("buffer").Buffer;
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -44,12 +48,12 @@ const Dashboard: FunctionComponent = () => {
   const [contentExist, setContentExist] =
     useState(`<?xml version="1.0" encoding="UTF-8"?>
   <model xmlns="http://www.cellml.org/cellml/2.0#"
-  xmlns:cellml="http://www.cellml.org/cellml/2.0#"
-  xmlns:xlink="http://www.w3.org/1999/xlink">
+  xmlns:cellml="http://www.cellml.org/cellml/2.0#">
 
   </model>`);
+  const [baseContent, setBaseContent] = useState(contentExist);
   const [valid, setValid] = useState(false);
-  const [viewSidebar, setViewSidebar] = useState(false);
+  const [viewSidebar, setViewSidebar] = useState(true);
 
   const switchSidebar = () => {
     console.log("Switching sidebar to " + viewSidebar);
@@ -80,6 +84,7 @@ const Dashboard: FunctionComponent = () => {
       setValid(res);
     };
     window.api.receive("validated-file", validatedFile);
+    //window.api.receive("validated-file", validatedFile);
 
     return () => {
       window.api.remove("init-content", initContentFn);
@@ -106,27 +111,44 @@ const Dashboard: FunctionComponent = () => {
   return (
     <div className={styles.root}>
       <Router>
-        <Grid container spacing={1}>
-          {viewSidebar && (
-            <ExpandedSidebar
-              content={contentExist}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
+        <Grid container spacing={1} direction="row">
+          <Grid item xs={viewSidebar ? 3 : 1}>
+            {viewSidebar && (
+              <ExpandedSidebar
+                content={contentExist}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+            {!viewSidebar && (
+              <UnexpandedSidebar
+                content={contentExist}
+                baseContent={baseContent}
+                switchSidebar={switchSidebar}
+                switchView={switchView}
+                viewSidebar={viewSidebar}
+                view={view}
+                valid={valid}
+                updateBaseContent={setBaseContent}
+              />
+            )}
+          </Grid>
+          {/* <Grid item xs={viewSidebar ? 3 : 1}>
+            <SidebarManager
               viewSidebar={viewSidebar}
               view={view}
               valid={valid}
-            />
-          )}
-          {!viewSidebar && (
-            <UnexpandedSidebar
               content={contentExist}
+              baseContent={baseContent}
+              setBaseContent={setBaseContent}
               switchSidebar={switchSidebar}
               switchView={switchView}
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
             />
-          )}
+          </Grid> */}
 
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
@@ -142,29 +164,8 @@ const Dashboard: FunctionComponent = () => {
                     />
                   )}
                 </Route>
-                <Route exact path="">
-                  {/* <PresentationMath
-                    mathml={`      <apply><eq/> 
-                    <apply><diff/>
-                      <bvar><ci>t</ci></bvar>
-                      <ci>N</ci>
-                    </apply>
-                    <apply><divide/>
-                      <apply><times/>
-                        <ci>r</ci>
-                        <ci>N</ci>
-                        <apply><minus/> 
-                          <ci>K</ci>
-                          <ci>N</ci>
-                        </apply> 
-                      </apply>
-                      <bvar><ci>K</ci></bvar>
-                    </apply>        
-                  </apply>
-            
-            `}  
-                  /> */}
 
+                <Route exact path="">
                   {!valid && (
                     <Alert severity="error">
                       File is not in valid CellML. You cannot use Concise View

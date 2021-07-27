@@ -4,42 +4,38 @@ import _ from "lodash";
 import { Theme } from "@material-ui/core/styles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Button from "@material-ui/core/Button";
 import { IProperties } from "../../../types/IProperties";
-import { Elements, elmToStr } from "../../../types/Elements";
-import { ISelection, IUpdate } from "../../../types/IQuery";
+import { Elements } from "../../../types/Elements";
+import { ISelection } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
 import { Box, Paper, Typography } from "@material-ui/core";
-import { AttributeWidget } from "./AttributeWidget";
-import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
+import { AttributeWidget } from "./attributes/AttributeWidget";
 import { UnitWidget } from "./UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
-import { ElementHelp } from "../help/ElementHelp";
+import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
+import { EmptyProperty } from "./content/EmptyProperty";
+import { LoadingProperty } from "./content/LoadingProperty";
 import { ConnectionWidget } from "./ConnectionWidget";
 
 const localStyles = makeStyles(() =>
   createStyles({
     propertyWidget: {
-      leftPadding: "5px",
-    },
-    subElementType: {
-      display: "flex",
-      justifyContent: "flex-end",
-      fontSize: "1.2em",
+      leftPadding: "1wv",
+      rightPading: "1wv",
     },
     plainText: {
       color: "black",
     },
-    elementType: {
-      display: "flex",
-      justifyContent: "flex-end",
-      fontSize: "1.8em",
-    },
+
     properties: {
       height: "70vh",
-      width: "100%",
-      alignContent: "flex-start",
+      leftPadding: "1wv",
+      rightPading: "1wv",
+      alignContent: "start",
+    },
+    updateAttribute: {
+      marginTop: "2vh",
     },
   })
 );
@@ -70,7 +66,6 @@ const updateAttr = (changeSet: AttributeChange[]) => {
       value: attributeValue,
     };
   };
-
   window.api.send("update-attribute", changeSet.map(processUpdate));
 };
 
@@ -123,42 +118,18 @@ const PropertiesWidget: FunctionComponent = () => {
     return () => {
       window.api.remove("res-select-element", handleUpdateAbstractModel);
       window.api.remove("init-content", handleInitContent);
+      window.api.remove("res-get-element", handleReceiveSelectedElement);
     };
   }, []);
-
-  // const dbUpdateAttr = _.debounce(
-  //   (type: Elements, compName: string, attrType: string, attrVal: string) =>
-  //     updateAttr(type, compName, attrType, attrVal),
-  //   300
-  // );
 
   // Before a file is loaded
   if (!abstractModel) {
     window.api.send("get-element");
-    return (
-      <Grid item className={styles.plainText}>
-        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-          Properties
-        </Typography>
-        LOADING ...
-      </Grid>
-    );
+    return <LoadingProperty />;
   }
 
   if (abstractModel.type === Elements.none) {
-    return (
-      <Grid item className={styles.plainText} style={{ height: "60%" }}>
-        <Paper className={styles.propertyWidget} style={{ height: "100%" }}>
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Properties
-          </Typography>
-          <Typography variant="body1" style={{ paddingLeft: "5px" }}>
-            No CellML element available to select. Please use a valid CellML
-            file.
-          </Typography>
-        </Paper>
-      </Grid>
-    );
+    return <EmptyProperty />;
   }
 
   // abstractModel.type
@@ -192,9 +163,6 @@ const PropertiesWidget: FunctionComponent = () => {
       }
     }
     if (newChangeFlag) diffSet.push(change);
-
-    //    dbUpdateAttr(abstractModel.type, compName, attrType, attrVal);
-    // console.log('MODEL PROPERTIES: Updated attribute');
   };
 
   const sendAttributeUpdate = () => {
@@ -213,119 +181,95 @@ const PropertiesWidget: FunctionComponent = () => {
     }
 
     // Update the set
-    console.log("DIFFSET BEFORE SENDING");
-    console.log(diffSet);
     const submitSet = [...postSet, ...prioritySet];
     updateAttr(submitSet);
     setDiffSet([]);
   };
 
-  console.log(abstractModel);
+  const handleNonSave = () => setDiffSet([]);
+
+  let propertyContent;
   if (abstractModel.attribute.name) {
-    return (
+    propertyContent = (
       <Grid
         container
-        item
         className={styles.properties}
-        xs={12}
-        style={{ height: "99%" }}
+        spacing={1}
+        justifyContent="flex-start"
       >
-        <Box
-          component="div"
-          className={styles.propertyWidget}
-          style={{ height: "100%", overflowX: "hidden" }}
-          overflow="scroll"
-        >
-          <Paper style={{ height: "100%" }}>
-            <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-              Properties
-            </Typography>
-            <Grid container item className={styles.plainText}>
-              <Grid item className={styles.elementType} xs={2}>
-                <Button
-                  onClick={() => {
-                    resetChanges();
-                    window.api.send("resetParent");
-                  }}
-                >
-                  Parent
-                </Button>
-              </Grid>
-              <Grid item className={styles.elementType} xs={10}>
-                <Typography variant="h5" style={{ paddingRight: "5px" }}>
-                  {capitaliseFirst(elmToStr(abstractModel.type))}
-                </Typography>
-                <ElementHelp type={abstractModel.type} />
-              </Grid>
-              <AttributeWidget
-                attribute={abstractModel.attribute}
-                handleChange={handleAttributeChange}
-              />
-              <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
-              <UnitWidget
-                unitMap={abstractModel.unit}
-                parentName={abstractModel.attribute.name}
-              />
-              <ChildrenWidget
-                abstractChildren={abstractModel.children}
-                parentType={abstractModel.type}
-                resetChanges={resetChanges}
-              />
-              <AddChildrenWidget
-                element={abstractModel.type}
-                name={abstractModel.attribute.name}
-              />
-            </Grid>
-          </Paper>
-        </Box>
+        <Typography variant="h2" style={{ paddingLeft: "5px" }}>
+          Properties
+        </Typography>
+        <PropertiesWidgetTop
+          type={abstractModel.type}
+          onClick={handleNonSave}
+        />
+        <AttributeWidget
+          attribute={abstractModel.attribute}
+          handleChange={handleAttributeChange}
+          updateAttribute={sendAttributeUpdate}
+        />
+
+        {abstractModel.unit.length > 0 && (
+          <UnitWidget
+            unitMap={abstractModel.unit}
+            parentName={abstractModel.attribute.name}
+          />
+        )}
+
+        {abstractModel.connection?.length > 0 && (
+          <ConnectionWidget connection={abstractModel.connection} />
+        )}
+
+        {Object.entries(abstractModel.children).length > 0 && (
+          <ChildrenWidget
+            abstractChildren={abstractModel.children}
+            parentType={abstractModel.type}
+            resetChanges={resetChanges}
+          />
+        )}
+        <AddChildrenWidget
+          element={abstractModel.type}
+          name={abstractModel.attribute.name}
+        />
       </Grid>
     );
   } else {
-    return (
+    propertyContent = (
       <Grid
         container
-        item
         className={styles.properties}
-        xs={12}
-        style={{ height: "60%" }}
+        spacing={1}
+        justifyContent="flex-start"
       >
-        <Box
-          component="div"
-          className={styles.propertyWidget}
-          style={{ height: "100%", overflowX: "hidden" }}
-          overflow="scroll"
-        >
-          <Paper style={{ height: "100%" }}>
-            <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-              Properties
-            </Typography>
-            <Grid container item className={styles.plainText}>
-              <Grid item className={styles.elementType} xs={2}>
-                <Button
-                  onClick={() => {
-                    window.api.send("resetParent");
-                  }}
-                >
-                  Parent
-                </Button>
-              </Grid>
-              <Grid item className={styles.elementType} xs={10}>
-                <Typography variant="h5" style={{ paddingRight: "5px" }}>
-                  {capitaliseFirst(elmToStr(abstractModel.type))}
-                </Typography>
-                <ElementHelp type={abstractModel.type} />
-              </Grid>
-              <AttributeWidget
-                attribute={abstractModel.attribute}
-                handleChange={handleAttributeChange}
-              />
-              <Button onClick={sendAttributeUpdate}>Update Attribute</Button>
-            </Grid>
-          </Paper>
-        </Box>
+        <Typography variant="h2" style={{ paddingLeft: "5px" }}>
+          Properties
+        </Typography>
+        <PropertiesWidgetTop
+          type={abstractModel.type}
+          onClick={handleNonSave}
+        />
+        <Grid container item className={styles.plainText}>
+          <AttributeWidget
+            attribute={abstractModel.attribute}
+            handleChange={handleAttributeChange}
+            updateAttribute={sendAttributeUpdate}
+          />
+        </Grid>
       </Grid>
     );
   }
+
+  return (
+    <Box
+      component="div"
+      className={styles.propertyWidget}
+      style={{ height: "95vh", overflowX: "hidden", paddingLeft: "5px" }}
+      overflow="scroll"
+    >
+      {propertyContent}
+    </Box>
+  );
 };
 
 export { PropertiesWidget, updateAttr, AttributeChange };

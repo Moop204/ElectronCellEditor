@@ -1,10 +1,15 @@
 import React, { FunctionComponent, MouseEventHandler } from "react";
-import { Elements, elmToStr } from "../../../../types/Elements";
+import { Elements, elmToStr, strToElm } from "../../../../types/Elements";
 import { IChild } from "../../../../types/IProperties";
 import { ISearch, ISelect } from "../../../../types/IQuery";
 import PropertyIcon from "./PropertyIcon";
 import Grid from "@material-ui/core/Grid";
-import { Box, Divider, Paper, Typography } from "@material-ui/core";
+import {
+  createStyles,
+  Divider,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
 
 const findElement = (elm: Elements, name: string, index: number) => {
@@ -30,6 +35,17 @@ interface IChildrenWidget {
   resetChanges: () => void;
 }
 
+const useStyle = makeStyles(() =>
+  createStyles({
+    childCategory: {
+      marginTop: "1vh",
+    },
+    childElement: {
+      marginTop: "5px",
+    },
+  })
+);
+
 const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   abstractChildren,
   parentType,
@@ -39,47 +55,60 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
     return <div>NO CHILD</div>;
   }
 
+  const styles = useStyle();
   return (
-    <Grid item xs={12}>
-      <Box style={{ height: "100%", backgroundColor: "#fff" }}>
-        {Object.entries(abstractChildren).length > 0 && (
-          <Typography variant="h5" style={{ paddingLeft: "5px" }}>
-            Children
-          </Typography>
-        )}
+    <Grid
+      container
+      item
+      direction="column"
+      style={{ paddingRight: "20px", display: "grid" }}
+    >
+      {Object.entries(abstractChildren).length > 0 && (
+        <Typography variant="h4" style={{ paddingLeft: "5px" }}>
+          Children
+        </Typography>
+      )}
 
-        {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
+      {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
+        if (childrenType.length > 0)
           return (
-            <div key={parentKey}>
+            <div
+              key={parentKey}
+              className={styles.childCategory}
+              style={{ paddingLeft: "2vw" }}
+            >
               <Divider variant="middle" />
-              <Typography variant="h6" style={{ paddingLeft: "5px" }}>
-                {capitaliseFirst(parentKey)}
-              </Typography>
+              <Typography variant="h5">{capitaliseFirst(parentKey)}</Typography>
               {Object.values(childrenType).map(
                 (attrType: IChild, index: number) => {
                   return (
-                    <PropertyIcon
-                      title={attrType.name}
-                      onClick={() => {
-                        findElement(
-                          Elements[parentKey as keyof typeof Elements],
-                          attrType.name ? attrType.name : "",
-                          attrType.index
-                        );
-                        resetChanges();
-                      }}
-                      element={parentKey}
-                      key={attrType.name}
-                      index={index}
-                      parentName={attrType.parentName}
-                    />
+                    <Grid
+                      container
+                      direction="row-reverse"
+                      key={parentKey + attrType.name}
+                    >
+                      <PropertyIcon
+                        title={attrType.name}
+                        onClick={() => {
+                          findElement(
+                            Elements[parentKey as keyof typeof Elements],
+                            attrType.name ? attrType.name : "",
+                            attrType.index
+                          );
+                          resetChanges();
+                        }}
+                        element={parentKey}
+                        key={attrType.name}
+                        index={index}
+                        parentName={attrType.parentName}
+                      />
+                    </Grid>
                   );
                 }
               )}
             </div>
           );
-        })}
-      </Box>
+      })}
     </Grid>
   );
 };

@@ -13,9 +13,11 @@ import {
   DialogTitle,
   Typography,
 } from "@material-ui/core";
+import { RulerIcon } from "../../../assets/RulerIcon";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
 import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
+import { DeleteButton } from "./DeleteButton";
 
 interface IPropertyIcon {
   title: string;
@@ -28,14 +30,33 @@ interface IPropertyIcon {
 const useStyle = makeStyles(() =>
   createStyles({
     button: {
-      margin: "0.5vh",
-      marginLeft: "2vw",
+      marginTop: "0.5vh",
+      paddingLeft: "3px",
+      //marginLeft: "1vw",
+      paddingRight: "0px",
+      maxWidth: "16vw",
     },
-    buffer: {
-      padding: "3vh",
+    root: {
+      flexGrow: 1,
+    },
+    buttonText: {
+      paddingLeft: "8px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      justifyContent: "left",
+      textAlign: "justify",
+      textTransform: "none",
     },
   })
 );
+
+const truncateText = (s: string) => {
+  if (s.length > 23) {
+    return s.substr(0, 20) + "...";
+  } else {
+    return s;
+  }
+};
 
 const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   const { onClick, title, element, index, parentName } = props;
@@ -54,7 +75,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
       icon = <RotateLeftIcon />;
       break;
     case "units":
-      icon = <CropSquareIcon />;
+      icon = <RulerIcon />;
       break;
     case "variable":
       icon = <ChangeHistoryIcon />;
@@ -69,7 +90,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
 
   if (element === "connection") {
     return (
-      <Grid item container xs={10}>
+      <Grid container className={style.root}>
         <Grid item xs={10}>
           <Button
             variant="outlined"
@@ -77,8 +98,14 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
             fullWidth
             className={style.button}
           >
-            {icon}
-            {title}
+            <Grid container>
+              <Grid item xs={2}>
+                {icon}
+              </Grid>
+              <Grid item xs={10}>
+                {truncateText(title)}
+              </Grid>
+            </Grid>
           </Button>
         </Grid>
         <Grid item xs={2}>
@@ -102,16 +129,31 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   }
 
   return (
-    <Grid item xs={10}>
-      <Button
-        variant="outlined"
-        onClick={onClick}
-        className={style.button}
-        fullWidth
-      >
-        {icon}
-        {title}
-      </Button>
+    <Grid container direction="row" key={element + title}>
+      <Grid item xs={11} className={style.button}>
+        <Button
+          variant="outlined"
+          onClick={onClick}
+          fullWidth
+          className={style.button}
+        >
+          <Grid container>
+            <Grid item xs={1}>
+              {icon}
+            </Grid>
+            <Grid item xs={11} className={style.buttonText}>
+              {title}
+            </Grid>
+          </Grid>
+        </Button>
+      </Grid>
+      <Grid item xs={1} className={style.button}>
+        <DeleteButton
+          elementType={strToElm(element)}
+          name={title}
+          index={index}
+        />
+      </Grid>
     </Grid>
   );
 };

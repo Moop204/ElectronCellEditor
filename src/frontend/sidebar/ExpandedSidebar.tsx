@@ -12,9 +12,15 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
   viewSidebar,
   view,
   valid,
+  updateBaseContent,
 }) => {
+  const primaryContent = view ? (
+    <PropertiesWidget />
+  ) : (
+    <IssuesWidget expanded={true} />
+  );
   return (
-    <Grid item xs={3}>
+    <div style={{ backgroundColor: "#fff" }}>
       <OptionWidget
         content={content}
         switchSidebar={switchSidebar}
@@ -22,11 +28,10 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
         viewSidebar={viewSidebar}
         view={view}
         valid={valid}
+        updateBaseContent={updateBaseContent}
       />
-
-      {view && <PropertiesWidget />}
-      {!view && <IssuesWidget expanded={viewSidebar} />}
-    </Grid>
+      {view && valid ? <PropertiesWidget /> : <IssuesWidget expanded={true} />}
+    </div>
   );
 };
 

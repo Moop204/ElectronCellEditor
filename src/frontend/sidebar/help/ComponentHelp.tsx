@@ -5,7 +5,6 @@ import { HelpPopup } from "./HelpPopup";
 const ComponentHelp: FunctionComponent = () => {
   const exampleCode = `
   <component name="main_component">
-    <component name="inner_component" />
     <variable name="inner_variable" />
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       ...
@@ -27,7 +26,7 @@ const ComponentHelp: FunctionComponent = () => {
         </Paper>
         <b>Attributes</b>
         <br />
-        <i>Name*</i> - Identifier for the component
+        <i>Name*</i> - Identifier for the component.
         <br />
         <i>Import Source</i> - Required only when describing an imported
         component. Refers to the location of the CellML file the component is
@@ -40,9 +39,6 @@ const ComponentHelp: FunctionComponent = () => {
         <b>Children</b>
         <br />
         <i>Variables</i> - A variable contained within the component.
-        <br />
-        <i>Component</i> - A component that is encapsulated within this
-        component.
         <br />
         <i>Reset</i> - Describes a mathematical operation on variables triggered
         by the values of variables.

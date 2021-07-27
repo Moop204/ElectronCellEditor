@@ -343,6 +343,7 @@ interface Issue {
   setVariable(variable: Variable): void;
   reset(): Reset;
   setReset(reset: Reset): void;
+  url(): string;
 }
 
 interface Component extends ComponentEntity, ImportedEntity {
@@ -359,7 +360,7 @@ interface Component extends ComponentEntity, ImportedEntity {
   hasVariableByVariable(variable: Variable): boolean;
   removeAllResets(): void;
   removeAllVariables(): void;
-  removeResetByIndex(): void;
+  removeResetByIndex(index: number): void;
   removeResetByReset(reset: Reset): boolean;
   removeVariableByIndex(index: number): boolean;
   removeVariableByName(name: string): boolean;

@@ -27,7 +27,7 @@ const validation = (
       .required('Attribute "name" is required')
       .min(1, "Require at least one character")
       .matches(
-        /^[a-zA-Z][a-z-A-Z0-9_]*$/,
+        /^[a-zA-Z][a-zA-Z0-9_]*$/,
         "Must start with an alphabetical character"
       ),
     units: yup.string().required().oneOf(curUnits, "Valid units required"),
@@ -97,6 +97,7 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          required
           fullWidth
           id="name"
           name="name"

@@ -1,5 +1,6 @@
-global.Buffer = global.Buffer || require("buffer").Buffer;
-
+// @ts-ignore
+//global.Buffer = global.Buffer || require("buffer").Buffer;
+import { Buffer } from "buffer";
 import React from "react";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";

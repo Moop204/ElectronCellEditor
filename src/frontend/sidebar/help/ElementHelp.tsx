@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Elements } from "../../../types/Elements";
 import { ComponentHelp } from "./ComponentHelp";
+import { MathHelp } from "./MathHelp";
 import { ModelHelp } from "./ModelHelp";
 import { ResetHelp } from "./ResetHelp";
 import { UnitHelp } from "./UnitHelp";
@@ -31,6 +32,9 @@ const ElementHelp: FunctionComponent<IElementHelp> = ({ type }) => {
       break;
     case Elements.reset:
       help = <ResetHelp />;
+    case Elements.math:
+      help = <MathHelp />;
+
     default:
   }
   return help;

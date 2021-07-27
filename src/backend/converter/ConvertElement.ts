@@ -1,10 +1,8 @@
-import { Elements, elmToStr } from "../../types/Elements";
+import { Elements } from "../../types/Elements";
 import {
   Model,
   Units,
   Component,
-  NamedEntity,
-  ComponentEntity,
   Variable,
   Reset,
 } from "../../types/ILibcellml";
@@ -16,18 +14,19 @@ import { convertReset } from "./ConvertReset";
 import { convertUnits } from "./ConvertUnits";
 import { convertVariable } from "./ConvertVariable";
 
-// TODO: Remove the filemanagement parameter once .parent() working
+// Convert currently selected element into properties-ready format
+// @selectedElement - Type of the currently selected element
+// @curElm - Current element (TODO: Remove and replace with fm)
+// @fm - Manager of state
 const convertSelectedElement = (
   selectedElement: Elements,
   curElm: Component | Model | Reset | Units | Variable | null,
   fm: FileManagement
 ) => {
-  console.log("Converting selected element " + elmToStr(selectedElement));
   let prop: IProperties = {
     type: Elements.none,
     attribute: {},
     children: {},
-    parent: { name: "", type: Elements.none },
     unit: [],
   };
   if (curElm) {
@@ -42,7 +41,7 @@ const convertSelectedElement = (
         prop = convertUnits(curElm as Units);
         break;
       case Elements.reset:
-        prop = convertReset(curElm as Reset, fm);
+        prop = convertReset(curElm as Reset);
         break;
       case Elements.variable:
         prop = convertVariable(curElm as Variable);

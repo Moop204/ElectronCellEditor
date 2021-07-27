@@ -12,34 +12,42 @@ import {
   Parser,
   NamedEntity,
 } from "../types/ILibcellml";
-import { ISearch, ISelect, ISelection, IUpdate } from "../types/IQuery";
+import {
+  IDirectSelect,
+  ISearch,
+  ISelect,
+  ISelection,
+  IUpdate,
+} from "../types/IQuery";
 import {
   obtainIssues,
   validateModel,
 } from "../frontend/sidebar/issues/IssueUtilities";
-import { updateName } from "./updateAttribute/updateName/UpdateName";
-import { updateUnits } from "./updateAttribute/UpdateUnits";
-import { updateMath } from "./updateAttribute/UpdateMath";
 import { EditorElement } from "../types/EditorElement";
 import { AddChild } from "./addChild/AddChild";
 import { ChildDetail } from "../types/ChildDetail";
-import fs from "fs";
+const fs = require("fs");
 
-//declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-const libcellModule = require("libcellml.js/libcellml.common");
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-// import libCellMLModule from "libcellml.js";
-// import libCellMLWasm from "libcellml.js/libcellml.wasm";
+// const libcellModule = require("libcellml.js/libcellml.common");
 
 import libCellMLModule from "./mainLibcellml/libcellml.js";
 import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
-import { getAllVariableNames } from "./utility/GetAllVariableNames";
+import {
+  getAllVariableNames,
+  getGlobalVariableNames,
+} from "./utility/GetAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
+import { RemoveElement } from "./removeChild/removeElement";
+import { SaveAs, Save } from "./../utility/Save";
+import { findElement } from "./utility/FindElement";
+import { generateModel } from "./addChild/generateModel";
 
 interface FileIssues {
   model: string;
@@ -51,6 +59,7 @@ export default class FileManagement {
   type: Elements;
   _cellml: any;
   _cellmlLoaded: boolean;
+  selectedFile: string;
 
   constructor() {
     this.content = `<?xml version="1.0" encoding="UTF-8"?>
@@ -62,10 +71,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     this.currentComponent = null;
     this.type = Elements.none;
     this._cellmlLoaded = false;
+    this.selectedFile = "";
     this.init();
   }
 
   async init(): Promise<void> {
+    if (this._cellmlLoaded) return;
     // @ts-ignore
     this._cellml = await new libCellMLModule({
       locateFile(path: string, prefix: string) {
@@ -167,76 +178,12 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     }
   };
 
-  // Find selected element
-  findElement(select: ISearch, element: Elements): void {
-    if (!this.currentComponent) {
-      return;
-    }
-    const { name, index } = select;
-
-    switch (element) {
-      case Elements.model:
-      case Elements.component:
-        {
-          const curComp = this.currentComponent as ComponentEntity;
-          if (name != null) {
-            this.currentComponent = curComp.componentByName(name, false);
-          } else if (index != null) {
-            this.currentComponent = curComp.componentByIndex(index);
-          }
-          this.type = Elements.component;
-        }
-        break;
-      case Elements.units:
-        {
-          // Parent
-          const curComp = this.currentComponent as Model;
-          if (name != null) {
-            if (curComp.hasUnitsByName(name)) {
-              this.currentComponent = curComp.unitsByName(name);
-            } else {
-              this.currentComponent = curComp.unitsByName(name.slice(1));
-            }
-          } else if (index != null) {
-            this.currentComponent = curComp.unitsByIndex(index);
-          }
-          this.type = Elements.units;
-        }
-        break;
-      case Elements.reset:
-        {
-          // Require to find in parent
-          const curComp = this.currentComponent as Component;
-          if (index != null) {
-            this.currentComponent = curComp.reset(index);
-          } else {
-            console.log("NO INDEX given FOR A RESET");
-          }
-          this.type = Elements.reset;
-          console.log("ELEMENT OF TYPE RESET");
-          console.log(this.currentComponent);
-        }
-        break;
-      case Elements.variable:
-        {
-          const curComp = this.getCurrentComponent() as Component;
-          this.setCurrentComponent(
-            curComp.variableByName(name as string),
-            Elements.variable
-          );
-        }
-        console.log("SET TYPE TO VARIABLE");
-        break;
-      default:
-        console.log("findElement failed to figure out which element it was");
-        break;
-    }
-  }
-
   // Import File
 
   async importFile(fileLoc: string): Promise<FileIssues> {
     const file: string = fs.readFileSync(fileLoc, "utf8");
+    console.log(file);
+    this.selectedFile = fileLoc;
     try {
       const validator = await validateModel(this, file);
       const issues = await obtainIssues(validator);
@@ -255,6 +202,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         model: file,
         issues: issues,
       };
+      console.log(this.content);
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
@@ -306,14 +254,61 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     });
   }
 
+  async saveFile() {
+    console.log("GAVE THIS " + this.selectedFile);
+    const fileName = await Save(this.getContent(), this.selectedFile);
+    console.log("GOT THIS " + fileName);
+    this.selectedFile = fileName;
+  }
+
+  async saveAsFile() {
+    console.log("GAVE THIS " + this.selectedFile);
+    const fileName = await SaveAs(this.getContent(), this.selectedFile);
+    console.log("GOT THIS " + fileName);
+    this.selectedFile = fileName;
+  }
+
   // Run once to set up handlers
   setupHandlers(): void {
+    ipcMain.on(
+      "update-content",
+      async (event: IpcMainEvent, newContent: string) => {
+        await this.updateContent(newContent);
+        this.resetToModel();
+        const selection = this.getCurrentAsSelection(this.type);
+        event.reply("res-select-element", selection);
+      }
+    );
+
     ipcMain.on(
       "save-content",
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
+        this.saveFile();
       }
     );
+
+    ipcMain.on("to-parent", async (event: IpcMainEvent) => {
+      if (this.type === Elements.model) return;
+      const cur = this.getCurrentComponent();
+      const parent = cur.parent();
+      let newType = Elements.component;
+      console.log("Going back to parent");
+      console.log(elmToStr(this.type));
+      switch (this.type) {
+        case Elements.component:
+          if (parent instanceof this._cellml.Model) {
+            newType = Elements.model;
+          }
+          break;
+        case Elements.units:
+          newType = Elements.model;
+          break;
+      }
+      this.setCurrentComponent(parent as EditorElement, newType);
+      const selection = this.getCurrentAsSelection(this.type);
+      event.reply("res-select-element", selection);
+    });
 
     // Used in Spatial view
     // Assume starting valid
@@ -369,17 +364,25 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
         console.log(`Looking for ${elmToStr(element)}`);
         console.log(select);
 
-        this.findElement(select, element);
+        findElement(this, select, element, this.getCurrentComponent());
 
-        console.log(`HEY LOOK ${elmToStr(this.type)}`);
         const selection = this.getCurrentAsSelection(element);
-        console.log("LOO AT ME I AH ERE");
-        console.log(selection);
         event.reply("res-select-element", selection);
       }
     );
 
-    ipcMain.on("resetParent", async (event: IpcMainEvent) => {
+    ipcMain.on(
+      "direct-find-element",
+      (event: IpcMainEvent, { element, select, parent }: IDirectSelect) => {
+        const m = generateModel(this._cellml, this.getContent());
+        const c = m.componentByName(parent, false);
+        findElement(this, select, element, c);
+        const selection = this.getCurrentAsSelection(element);
+        event.reply("res-select-element", selection);
+      }
+    );
+
+    ipcMain.on("reset-parent", async (event: IpcMainEvent) => {
       const resetProp = await this.resetToModel();
       event.reply("res-get-element", resetProp);
     });
@@ -393,9 +396,6 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
     // Sets the raw truth directly to frontend
     ipcMain.on("get-element", (event: IpcMainEvent) => {
       const prop = this.getCurrentAsSelection(this.type);
-      console.log("GetElement: On Get Element");
-      console.log(this.getCurrentComponent());
-      console.log(prop);
       event.reply("res-get-element", prop.prop);
     });
 
@@ -403,6 +403,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       const validator = await validateModel(this, file);
       event.reply("validated-file", validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
+      await this.updateContent(file);
       if (issues.length === 0 && this.type === Elements.none) {
         this.type = Elements.model;
         const libcellml = this._cellml;
@@ -417,6 +418,8 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       }
       event.reply("error-reply", issues);
     });
+
+    //ipcMain.emit()
 
     ipcMain.on("all-components", async (event: IpcMainEvent) => {
       if (!this._cellmlLoaded) {
@@ -442,11 +445,30 @@ xmlns:xlink="http://www.w3.org/1999/xlink">
       event.returnValue = await getAllVariableNames(this);
     });
 
-    // TODO: Complete implementation
-    ipcMain.on("add-connection", async () => {});
+    // Returns a list of all variables in the model
+    // Placeholder until bindings for equivalence is completed
+    ipcMain.on("global-variable", async (event: IpcMainEvent) => {
+      event.returnValue = await getGlobalVariableNames(this);
+    });
 
-    ipcMain.on("remove-connection", async () => {});
+    ipcMain.on(
+      "delete-element",
+      async (event: IpcMainEvent, { element, select }: ISelect) => {
+        RemoveElement(this, element, select);
+        const prop = this.getCurrentAsSelection(this.type);
+        event.reply("res-get-element", prop.prop);
+        event.reply("update-content-b", this.getContent());
+      }
+    );
 
-    // ipcMain.on("");
+    ipcMain.on("parent-name", (event: IpcMainEvent) => {
+      event.returnValue = (
+        this.getCurrentComponent().parent() as NamedEntity
+      ).name();
+    });
+  }
+
+  destroyHandlers(): void {
+    ipcMain.removeAllListeners();
   }
 }

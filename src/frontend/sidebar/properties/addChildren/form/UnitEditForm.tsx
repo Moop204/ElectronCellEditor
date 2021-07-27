@@ -55,7 +55,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
   unit: { reference, prefix, exponent, multiplier },
 }) => {
   let validUnits: string[] = AllStandardUnits();
-  validUnits = [...validUnits, ...window.api.sendSync("all-units")];
+  validUnits = [...window.api.sendSync("all-units"), ...validUnits];
   const validPrefix = AllPrefix();
   const validationSchema = validation(validPrefix, validUnits);
   const [baseReference, setReference] = useState(reference);
@@ -139,7 +139,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
           )}
         </Grid>
 
-        <FormControl fullWidth>
+        <FormControl fullWidth required>
           <InputLabel id="units" error={Boolean(formik.errors.units)}>
             Units
           </InputLabel>
@@ -149,6 +149,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
             name="units"
             value={formik.values.units}
             onChange={formik.handleChange}
+            required
             label="units"
             input={<Input />}
             error={formik.touched.units && Boolean(formik.errors.units)}

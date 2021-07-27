@@ -5,7 +5,9 @@ enum Elements {
   unit,
   reset,
   variable, // TODO: Remove maybe?
+  connection,
   none, // For Model parents
+  math,
 }
 
 const strToElm = (s: string) => {
@@ -24,6 +26,8 @@ const strToElm = (s: string) => {
       return Elements.unit;
     case "none":
       return Elements.none;
+    case "connection":
+      return Elements.connection;
     default:
       console.log(`ELEMENTS: Failed to identify ${s} as an Element`);
   }
@@ -46,6 +50,8 @@ const elmToStr = (e: Elements): string => {
       return "unit";
     case Elements.none:
       return "none";
+    case Elements.connection:
+      return "connection";
 
     default:
       console.log(`ELEMENTS: Failed to identify ${e} as an Element`);

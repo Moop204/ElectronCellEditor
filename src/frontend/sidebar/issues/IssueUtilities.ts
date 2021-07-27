@@ -2,7 +2,7 @@ import FileManagement from "../../../backend/FileManagement";
 import { Level, Model, Parser, Validator } from "../../../types/ILibcellml";
 import { IssueDescriptor } from "./Issue";
 
-const formatErrors = (v: Validator) => {
+const formatErrors = (v: Validator): IssueDescriptor[] => {
   const noError = v.errorCount();
   const errors = [];
   for (let errorNum = 0; errorNum < noError; errorNum += 1) {
@@ -11,12 +11,13 @@ const formatErrors = (v: Validator) => {
       desc: issue.description(),
       cause: issue.referenceHeading(),
       type: Level.ERROR,
+      url: issue.url(),
     });
   }
   return errors;
 };
 
-const formatWarnings = (v: Validator) => {
+const formatWarnings = (v: Validator): IssueDescriptor[] => {
   const noWarning = v.warningCount();
   const warnings = [];
   for (let warningNum = 0; warningNum < noWarning; warningNum += 1) {
@@ -25,12 +26,13 @@ const formatWarnings = (v: Validator) => {
       desc: warning.description(),
       cause: warning.referenceHeading(),
       type: Level.WARNING,
+      url: warning.url(),
     });
   }
   return warnings;
 };
 
-const formatMessage = (v: Validator) => {
+const formatMessage = (v: Validator): IssueDescriptor[] => {
   const noHint = v.messageCount();
   const hints = [];
   for (let i = 0; i < noHint; i += 1) {
@@ -39,6 +41,7 @@ const formatMessage = (v: Validator) => {
       desc: hint.description(),
       cause: hint.referenceHeading(),
       type: Level.HINT,
+      url: hint.url(),
     });
   }
   return hints;

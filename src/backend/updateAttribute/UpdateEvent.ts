@@ -1,7 +1,7 @@
 import { EditorElement } from "./../../types/EditorElement";
 import { Model, Reset, Variable } from "./../../types/ILibcellml";
 import { IUpdate } from "./../../types/IQuery";
-import { updateExponent } from "./UpdateExponent";
+import { updateExponent } from "./updateExponent";
 import { updateInitialValue } from "./UpdateInitialValue";
 import { updateInterface } from "./UpdateInterface";
 import { updateMath } from "./UpdateMath";
@@ -11,7 +11,11 @@ import { updateOrder } from "./UpdateOrder";
 import { updatePrefix } from "./UpdatePrefix";
 import { updateReference } from "./UpdateReference";
 import { updateRemoveConnection } from "./UpdateRemoveConnection";
+import { updateResetValue } from "./UpdateResetValue";
+import { updateTestValue } from "./UpdateTestValue";
+import { updateTestVariable } from "./UpdateTestVariable";
 import { updateUnits } from "./UpdateUnits";
+import { updateVariable } from "./UpdateVariable";
 
 const updateEvent = (
   model: Model,
@@ -121,6 +125,30 @@ const updateEvent = (
         curElm
       ));
     }
+  } else if (attribute === "variable") {
+    ({ newModel, newCurrentElement } = updateVariable(
+      model,
+      curElm as Reset,
+      value
+    ));
+  } else if (attribute === "test_variable") {
+    ({ newModel, newCurrentElement } = updateTestVariable(
+      model,
+      curElm as Reset,
+      value
+    ));
+  } else if (attribute === "reset_value") {
+    ({ newModel, newCurrentElement } = updateResetValue(
+      model,
+      curElm as Reset,
+      value
+    ));
+  } else if (attribute === "test_value") {
+    ({ newModel, newCurrentElement } = updateTestValue(
+      model,
+      curElm as Reset,
+      value
+    ));
   } else {
     console.log(
       `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`

@@ -1,6 +1,6 @@
 {
-  "name": "electroncelleditor",
-  "productName": "ElectronCellEditor",
+  "name": "cellml-editor",
+  "productName": "cellml-editor",
   "version": "1.0.0",
   "description": "Thesis project for Software Engineering degree.",
   "main": ".webpack/main",
@@ -14,8 +14,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "Andrew Nguyen",
-    "email": "andrew.nguyen2045@outlook.com"
+    "name": "Moop204",
+    "email": "z5162792@unsw.edu.au"
   },
   "license": "MIT",
   "config": {
@@ -80,6 +80,7 @@
     "@types/react-dom": "^17.0.5",
     "@types/react-pdf": "^5.0.4",
     "@types/react-router-dom": "^5.1.7",
+    "@types/trim-newlines": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "css-loader": "^5.2.6",
@@ -122,6 +123,7 @@
     "react-xml-editor": "^0.8.0",
     "sass": "^1.35.1",
     "sass-loader": "^12.1.0",
+    "trim-newlines": "^4.0.2",
     "webpack-shell-plugin": "^0.5.0",
     "xml-js": "^1.6.11",
     "yup": "^0.32.9"

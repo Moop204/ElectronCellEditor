@@ -1,21 +1,12 @@
 import { Elements } from "../../types/Elements";
 import { ChildDetail } from "../../types/ChildDetail";
-import {
-  Parser,
-  Printer,
-  Model,
-  Units,
-  Variable,
-  InterfaceType,
-  Component,
-} from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
-import { AddChildComponent } from "./AddChildComponent";
-import { AddChildReset } from "./AddChildReset";
-import { AddChildUnit } from "./AddChildUnit";
-import { AddChildUnits } from "./AddChildUnits";
-import { AddChildVariable } from "./AddChildVariable";
+import { AddComponent } from "./AddComponent";
+import { AddReset } from "./AddReset";
+import { AddUnit } from "./AddUnit";
+import { AddUnits } from "./AddUnits";
+import { AddVariable } from "./AddVariable";
 
 const AddChild = async (
   fm: FileManagement,
@@ -28,21 +19,21 @@ const AddChild = async (
   }
   switch (child.type) {
     case Elements.component:
-      await AddChildComponent(fm, parent, parentType, child);
+      await AddComponent(fm, parentType, child);
       break;
     case Elements.units:
-      await AddChildUnits(fm, child);
+      await AddUnits(fm, child);
       break;
     case Elements.variable: {
-      await AddChildVariable(fm, parent, child);
+      await AddVariable(fm, child);
       break;
     }
     case Elements.reset: {
-      await AddChildReset(fm, child, parent);
+      await AddReset(fm, child);
       break;
     }
     case Elements.unit: {
-      await AddChildUnit(fm, child, parent);
+      await AddUnit(fm, child);
       break;
     }
     default:

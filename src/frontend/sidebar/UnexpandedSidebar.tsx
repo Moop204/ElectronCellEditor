@@ -6,24 +6,28 @@ import { IssuesWidget } from "./issues/IssueWidget";
 
 const UnexpandedSidebar: FunctionComponent<ISidebar> = ({
   content,
+  baseContent,
   switchSidebar,
   switchView,
   viewSidebar,
   view,
   valid,
+  updateBaseContent,
 }) => {
   return (
-    <Grid item xs={1}>
+    <span>
       <VerticalOptionWidget
         content={content}
+        baseContent={baseContent}
         switchSidebar={switchSidebar}
         switchView={switchView}
         viewSidebar={viewSidebar}
         view={view}
         valid={valid}
+        updateBaseContent={updateBaseContent}
       />
       <IssuesWidget expanded={viewSidebar} />
-    </Grid>
+    </span>
   );
 };
 

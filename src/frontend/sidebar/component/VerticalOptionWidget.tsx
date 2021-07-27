@@ -18,12 +18,16 @@ const localStyles = makeStyles(() =>
 
 const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
   content,
+  baseContent,
+  updateBaseContent,
   switchSidebar,
   switchView,
   view,
   valid,
 }) => {
   const style = localStyles();
+  console.log(baseContent);
+  console.log(content);
   return (
     <Paper
       style={{
@@ -33,32 +37,30 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
     >
       <Grid
         container
-        item
         direction="row"
-        justify="space-around"
+        justifyContent="space-around"
         style={{ height: "95%" }}
       >
-        <Grid container item>
-          <Typography variant="h6" style={{ paddingLeft: "5px" }}>
-            Views
-          </Typography>
-        </Grid>
-
         {view && (
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <TextViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
         {!view && (
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <SpatialViewButton onClick={switchView} expanded={false} />
           </Grid>
         )}
-        <Grid item container direction="row" justify="center" xs={12}>
+        <Grid item container direction="row" justifyContent="center" xs={12}>
           <VisibilityButton onClick={switchSidebar} expanded={false} />
         </Grid>
-        <Grid item container direction="row" justify="center" xs={12}>
-          <SaveButton content={content} expanded={false} color={"primary"} />
+        <Grid item container direction="row" justifyContent="center" xs={12}>
+          <SaveButton
+            content={content}
+            expanded={false}
+            color={baseContent === content ? "primary" : "secondary"}
+            updateBaseContent={updateBaseContent}
+          />
         </Grid>
       </Grid>
     </Paper>

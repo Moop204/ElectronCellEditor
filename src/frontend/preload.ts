@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-
+import { Buffer } from "buffer";
 declare global {
   interface Window {
     api: {
@@ -19,7 +19,7 @@ const validChannels = [
   "all-units",
   "all-components",
   "validate-file",
-  "resetParent",
+  "reset-parent",
   "find-element-from-children",
   "add-child",
   "update-attribute",

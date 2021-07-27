@@ -6,6 +6,10 @@ interface ISelect {
   select: ISearch;
 }
 
+interface IDirectSelect extends ISelect {
+  parent: string;
+}
+
 interface IUpdate {
   element: Elements; // Element of the item being updated, maybe redundant
   select: ISearch;
@@ -23,4 +27,4 @@ interface ISelection {
   prop: IProperties;
 }
 
-export { IUpdate, ISelect, ISearch, ISelection };
+export { IUpdate, ISelect, ISearch, ISelection, IDirectSelect };

@@ -39,18 +39,20 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
   let errorCount = 0;
   let warningCount = 0;
   let hintCount = 0;
-  issues.map((val) => {
-    if (val.type === Level.ERROR) {
-      errorCount++;
-    } else if (val.type === Level.WARNING) {
-      warningCount++;
-    } else {
-      hintCount++;
-    }
-  });
+  issues.length > 0 &&
+    issues.map((val) => {
+      if (val.type === Level.ERROR) {
+        errorCount++;
+      } else if (val.type === Level.WARNING) {
+        warningCount++;
+      } else {
+        hintCount++;
+      }
+    });
 
   useEffect(() => {
     const errorReplyFn = (event: Event, issues: IssueDescriptor[]) => {
+      console.log(issues);
       setIssues(issues || []);
     };
     const dbErrorReplyFn = errorReplyFn;
@@ -66,9 +68,9 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
           container
           direction="row"
           style={{ height: "45%" }}
-          justify="space-around"
+          justifyContent="space-around"
         >
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple
@@ -79,7 +81,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
               <ErrorIcon /> {errorCount}
             </IconButton>
           </Grid>
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple
@@ -90,7 +92,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
               <WarningIcon />
             </IconButton>
           </Grid>
-          <Grid item container direction="row" justify="center" xs={12}>
+          <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
               color="primary"
               disableRipple
@@ -106,12 +108,10 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     );
   }
   return (
-    <Paper style={{ height: "94%" }}>
-      <Grid container>
+    <Paper style={{ height: "95vh" }}>
+      <Grid container style={{ padding: "5px" }}>
         <Grid item xs={5}>
-          <Typography variant="h4" style={{ paddingLeft: "5px" }}>
-            Issues
-          </Typography>
+          <Typography variant="h4">Issues</Typography>
         </Grid>
         <Grid container item xs={7}>
           <br />

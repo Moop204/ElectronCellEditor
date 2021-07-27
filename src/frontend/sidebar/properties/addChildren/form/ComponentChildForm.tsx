@@ -15,7 +15,7 @@ const nameValidation = (curComponents: string[]) =>
       .string()
       .min(1, "Require at least one character")
       .matches(
-        /^[a-zA-Z][a-z-A-Z0-9_]*$/,
+        /^[a-zA-Z][a-zA-Z0-9_]*$/,
         "Must start with an alphabetical character"
       )
       .required('Attribute "name" is required')
@@ -71,6 +71,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          required
           fullWidth
           id="name"
           name="name"
@@ -94,6 +95,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
         {formik.values.imported && (
           <div>
             <TextField
+              required
               fullWidth
               id="source"
               name="source"
@@ -104,6 +106,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
               helperText={formik.touched.source && formik.errors.source}
             />
             <TextField
+              required
               fullWidth
               id="component_ref"
               name="component_ref"
