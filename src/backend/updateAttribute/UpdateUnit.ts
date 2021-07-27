@@ -19,10 +19,9 @@ const updateUnit = (
   value: any,
   currentElement: EditorElement
 ) => {
-  const modelCopy = model.clone();
   switch (element) {
     case Elements.variable:
-      const parentElement = modelCopy.takeComponentByName(
+      const parentElement = model.takeComponentByName(
         parentSelect.name as string,
         true
       );
