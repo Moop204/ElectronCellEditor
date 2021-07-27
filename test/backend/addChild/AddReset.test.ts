@@ -7,12 +7,8 @@ import {
   Printer,
   Variable,
 } from "../../../src/types/ILibcellml";
-import { AddComponent } from "../../../src/backend/addChild/AddComponent";
 import { Elements } from "../../../src/types/Elements";
-import {
-  ChildComponentDetail,
-  ChildResetDetail,
-} from "../../../src/types/ChildDetail";
+import { ChildResetDetail } from "../../../src/types/ChildDetail";
 import { AddReset } from "../../../src/backend/addChild/AddReset";
 
 describe("Adding reset to component", function () {

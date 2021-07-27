@@ -8,11 +8,11 @@ import {
 } from "../../types/ILibcellml";
 import { IProperties } from "../../types/IProperties";
 import FileManagement from "../FileManagement";
-import { convertComponent } from "./ConvertComponent";
-import { convertModel } from "./ConvertModel";
-import { convertReset } from "./ConvertReset";
-import { convertUnits } from "./ConvertUnits";
-import { convertVariable } from "./ConvertVariable";
+import { convertComponent } from "./convertComponent";
+import { convertModel } from "./convertModel";
+import { convertReset } from "./convertReset";
+import { convertUnits } from "./convertUnits";
+import { convertVariable } from "./convertVariable";
 
 // Convert currently selected element into properties-ready format
 // @selectedElement - Type of the currently selected element

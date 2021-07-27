@@ -10,7 +10,6 @@ import {
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { IChild } from "../../../src/types/IProperties";
-import { removeVariable } from "../../../src/backend/removeChild/removeVariable";
 import { removeReset } from "../../../src/backend/removeChild/removeReset";
 
 describe("Removing CellML Reset into property format", function () {

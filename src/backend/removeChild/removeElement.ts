@@ -1,8 +1,8 @@
 import { Elements, elmToStr } from "../../types/Elements";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
-import { RemoveComponent } from "./removeComponent";
-import { RemoveUnits } from "./removeUnits";
+import { removeComponent } from "./removeComponent";
+import { removeUnits } from "./removeUnits";
 import { removeVariable } from "./removeVariable";
 import { removeReset } from "./removeReset";
 import { removeUnit } from "./removeUnit";
@@ -17,10 +17,10 @@ const RemoveElement = async (
   }
   switch (type) {
     case Elements.component:
-      await RemoveComponent(fm, child);
+      await removeComponent(fm, child);
       break;
     case Elements.units:
-      await RemoveUnits(fm, child);
+      await removeUnits(fm, child);
       break;
     case Elements.variable:
       await removeVariable(fm, child);
