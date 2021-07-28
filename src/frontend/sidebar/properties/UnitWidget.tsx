@@ -80,7 +80,7 @@ const UnitHeading = () => {
         </Typography>
       </Grid>
       <Grid item xs={3}>
-        {/* <ElementHelp type={Elements.unit} /> */}X{" "}
+        <ElementHelp type={Elements.unit} />
       </Grid>
     </Grid>
   );
@@ -92,10 +92,10 @@ const UnitEdit = ({ units, parentName }: IUnitForm) => {
   const handleClose = () => setOpen(false);
   const style = useStyle();
   return (
-    <Grid item container xs={12}>
+    <Grid item container direction="column">
       {units.map((description, index) => {
         return (
-          <div>
+          <Grid item>
             <div style={{ width: "100%" }}>
               <UnitMath
                 description={description.description}
@@ -118,7 +118,7 @@ const UnitEdit = ({ units, parentName }: IUnitForm) => {
                 />
               </div>
             </Dialog>
-          </div>
+          </Grid>
         );
       })}
     </Grid>

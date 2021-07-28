@@ -41,7 +41,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
       open={open}
       onClose={handleSavedClose}
       aria-labelledby="form-dialog-title"
-      maxWidth="xl"
+      maxWidth="lg"
       fullWidth
     >
       <DialogTitle id="form-dialog-title">

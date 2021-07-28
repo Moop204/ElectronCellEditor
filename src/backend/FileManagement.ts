@@ -63,9 +63,7 @@ export default class FileManagement {
 
   constructor() {
     this.content = `<?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" 
-xmlns:cellml="http://www.cellml.org/cellml/2.0#" 
-xmlns:xlink="http://www.w3.org/1999/xlink">
+<model xmlns="http://www.cellml.org/cellml/2.0#" >
 
 </model>`;
     this.currentComponent = null;

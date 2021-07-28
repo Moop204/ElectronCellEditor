@@ -14,11 +14,6 @@ const ExpandedSidebar: FunctionComponent<ISidebar> = ({
   valid,
   updateBaseContent,
 }) => {
-  const primaryContent = view ? (
-    <PropertiesWidget />
-  ) : (
-    <IssuesWidget expanded={true} />
-  );
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <OptionWidget

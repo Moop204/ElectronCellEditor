@@ -18,6 +18,10 @@ const nameValidation = (curComponents: string[]) =>
         /^[a-zA-Z][a-zA-Z0-9_]*$/,
         "Must start with an alphabetical character"
       )
+      .matches(
+        /^[a-zA-Z][a-zA-Z0-9_]*$/,
+        "Valid characters include alphabetical, numerical and _"
+      )
       .required('Attribute "name" is required')
       .notOneOf(curComponents, "Cannot be an existing component"),
     source: yup.string().ensure().when("imported", {
