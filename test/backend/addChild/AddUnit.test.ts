@@ -3,7 +3,8 @@ import assert from "assert";
 import { Model, Parser, Printer, Units } from "../../../src/types/ILibcellml";
 import { Elements } from "../../../src/types/Elements";
 import { ChildUnitDetail } from "../../../src/types/ChildDetail";
-import { AddUnit } from "../../../src/backend/addChild/AddUnit";
+import { addUnit } from "../../../src/backend/addChild/addUnit";
+import { ensureValid } from "../../../src/utility/ensureValid";
 
 describe("Adding Unit to Units", function () {
   this.timeout(5000);
@@ -35,7 +36,7 @@ describe("Adding Unit to Units", function () {
       },
     };
 
-    AddUnit(fm, child);
+    addUnit(fm, child);
 
     // Validation
     const updatedContent = fm.getContent();
@@ -52,5 +53,6 @@ describe("Adding Unit to Units", function () {
       newModel.unitsByIndex(0).unitAttributePrefix(0),
       "milli"
     );
+    assert.strictEqual(ensureValid(fm), true);
   });
 });

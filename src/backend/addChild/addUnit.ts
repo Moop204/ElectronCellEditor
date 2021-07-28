@@ -23,7 +23,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
     parentUnits.addUnitByReferenceExponent(
       units,
       exponent === "" ? 1.0 : parseFloat(exponent),
-      units
+      [parentName, prefix, units, exponent, multiplier].join("_")
     );
   } else {
     parentUnits.addUnitByReferenceStringPrefix(
@@ -31,7 +31,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
       prefix,
       exponent === "" ? 1.0 : parseFloat(exponent),
       multiplier === "" ? 1.0 : parseFloat(multiplier),
-      units
+      [parentName, prefix, units, exponent, multiplier].join("_")
     );
   }
 

@@ -6,7 +6,12 @@ import { Paper, Typography } from "@material-ui/core";
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
-    <Grid item xs={12} key={parentName + elmToStr(childElm)}>
+    <Grid
+      item
+      xs={12}
+      key={parentName + elmToStr(childElm)}
+      style={{ paddingTop: "4px" }}
+    >
       <AddChildSelect
         childElement={childElm}
         parentElement={parent}

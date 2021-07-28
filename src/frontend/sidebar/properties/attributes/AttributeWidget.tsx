@@ -17,7 +17,6 @@ interface IAttributeWidget {
 const useStyle = makeStyles(() =>
   createStyles({
     updateButton: {
-      height: "50px",
       marginTop: "0.5vh",
     },
   })
