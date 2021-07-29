@@ -2,13 +2,13 @@ import { Elements } from "../../types/Elements";
 import { ChildDetail } from "../../types/ChildDetail";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
-import { AddComponent } from "./AddComponent";
-import { AddReset } from "./AddReset";
+import { addComponent } from "./addComponent";
+import { addReset } from "./addReset";
 import { addUnit } from "./addUnit";
-import { AddUnits } from "./AddUnits";
-import { AddVariable } from "./AddVariable";
+import { addUnits } from "./addUnits";
+import { addVariable } from "./addVariable";
 
-const AddChild = async (
+const addChild = async (
   fm: FileManagement,
   child: ChildDetail,
   parent: ISearch,
@@ -19,17 +19,17 @@ const AddChild = async (
   }
   switch (child.type) {
     case Elements.component:
-      await AddComponent(fm, parentType, child);
+      await addComponent(fm, parentType, child);
       break;
     case Elements.units:
-      await AddUnits(fm, child);
+      await addUnits(fm, child);
       break;
     case Elements.variable: {
-      await AddVariable(fm, child);
+      await addVariable(fm, child);
       break;
     }
     case Elements.reset: {
-      await AddReset(fm, child);
+      await addReset(fm, child);
       break;
     }
     case Elements.unit: {
@@ -42,4 +42,4 @@ const AddChild = async (
   }
 };
 
-export { AddChild };
+export { addChild };

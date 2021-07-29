@@ -8,6 +8,7 @@ const config1: monaco.languages.LanguageConfiguration = {
     { open: '"', close: `"` },
     { open: "<apply>", close: `</apply>` },
     { open: "<ci>", close: `</ci>` },
+    { open: "<bvar>", close: `</bvar>` },
     { open: "<cn>", close: `</cn>` },
     { open: "<piecewise>", close: `</piecewise>` },
     { open: "<piece>", close: `</piece>` },

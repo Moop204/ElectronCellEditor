@@ -24,7 +24,7 @@ import {
   validateModel,
 } from "../frontend/sidebar/issues/IssueUtilities";
 import { EditorElement } from "../types/EditorElement";
-import { AddChild } from "./addChild/AddChild";
+import { addChild } from "./addChild/addChild";
 import { ChildDetail } from "../types/ChildDetail";
 const fs = require("fs");
 
@@ -347,7 +347,7 @@ export default class FileManagement {
     ipcMain.on(
       "add-child",
       async (event: IpcMainEvent, { child, parent, parentType }: IAddChild) => {
-        await AddChild(this, child, parent, parentType);
+        await addChild(this, child, parent, parentType);
         event.reply("update-content-b", this.getContent());
       }
     );
