@@ -189,7 +189,10 @@ const PropertiesWidget: FunctionComponent = () => {
   const handleNonSave = () => setDiffSet([]);
 
   let propertyContent;
-  if (abstractModel.attribute.name) {
+  if (
+    abstractModel.attribute.name ||
+    abstractModel.attribute.name !== undefined
+  ) {
     propertyContent = (
       <Grid
         container

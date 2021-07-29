@@ -155,7 +155,6 @@ const mathList: ElementObject[] = [
   },
   { label: "rem", insertion: "rem/>", tooltip: `Modulus operator.` },
   { label: "diff", insertion: "diff/>", tooltip: `Differentiation operator.` },
-  { label: "bvar", insertion: "bvar", tooltip: `Bound variable.` },
   {
     label: "logbase",
     insertion: "logbase",

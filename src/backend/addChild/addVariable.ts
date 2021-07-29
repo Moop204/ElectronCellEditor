@@ -28,7 +28,7 @@ const makeVariable = (
 // Add a Variable to the currently selected element Component.
 // @fm - Manages the model of the program
 // @child - Describes details of the new Variable
-const AddVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
+const addVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
   const libcellml = fm._cellml;
   const m = generateModel(fm._cellml, fm.getContent());
   const parentName = (fm.getCurrentComponent() as Component).name();
@@ -49,4 +49,4 @@ const AddVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
   fm.setCurrentComponent(parentComponent, Elements.component);
 };
 
-export { AddVariable };
+export { addVariable };

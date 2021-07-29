@@ -1,12 +1,6 @@
 import { Elements } from "../../types/Elements";
-import { ChildDetail, ChildUnitsDetail } from "../../types/ChildDetail";
-import {
-  Model,
-  Units,
-  Printer,
-  Parser,
-  ImportSource,
-} from "../../types/ILibcellml";
+import { ChildUnitsDetail } from "../../types/ChildDetail";
+import { Units, ImportSource } from "../../types/ILibcellml";
 import FileManagement from "../FileManagement";
 import { generateModel } from "./generateModel";
 import { modelToString } from "./modelToString";
@@ -33,7 +27,7 @@ const makeUnits = (
 // Add a Units to the currently selected Model.
 // @fm - Manages the model of the program
 // @child - Describes details of the new component
-const AddUnits = async (fm: FileManagement, child: ChildUnitsDetail) => {
+const addUnits = async (fm: FileManagement, child: ChildUnitsDetail) => {
   const { name, imported, source, component_ref } = child.attribute;
 
   // Initialised by caller
@@ -49,4 +43,4 @@ const AddUnits = async (fm: FileManagement, child: ChildUnitsDetail) => {
   await fm.updateContent(modelToString(libcellml, m));
 };
 
-export { AddUnits };
+export { addUnits };

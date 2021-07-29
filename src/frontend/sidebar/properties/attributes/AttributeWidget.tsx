@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { PropertyAttribute } from "./PropertyAttribute";
 
 interface IAttributeWidget {
@@ -28,7 +28,6 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
   updateAttribute,
 }) => {
   const styles = useStyle();
-
   return (
     <Grid item xs={12}>
       <Typography variant="h4" style={{ paddingLeft: "5px" }}>

@@ -28,7 +28,7 @@ const makeComponent = (
 // @fm - Manages the model of the program
 // @parentType - Identifies type of element that component is added to
 // @child - Describes details of the new component
-const AddComponent = async (
+const addComponent = async (
   fm: FileManagement,
   parentType: Elements,
   child: ChildComponentDetail
@@ -46,12 +46,10 @@ const AddComponent = async (
     const parentName = (fm.getCurrentComponent() as Model | Component).name();
     const parentComponent = m.componentByName(parentName, true);
     parentComponent.addComponent(newComponent);
-    //m.replaceComponentByName(parentName as string, parentComponent, true);
-
     const curComp = m.componentByName(parentName as string, true);
     fm.setCurrentComponent(curComp, Elements.component);
   }
   await fm.updateContent(modelToString(libcellml, m));
 };
 
-export { AddComponent };
+export { addComponent };

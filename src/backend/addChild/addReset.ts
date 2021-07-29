@@ -30,7 +30,7 @@ const makeReset = (
 // Add a Reset to the currently selected Component.
 // @fm - Manages the model of the program
 // @child - Describes details of the new component
-const AddReset = async (fm: FileManagement, child: ChildResetDetail) => {
+const addReset = async (fm: FileManagement, child: ChildResetDetail) => {
   const libcellml = fm._cellml;
   const { reset_variable, test_variable, order, reset_value, test_value } =
     child.attribute;
@@ -52,4 +52,4 @@ const AddReset = async (fm: FileManagement, child: ChildResetDetail) => {
   fm.setCurrentComponent(parentComponent.clone(), Elements.component);
 };
 
-export { AddReset };
+export { addReset };
