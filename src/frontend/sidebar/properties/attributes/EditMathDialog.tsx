@@ -38,7 +38,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
     if (value === "") {
       setContent(`<math xmlns="http://www.w3.org/1998/Math/MathML">
 
-      </math>`);
+</math>`);
     }
   }, []);
 

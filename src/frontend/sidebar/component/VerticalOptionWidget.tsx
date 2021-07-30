@@ -64,7 +64,10 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
           />
         </Grid>
         <Grid item>
-          <IconButton onClick={() => window.api.send("new-file")}>
+          <IconButton
+            color="primary"
+            onClick={() => window.api.send("new-file")}
+          >
             <NoteAddIcon />
           </IconButton>
         </Grid>
