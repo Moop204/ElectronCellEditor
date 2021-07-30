@@ -79,9 +79,8 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
             >
               <Divider variant="middle" />
               <Typography variant="h5">
-                {parentKey === "component"
-                  ? "Encapsulated"
-                  : "" + capitaliseFirst(parentKey)}
+                {(parentKey === "component" ? "Encapsulated" : "") +
+                  capitaliseFirst(parentKey)}
               </Typography>
               {Object.values(childrenType).map(
                 (attrType: IChild, index: number) => {
