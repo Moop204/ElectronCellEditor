@@ -77,13 +77,16 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
             updateBaseContent={updateBaseContent}
           />
         </Grid>
-        <Grid item xs={2}>
-          <IconButton onClick={() => setElementSearch(true)}>
+        {/* <Grid item xs={2}>
+          <IconButton color="primary" onClick={() => setElementSearch(true)}>
             <SearchIcon />
           </IconButton>
-        </Grid>
+        </Grid> */}
         <Grid item xs={2}>
-          <IconButton onClick={() => window.api.send("new-file")}>
+          <IconButton
+            color="primary"
+            onClick={() => window.api.send("new-file")}
+          >
             <NoteAddIcon />
           </IconButton>
         </Grid>
