@@ -72,35 +72,35 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
         >
           <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
-              color="primary"
+              color="secondary"
               disableRipple
               disableTouchRipple
               style={{ backgroundColor: "transparent" }}
               disabled={errorCount === 0}
             >
-              <ErrorIcon /> {errorCount}
+              <ErrorIcon /> {errorCount !== 0 && errorCount}
             </IconButton>
           </Grid>
           <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
-              color="primary"
+              color="secondary"
               disableRipple
               disableTouchRipple
               style={{ backgroundColor: "transparent" }}
               disabled={warningCount === 0}
             >
-              <WarningIcon />
+              <WarningIcon /> {warningCount !== 0 && warningCount}
             </IconButton>
           </Grid>
           <Grid item container direction="row" justifyContent="center" xs={12}>
             <IconButton
-              color="primary"
+              color="secondary"
               disableRipple
               disableTouchRipple
               style={{ backgroundColor: "transparent" }}
               disabled={hintCount === 0}
             >
-              <HintIcon />
+              <HintIcon /> {hintCount !== 0 && hintCount}
             </IconButton>
           </Grid>
         </Grid>

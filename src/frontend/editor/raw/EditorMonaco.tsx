@@ -41,7 +41,8 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
   },
 }) => {
   const [disposables, setDisposables] = useState<IDisposable[]>([]);
-  const [key, setKey] = useState("");
+
+  console.log("Hey guys did you know Vaporeon");
 
   useEffect(() => {
     return () => {
@@ -51,7 +52,7 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
     };
   }, []);
 
-  const handleOnMount: BeforeMount = (monaco) => {
+  const handleBeforeMount: BeforeMount = (monaco) => {
     console.log("Handled before mounting");
     const autoClosingTag = monaco.languages.setLanguageConfiguration(
       "xml",
@@ -69,9 +70,6 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
     );
     // editor.languages.IndentAction;
     disposables.push(autoClosingTag, indentTag, removeClosing);
-    console.log(key);
-    setKey(xmlInput);
-    console.log(key);
   };
 
   const monaco = useMonaco();
@@ -79,7 +77,7 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
     // do conditional chaining
     // or make sure that it exists by other ways
     if (monaco) {
-      handleOnMount(monaco);
+      handleBeforeMount(monaco);
       console.log("here is the monaco instance:", monaco);
     }
   }, [monaco]);
@@ -93,7 +91,6 @@ const EditorMonaco: FunctionComponent<EditorProp> = ({
       // beforeMount={handleOnMount}
       // onMount={handleOnMount}
       onChange={onChange}
-      key={key}
     />
   );
 };

@@ -27,9 +27,9 @@ const config2 = (
     return {
       suggestions: autoFill(range, monaco, option),
       indentationRules: {
-        increaseIndentPattern:
-          "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
-        decreaseIndentPattern: "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$",
+        increaseIndentPattern: "<.*>$",
+        // "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
+        decreaseIndentPattern: "/>", //"^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$",
       },
       brackets: [],
       formatOnPaste: true,

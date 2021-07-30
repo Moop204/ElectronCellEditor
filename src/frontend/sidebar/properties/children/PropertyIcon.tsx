@@ -130,7 +130,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
 
   return (
     <Grid container direction="row" key={element + title}>
-      <Grid item xs={11} className={style.button}>
+      <Grid item xs={6} sm={6} md={8} lg={10} className={style.button}>
         <Button
           variant="outlined"
           onClick={onClick}
@@ -147,7 +147,7 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
           </Grid>
         </Button>
       </Grid>
-      <Grid item xs={1} className={style.button}>
+      <Grid item xs={6} sm={6} md={4} lg={2} className={style.button}>
         <DeleteButton
           elementType={strToElm(element)}
           name={title}

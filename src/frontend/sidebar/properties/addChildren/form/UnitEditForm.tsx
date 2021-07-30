@@ -92,7 +92,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
       <form onSubmit={formik.handleSubmit} style={{ width: "70vw" }}>
         <Grid container item>
           <Grid item xs={6}>
-            <Autocomplete
+            {/* <Autocomplete
               id="uniteditform"
               options={validPrefix}
               defaultValue={formik.values.prefix}
@@ -105,34 +105,34 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
                 />
               )}
               onChange={formik.handleChange}
-            />
+            /> */}
 
-            {/* // <FormControl fullWidth>
-            //   <InputLabel id="prefix" error={Boolean(formik.errors.prefix)}>
-            //     Prefix
-            //   </InputLabel>
-            //   <Select
-            //     labelId="prefix"
-            //     id="prefix"
-            //     name="prefix"
-            //     value={formik.values.prefix}
-            //     onChange={formik.handleChange}
-            //     label="prefix"
-            //     input={<Input />}
-            //     error={formik.touched.prefix && Boolean(formik.errors.prefix)}
-            //   >
-            //     {validPrefix.map((v: string) => {
-            //       return (
-            //         <MenuItem key={v} value={v.toLowerCase()}>
-            //           {v}
-            //         </MenuItem>
-            //       );
-            //     })}
-            //   </Select>
-            //   <FormHelperText error>
-            //     {formik.touched.prefix && formik.errors.prefix}
-            //   </FormHelperText>
-            // </FormControl> */}
+            <FormControl fullWidth>
+              <InputLabel id="prefix" error={Boolean(formik.errors.prefix)}>
+                Prefix
+              </InputLabel>
+              <Select
+                labelId="prefix"
+                id="prefix"
+                name="prefix"
+                value={formik.values.prefix}
+                onChange={formik.handleChange}
+                label="prefix"
+                input={<Input />}
+                error={formik.touched.prefix && Boolean(formik.errors.prefix)}
+              >
+                {validPrefix.map((v: string) => {
+                  return (
+                    <MenuItem key={v} value={v.toLowerCase()}>
+                      {v}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+              <FormHelperText error>
+                {formik.touched.prefix && formik.errors.prefix}
+              </FormHelperText>
+            </FormControl>
           </Grid>
           {formik.values.prefix !== "" && (
             <Grid item xs={6}>

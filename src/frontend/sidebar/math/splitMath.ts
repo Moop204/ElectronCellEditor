@@ -17,7 +17,6 @@ const splitMath = (mathml: string): string[] => {
       }
     );
     const res = listOfSecondLevelApply.map((apply) => {
-      const mathHeading = mathElement;
       parsed.elements[0].elements = [apply];
       const stringedXml = xml.json2xml(JSON.stringify(parsed), {
         spaces: 4,

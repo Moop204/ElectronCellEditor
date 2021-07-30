@@ -14,14 +14,13 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 interface IPropertiesWidgetTop {
   type: Elements;
   onClick: () => void;
+  resetChanges: () => void;
 }
 
 const localStyles = makeStyles(() =>
   createStyles({
-    propertyWidget: {
-      leftPadding: "1wv",
-    },
     root: {
+      paddingRight: "16px",
       flexGrow: 1,
     },
   })
@@ -30,6 +29,7 @@ const localStyles = makeStyles(() =>
 const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
   type,
   onClick,
+  resetChanges,
 }) => {
   const style = localStyles();
   return (
@@ -42,6 +42,7 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
       <Grid item xs={1}>
         <IconButton
           onClick={() => {
+            resetChanges();
             onClick();
             window.api.send("to-parent");
             window.api.send("get-element");
@@ -62,8 +63,8 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
             <ElementHelp type={type} />
           </span>
         </Grid>
-        <Grid item>
-          <Typography variant="h5" style={{ paddingRight: "5px" }}>
+        <Grid item style={{ alignSelf: "center" }}>
+          <Typography variant="h3" style={{ paddingRight: "5px" }}>
             {capitaliseFirst(elmToStr(type))}
           </Typography>
         </Grid>

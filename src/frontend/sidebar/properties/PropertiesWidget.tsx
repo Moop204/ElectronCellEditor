@@ -21,8 +21,8 @@ import { ConnectionWidget } from "./ConnectionWidget";
 const localStyles = makeStyles(() =>
   createStyles({
     propertyWidget: {
-      leftPadding: "1wv",
-      rightPading: "1wv",
+      paddingLeft: "1wv",
+      paddingRight: "1wv",
     },
     plainText: {
       color: "black",
@@ -30,8 +30,8 @@ const localStyles = makeStyles(() =>
 
     properties: {
       height: "70vh",
-      leftPadding: "1wv",
-      rightPading: "1wv",
+      paddingLeft: "1wv",
+      paddingRight: "1wv",
       alignContent: "start",
     },
     updateAttribute: {
@@ -184,6 +184,7 @@ const PropertiesWidget: FunctionComponent = () => {
     const submitSet = [...postSet, ...prioritySet];
     updateAttr(submitSet);
     setDiffSet([]);
+    window.api.send("get-element");
   };
 
   const handleNonSave = () => setDiffSet([]);
@@ -206,6 +207,7 @@ const PropertiesWidget: FunctionComponent = () => {
         <PropertiesWidgetTop
           type={abstractModel.type}
           onClick={handleNonSave}
+          resetChanges={handleNonSave}
         />
         <AttributeWidget
           attribute={abstractModel.attribute}
@@ -251,6 +253,7 @@ const PropertiesWidget: FunctionComponent = () => {
         <PropertiesWidgetTop
           type={abstractModel.type}
           onClick={handleNonSave}
+          resetChanges={handleNonSave}
         />
         <Grid container item className={styles.plainText}>
           <AttributeWidget
