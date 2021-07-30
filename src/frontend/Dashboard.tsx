@@ -11,7 +11,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, Tooltip } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { RawView } from "./editor/raw/RawView";
 import { ConciseView } from "./editor/concise/ConciseView";
@@ -21,6 +21,10 @@ import _ from "lodash";
 import { PresentationMath } from "./sidebar/math/PresentationMath";
 import { SidebarManager } from "./sidebar/SidebarManager";
 import MathJax from "mathjax3-react";
+import AppBar from "@material-ui/core/AppBar";
+
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
@@ -61,6 +65,7 @@ const Dashboard: FunctionComponent = () => {
   };
 
   const [view, setView] = useState(false);
+  const [fileName, setFileName] = useState("untitled");
 
   const switchView = () => {
     if (valid) setView(!view);
@@ -84,12 +89,17 @@ const Dashboard: FunctionComponent = () => {
       setValid(res);
     };
     window.api.receive("validated-file", validatedFile);
-    //window.api.receive("validated-file", validatedFile);
+
+    const namedFile = (event: Event, res: string) => {
+      setFileName(res);
+    };
+    window.api.receive("receive-filename", namedFile);
 
     return () => {
       window.api.remove("init-content", initContentFn);
       window.api.remove("update-content-b", updateContentFn);
       window.api.remove("validated-file", validatedFile);
+      window.api.remove("receive-filename", namedFile);
     };
   }, []);
 
@@ -113,31 +123,6 @@ const Dashboard: FunctionComponent = () => {
       <Router>
         <Grid container spacing={1} direction="row">
           <Grid item xs={viewSidebar ? 3 : 1}>
-            {viewSidebar && (
-              <ExpandedSidebar
-                content={contentExist}
-                switchSidebar={switchSidebar}
-                switchView={switchView}
-                viewSidebar={viewSidebar}
-                view={view}
-                valid={valid}
-                updateBaseContent={setBaseContent}
-              />
-            )}
-            {!viewSidebar && (
-              <UnexpandedSidebar
-                content={contentExist}
-                baseContent={baseContent}
-                switchSidebar={switchSidebar}
-                switchView={switchView}
-                viewSidebar={viewSidebar}
-                view={view}
-                valid={valid}
-                updateBaseContent={setBaseContent}
-              />
-            )}
-          </Grid>
-          {/* <Grid item xs={viewSidebar ? 3 : 1}>
             <SidebarManager
               viewSidebar={viewSidebar}
               view={view}
@@ -148,11 +133,40 @@ const Dashboard: FunctionComponent = () => {
               switchSidebar={switchSidebar}
               switchView={switchView}
             />
-          </Grid> */}
+          </Grid>
 
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
-              <Paper className={styles.tabbing}></Paper>
+              {/* <Paper className={styles.tabbing}>{fileName}</Paper> */}
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={fileName}
+                  // onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="file tabs"
+                >
+                  <Tooltip title={fileName}>
+                    <Tab
+                      style={{
+                        textOverflow: "ellipsis",
+                        textTransform: "none",
+                        textDecoration: "underline",
+                      }}
+                      wrapped
+                      label={
+                        fileName[0] !== "/"
+                          ? fileName === ""
+                            ? "untitled"
+                            : fileName
+                          : fileName.match(/\/[^/]+$/)[0].slice(1)
+                      }
+                    />
+                  </Tooltip>
+                </Tabs>
+              </AppBar>
               <Switch>
                 <Route exact path="/concise">
                   {!valid && <Redirect to="" />}

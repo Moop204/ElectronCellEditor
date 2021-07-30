@@ -36,6 +36,16 @@ const ActionSaveAs = (mainWindow: BrowserWindow, fm: FileManagement) => {
   };
 };
 
+const ActionNewFile = (mainWindow: BrowserWindow, fm: FileManagement) => {
+  return {
+    label: "Open New File",
+    accelerator: "Ctrl+N",
+    click: () => {
+      fm.newFile();
+    },
+  };
+};
+
 const FileItem = (
   isMac: boolean,
   mainWindow: BrowserWindow,

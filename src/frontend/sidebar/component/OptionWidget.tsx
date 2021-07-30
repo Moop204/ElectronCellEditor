@@ -18,6 +18,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { ISidebar } from "../ISidebar";
 import { SearchElement } from "./search/SearchElement";
 import SearchIcon from "@material-ui/icons/Search";
+import NoteAddIcon from "@material-ui/icons/NoteAdd";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -39,6 +40,8 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
   const [elementSearch, setElementSearch] = useState(false);
+  const [newFile, setNewFile] = useState(false);
+
   useEffect(() => {
     setBaseContent(content);
   }, []);
@@ -77,6 +80,11 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
         <Grid item xs={2}>
           <IconButton onClick={() => setElementSearch(true)}>
             <SearchIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={2}>
+          <IconButton onClick={() => window.api.send("new-file")}>
+            <NoteAddIcon />
           </IconButton>
         </Grid>
         <Dialog

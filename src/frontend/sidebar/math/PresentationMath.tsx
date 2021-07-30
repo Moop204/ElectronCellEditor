@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { ctop } from "./ctop";
 import MathJax from "mathjax3-react";
 import { stripMath } from "./stripMath";
@@ -13,6 +13,12 @@ const ErrorMathMl: FunctionComponent = () => {
   return <div>Invalid MathML Input</div>;
 };
 
+const parser = new DOMParser();
+const xsltProcessor = new XSLTProcessor();
+const serializer = new XMLSerializer();
+const transform = parser.parseFromString(ctop, "text/xml");
+xsltProcessor.importStylesheet(transform);
+
 // Turns content mathml into presentation mathml
 // MathML written in cellml is always content type
 const convertToPresentation = (mathml: string) => {
@@ -21,19 +27,15 @@ const convertToPresentation = (mathml: string) => {
   if (mathml !== "" && strippedMathml === "") {
     return <ErrorMathMl />;
   }
-  console.log(mathml);
+  // console.log(mathml);
   // Processing
-  const parser = new DOMParser();
-  const documentSource = parser.parseFromString(strippedMathml, "text/xml");
-  const transform = parser.parseFromString(ctop, "text/xml");
-  const xsltProcessor = new XSLTProcessor();
-  xsltProcessor.importStylesheet(transform);
-  const resultDocument = xsltProcessor.transformToDocument(documentSource);
 
-  const serializer = new XMLSerializer();
+  const documentSource = parser.parseFromString(strippedMathml, "text/xml");
+  const resultDocument = xsltProcessor.transformToDocument(documentSource);
   const transformed = serializer.serializeToString(
     resultDocument.documentElement
   );
+
   return (
     '<math xmlns="http://www.w3.org/1998/Math/MathML">' +
     transformed +
@@ -41,28 +43,45 @@ const convertToPresentation = (mathml: string) => {
   );
 };
 
-const PresentFormula: FunctionComponent<IMath> = ({ mathml }) => {
-  return (
-    <MathJax.Html
-      html={
-        `<div style="color:red; text-align:center;">` +
-        convertToPresentation(mathml) +
-        `</div>`
-      }
-    />
-  );
-};
+// const PresentFormula: FunctionComponent<IMath> = ({ mathml }) => {
+//   const memod = useMemo(() => convertToPresentation(mathml), [mathml]);
+
+//   return (
+//     <MathJax.Html
+//       html={`<div style="color:red; text-align:center;">` + memod + `</div>`}
+//     />
+//   );
+// };
 
 const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
-  const formulas = splitMath(mathml);
+  const [formulas, setFormulas] = useState<string[]>([]);
+
+  // const stringFormulas = splitMath(mathml);
+  useEffect(() => {
+    const stringFormulas = splitMath(mathml);
+    setFormulas(
+      stringFormulas.map(
+        (formula) =>
+          `<div style="color:red; text-align:center;">` +
+          convertToPresentation(formula) +
+          `</div>`
+      )
+    );
+  }, []);
+
   if (formulas.length === 0) {
-    return <ErrorMathMl />;
+    return (
+      <Grid style={{ textTransform: "none" }}>
+        <ErrorMathMl />
+      </Grid>
+    );
   }
+
   return (
     <Grid style={{ textTransform: "none" }}>
       {/* <MathJax.Provider> */}
       {formulas.map((formula) => (
-        <PresentFormula mathml={formula} />
+        <MathJax.Html html={formula} />
       ))}
       {/* </MathJax.Provider> */}
     </Grid>

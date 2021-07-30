@@ -38,7 +38,7 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
   const style = useStyle();
   return (
     <div>
-      <IconButton edge="start" onClick={() => setOpenHelp(true)}>
+      <IconButton edge="end" onClick={() => setOpenHelp(true)} color="primary">
         <HelpIcon />
       </IconButton>
       <Dialog

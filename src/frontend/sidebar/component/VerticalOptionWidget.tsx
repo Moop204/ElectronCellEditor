@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, IconButton, Paper, Typography } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { TextViewButton } from "./TextViewButton";
 import { SpatialViewButton } from "./SpatialViewButton";
 import { VisibilityButton } from "./VisibilityButton";
 import { ISidebar } from "../ISidebar";
 import { SaveButton } from "./SaveButton";
+import NoteAddIcon from "@material-ui/icons/NoteAdd";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -61,6 +62,11 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
             color={baseContent === content ? "primary" : "secondary"}
             updateBaseContent={updateBaseContent}
           />
+        </Grid>
+        <Grid item>
+          <IconButton onClick={() => window.api.send("new-file")}>
+            <NoteAddIcon />
+          </IconButton>
         </Grid>
       </Grid>
     </Paper>

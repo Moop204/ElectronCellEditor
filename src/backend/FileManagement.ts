@@ -212,6 +212,18 @@ export default class FileManagement {
     }
   }
 
+  // Make a new file
+  newFile() {
+    this.content = `<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" >
+
+</model>`;
+    this.currentComponent = null;
+    this.type = Elements.none;
+    this._cellmlLoaded = true;
+    this.selectedFile = "";
+  }
+
   // Print out model
 
   async printModel(): Promise<void> {
@@ -250,6 +262,7 @@ export default class FileManagement {
     mainWindow.webContents.send("error-reply", {
       issues,
     });
+    mainWindow.webContents.send("receive-filename", this.selectedFile);
   }
 
   async saveFile() {
@@ -268,6 +281,14 @@ export default class FileManagement {
 
   // Run once to set up handlers
   setupHandlers(): void {
+    ipcMain.on("new-file", async (event: IpcMainEvent) => {
+      this.newFile();
+      console.log("new file pls ");
+      console.log(this.selectedFile);
+      event.reply("update-content-b", this.getContent());
+      event.reply("receive-filename", this.selectedFile);
+    });
+
     ipcMain.on(
       "update-content",
       async (event: IpcMainEvent, newContent: string) => {
@@ -282,7 +303,8 @@ export default class FileManagement {
       "save-content",
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
-        this.saveFile();
+        await this.saveFile();
+        event.reply("receive-filename", this.selectedFile);
       }
     );
 

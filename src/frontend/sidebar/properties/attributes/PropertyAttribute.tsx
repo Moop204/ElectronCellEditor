@@ -25,6 +25,7 @@ import { Elements } from "../../../../types/Elements";
 import { VariableAttr } from "./VariableAttr";
 import { EditMathDialog } from "./EditMathDialog";
 import { UnitsAttribute } from "./UnitsAttribute";
+import _ from "lodash";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -196,10 +197,10 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             e.target.value.match(/^[a-zA-Z_][a-zA-Z_0-9]*$/) ||
             e.target.value === ""
           ) {
-            setError(false);
+            if (error) setError(false);
             onChange(title, e.target.value, index);
           } else {
-            setError(true);
+            if (!error) setError(true);
           }
         }}
         helperText={

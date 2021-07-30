@@ -403,11 +403,6 @@ const attributesList = [
     tooltip: `Priority of Resets being triggered. Lower values are prioritised first.`,
   },
   {
-    label: "component",
-    insertion: "component",
-    tooltip: `Reference to a Component.`,
-  },
-  {
     label: "component_1",
     insertion: "component_1",
     tooltip: `Reference to a Component. Cannot be the same as component_2.`,

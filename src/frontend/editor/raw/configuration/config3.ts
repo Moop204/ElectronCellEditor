@@ -23,6 +23,63 @@ const avoidTag = (tag: string) => {
     case "reset_value":
     case "test_value":
     case "encapsulation":
+    case "eq":
+    case "sep":
+    case "neg":
+    case "gt":
+    case "lt":
+    case "geq":
+    case "leq":
+    case "and":
+    case "or":
+    case "xor":
+    case "plus":
+    case "not":
+    case "plus":
+    case "minus":
+    case "times":
+    case "divide":
+    case "power":
+    case "root":
+    case "abs":
+    case "exp":
+    case "ln":
+    case "log":
+    case "floor":
+    case "ceiling":
+    case "min":
+    case "max":
+    case "rem":
+    case "diff":
+    case "sin":
+    case "cos":
+    case "tan":
+    case "sec":
+    case "csc":
+    case "cot":
+    case "sinh":
+    case "cosh":
+    case "tanh":
+    case "sech":
+    case "csch":
+    case "coth":
+    case "arcsin":
+    case "arccos":
+    case "arctan":
+    case "arcsec":
+    case "arccsc":
+    case "arccot":
+    case "arcsinh":
+    case "arccosh":
+    case "arctanh":
+    case "arcsech":
+    case "arccsch":
+    case "arccoth":
+    case "pi":
+    case "notanumber":
+    case "infinity":
+    case "true":
+    case "false":
       return true;
     default:
       return false;
