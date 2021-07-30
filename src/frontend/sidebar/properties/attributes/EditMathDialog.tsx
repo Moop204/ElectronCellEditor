@@ -72,7 +72,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
         <Grid container item>
           <Grid item style={{ width: "100%", height: "70vh" }}>
             <EditorMonaco
-              xmlInput={value}
+              xmlInput={content}
               onChange={_.debounce((val: string) => {
                 setContent(val);
               }, 200)}
