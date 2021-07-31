@@ -3,17 +3,94 @@ import FileManagement from "../src/backend/FileManagement";
 const libcellModule = require("libcellml.js/libcellml.common");
 
 import assert from "assert";
-import { Printer, Units } from "../src/types/ILibcellml";
+import {
+  Component,
+  Model,
+  Parser,
+  Printer,
+  Units,
+} from "../src/types/ILibcellml";
 import { stripMath } from "../src/frontend/sidebar/math/stripMath";
+import { Elements } from "../src/types/Elements";
+import { updateMath } from "../src/backend/updateAttribute/UpdateMath";
+
+const validMathMl = (fm: FileManagement, mathml: string): boolean => {
+  const cellml = fm._cellml;
+  const m: Model = new cellml.Model();
+  m.setName("m");
+  const c1: Component = new cellml.Component();
+  c1.setName("c1");
+  c1.setMath(mathml);
+  m.addComponent(c1);
+  const stringedModel = fm._printer.printModel(m, true);
+  console.log(stringedModel);
+  return stringedModel !== "";
+};
 
 describe("array", () => {
-  it("checks for imported", async () => {
+  it("validates MathML", async () => {
     const fm = new FileManagement();
     await fm.init();
-    const u: Units = new fm._cellml.Units();
-    u.setName("a");
-    assert.strictEqual(u.isImport(), false);
+
+    const validMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+    <apply>
+      <eq/>
+        <ci>t</ci>
+        <ci>x</ci>
+    </apply>
+  </math>`;
+    const invalidMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+  <apply>
+    <eq/>
+      <ci>t</ci>
+      <ci>x</ci
+  </apply>
+</math>`;
+
+    const validRes = validMathMl(fm, validMathML);
+    const invalidRes = validMathMl(fm, invalidMathML);
+
+    assert.ok(validRes);
+    assert.ok(!invalidRes);
   });
+
+  // it("checks for imported", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+  //   const u: Units = new fm._cellml.Units();
+  //   u.setName("a");
+  //   assert.strictEqual(u.isImport(), false);
+  // });
+  // it("math-testing", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+  //   const cellml = fm._cellml;
+  //   const m: Model = new cellml.Model();
+  //   m.setName("m");
+  //   const c1: Component = new cellml.Component();
+  //   c1.setName("c1");
+  //   c1.setMath(`<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+  //         <apply>
+  //           <eq/>
+  //             <ci>t</ci>
+  //             <ci>x</ci>
+  //         </apply>
+  //       </math>`);
+  //   // c1.setMath("Kyaaaaa");
+  //   // c1.setMath("<math><apply><eq/><cix</ci><ci>y</ci></math>");
+  //   m.addComponent(c1);
+
+  //   const printer: Printer = new cellml.Printer();
+  //   console.log("ahhhh");
+  //   console.log(printer.printModel(m, true));
+  //   console.log("haaaa");
+  //   assert.ok(m instanceof cellml.Model);
+  //   console.log(m.name());
+  //   console.log(m.componentByIndex(0).name());
+  //   console.log(m.componentByIndex(0).math());
+  //   // assert.ok(m === null);
+  // });
+
   // it("checking type", async () => {
   //   const fm = new FileManagement();
   //   await fm.init();

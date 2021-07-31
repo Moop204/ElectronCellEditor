@@ -151,39 +151,6 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
           handleClose={handleClose}
           value={value}
         />
-
-        {/* <Dialog
-          open={mathSelect}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-          className={style.contentEdit}
-          fullWidth
-        >
-          <DialogTitle id="form-dialog-title" className={style.formHeader}>
-            <Grid container>
-              <Grid container item xs={10} direction="row">
-                Edit MathML
-                <ElementHelp type={Elements.math} />
-              </Grid>
-              <Grid item xs={2}>
-                <Button onClick={handleClose} color="primary">
-                  Close
-                </Button>
-              </Grid>
-            </Grid>
-          </DialogTitle>
-          <DialogContent className={style.mathEdit}>
-            <Grid container item>
-              <EditorMonaco
-                xmlInput={value}
-                onChange={(val: string) => {
-                  onChange(title, val, index);
-                }}
-              />
-            </Grid>
-          </DialogContent>
-        </Dialog> */}
-        {/* </Card> */}
       </Grid>
     );
   } else {

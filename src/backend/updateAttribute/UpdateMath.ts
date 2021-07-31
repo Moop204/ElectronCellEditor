@@ -23,26 +23,28 @@ const updateMath = (
   value: any,
   currentElement: EditorElement
 ) => {
-  const modelCopy = model.clone();
-
   switch (element) {
     case Elements.component:
-      const componentElement = modelCopy.takeComponentByName(
+      const componentElement = model.componentByName(
         select.name as string,
         true
       );
+      console.log("New Math is ");
+      console.log(value);
       componentElement.setMath(value);
-      model.replaceComponentByName(
-        select.name as string,
-        componentElement,
-        true
-      );
+      // model.replaceComponentByName(
+      //   select.name as string,
+      //   componentElement,
+      //   true
+      // );
 
-      if (currentElement === null) {
-        console.log("FM: CurrentComponent is null when setting name");
-      } else {
-        (currentElement as Component).setMath(value);
-      }
+      // if (currentElement === null) {
+      //   console.log("FM: CurrentComponent is null when setting name");
+      // } else {
+      //   (currentElement as Component).setMath(value);
+      // }
+      currentElement = componentElement;
+
       break;
     // case Elements.model:
     //   model.setName(value);
@@ -61,6 +63,8 @@ const updateMath = (
   }
   const newModel = model;
   const newCurrentElement = currentElement;
+
+  console.log("Resulting model name " + newModel.name());
   return { newModel, newCurrentElement };
 };
 
