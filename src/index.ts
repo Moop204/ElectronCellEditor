@@ -19,21 +19,6 @@ const fm = new FileManagement();
 fm.init();
 fm.setupHandlers();
 
-// // Not needed
-// const init = async () => {
-//   // @ts-ignore
-//   const libCellMl = await new libCellMLModule({
-//     locateFile(path: string, prefix: string) {
-//       if (path.endsWith(".wasm")) {
-//         return prefix + libCellMLWasm;
-//       }
-//       return prefix + path;
-//     },
-//   });
-// };
-
-// init();
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require

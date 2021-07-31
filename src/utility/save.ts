@@ -1,13 +1,17 @@
-import { BrowserWindow } from "electron";
-import { flip } from "lodash";
-const { dialog } = require("electron");
-const fs = require("fs");
+import { dialog, BrowserWindow } from "electron";
+import fs from "fs";
 
-const SaveAs = async (content: string, recentFile: string) => {
+// Requests the user specify where to save. Returns the
+// location chosen
+// @content     - The text to be written to the file
+// @recentFile  - Location of the current file or if no file
+//                is current then an empty string
+const saveAs = async (content: string, recentFile: string): Promise<string> => {
   const options = {
     title: "Save file",
     buttonLabel: "Save",
     filters: [{ name: "All Files", extensions: ["*"] }],
+    defaultPath: recentFile,
   };
 
   const mainWindow = BrowserWindow.getFocusedWindow();
@@ -19,13 +23,13 @@ const SaveAs = async (content: string, recentFile: string) => {
       return filePath;
     })
     .catch((e) => {
-      console.log("Failed to save new file");
+      console.log("Failed to save as new file");
       return recentFile;
     });
   return res;
 };
 
-const Save = async (content: string, recentFile: string) => {
+const save = async (content: string, recentFile: string): Promise<string> => {
   const options = {
     title: "Save file",
     buttonLabel: "Save",
@@ -52,4 +56,4 @@ const Save = async (content: string, recentFile: string) => {
   }
 };
 
-export { SaveAs, Save };
+export { saveAs, save };

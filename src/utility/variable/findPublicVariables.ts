@@ -1,10 +1,18 @@
-import { ComponentEntity, Variable } from "../types/ILibcellml";
+import { ComponentEntity, Variable } from "../../types/ILibcellml";
+import { VariableDescriptor } from "./VariableDescriptor";
 
+// TODO: Test completion once libcellml updates hasEquivalentVariable
+// binding in javascript
+
+// Searches for all public variables from a selected component
+// @sharedParentElm - Immediate parent of the selected Variable
+// @variable        - The variable that is compared with all other potential Public Variables
+// @exclude         - Variables of components named are ignored
 const findPublicVariables = (
   sharedParentElm: ComponentEntity,
   variable: Variable,
   exclude?: string
-) => {
+): VariableDescriptor[] => {
   const validVariables = [];
   const compNum = sharedParentElm.componentCount();
   for (let i = 0; i < compNum; i++) {

@@ -7,8 +7,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
-import { AllStandardUnits } from "../../../../utility/StandardUnitConverter";
-import { processAttribute } from "./PropertyAttribute";
+import { allStandardUnits } from "../../../../utility/standardUnitConverter";
 
 interface IUnitsAttribute {
   title: string;
@@ -23,7 +22,7 @@ const UnitsAttribute: FunctionComponent<IUnitsAttribute> = ({
   value,
   onChange,
 }) => {
-  let validUnits: string[] = AllStandardUnits();
+  let validUnits: string[] = allStandardUnits();
   validUnits = [...validUnits, ...window.api.sendSync("all-units")];
   return (
     <FormControl fullWidth>

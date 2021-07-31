@@ -67,9 +67,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
       <DialogTitle id="form-dialog-title">
         <Grid container>
           <Grid container item xs={10} direction="row">
-            Edit MathML {valid ? "good" : "bad"}
-            {valid && "YES YES"}
-            {!valid && "NO"}
+            Edit MathML
             <ElementHelp type={Elements.math} />
           </Grid>
           <Grid item xs={2}>

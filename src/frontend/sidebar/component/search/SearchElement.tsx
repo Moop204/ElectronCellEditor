@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
-import { VariableDescriptor } from "./../../../../backend/utility/GetAllVariableNames";
+import { VariableDescriptor } from "../../../../utility/variable/getAllVariableNames";
 import { PropertiesWidget } from "../../properties/PropertiesWidget";
 
 const SearchElement = () => {

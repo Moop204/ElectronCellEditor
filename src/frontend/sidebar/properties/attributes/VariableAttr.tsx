@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import React, { FunctionComponent } from "react";
-import { VariableDescriptor } from "../../../../backend/utility/GetAllVariableNames";
+import { VariableDescriptor } from "../../../../utility/variable/getAllVariableNames";
 import { Autocomplete } from "@material-ui/lab";
 
 interface IVariableAttr {
