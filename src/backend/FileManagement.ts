@@ -11,6 +11,7 @@ import {
   Variable,
   Parser,
   NamedEntity,
+  Printer,
 } from "../types/ILibcellml";
 import {
   IDirectSelect,
@@ -48,6 +49,7 @@ import { RemoveElement } from "./removeChild/removeElement";
 import { SaveAs, Save } from "./../utility/Save";
 import { findElement } from "./utility/FindElement";
 import { generateModel } from "./addChild/generateModel";
+import { validMathMl } from "./math/validateMathMl";
 
 interface FileIssues {
   model: string;
@@ -58,6 +60,8 @@ export default class FileManagement {
   currentComponent: Component | Model | Reset | Units | Variable | null;
   type: Elements;
   _cellml: any;
+  _printer: Printer;
+  _parser: Parser;
   _cellmlLoaded: boolean;
   selectedFile: string;
 
@@ -85,6 +89,8 @@ export default class FileManagement {
       },
     });
     // this._cellml = await libcellModule();
+    this._parser = new this._cellml.Parser();
+    this._printer = new this._cellml.Printer();
     this._cellmlLoaded = true;
   }
 
@@ -173,6 +179,8 @@ export default class FileManagement {
       );
       fm.setCurrentComponent(newCurrentElement, fm.type);
       await fm.updateContent(printer.printModel(newModel, false));
+      console.log("THIS IS WHAT YOU GET");
+      console.log(printer.printModel(newModel, false));
     }
   };
 
@@ -480,6 +488,11 @@ export default class FileManagement {
         event.reply("update-content-b", this.getContent());
       }
     );
+
+    ipcMain.on("validate-math", async (event: IpcMainEvent, mathml: string) => {
+      const res = validMathMl(this, mathml);
+      event.reply("math-validity", res);
+    });
 
     ipcMain.on("parent-name", (event: IpcMainEvent) => {
       event.returnValue = (

@@ -29,9 +29,13 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
   index,
 }) => {
   const [content, setContent] = useState(value);
+  const [valid, setValid] = useState(true);
   const handleSavedClose = () => {
     updateDetail(title, content, index);
     handleClose();
+  };
+  const resetChanges = () => {
+    setContent(value);
   };
 
   useEffect(() => {
@@ -40,11 +44,17 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
 
 </math>`);
     }
+    const updateValidity = (_: Event, res: boolean) => setValid(res);
+    window.api.receive("math-validity", updateValidity);
+
+    return () => {
+      window.api.remove("math-validity", updateValidity);
+    };
   }, []);
 
-  const MathComponent = memo(() => {
-    return <PresentationMath mathml={content} />;
-  });
+  useEffect(() => {
+    window.api.send("validate-math", content);
+  }, [content]);
 
   return (
     <Dialog
@@ -57,11 +67,21 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
       <DialogTitle id="form-dialog-title">
         <Grid container>
           <Grid container item xs={10} direction="row">
-            Edit MathML
+            Edit MathML {valid ? "good" : "bad"}
+            {valid && "YES YES"}
+            {!valid && "NO"}
             <ElementHelp type={Elements.math} />
           </Grid>
           <Grid item xs={2}>
-            <Button onClick={handleSavedClose} color="primary">
+            <Button onClick={resetChanges} color="primary">
+              Reset
+            </Button>
+
+            <Button
+              onClick={handleSavedClose}
+              color="primary"
+              disabled={!valid}
+            >
               Close
             </Button>
           </Grid>
@@ -75,7 +95,7 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
               xmlInput={content}
               onChange={_.debounce((val: string) => {
                 setContent(val);
-              }, 200)}
+              }, 100)}
               option={{ cellml: false, mathml: true }}
             />
           </Grid>

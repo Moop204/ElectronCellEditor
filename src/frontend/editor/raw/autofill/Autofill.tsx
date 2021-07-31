@@ -47,6 +47,11 @@ const mathList: ElementObject[] = [
     tooltip: `Applies a function or operator to its children.`,
   },
   {
+    label: "bvar",
+    insertion: "bvar",
+    tooltip: `A bounded variable.`,
+  },
+  {
     label: "piecewise",
     insertion: "piecewise",
     tooltip: `Declares a piecewise function`,
