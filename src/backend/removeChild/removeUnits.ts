@@ -17,8 +17,7 @@ const removeUnits = async (fm: FileManagement, child: ISearch) => {
   if (!removed) {
     console.log("Failed to remove Units");
   }
-  const printer: Printer = new libcellml.Printer();
-  await fm.updateContent(printer.printModel(m, false));
+  await fm.updateContent(fm._printer.printModel(m, false));
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Model;

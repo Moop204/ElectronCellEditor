@@ -156,10 +156,7 @@ export default class FileManagement {
     curElm: EditorElement,
     fm: FileManagement
   ) => {
-    const parser = new libcellml.Parser();
-    const printer = new libcellml.Printer();
-
-    const model: Model = parser.parseModel(content);
+    const model: Model = this._parser.parseModel(content);
 
     // TODO: Jank fix, refactor properly
 
@@ -178,9 +175,9 @@ export default class FileManagement {
         curElm
       );
       fm.setCurrentComponent(newCurrentElement, fm.type);
-      await fm.updateContent(printer.printModel(newModel, false));
+      await fm.updateContent(this._printer.printModel(newModel, false));
       console.log("THIS IS WHAT YOU GET");
-      console.log(printer.printModel(newModel, false));
+      console.log(this._printer.printModel(newModel, false));
     }
   };
 

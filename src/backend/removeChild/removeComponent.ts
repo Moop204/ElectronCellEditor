@@ -8,9 +8,7 @@ import { EditorElement } from "../../types/EditorElement";
 // @child - Identifies the child to be removed
 const removeComponent = async (fm: FileManagement, child: ISearch) => {
   const libcellml = fm._cellml;
-  const printer: Printer = new libcellml.Printer();
-  const parser: Parser = new libcellml.Parser();
-  const m: Model = parser.parseModel(fm.getContent());
+  const m: Model = fm._parser.parseModel(fm.getContent());
   const name = child.name;
 
   // Remove component in editor
@@ -18,7 +16,7 @@ const removeComponent = async (fm: FileManagement, child: ISearch) => {
   if (!removed) {
     console.log("Failed to remove Component");
   }
-  await fm.updateContent(printer.printModel(m, false));
+  await fm.updateContent(fm._printer.printModel(m, false));
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Component | Model;
