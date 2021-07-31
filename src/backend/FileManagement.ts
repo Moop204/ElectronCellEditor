@@ -42,7 +42,7 @@ import {
   getAllVariableNames,
   getGlobalVariableNames,
 } from "../utility/variable/getAllVariableNames";
-import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
+import { getAllUnitsNames } from "./utility/getAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveElement } from "./removeChild/removeElement";
@@ -101,8 +101,10 @@ export default class FileManagement {
     }
     const validator = await validateModel(this, s);
     if (this.type === Elements.none && validator.issueCount() === 0) {
-      const parser: Parser = new this._cellml.Parser();
-      this.setCurrentComponent(parser.parseModel(this.content), Elements.model);
+      this.setCurrentComponent(
+        this._parser.parseModel(this.content),
+        Elements.model
+      );
     }
     if (ipcMain) ipcMain.emit("update-content-b", this.getContent());
   }
@@ -113,16 +115,14 @@ export default class FileManagement {
     if (!this._cellmlLoaded) {
       await this.init();
     }
-    const parser: Parser = new this._cellml.Parser();
-    this.currentComponent = parser.parseModel(this.content);
+    this.currentComponent = this._parser.parseModel(this.content);
   }
 
   async resetToModel(): Promise<IProperties> {
     if (!this._cellmlLoaded) {
       await this.init();
     }
-    const parser: Parser = new this._cellml.Parser();
-    this.currentComponent = parser.parseModel(this.content);
+    this.currentComponent = this._parser.parseModel(this.content);
     this.type = Elements.model;
     const resetProp = convertSelectedElement(
       this.type,
@@ -196,10 +196,9 @@ export default class FileManagement {
         await this.init();
       }
       const cellml = this._cellml;
-      const p: Parser = new cellml.Parser();
 
       this.type = Elements.model;
-      this.setCurrentComponent(p.parseModel(file), Elements.model);
+      this.setCurrentComponent(this._parser.parseModel(file), Elements.model);
       await this.updateContent(file);
       const res = {
         model: file,
@@ -239,9 +238,7 @@ export default class FileManagement {
     if (!this._cellmlLoaded) {
       await this.init();
     }
-    const libcellml = this._cellml;
-    const parser = new libcellml.Parser();
-    const model = parser.parseModel(content);
+    const model = this._parser.parseModel(content);
     for (let i = 0; i < model.componentCount(); i += 1) {
       console.log(model.componentByIndex(i).name());
     }
@@ -432,8 +429,7 @@ export default class FileManagement {
       if (issues.length === 0 && this.type === Elements.none) {
         this.type = Elements.model;
         const libcellml = this._cellml;
-        const parser: Parser = new libcellml.Parser();
-        const m: Model = parser.parseModel(file);
+        const m: Model = this._parser.parseModel(file);
         this.currentComponent = m;
         const prop = this.getCurrentAsSelection(this.type);
         event.reply("res-get-element", prop.prop);
@@ -451,8 +447,7 @@ export default class FileManagement {
         await this.init();
       }
       const libcellml = this._cellml;
-      const parser: Parser = new libcellml.Parser();
-      const model = parser.parseModel(this.content);
+      const model = this._parser.parseModel(this.content);
       let res: string[] = [];
       res = getAllComponentNames(res, model);
       event.returnValue = res;

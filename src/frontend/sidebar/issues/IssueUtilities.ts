@@ -48,15 +48,14 @@ const formatMessage = (v: Validator): IssueDescriptor[] => {
 };
 
 const validateModel = async (
-  self: FileManagement,
+  fm: FileManagement,
   file: string
 ): Promise<Validator> => {
-  if (!self._cellml) {
-    await self.init();
+  if (!fm._cellml) {
+    await fm.init();
   }
-  const libcellml = self._cellml;
-  const parser: Parser = new libcellml.Parser();
-  const m: Model = parser.parseModel(file);
+  const libcellml = fm._cellml;
+  const m: Model = fm._parser.parseModel(file);
   const v: Validator = new libcellml.Validator();
   v.validateModel(m);
   return v;

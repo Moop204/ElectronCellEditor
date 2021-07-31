@@ -1,4 +1,4 @@
-import { Model, Parser, Printer, Units } from "../../types/ILibcellml";
+import { Model, Units } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { EditorElement } from "../../types/EditorElement";
@@ -8,9 +8,7 @@ import { EditorElement } from "../../types/EditorElement";
 // @child - Identifies parent Units name as well as reset index
 const removeUnit = async (fm: FileManagement, child: ISearch) => {
   const libcellml = fm._cellml;
-  const printer: Printer = new libcellml.Printer();
-  const parser: Parser = new libcellml.Parser();
-  const m: Model = parser.parseModel(fm.getContent());
+  const m: Model = fm._parser.parseModel(fm.getContent());
   const index = child.index;
 
   // Remove element in properties
@@ -22,7 +20,7 @@ const removeUnit = async (fm: FileManagement, child: ISearch) => {
   }
   // Remove element in editor
   m.unitsByName(componentName).removeUnitByIndex(index);
-  await fm.updateContent(printer.printModel(m, false));
+  await fm.updateContent(fm._printer.printModel(m, false));
 
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
