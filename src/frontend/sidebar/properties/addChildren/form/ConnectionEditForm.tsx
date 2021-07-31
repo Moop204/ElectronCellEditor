@@ -1,11 +1,8 @@
 import React, { FunctionComponent, useState } from "react";
 import { useFormik } from "formik";
 import DialogActions from "@material-ui/core/DialogActions";
-import TextField from "@material-ui/core/TextField";
 import * as yup from "yup";
-import { Elements } from "../../../../../types/Elements";
 import Button from "@material-ui/core/Button";
-import { AllStandardUnits } from "../../../../../utility/StandardUnitConverter";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -13,13 +10,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { AllPrefix } from "../../../../../utility/PrefixConverter";
-import { IPopup } from "../IPopup";
-import { IUnitForm } from "../../UnitWidget";
-import { UnitDescriptor } from "../../../../../types/UnitDescriptor";
-import { updateAttr } from "../../PropertiesWidget";
-import { IUpdate } from "../../../../../types/IQuery";
-import { InterfaceType } from "../../../../../types/ILibcellml";
 
 interface IConnectionEdit {
   index: number;

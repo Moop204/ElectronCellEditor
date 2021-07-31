@@ -1,6 +1,8 @@
 import { Component, Parser } from "../../types/ILibcellml";
-import FileManagement from "../FileManagement";
+import FileManagement from "../../backend/FileManagement";
+import { VariableDescriptor } from "./VariableDescriptor";
 
+// Obtain variables of the selected component
 const getAllVariableNames = async (fm: FileManagement) => {
   if (!fm._cellmlLoaded) {
     await fm.init();
@@ -14,11 +16,7 @@ const getAllVariableNames = async (fm: FileManagement) => {
   return res;
 };
 
-interface VariableDescriptor {
-  parent: string;
-  variable: string;
-}
-
+// Finds variables recursively
 const recursiveHelper = (c: Component): VariableDescriptor[] => {
   let res: VariableDescriptor[] = [];
   for (let i = 0; i < c.variableCount(); i++) {
@@ -33,13 +31,10 @@ const recursiveHelper = (c: Component): VariableDescriptor[] => {
   return res;
 };
 
-const getGlobalVariableNames = async (fm: FileManagement) => {
-  if (!fm._cellmlLoaded) {
-    await fm.init();
-  }
-  const parser: Parser = new fm._cellml.Parser();
+// Find all variables mentioned in model
+const getGlobalVariableNames = (fm: FileManagement): VariableDescriptor[] => {
   const content = fm.getContent();
-  const m = parser.parseModel(content);
+  const m = fm._parser.parseModel(content);
 
   let res: VariableDescriptor[] = [];
   for (let i = 0; i < m.componentCount(); i++) {

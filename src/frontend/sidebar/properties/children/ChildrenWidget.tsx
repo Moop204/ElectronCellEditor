@@ -10,7 +10,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { capitaliseFirst } from "../../../../utility/CapitaliseFirst";
+import { capitaliseFirst } from "../../../../utility/capitaliseFirst";
 
 const findElement = (elm: Elements, name: string, index: number) => {
   const select: ISearch = { index, name };

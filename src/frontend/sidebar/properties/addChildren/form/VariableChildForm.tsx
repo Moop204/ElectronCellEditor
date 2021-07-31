@@ -5,13 +5,13 @@ import TextField from "@material-ui/core/TextField";
 import * as yup from "yup";
 import { Elements } from "../../../../../types/Elements";
 import Button from "@material-ui/core/Button";
-import { AllStandardUnits } from "../../../../../utility/StandardUnitConverter";
+import { allStandardUnits } from "../../../../../utility/standardUnitConverter";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { AllInterfaceType } from "../../../../../utility/InterfaceConverter";
+import { AllInterfaceType } from "../../../../../utility/interfaceConverter";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { IPopup } from "../IPopup";
@@ -61,7 +61,7 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
   handleClose,
 }) => {
   let validUnits: string[] = window.api.sendSync("all-units");
-  validUnits = [...validUnits, ...AllStandardUnits()];
+  validUnits = [...validUnits, ...allStandardUnits()];
   const validInterface = AllInterfaceType();
   const validVariable: string[] = window.api.sendSync("all-variable");
   const validationSchema = validation(

@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import React, { FunctionComponent } from "react";
 import { Elements, elmToStr } from "../../../types/Elements";
-import { capitaliseFirst } from "../../../utility/CapitaliseFirst";
+import { capitaliseFirst } from "../../../utility/capitaliseFirst";
 import { ElementHelp } from "../help/ElementHelp";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 

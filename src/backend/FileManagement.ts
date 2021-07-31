@@ -41,12 +41,12 @@ import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
 import {
   getAllVariableNames,
   getGlobalVariableNames,
-} from "./utility/GetAllVariableNames";
+} from "../utility/variable/getAllVariableNames";
 import { getAllUnitsNames } from "./utility/GetAllUnitsNames";
 import { getAllComponentNames } from "./utility/GetAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveElement } from "./removeChild/removeElement";
-import { SaveAs, Save } from "./../utility/Save";
+import { saveAs, save } from "../utility/save";
 import { findElement } from "./utility/FindElement";
 import { generateModel } from "./addChild/generateModel";
 import { validMathMl } from "./math/validateMathMl";
@@ -272,14 +272,14 @@ export default class FileManagement {
 
   async saveFile() {
     console.log("GAVE THIS " + this.selectedFile);
-    const fileName = await Save(this.getContent(), this.selectedFile);
+    const fileName = await save(this.getContent(), this.selectedFile);
     console.log("GOT THIS " + fileName);
     this.selectedFile = fileName;
   }
 
   async saveAsFile() {
     console.log("GAVE THIS " + this.selectedFile);
-    const fileName = await SaveAs(this.getContent(), this.selectedFile);
+    const fileName = await saveAs(this.getContent(), this.selectedFile);
     console.log("GOT THIS " + fileName);
     this.selectedFile = fileName;
   }
@@ -473,7 +473,7 @@ export default class FileManagement {
     // Returns a list of all variables in the model
     // Placeholder until bindings for equivalence is completed
     ipcMain.on("global-variable", async (event: IpcMainEvent) => {
-      event.returnValue = await getGlobalVariableNames(this);
+      event.returnValue = getGlobalVariableNames(this);
     });
 
     ipcMain.on(

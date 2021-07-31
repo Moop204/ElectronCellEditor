@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import * as yup from "yup";
 import { Elements } from "../../../../../types/Elements";
 import Button from "@material-ui/core/Button";
-import { AllStandardUnits } from "../../../../../utility/StandardUnitConverter";
+import { allStandardUnits } from "../../../../../utility/standardUnitConverter";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -13,13 +13,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { AllPrefix } from "../../../../../utility/PrefixConverter";
+import { AllPrefix } from "../../../../../utility/prefixConverter";
 import { IPopup } from "../IPopup";
-import { IUnitForm } from "../../UnitWidget";
 import { UnitDescriptor } from "../../../../../types/UnitDescriptor";
-import { updateAttr } from "../../PropertiesWidget";
-import { IUpdate } from "../../../../../types/IQuery";
-import { Autocomplete } from "@material-ui/lab";
 
 interface IUnitEdit extends IPopup {
   unit: UnitDescriptor;
@@ -55,7 +51,7 @@ const UnitEditForm: FunctionComponent<IUnitEdit> = ({
   index,
   unit: { reference, prefix, exponent, multiplier },
 }) => {
-  let validUnits: string[] = AllStandardUnits();
+  let validUnits: string[] = allStandardUnits();
   validUnits = [...window.api.sendSync("all-units"), ...validUnits];
   const validPrefix = AllPrefix();
   const validationSchema = validation(validPrefix, validUnits);

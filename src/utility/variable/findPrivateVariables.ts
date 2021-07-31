@@ -1,14 +1,14 @@
-import { ComponentEntity, Variable } from "../types/ILibcellml";
+import { ComponentEntity, Variable } from "../../types/ILibcellml";
+import { VariableDescriptor } from "./VariableDescriptor";
 
-interface IVarIdentifier {
-  parent: string;
-  variable: string;
-}
-
+// Identify private variables of the current element
+// @currentElm  - Currently selected Component
+// @variable    - Variable of the currently selected Component which
+//                the resulting variables have a private relation with
 const findPrivateVariables = (
   currentElm: ComponentEntity,
   variable: Variable
-): IVarIdentifier[] => {
+): VariableDescriptor[] => {
   const validVariables = [];
   const compNum = currentElm.componentCount();
   for (let i = 0; i < compNum; i++) {
