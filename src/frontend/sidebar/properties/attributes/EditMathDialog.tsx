@@ -4,6 +4,7 @@ import {
   Grid,
   Button,
   DialogContent,
+  Typography,
 } from "@material-ui/core";
 import React, { memo, FunctionComponent, useState, useEffect } from "react";
 import { EditorMonaco } from "../../../editor/raw/EditorMonaco";
@@ -66,9 +67,19 @@ const EditMathDialog: FunctionComponent<IMathDialog> = ({
     >
       <DialogTitle id="form-dialog-title">
         <Grid container>
-          <Grid container item xs={10} direction="row">
+          <Grid
+            container
+            item
+            xs={3}
+            direction="row"
+            style={{ alignItems: "center" }}
+          >
             Edit MathML
             <ElementHelp type={Elements.math} />
+          </Grid>
+          <Grid container item xs={7} direction="row" style={{ color: "red" }}>
+            {!valid &&
+              "MathML is invalid. Please fix or reset the MathML element."}
           </Grid>
           <Grid item xs={2}>
             <Button onClick={resetChanges} color="primary">
