@@ -21,7 +21,7 @@ const ActionSave = (mainWindow: BrowserWindow, fm: FileManagement) => {
     label: "File Save",
     accelerator: "Ctrl+S",
     click: () => {
-      fm.saveFile();
+      fm.saveFile(mainWindow);
     },
   };
 };
@@ -31,7 +31,7 @@ const ActionSaveAs = (mainWindow: BrowserWindow, fm: FileManagement) => {
     label: "File Save As",
     accelerator: "Shift+Ctrl+S",
     click: () => {
-      fm.saveAsFile();
+      fm.saveAsFile(mainWindow);
     },
   };
 };
@@ -54,10 +54,11 @@ const FileItem = (
   return {
     label: "File",
     submenu: [
-      isMac ? { role: "close" } : { role: "quit" },
+      ActionNewFile(mainWindow, fm),
       ActionOpen(mainWindow, fm),
       ActionSave(mainWindow, fm),
       ActionSaveAs(mainWindow, fm),
+      isMac ? { role: "close" } : { role: "quit" },
     ],
   };
 };

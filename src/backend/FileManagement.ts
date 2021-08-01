@@ -267,18 +267,21 @@ export default class FileManagement {
     mainWindow.webContents.send("receive-filename", this.selectedFile);
   }
 
-  async saveFile() {
+  async saveFile(mainWindow?: BrowserWindow) {
     console.log("GAVE THIS " + this.selectedFile);
     const fileName = await save(this.getContent(), this.selectedFile);
     console.log("GOT THIS " + fileName);
     this.selectedFile = fileName;
+    mainWindow?.webContents.send("receive-filename", this.selectedFile);
   }
 
-  async saveAsFile() {
+  async saveAsFile(mainWindow?: BrowserWindow) {
     console.log("GAVE THIS " + this.selectedFile);
     const fileName = await saveAs(this.getContent(), this.selectedFile);
     console.log("GOT THIS " + fileName);
     this.selectedFile = fileName;
+    if (mainWindow)
+      mainWindow.webContents.send("receive-filename", this.selectedFile);
   }
 
   // Run once to set up handlers
