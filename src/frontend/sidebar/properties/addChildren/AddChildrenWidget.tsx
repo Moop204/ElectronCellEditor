@@ -10,7 +10,7 @@ const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
       item
       xs={12}
       key={parentName + elmToStr(childElm)}
-      style={{ paddingTop: "4px" }}
+      style={{ paddingTop: "4px", alignSelf: "center" }}
     >
       <AddChildSelect
         childElement={childElm}

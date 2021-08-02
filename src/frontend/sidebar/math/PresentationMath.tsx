@@ -5,6 +5,12 @@ import { stripMath } from "./stripMath";
 import { splitMath } from "./splitMath";
 import { Grid } from "@material-ui/core";
 
+const parser = new DOMParser();
+const xsltProcessor = new XSLTProcessor();
+const serializer = new XMLSerializer();
+const transform = parser.parseFromString(ctop, "text/xml");
+xsltProcessor.importStylesheet(transform);
+
 interface IMath {
   mathml: string;
 }
@@ -12,12 +18,6 @@ interface IMath {
 const ErrorMathMl: FunctionComponent = () => {
   return <div>Invalid MathML Input</div>;
 };
-
-const parser = new DOMParser();
-const xsltProcessor = new XSLTProcessor();
-const serializer = new XMLSerializer();
-const transform = parser.parseFromString(ctop, "text/xml");
-xsltProcessor.importStylesheet(transform);
 
 // Turns content mathml into presentation mathml
 // MathML written in cellml is always content type
@@ -67,7 +67,7 @@ const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
           `</div>`
       )
     );
-  }, []);
+  }, [mathml]);
 
   if (formulas.length === 0) {
     return (

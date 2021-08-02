@@ -19,7 +19,7 @@ const AddChildSelect: FunctionComponent<IAddChild> = ({
   console.log(`ComponentChildForm elementcheck: ${parentElement}`);
 
   return (
-    <Grid container direction="row">
+    <Grid container direction="row" style={{ alignItems: "center" }}>
       <Grid item xs={10}>
         <ElementForm
           childElement={childElement}

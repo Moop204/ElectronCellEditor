@@ -159,7 +159,11 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             e.target.value === ""
           ) {
             if (error) setError(false);
-            onChange(title, e.target.value, index);
+            /*_.debounce(() =>*/ onChange(
+              title,
+              e.target.value,
+              index
+            ); /*, 100);*/
           } else {
             if (!error) setError(true);
           }

@@ -288,8 +288,6 @@ export default class FileManagement {
   setupHandlers(): void {
     ipcMain.on("new-file", async (event: IpcMainEvent) => {
       this.newFile();
-      console.log("new file pls ");
-      console.log(this.selectedFile);
       event.reply("update-content-b", this.getContent());
       event.reply("receive-filename", this.selectedFile);
     });
