@@ -7,47 +7,70 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import convert from "xml-js";
 import { IEditorXml } from "./EditorXml";
 import { IXmlElement, IXmlJs } from "../../../backend/compressCellml";
-interface RenderTree {
-  id: string;
-  name: string;
-  children?: RenderTree[];
-}
+import {
+  alpha,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+} from "@material-ui/core";
+import { PropertyIcon } from "../../sidebar/properties/children/PropertyIcon";
 
-const data: RenderTree = {
-  id: "root",
-  name: "Parent",
-  children: [
-    {
-      id: "1",
-      name: "Child - 1",
-    },
-    {
-      id: "3",
-      name: "Child - 3",
-      children: [
-        {
-          id: "4",
-          name: "Child - 4",
-        },
-      ],
-    },
-  ],
-};
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: 110,
     flexGrow: 1,
-    maxWidth: 400,
+    maxWidth: "100vh",
   },
-});
+  record: {
+    margin: "2px",
+    padding: "10px",
+    border: "1px solid lightgrey",
+    borderRadius: "10px",
+  },
+  group: {
+    marginLeft: 7,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
+}));
 
 interface IElement {
   element: IXmlElement;
 }
 
 const ElementRecord: FunctionComponent<IElement> = ({ element }) => {
-  return <div></div>;
+  const style = useStyles();
+
+  return (
+    <div className={style.record}>
+      {/* <CardContent> */}
+      <Grid container direction="row" spacing={2} alignItems="center">
+        <Grid item>
+          <PropertyIcon element={element.name} />
+        </Grid>
+        {Object.entries(element.attributes).map(([key, value]) => {
+          return (
+            <>
+              <Divider orientation="vertical" flexItem />
+              <Grid item>
+                <Typography variant="subtitle2" style={{}}>
+                  {key}:
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" color="textSecondary">
+                  {value}{" "}
+                </Typography>
+              </Grid>
+            </>
+          );
+        })}
+      </Grid>
+      {/* </CardContent> */}
+    </div>
+  );
 };
 
 const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
@@ -58,19 +81,17 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
 
   const classes = useStyles();
 
-  const renderTree = (nodes: IXmlElement, index: number) => {
+  const renderTree = (nodes: IXmlElement, index: string) => {
     const id = nodes.name + index;
-    let label: string;
-    if (nodes.attributes.name) {
-      label = nodes.attributes.name;
-    } else if (nodes.name === "unit") {
-      label = nodes.attributes?.prefix + nodes.attributes.units;
-    }
-
     return (
-      <TreeItem key={id} nodeId={id} label={label}>
+      <TreeItem
+        key={id}
+        nodeId={id}
+        label={<ElementRecord element={nodes} />}
+        className={classes.group}
+      >
         {Array.isArray(nodes.elements)
-          ? nodes.elements.map((node, index) => renderTree(node, index))
+          ? nodes.elements.map((node, i) => renderTree(node, index + i))
           : null}
       </TreeItem>
     );
@@ -80,10 +101,11 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
     <TreeView
       className={classes.root}
       defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpanded={["root"]}
+      // defaultExpanded={["root"]}
+      defaultExpanded={["1"]}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      {renderTree(richObject.elements[0], 0)}
+      {renderTree(richObject.elements[0], "0")}
     </TreeView>
   );
 };

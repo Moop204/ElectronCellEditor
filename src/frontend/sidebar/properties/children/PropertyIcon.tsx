@@ -12,13 +12,15 @@ import {
   Dialog,
   DialogTitle,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import { RulerIcon } from "../../../assets/RulerIcon";
 import PowerIcon from "@material-ui/icons/Power";
 import { ElementHelp } from "../../help/ElementHelp";
 import { ConnectionEditForm } from "../addChildren/form/ConnectionEditForm";
 import { DeleteButton } from "./DeleteButton";
-
+import { SystemInternationalIcon } from "../../../assets/SystemeInternational";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 interface IPropertyIcon {
   element: string;
 }
@@ -48,12 +50,12 @@ const useStyle = makeStyles(() =>
 
 const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
   const { element } = props;
-  const style = useStyle();
   let icon;
 
   switch (element) {
     case "component":
       icon = <ExtensionIcon />;
+
       break;
     case "reset":
       icon = <RotateLeftIcon />;
@@ -67,11 +69,16 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
     case "connection":
       icon = <PowerIcon />;
       break;
-
+    case "unit":
+      icon = <SystemInternationalIcon />;
+      break;
+    case "model":
+      icon = <DashboardIcon />;
+      break;
     default:
       icon = <div> |{element}| </div>;
   }
-  return icon;
+  return <Tooltip title={element}>{icon}</Tooltip>;
 };
 
 export { PropertyIcon };

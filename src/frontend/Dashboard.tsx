@@ -25,6 +25,7 @@ import AppBar from "@material-ui/core/AppBar";
 
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import { SystemInternationalIcon } from "./assets/SystemeInternational";
 
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
@@ -118,16 +119,17 @@ const Dashboard: FunctionComponent = () => {
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
-  // Faster dev env
-  return (
-    <div className={styles.root}>
-      <ConciseView
-        contentExist={contentExist}
-        setContentExist={setContentExist}
-        key="concise-view"
-      />
-    </div>
-  );
+  // // Faster dev env
+  // return (
+  //   <div className={styles.root}>
+  //     <ConciseView
+  //       contentExist={contentExist}
+  //       setContentExist={setContentExist}
+  //       key="concise-view"
+  //     />
+  //     <SystemInternationalIcon />
+  //   </div>
+  // );
 
   return (
     <div className={styles.root}>
