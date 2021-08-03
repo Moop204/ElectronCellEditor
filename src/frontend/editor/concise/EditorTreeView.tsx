@@ -29,11 +29,11 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid lightgrey",
     borderRadius: "10px",
   },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-  },
+  // group: {
+  //   marginLeft: 7,
+  //   paddingLeft: 18,
+  //   borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  // },
 }));
 
 interface IElement {
@@ -88,7 +88,7 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
         key={id}
         nodeId={id}
         label={<ElementRecord element={nodes} />}
-        className={classes.group}
+        // className={classes.group}
       >
         {Array.isArray(nodes.elements)
           ? nodes.elements.map((node, i) => renderTree(node, index + i))

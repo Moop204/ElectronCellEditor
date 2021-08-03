@@ -65,7 +65,7 @@ const Dashboard: FunctionComponent = () => {
     setViewSidebar(!viewSidebar);
   };
 
-  const [view, setView] = useState(false);
+  const [view, setView] = useState(true);
   const [fileName, setFileName] = useState("untitled");
 
   const switchView = () => {
@@ -133,83 +133,83 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <div className={styles.root}>
-      <Router>
-        <Grid container spacing={1} direction="row">
-          <Grid item xs={viewSidebar ? 3 : 1}>
-            <SidebarManager
-              viewSidebar={viewSidebar}
-              view={view}
-              valid={valid}
-              content={contentExist}
-              baseContent={baseContent}
-              setBaseContent={setBaseContent}
-              switchSidebar={switchSidebar}
-              switchView={switchView}
-            />
-          </Grid>
-
-          <Grid item xs={viewSidebar ? 9 : 11}>
-            <Paper className={styles.contentView}>
-              {/* <Paper className={styles.tabbing}>{fileName}</Paper> */}
-              <AppBar position="static" color="default">
-                <Tabs
-                  value={fileName}
-                  // onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="file tabs"
-                >
-                  <Tooltip title={fileName}>
-                    <Tab
-                      style={{
-                        textOverflow: "ellipsis",
-                        textTransform: "none",
-                        textDecoration: "underline",
-                      }}
-                      wrapped
-                      label={
-                        fileName[0] !== "/"
-                          ? fileName === ""
-                            ? "untitled"
-                            : fileName
-                          : fileName.match(/\/[^/]+$/)[0].slice(1)
-                      }
-                    />
-                  </Tooltip>
-                </Tabs>
-              </AppBar>
-              <Switch>
-                <Route exact path="/concise">
-                  {!valid && <Redirect to="" />}
-                  {valid && (
-                    <ConciseView
-                      contentExist={contentExist}
-                      setContentExist={setContentExist}
-                      key="concise-view"
-                    />
-                  )}
-                </Route>
-
-                <Route exact path="">
-                  {!valid && (
-                    <Alert severity="error">
-                      File is not in valid CellML. You cannot use Concise View
-                      without fixing this.
-                    </Alert>
-                  )}
-                  <RawView
-                    setContentExist={setContentExist}
-                    contentExist={contentExist}
-                    key="raw-view"
-                  />
-                </Route>
-              </Switch>
-            </Paper>
-          </Grid>
+      {/* <Router> */}
+      <Grid container spacing={1} direction="row">
+        <Grid item xs={viewSidebar ? 3 : 1}>
+          <SidebarManager
+            viewSidebar={viewSidebar}
+            view={view}
+            valid={valid}
+            content={contentExist}
+            baseContent={baseContent}
+            setBaseContent={setBaseContent}
+            switchSidebar={switchSidebar}
+            switchView={switchView}
+          />
         </Grid>
-      </Router>
+
+        <Grid item xs={viewSidebar ? 9 : 11}>
+          <Paper className={styles.contentView}>
+            {/* <Paper className={styles.tabbing}>{fileName}</Paper> */}
+            <AppBar position="static" color="default">
+              <Tabs
+                value={fileName}
+                // onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="file tabs"
+              >
+                <Tooltip title={fileName}>
+                  <Tab
+                    style={{
+                      textOverflow: "ellipsis",
+                      textTransform: "none",
+                      textDecoration: "underline",
+                    }}
+                    wrapped
+                    label={
+                      fileName[0] !== "/"
+                        ? fileName === ""
+                          ? "untitled"
+                          : fileName
+                        : fileName.match(/\/[^/]+$/)[0].slice(1)
+                    }
+                  />
+                </Tooltip>
+              </Tabs>
+            </AppBar>
+            {/* <Switch>
+              <Route exact path="/concise">
+                {!valid && <Redirect to="" />}
+                {valid && (
+                  <ConciseView
+                    contentExist={contentExist}
+                    setContentExist={setContentExist}
+                    key="concise-view"
+                  />
+                )}
+              </Route>
+
+              <Route exact path="">
+                {!valid && (
+                  <Alert severity="error">
+                    File is not in valid CellML. You cannot use Concise View
+                    without fixing this.
+                  </Alert>
+                )}
+                <RawView
+                  setContentExist={setContentExist}
+                  contentExist={contentExist}
+                  key="raw-view"
+                />
+              </Route>
+            </Switch> */}
+          </Paper>
+        </Grid>
+      </Grid>
+      {/* </Router> */}
     </div>
   );
 };

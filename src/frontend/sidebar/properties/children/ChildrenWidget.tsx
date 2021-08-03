@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import {
   createStyles,
   Divider,
+  List,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -79,17 +80,19 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
             >
               <Divider variant="middle" />
               <Typography variant="h5">
-                {(parentKey === "component" ? "Encapsulated" : "") +
+                {(parentKey === "component" ? "Encapsulated " : "") +
                   capitaliseFirst(parentKey)}
               </Typography>
-              {Object.values(childrenType).map(
-                (attrType: IChild, index: number) => {
-                  return (
-                    <Grid
-                      container
-                      direction="row-reverse"
-                      key={parentKey + attrType.name}
-                    >
+
+              <List>
+                {Object.values(childrenType).map(
+                  (attrType: IChild, index: number) => {
+                    return (
+                      // <Grid
+                      //   container
+                      //   direction="row-reverse"
+                      //   key={parentKey + attrType.name}
+                      // >
                       <ChildrenRecord
                         title={attrType.name}
                         onClick={() => {
@@ -105,10 +108,11 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                         index={index}
                         parentName={attrType.parentName}
                       />
-                    </Grid>
-                  );
-                }
-              )}
+                      // </Grid>
+                    );
+                  }
+                )}
+              </List>
             </div>
           );
       })}

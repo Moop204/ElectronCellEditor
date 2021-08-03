@@ -1,4 +1,17 @@
-import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  Button,
+  Avatar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  Typography,
+} from "@material-ui/core";
 import { title } from "process";
 import React, { FunctionComponent, MouseEventHandler, useState } from "react";
 import { Elements, strToElm } from "../../../../types/Elements";
@@ -7,7 +20,7 @@ import { PropertyIcon } from "./PropertyIcon";
 
 interface IChildrenRecord {
   title: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick: MouseEventHandler<HTMLDivElement>;
   element: string;
   index: number;
   parentName?: string;
@@ -47,6 +60,27 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  // New implementation
+  return (
+    <ListItem button onClick={onClick} dense>
+      <ListItemAvatar>
+        <Avatar>
+          <PropertyIcon element={element} />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText primary={title} />
+      <ListItemSecondaryAction>
+        <IconButton edge="end" aria-label="delete">
+          <DeleteButton
+            elementType={strToElm(element)}
+            name={title}
+            index={index}
+          />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
 
   if (element === "connection") {
     return (
@@ -88,34 +122,34 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
     );
   }
 
-  return (
-    <Grid container direction="row" key={element + title}>
-      <Grid item xs={6} sm={6} md={8} lg={10} className={style.button}>
-        <Button
-          variant="outlined"
-          onClick={onClick}
-          fullWidth
-          className={style.button}
-        >
-          <Grid container>
-            <Grid item xs={1}>
-              <PropertyIcon element={element} />
-            </Grid>
-            <Grid item xs={11} className={style.buttonText}>
-              {title}
-            </Grid>
-          </Grid>
-        </Button>
-      </Grid>
-      <Grid item xs={6} sm={6} md={4} lg={2} className={style.button}>
-        <DeleteButton
-          elementType={strToElm(element)}
-          name={title}
-          index={index}
-        />
-      </Grid>
-    </Grid>
-  );
+  // return (
+  //   <Grid container direction="row" key={element + title}>
+  //     <Grid item xs={6} sm={6} md={8} lg={10} className={style.button}>
+  //       <Button
+  //         variant="outlined"
+  //         onClick={onClick}
+  //         fullWidth
+  //         className={style.button}
+  //       >
+  //         <Grid container>
+  //           <Grid item xs={1}>
+  //             <PropertyIcon element={element} />
+  //           </Grid>
+  //           <Grid item xs={11} className={style.buttonText}>
+  //             {title}
+  //           </Grid>
+  //         </Grid>
+  //       </Button>
+  //     </Grid>
+  //     <Grid item xs={6} sm={6} md={4} lg={2} className={style.button}>
+  //       <DeleteButton
+  //         elementType={strToElm(element)}
+  //         name={title}
+  //         index={index}
+  //       />
+  //     </Grid>
+  //   </Grid>
+  // );
 };
 
 export { ChildrenRecord };
