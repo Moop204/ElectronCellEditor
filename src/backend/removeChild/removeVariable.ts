@@ -24,7 +24,7 @@ const removeVariable = async (fm: FileManagement, child: ISearch) => {
   if (!removed) {
     console.log("Failed to remove Variable");
   }
-  await fm.updateContent(printer.printModel(m, false));
+  await fm.updateContentFromModel(m);
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };
 

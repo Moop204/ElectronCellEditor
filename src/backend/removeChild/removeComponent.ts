@@ -16,7 +16,7 @@ const removeComponent = async (fm: FileManagement, child: ISearch) => {
   if (!removed) {
     console.log("Failed to remove Component");
   }
-  await fm.updateContent(fm._printer.printModel(m, false));
+  await fm.updateContentFromModel(m);
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Component | Model;

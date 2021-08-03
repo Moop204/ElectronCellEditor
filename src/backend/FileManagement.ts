@@ -94,6 +94,10 @@ export default class FileManagement {
     this._cellmlLoaded = true;
   }
 
+  async updateContentFromModel(m: Model): Promise<void> {
+    await this.updateContent(this._printer.printModel(m, true));
+  }
+
   async updateContent(s: string): Promise<void> {
     this.content = s;
     if (!this._cellmlLoaded) {
@@ -175,9 +179,9 @@ export default class FileManagement {
         curElm
       );
       fm.setCurrentComponent(newCurrentElement, fm.type);
-      await fm.updateContent(this._printer.printModel(newModel, false));
+      await fm.updateContentFromModel(newModel);
       console.log("THIS IS WHAT YOU GET");
-      console.log(this._printer.printModel(newModel, false));
+      console.log(this._printer.printModel(newModel, true));
     }
   };
 

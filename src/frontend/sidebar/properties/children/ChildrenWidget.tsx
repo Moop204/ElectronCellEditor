@@ -2,7 +2,7 @@ import React, { FunctionComponent, MouseEventHandler } from "react";
 import { Elements, elmToStr, strToElm } from "../../../../types/Elements";
 import { IChild } from "../../../../types/IProperties";
 import { ISearch, ISelect } from "../../../../types/IQuery";
-import PropertyIcon from "./PropertyIcon";
+import { ChildrenRecord } from "./ChildrenRecord";
 import Grid from "@material-ui/core/Grid";
 import {
   createStyles,
@@ -90,7 +90,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                       direction="row-reverse"
                       key={parentKey + attrType.name}
                     >
-                      <PropertyIcon
+                      <ChildrenRecord
                         title={attrType.name}
                         onClick={() => {
                           findElement(

@@ -17,7 +17,7 @@ const removeUnits = async (fm: FileManagement, child: ISearch) => {
   if (!removed) {
     console.log("Failed to remove Units");
   }
-  await fm.updateContent(fm._printer.printModel(m, false));
+  await fm.updateContentFromModel(m);
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Model;

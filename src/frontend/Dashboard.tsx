@@ -118,6 +118,17 @@ const Dashboard: FunctionComponent = () => {
     // ipcRenderer.send('notify-backend', contentExist);
   }, [contentExist]);
 
+  // Faster dev env
+  return (
+    <div className={styles.root}>
+      <ConciseView
+        contentExist={contentExist}
+        setContentExist={setContentExist}
+        key="concise-view"
+      />
+    </div>
+  );
+
   return (
     <div className={styles.root}>
       <Router>

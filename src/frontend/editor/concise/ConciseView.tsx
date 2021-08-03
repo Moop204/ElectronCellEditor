@@ -5,6 +5,7 @@ import React from "react";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { EditorXml } from "./EditorXml";
+import { EditorTreeView } from "./EditorTreeView";
 import { compressCellml } from "../../../backend/compressCellml";
 import { IEditorProp } from "../IEditorProp";
 import { FunctionComponent } from "react";
@@ -29,9 +30,11 @@ const ConciseView: FunctionComponent<IEditorProp> = ({ contentExist }) => {
   if (contentExist === "") {
     return <div className={styles.notLoaded}>No File Loaded</div>;
   }
+
   return (
     <div className={styles.conciseView}>
-      <EditorXml xmlInput={compressCellml(contentExist)} />
+      {/* <EditorXml xmlInput={compressCellml(contentExist)} /> */}
+      <EditorTreeView xmlInput={compressCellml(contentExist)} />
     </div>
   );
 };

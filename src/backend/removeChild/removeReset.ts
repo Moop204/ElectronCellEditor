@@ -21,7 +21,7 @@ const removeReset = async (fm: FileManagement, child: ISearch) => {
 
   // Remove element in editor
   m.componentByName(componentName, true).removeResetByIndex(index);
-  await fm.updateContent(fm._printer.printModel(m, false));
+  await fm.updateContentFromModel(m);
 
   fm.setCurrentComponent(curElm as EditorElement, fm.type);
 };

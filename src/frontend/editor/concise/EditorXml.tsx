@@ -2,13 +2,15 @@ import { XmlEditor } from "react-xml-editor";
 import React, { FunctionComponent } from "react";
 import { useRef } from "react";
 import { Box } from "@material-ui/core";
-
+import convert from "xml-js";
 interface IEditorXml {
   xmlInput: string;
 }
 
 const EditorXml: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
   const editorRef = useRef<XmlEditor | null>(null);
+
+  console.log(convert.xml2json(xmlInput, { compact: false, spaces: 4 }));
 
   return (
     <Box
@@ -27,4 +29,4 @@ const EditorXml: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
   );
 };
 
-export { EditorXml };
+export { EditorXml, IEditorXml };

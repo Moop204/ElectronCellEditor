@@ -17,8 +17,8 @@ import {
 import { IUpdate } from "../src/types/IQuery";
 import { isVariableDeclaration } from "typescript";
 import { Elements } from "../src/types/Elements";
-import { findPrivateVariables } from "../src/utility/FindPrivateVariables";
-import { findPublicVariables } from "../src/utility/FindPublicVariables";
+import { findPrivateVariables } from "../src/utility/variable/findPrivateVariables";
+import { findPublicVariables } from "../src/utility/variable/findPublicVariables";
 
 describe("Public interfaces", () => {
   it("Connects two sibling variables", async () => {

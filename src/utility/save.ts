@@ -1,5 +1,6 @@
 import { dialog, BrowserWindow } from "electron";
-import fs from "fs";
+// import fs from "fs";
+const fs = require("fs");
 
 // Requests the user specify where to save. Returns the
 // location chosen
