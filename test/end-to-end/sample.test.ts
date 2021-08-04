@@ -33,18 +33,19 @@ const app = new Application({
 
 describe("Basic tests", function () {
   this.timeout(500000);
-  beforeEach(() => {
-    return app.start();
+  beforeEach(async () => {
+    await app.start();
   });
 
   it("Ensure application works", async () => {
     const winCount = await app.client.getWindowCount();
-    return assert.equal(winCount, 1);
+    return assert.equal(winCount, 2);
   });
 
-  afterEach(() => {
-    if (app && app.isRunning()) {
-      return app.stop();
-    }
+  afterEach(async () => {
+    await app.stop();
+    // if (app && app.isRunning()) {
+    //   return app.stop();
+    // }
   });
 });

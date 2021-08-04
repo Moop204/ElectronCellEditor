@@ -11,6 +11,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
+  ListItemIcon,
 } from "@material-ui/core";
 import { title } from "process";
 import React, { FunctionComponent, MouseEventHandler, useState } from "react";
@@ -57,18 +58,13 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   parentName,
 }) => {
   const style = useStyle();
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
 
   // New implementation
   return (
     <ListItem button onClick={onClick} dense>
-      <ListItemAvatar>
-        <Avatar>
-          <PropertyIcon element={element} />
-        </Avatar>
-      </ListItemAvatar>
+      <ListItemIcon>
+        <PropertyIcon element={element} />
+      </ListItemIcon>
       <ListItemText primary={title} />
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="delete">
@@ -82,45 +78,45 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
     </ListItem>
   );
 
-  if (element === "connection") {
-    return (
-      <Grid container className={style.root}>
-        <Grid item xs={10}>
-          <Button
-            variant="outlined"
-            onClick={handleOpen}
-            fullWidth
-            className={style.button}
-          >
-            <Grid container>
-              <Grid item xs={2}>
-                <PropertyIcon element={element} />
-              </Grid>
-              <Grid item xs={10}>
-                {title}
-              </Grid>
-            </Grid>
-          </Button>
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            onClick={() => {
-              window.api.send("update-attribute", [
-                {
-                  element: Elements.variable,
-                  select: { name: title, index: index },
-                  attribute: "connection",
-                  value: parentName,
-                },
-              ]);
-            }}
-          >
-            X
-          </Button>
-        </Grid>
-      </Grid>
-    );
-  }
+  // if (element === "connection") {
+  //   return (
+  //     <Grid container className={style.root}>
+  //       <Grid item xs={10}>
+  //         <Button
+  //           variant="outlined"
+  //           onClick={handleOpen}
+  //           fullWidth
+  //           className={style.button}
+  //         >
+  //           <Grid container>
+  //             <Grid item xs={2}>
+  //               <PropertyIcon element={element} />
+  //             </Grid>
+  //             <Grid item xs={10}>
+  //               {title}
+  //             </Grid>
+  //           </Grid>
+  //         </Button>
+  //       </Grid>
+  //       <Grid item xs={2}>
+  //         <Button
+  //           onClick={() => {
+  //             window.api.send("update-attribute", [
+  //               {
+  //                 element: Elements.variable,
+  //                 select: { name: title, index: index },
+  //                 attribute: "connection",
+  //                 value: parentName,
+  //               },
+  //             ]);
+  //           }}
+  //         >
+  //           X
+  //         </Button>
+  //       </Grid>
+  //     </Grid>
+  //   );
+  // }
 
   // return (
   //   <Grid container direction="row" key={element + title}>

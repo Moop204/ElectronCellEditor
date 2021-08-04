@@ -150,7 +150,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
                   Boolean(formik.errors.source)
                 )
               ) {
-                return handleClose();
+                handleClose();
               } else {
                 console.log(formik.errors);
               }

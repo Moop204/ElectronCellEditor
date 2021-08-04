@@ -3,7 +3,7 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 
 const RulerIcon: React.FunctionComponent = () => {
   return (
-    <SvgIcon>
+    <SvgIcon color="primary">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
         <g className="" transform="translate(0,0)">
           <g>
@@ -16,8 +16,6 @@ const RulerIcon: React.FunctionComponent = () => {
             <path
               d="M108.9 31.15L31.15 108.9L41.06 118.8L68.62 91.25L81.36 104L53.83 131.6L74.99 152.7L102.5 125.2L115.3 138L87.75 165.5L108.9 186.6L159.1 136.5L171.9 149.3L121.7 199.4L142.9 220.6L170.4 193L183.2 205.8L155.7 233.4L176.8 254.5L204.3 227L217.1 239.8L189.6 267.3L210.7 288.5L260.9 238.3L273.7 251.1L223.5 301.3L244.7 322.4L272.2 294.9L285 307.7L257.5 335.2L278.6 356.4L306.2 328.8L319 341.6L291.4 369.2L312.5 390.3L362.7 340.1L375.5 352.9L325.3 403.1L346.5 424.2L374 396.7L386.8 409.5L359.3 437L380.4 458.2L408 430.6L420.8 443.4L393.2 471L403.1 480.9L480.9 403.1Z"
               className="selected"
-              fill="#000000"
-              fillOpacity="1"
             ></path>
             <path
               d="M383.8 73.04L373.9 82.95L383.8 92.85L396.5 105.6L406.4 115.5L419.1 128.2L429 138.1L438.9 128.2Z"

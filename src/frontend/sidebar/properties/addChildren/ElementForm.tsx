@@ -19,19 +19,15 @@ interface IAddChild {
   childElement: Elements;
   parentElement: Elements;
   parentName: string;
+  handleClose: () => void;
 }
 
 const ElementForm: FunctionComponent<IAddChild> = ({
   childElement,
   parentElement,
   parentName,
+  handleClose,
 }) => {
-  // Controls it popping or not
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   console.log(`ComponentChildForm elementcheck: ${parentElement}`);
 
   let form;
@@ -41,7 +37,7 @@ const ElementForm: FunctionComponent<IAddChild> = ({
         <ComponentChildForm
           parent={parentElement}
           parentName={parentName}
-          handleClose={handleClose}
+          handleClose={() => handleClose()}
         />
       );
       break;
@@ -84,32 +80,7 @@ const ElementForm: FunctionComponent<IAddChild> = ({
     default:
   }
 
-  return (
-    <div>
-      <Button variant="outlined" fullWidth onClick={handleClickOpen}>
-        + {elmToStr(childElement)}
-      </Button>
-      <Dialog
-        disableEscapeKeyDown
-        open={open}
-        onClose={handleClose}
-        fullWidth
-        maxWidth="lg"
-      >
-        <DialogTitle>
-          <Grid container>
-            <Grid item xs={10}>
-              Add {elmToStr(childElement)} as child of {elmToStr(parentElement)}
-            </Grid>
-            <Grid item xs={2}>
-              <ElementHelp type={childElement} />
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <DialogContent>{form}</DialogContent>
-      </Dialog>
-    </div>
-  );
+  return form;
 };
 
 export { ElementForm };

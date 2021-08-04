@@ -2,23 +2,16 @@ import React, { FunctionComponent } from "react";
 import { Elements, elmToStr } from "../../../../types/Elements";
 import { AddChildSelect } from "./AddChildSelect";
 import Grid from "@material-ui/core/Grid";
-import { Paper, Typography } from "@material-ui/core";
+import { List, ListItem, Typography } from "@material-ui/core";
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
-    <Grid
-      item
-      xs={12}
-      key={parentName + elmToStr(childElm)}
-      style={{ paddingTop: "4px", alignSelf: "center" }}
-    >
-      <AddChildSelect
-        childElement={childElm}
-        parentElement={parent}
-        parentName={parentName}
-        key={elmToStr(childElm)}
-      />
-    </Grid>
+    <AddChildSelect
+      childElement={childElm}
+      parentElement={parent}
+      parentName={parentName}
+      key={elmToStr(childElm)}
+    />
   );
 };
 
@@ -43,15 +36,17 @@ const AddChildrenWidget: FunctionComponent<IAddChild> = ({ element, name }) => {
       return <div></div>;
   }
   return (
-    <Grid container item>
+    <Grid container item direction="column">
       {children.length > 0 && (
         <Typography variant="h4" style={{ paddingLeft: "5px" }}>
           Add Children
         </Typography>
       )}
-      {children.map((elm) => {
-        return AddChild(elm, element, name);
-      })}
+      <List>
+        {children.map((elm) => {
+          return AddChild(elm, element, name);
+        })}
+      </List>
     </Grid>
   );
 };

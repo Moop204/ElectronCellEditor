@@ -54,26 +54,26 @@ const PropertyIcon: FunctionComponent<IPropertyIcon> = (props) => {
 
   switch (element) {
     case "component":
-      icon = <ExtensionIcon />;
+      icon = <ExtensionIcon color="primary" />;
 
       break;
     case "reset":
-      icon = <RotateLeftIcon />;
+      icon = <RotateLeftIcon color="primary" />;
       break;
     case "units":
       icon = <RulerIcon />;
       break;
     case "variable":
-      icon = <ChangeHistoryIcon />;
+      icon = <ChangeHistoryIcon color="primary" />;
       break;
     case "connection":
-      icon = <PowerIcon />;
+      icon = <PowerIcon color="primary" />;
       break;
     case "unit":
       icon = <SystemInternationalIcon />;
       break;
     case "model":
-      icon = <DashboardIcon />;
+      icon = <DashboardIcon color="primary" />;
       break;
     default:
       icon = <div> |{element}| </div>;

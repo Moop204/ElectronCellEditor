@@ -201,9 +201,9 @@ const PropertiesWidget: FunctionComponent = () => {
         spacing={1}
         justifyContent="flex-start"
       >
-        <Typography variant="h2" style={{ paddingLeft: "5px" }}>
+        {/* <Typography variant="h2" style={{ paddingLeft: "5px" }}>
           Properties
-        </Typography>
+        </Typography> */}
         <PropertiesWidgetTop
           type={abstractModel.type}
           onClick={handleNonSave}
