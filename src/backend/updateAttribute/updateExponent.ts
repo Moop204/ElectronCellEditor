@@ -1,15 +1,8 @@
 /* eslint-disable no-case-declarations */
 import { Elements } from "../../types/Elements";
 import { EditorElement } from "../../types/EditorElement";
-import {
-  Model,
-  Reset,
-  Units,
-  Variable,
-  Component,
-} from "../../types/ILibcellml";
+import { Model, Units } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
-import FileManagement from "../FileManagement";
 
 // Changes the exponent attribute of a Unit element
 // @model - The complete cellml file as a model

@@ -1,14 +1,12 @@
-import { EditorElement } from "../../types/EditorElement";
-import { Elements } from "../../types/Elements";
 import { Component, Model, Reset } from "../../types/ILibcellml";
-import { ISearch } from "../../types/IQuery";
-import FileManagement from "../FileManagement";
 
-// Change the reset value for Reset
+// Changes the reset_value attribute of a Reset element
+// @model - The complete cellml file as a model
+// @element - The type of element where math is being updated on
+// @parentSelect - Identifying the parental element of the current element
+// @value - Value that the math attribute will be replace with
+// @currentElement - The currently selected Units
 const updateResetValue = (model: Model, curElm: Reset, value: string) => {
-  console.log("UPDATING ATTRIBUTE: Updating Reset Value");
-  console.log(value);
-
   if (curElm) {
     // Updating current element
     (curElm as Reset).setResetValue(value);
@@ -21,11 +19,8 @@ const updateResetValue = (model: Model, curElm: Reset, value: string) => {
         curElm.variable().name() === parent.reset(i).variable().name() &&
         curElm.order() === parent.reset(i).order()
       ) {
-        console.log("I FOUND A GOOD ONE " + i);
         resetIndex = i;
         break;
-      } else {
-        console.log(curElm.order() + " " + parent.reset(i).order());
       }
     }
     // Updating model
