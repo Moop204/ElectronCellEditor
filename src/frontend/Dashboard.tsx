@@ -150,7 +150,6 @@ const Dashboard: FunctionComponent = () => {
 
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
-              {/* <Paper className={styles.tabbing}>{fileName}</Paper> */}
               <AppBar position="static" color="default">
                 <Tabs
                   value={fileName}

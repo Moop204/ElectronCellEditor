@@ -19,7 +19,7 @@ const SpatialViewButton: FunctionComponent<ISpatialViewButton> = ({
   return (
     <div>
       <Tooltip title="Concise View">
-        {/* <Link to="/concise">
+        <Link to="/concise">
           <IconButton
             aria-label="Concise View"
             color="primary"
@@ -27,8 +27,7 @@ const SpatialViewButton: FunctionComponent<ISpatialViewButton> = ({
           >
             <StorageIcon />
           </IconButton>
-        </Link> */}
-        <div></div>
+        </Link>
       </Tooltip>
     </div>
   );

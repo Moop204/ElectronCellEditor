@@ -19,12 +19,11 @@ const TextViewButton: FunctionComponent<ITextViewButton> = ({
   return (
     <div>
       <Tooltip title="Text View">
-        {/* <Link to="">
+        <Link to="">
           <IconButton aria-label="Text View" color="primary" onClick={onClick}>
             <CreateIcon />
           </IconButton>
-        </Link> */}
-        <div></div>
+        </Link>
       </Tooltip>
     </div>
   );

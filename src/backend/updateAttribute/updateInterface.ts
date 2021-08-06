@@ -16,7 +16,6 @@ import { ISearch } from "../../types/IQuery";
 //    - none
 //    - private
 //    - public_and_private
-// Definitely name attribute search
 const updateInterface = (
   model: Model,
   element: Elements,

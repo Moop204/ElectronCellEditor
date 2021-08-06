@@ -1,6 +1,5 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
-import { updateOrder } from "../../../src/backend/updateAttribute/UpdateOrder";
 import { Elements } from "../../../src/types/Elements";
 import {
   Component,

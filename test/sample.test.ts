@@ -13,7 +13,7 @@ import {
 } from "../src/types/ILibcellml";
 import { stripMath } from "../src/frontend/sidebar/math/stripMath";
 import { Elements } from "../src/types/Elements";
-import { updateMath } from "../src/backend/updateAttribute/UpdateMath";
+import { updateMath } from "../src/backend/updateAttribute/updateMath";
 import { updateNameOfVariable } from "../src/backend/updateAttribute/updateName/updateNameOfVariable";
 
 const validMathMl = (fm: FileManagement, mathml: string): boolean => {

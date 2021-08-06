@@ -160,7 +160,9 @@ export default class FileManagement {
     fm: FileManagement
   ) => {
     const model: Model = this._parser.parseModel(content);
-
+    console.log("THIS");
+    console.log(content);
+    console.log(model);
     // TODO: Jank fix, refactor properly
 
     for (const updateDescriptor of updates) {

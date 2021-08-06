@@ -23,8 +23,6 @@ const SidebarManager: FunctionComponent<ISidebarManager> = ({
   switchSidebar,
   switchView,
 }) => {
-  //TODO: DLEETE THEIS
-  viewSidebar = true;
   if (viewSidebar) {
     return (
       <ExpandedSidebar
