@@ -8,9 +8,6 @@ const updateNameOfVariable = (
   select: ISearch,
   value: string
 ) => {
-  console.log("TEST DEBUG");
-  console.log(currentElement);
-  console.log(currentElement.parent());
   const parentName = (currentElement?.parent() as Component).name();
 
   const c: Component = model.componentByName(parentName, true);

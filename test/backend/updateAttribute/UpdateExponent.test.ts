@@ -1,20 +1,13 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
-import { updateOrder } from "../../../src/backend/updateAttribute/UpdateOrder";
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Reset,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Model, Units } from "../../../src/types/ILibcellml";
 import { IUpdate } from "../../../src/types/IQuery";
 
 describe("Updating exponent attribute", function () {
   this.timeout(5000);
   let fm: FileManagement;
-  const newValue = "100";
+  const newValue = 100;
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
@@ -32,7 +25,7 @@ describe("Updating exponent attribute", function () {
     fm.setCurrentComponent(u, Elements.units);
 
     const update: IUpdate = {
-      element: Elements.unit,
+      element: Elements.units,
       select: {
         name: "u1",
         index: 0,
