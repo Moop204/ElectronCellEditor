@@ -1,16 +1,14 @@
 /* eslint-disable no-case-declarations */
 import { Elements } from "../../types/Elements";
 import { EditorElement } from "../../types/EditorElement";
-import {
-  Model,
-  Reset,
-  Units,
-  Variable,
-  Component,
-} from "../../types/ILibcellml";
+import { Model, Variable, Component } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 
-// Definitely name attribute search
+// Changes initial value of a Variable
+// @model - Complete CellML data structure
+// @element - Type of currently selected data structure
+// @select - Means of searching model to find variable
+// @currentElement - Currently selected element
 const updateInitialValue = (
   model: Model,
   element: Elements,
@@ -28,17 +26,11 @@ const updateInitialValue = (
       );
 
       // Change
-      console.log("Update Initial Value");
-      console.log(value);
       variableElement.setInitialValueByString(value.toString());
 
       // Integrate change to model
       parentElement.addVariable(variableElement);
       model.replaceComponentByName(parentName, parentElement, true);
-
-      console.log("Initial Value log");
-      console.log(select.name);
-      console.log(variableElement.name());
 
       if (currentElement === null) {
         console.log("FM: CurrentComponent is null when setting name");
