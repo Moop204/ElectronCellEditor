@@ -9,10 +9,12 @@ import {
   Parser,
   Printer,
   Units,
+  Variable,
 } from "../src/types/ILibcellml";
 import { stripMath } from "../src/frontend/sidebar/math/stripMath";
 import { Elements } from "../src/types/Elements";
 import { updateMath } from "../src/backend/updateAttribute/UpdateMath";
+import { updateNameOfVariable } from "../src/backend/updateAttribute/updateName/updateNameOfVariable";
 
 const validMathMl = (fm: FileManagement, mathml: string): boolean => {
   const cellml = fm._cellml;
@@ -28,31 +30,56 @@ const validMathMl = (fm: FileManagement, mathml: string): boolean => {
 };
 
 describe("array", () => {
-  it("validates MathML", async () => {
+  it("checks variable parents", async () => {
     const fm = new FileManagement();
     await fm.init();
 
-    const validMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
-    <apply>
-      <eq/>
-        <ci>t</ci>
-        <ci>x</ci>
-    </apply>
-  </math>`;
-    const invalidMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
-  <apply>
-    <eq/>
-      <ci>t</ci>
-      <ci>x</ci
-  </apply>
-</math>`;
+    const m: Model = new fm._cellml.Model();
+    m.setName("m1");
+    const c: Component = new fm._cellml.Component();
+    c.setName("c1");
+    const v: Variable = new fm._cellml.Variable();
+    v.setName("v1");
+    v.setUnitsByName("second");
+    c.addVariable(v);
+    m.addComponent(c);
 
-    const validRes = validMathMl(fm, validMathML);
-    const invalidRes = validMathMl(fm, invalidMathML);
-
-    assert.ok(validRes);
-    assert.ok(!invalidRes);
+    const { editedModel, editedCurrentElement } = updateNameOfVariable(
+      m,
+      v,
+      { name: "v1", index: null },
+      "V2"
+    );
+    console.log(editedCurrentElement.parent());
+    console.log(v.parent());
+    // const u: Units = new fm._cellml.Units();
   });
+
+  //   it("validates MathML", async () => {
+  //     const fm = new FileManagement();
+  //     await fm.init();
+
+  //     const validMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+  //     <apply>
+  //       <eq/>
+  //         <ci>t</ci>
+  //         <ci>x</ci>
+  //     </apply>
+  //   </math>`;
+  //     const invalidMathML = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+  //   <apply>
+  //     <eq/>
+  //       <ci>t</ci>
+  //       <ci>x</ci
+  //   </apply>
+  // </math>`;
+
+  //     const validRes = validMathMl(fm, validMathML);
+  //     const invalidRes = validMathMl(fm, invalidMathML);
+
+  //     assert.ok(validRes);
+  //     assert.ok(!invalidRes);
+  //   });
 
   // it("checks for imported", async () => {
   //   const fm = new FileManagement();

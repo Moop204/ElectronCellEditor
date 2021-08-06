@@ -6,7 +6,7 @@ import { updateInitialValue } from "./UpdateInitialValue";
 import { updateInterface } from "./UpdateInterface";
 import { updateMath } from "./UpdateMath";
 import { updateMultiplier } from "./UpdateMultiplier";
-import { updateName } from "./updateName/UpdateName";
+import { updateName } from "./updateName/updateName";
 import { updateOrder } from "./UpdateOrder";
 import { updatePrefix } from "./UpdatePrefix";
 import { updateReference } from "./UpdateReference";

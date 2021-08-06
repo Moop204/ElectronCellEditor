@@ -1,19 +1,12 @@
 /* eslint-disable no-case-declarations */
 import { Elements } from "../../../types/Elements";
 import { EditorElement } from "../../../types/EditorElement";
-import {
-  Model,
-  Reset,
-  Units,
-  Variable,
-  Component,
-  NamedEntity,
-} from "../../../types/ILibcellml";
+import { Model } from "../../../types/ILibcellml";
 import { ISearch } from "../../../types/IQuery";
-import { updateNameOfComponent } from "./UpdateNameOfComponent";
-import { updateNameOfModel } from "./UpdateNameOfModel";
-import { updateNameOfUnits } from "./UpdateNameOfUnits";
-import { updateNameOfVariable } from "./UpdateNameOfVariable";
+import { updateNameOfComponent } from "./updateNameOfComponent";
+import { updateNameOfModel } from "./updateNameOfModel";
+import { updateNameOfUnits } from "./updateNameOfUnits";
+import { updateNameOfVariable } from "./updateNameOfVariable";
 
 // Change the name of a named entity (Model, Component, Variable, Units)
 const updateName = (
