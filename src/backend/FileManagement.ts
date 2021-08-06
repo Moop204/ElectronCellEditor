@@ -179,8 +179,6 @@ export default class FileManagement {
       );
       fm.setCurrentComponent(newCurrentElement, fm.type);
       await fm.updateContentFromModel(newModel);
-      console.log("THIS IS WHAT YOU GET");
-      console.log(this._printer.printModel(newModel, true));
     }
   };
 

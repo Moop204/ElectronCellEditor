@@ -10,6 +10,12 @@ import {
 } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
 
+// Changes the currentElement's interface attribute into the value specified by
+// Presumptions: All values are of values:
+//    - public
+//    - none
+//    - private
+//    - public_and_private
 // Definitely name attribute search
 const updateInterface = (
   model: Model,
@@ -29,11 +35,7 @@ const updateInterface = (
       );
 
       // Change
-      console.log("Update Interface");
-      console.log(variableElement.interfaceType());
-      console.log(value);
       variableElement.setInterfaceTypeByString(value);
-      console.log(variableElement.interfaceType());
 
       // Integrate change to model
       parentElement.addVariable(variableElement);
