@@ -1,6 +1,6 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
-import { updateOrder } from "../../../src/backend/updateAttribute/UpdateOrder";
+import { updateOrder } from "../../../src/backend/updateAttribute/updateOrder";
 import {
   Component,
   Model,
@@ -10,6 +10,13 @@ import {
 
 describe("Updating Reset attribute Order", function () {
   this.timeout(5000);
+  let fm: FileManagement;
+
+  beforeEach(async () => {
+    fm = new FileManagement();
+    await fm.init();
+  });
+
   it("Updating with a number", async () => {
     const fm = new FileManagement();
     await fm.init();
@@ -40,5 +47,9 @@ describe("Updating Reset attribute Order", function () {
     });
 
     assert.strictEqual((newCurrentElement as Reset).order(), 3);
+    assert.strictEqual(
+      (newModel as Model).componentByIndex(0).reset(0).order(),
+      3
+    );
   });
 });
