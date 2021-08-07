@@ -137,7 +137,8 @@ const updateEvent = (
     ({ newModel, newCurrentElement } = updateTestVariable(
       model,
       curElm as Reset,
-      value
+      value,
+      fm.componentRoot
     ));
   } else if (attribute === "reset_value") {
     ({ newModel, newCurrentElement } = updateResetValue(
