@@ -7,9 +7,14 @@ import { Elements } from "../../../src/types/Elements";
 
 describe("Removing CellML Unit in property format", function () {
   this.timeout(5000);
-  it("Removing Unit", async () => {
-    const fm = new FileManagement();
+
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+
+  it("Removing Unit", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const u: Units = new fm._cellml.Units();

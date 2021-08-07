@@ -6,6 +6,11 @@ import { generateModel } from "./generateModel";
 import { modelToString } from "./modelToString";
 
 // Create a Units element
+// @fm            - State management
+// @name          - Name of new component
+// @imported      - Whether or not the new component is imported
+// @source        - Location of file where component is imported from
+// @component_ref - Name of Units in the source file that is being imported
 const makeUnits = (
   fm: FileManagement,
   name: string,

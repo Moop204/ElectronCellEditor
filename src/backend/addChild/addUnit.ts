@@ -16,6 +16,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
 
   // Find the units
   const parentUnits = m.unitsByName(parentName);
+
   // Remove in case of duplication
   parentUnits.removeUnitByReference(units);
 
@@ -35,9 +36,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
     );
   }
 
-  m.replaceUnitsByName(parentName, parentUnits);
   await fm.updateContent(modelToString(libcellml, m));
-
   // Update current element
   fm.setCurrentComponent(parentUnits, Elements.units);
 };

@@ -35,7 +35,7 @@ describe("Updating name attribute", function () {
       value: newName,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());
@@ -70,7 +70,7 @@ describe("Updating name attribute", function () {
       value: newName,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());
@@ -104,7 +104,7 @@ describe("Updating name attribute", function () {
       value: newName,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());
@@ -144,7 +144,7 @@ describe("Updating name attribute", function () {
       value: newName,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());

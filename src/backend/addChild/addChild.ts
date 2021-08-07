@@ -18,12 +18,14 @@ const addChild = async (
     await fm.init();
   }
   switch (child.type) {
-    case Elements.component:
+    case Elements.component: {
       await addComponent(fm, parentType, child);
       break;
-    case Elements.units:
+    }
+    case Elements.units: {
       await addUnits(fm, child);
       break;
+    }
     case Elements.variable: {
       await addVariable(fm, child);
       break;

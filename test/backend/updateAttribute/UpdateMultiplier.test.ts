@@ -34,7 +34,7 @@ describe("Updating multiplier attribute", function () {
       value: newValue,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());

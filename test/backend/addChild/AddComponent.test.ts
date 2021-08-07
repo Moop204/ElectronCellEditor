@@ -6,25 +6,30 @@ import {
   Parser,
   Printer,
 } from "../../../src/types/ILibcellml";
-import { AddComponent } from "../../../src/backend/addChild/AddComponent";
+import { addComponent } from "../../../src/backend/addChild/addComponent";
 import { Elements } from "../../../src/types/Elements";
 import { ChildComponentDetail } from "../../../src/types/ChildDetail";
 
 describe("Adding component to model", function () {
   this.timeout(5000);
 
-  it("Adds local component", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
-
     // Building model
     const m: Model = new fm._cellml.Model();
     m.setName("test_model");
-
     // Assigning model
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
+    fm.setContent(fm._printer.printModel(m, false));
+    fm.setCurrentComponent(m, Elements.model);
+  });
 
+  afterEach(async () => {
+    fm.newFile();
+  });
+
+  it("Adds local component", async () => {
     // Applying update
     const child: ChildComponentDetail = {
       type: Elements.component,
@@ -36,26 +41,14 @@ describe("Adding component to model", function () {
       },
     };
 
-    AddComponent(fm, Elements.model, child);
+    addComponent(fm, Elements.model, child);
 
-    const updatedContent = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const newModel = parser.parseModel(updatedContent);
+    const newModel = fm._parser.parseModel(fm.getContent());
     assert.strictEqual(newModel.componentCount(), 1);
     assert.strictEqual(newModel.componentByIndex(0).name(), "child_component");
+    assert.strictEqual(newModel.componentByIndex(0).isImport(), false);
   });
   it("Adds imported component", async () => {
-    const fm = new FileManagement();
-    await fm.init();
-
-    // Building model
-    const m: Model = new fm._cellml.Model();
-    m.setName("test_model");
-
-    // Assigning model
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-
     // Applying update
     const child: ChildComponentDetail = {
       type: Elements.component,
@@ -67,12 +60,10 @@ describe("Adding component to model", function () {
       },
     };
 
-    AddComponent(fm, Elements.model, child);
+    addComponent(fm, Elements.model, child);
 
     // Validation
-    const updatedContent = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const newModel = parser.parseModel(updatedContent);
+    const newModel = fm._parser.parseModel(fm.getContent());
     assert.strictEqual(newModel.componentCount(), 1);
     assert.strictEqual(newModel.componentByIndex(0).name(), "child_component");
     // Added as issue #916 to libcellml
@@ -119,7 +110,7 @@ describe("Adding component to component", function () {
       },
     };
 
-    AddComponent(fm, Elements.component, child);
+    addComponent(fm, Elements.component, child);
 
     // Validation
     const updatedContent = fm.getContent();
@@ -130,6 +121,7 @@ describe("Adding component to component", function () {
       newModel.componentByIndex(0).componentByIndex(0).name(),
       "child_component"
     );
+    assert.strictEqual(newModel.componentByIndex(0).isImport(), false);
   });
   it("Adds imported component", async () => {
     const fm = new FileManagement();
@@ -158,7 +150,7 @@ describe("Adding component to component", function () {
       },
     };
 
-    AddComponent(fm, Elements.component, child);
+    addComponent(fm, Elements.component, child);
 
     // Validation
     const updatedContent = fm.getContent();
@@ -168,7 +160,8 @@ describe("Adding component to component", function () {
     assert.strictEqual(curComp.componentCount(), 1);
     assert.strictEqual(curComp.componentByIndex(0).name(), "child_component");
     // Added as issue #916 to libcellml
-    //    assert.strictEqual(newModel.componentByIndex(0).isImport(), true);
+    // console.log(fm.getContent());
+    // assert.strictEqual(newModel.componentByIndex(0).isImport(), true);
     // assert.strictEqual(
     //   newModel.componentByIndex(0).importReference(),
     //   "to_be_imported"

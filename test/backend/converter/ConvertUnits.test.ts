@@ -1,19 +1,18 @@
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Model, Units } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
-import { convertSelectedElement } from "../../../src/backend/converter/ConvertElement";
+import { convertSelectedElement } from "../../../src/backend/converter/convertElement";
 import assert from "assert";
 
 describe("Converting CellML Units into property format", function () {
   this.timeout(5000);
-  it("Converting barest Units", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+  it("Converting barest Units", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const units: Units = new fm._cellml.Units();
@@ -31,8 +30,6 @@ describe("Converting CellML Units into property format", function () {
     assert.strictEqual(convertedElement.unit.length, 0);
   });
   it("Converting Units with Unit", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const units: Units = new fm._cellml.Units();
@@ -59,8 +56,6 @@ describe("Converting CellML Units into property format", function () {
     assert.strictEqual(convertedElement.unit[0].description.multiplier, 1);
   });
   it("Converting Units with Unit and exponent, prefixes and multipliers", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const units: Units = new fm._cellml.Units();
@@ -88,8 +83,6 @@ describe("Converting CellML Units into property format", function () {
   });
 
   it("Converting Units with Unit and exponents", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const units: Units = new fm._cellml.Units();
@@ -116,8 +109,6 @@ describe("Converting CellML Units into property format", function () {
   });
 
   it("Converting Units with imported Unit", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const units: Units = new fm._cellml.Units();
@@ -135,8 +126,6 @@ describe("Converting CellML Units into property format", function () {
   });
 
   it("Converting Units with multiple Unit", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
 

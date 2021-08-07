@@ -13,9 +13,13 @@ import { removeVariable } from "../../../src/backend/removeChild/removeVariable"
 
 describe("Removing CellML Variable into property format", function () {
   this.timeout(5000);
-  it("Removing Variable", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+
+  it("Removing Variable", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();

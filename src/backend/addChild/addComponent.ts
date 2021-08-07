@@ -10,7 +10,7 @@ import { modelToString } from "./modelToString";
 // @name          - Name of new component
 // @imported      - Whether or not the new component is imported
 // @source        - Location of file where component is imported from
-// @component_ref - Name of component in the source file that is being imported
+// @component_ref - Name of Component in the source file that is being imported
 const makeComponent = (
   fm: FileManagement,
   name: string,

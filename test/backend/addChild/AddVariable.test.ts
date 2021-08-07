@@ -8,7 +8,7 @@ import {
 } from "../../../src/types/ILibcellml";
 import { Elements } from "../../../src/types/Elements";
 import { ChildVariableDetail } from "../../../src/types/ChildDetail";
-import { AddVariable } from "../../../src/backend/addChild/AddVariable";
+import { addVariable } from "../../../src/backend/addChild/addVariable";
 
 describe("Adding Variable to Component", function () {
   this.timeout(5000);
@@ -39,7 +39,7 @@ describe("Adding Variable to Component", function () {
       },
     };
 
-    AddVariable(fm, child);
+    addVariable(fm, child);
 
     // Validation
     const updatedContent = fm.getContent();
@@ -84,7 +84,7 @@ describe("Adding Variable to Component", function () {
       },
     };
 
-    AddVariable(fm, child);
+    addVariable(fm, child);
 
     // Validation
     const updatedContent = fm.getContent();

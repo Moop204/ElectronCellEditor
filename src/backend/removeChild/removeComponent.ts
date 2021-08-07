@@ -20,7 +20,7 @@ const removeComponent = async (fm: FileManagement, child: ISearch) => {
 
   // Remove component in properties
   let curElm = fm.getCurrentComponent() as Component | Model;
-  curElm = curElm.clone();
+  //curElm = curElm.clone();
   curElm.removeComponentByName(name, false);
 
   fm.setCurrentComponent(curElm as EditorElement, fm.type);

@@ -16,8 +16,8 @@ const updateResetValue = (
     // Updating current element
     (curElm as Reset).setResetValue(value);
     // Find Reset index
-    //    const parent = curElm.parent() as Component;
-    const parent = componentRoot;
+    const parent = curElm.parent() as Component;
+    // const parent = componentRoot;
     const parentName = parent.name();
     let resetIndex = 0;
     for (let i = 0; i < parent.resetCount(); i++) {

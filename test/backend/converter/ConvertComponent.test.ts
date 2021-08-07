@@ -1,16 +1,24 @@
 import assert from "assert";
-import { convertComponent } from "../../../src/backend/converter/ConvertComponent";
-import { convertSelectedElement } from "../../../src/backend/converter/ConvertElement";
+import { convertComponent } from "../../../src/backend/converter/convertComponent";
+import { convertSelectedElement } from "../../../src/backend/converter/convertElement";
 import FileManagement from "../../../src/backend/FileManagement";
 import { Elements } from "../../../src/types/Elements";
 import { Model, Variable, Component } from "../../../src/types/ILibcellml";
 
 describe("Converting CellML Component into property format", function () {
   this.timeout(5000);
-  it("Converting Basic Component", async () => {
-    const fm = new FileManagement();
-    await fm.init();
+  let fm: FileManagement;
 
+  beforeEach(async () => {
+    fm = new FileManagement();
+    await fm.init();
+  });
+
+  afterEach(async () => {
+    fm.destroyHandlers();
+  });
+
+  it("Converting Basic Component", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();
@@ -35,8 +43,6 @@ describe("Converting CellML Component into property format", function () {
   });
 
   it("Converting a Component with math", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();
@@ -57,9 +63,6 @@ describe("Converting CellML Component into property format", function () {
   });
 
   it("Converting Component of Component", async () => {
-    const fm = new FileManagement();
-    await fm.init();
-
     // Make Component
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
@@ -85,9 +88,6 @@ describe("Converting CellML Component into property format", function () {
   });
 
   it("Converting Component with Component Child", async () => {
-    const fm = new FileManagement();
-    await fm.init();
-
     // Make Component
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
@@ -113,9 +113,6 @@ describe("Converting CellML Component into property format", function () {
   });
 
   it("Converting Component with Variable Child", async () => {
-    const fm = new FileManagement();
-    await fm.init();
-
     // Make Component
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");

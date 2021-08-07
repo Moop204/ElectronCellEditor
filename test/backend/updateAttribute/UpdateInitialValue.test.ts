@@ -1,12 +1,7 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Component, Model, Variable } from "../../../src/types/ILibcellml";
 import { IUpdate } from "../../../src/types/IQuery";
 
 describe("Updating initial value attribute", function () {
@@ -43,7 +38,7 @@ describe("Updating initial value attribute", function () {
       value: newValue,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());

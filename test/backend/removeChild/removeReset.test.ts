@@ -14,9 +14,13 @@ import { removeReset } from "../../../src/backend/removeChild/removeReset";
 
 describe("Removing CellML Reset into property format", function () {
   this.timeout(5000);
-  it("Removing Reset", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+
+  it("Removing Reset", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();

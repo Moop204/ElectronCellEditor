@@ -18,9 +18,6 @@ describe("Updating Reset attribute Order", function () {
   });
 
   it("Updating with a number", async () => {
-    const fm = new FileManagement();
-    await fm.init();
-
     const m: Model = new fm._cellml.Model();
     m.setName("model");
     const c1: Component = new fm._cellml.Component();

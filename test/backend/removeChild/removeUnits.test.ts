@@ -6,9 +6,12 @@ import { removeUnits } from "../../../src/backend/removeChild/removeUnits";
 
 describe("Removing CellML Units in property format", function () {
   this.timeout(5000);
-  it("Removing Units", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+  it("Removing Units", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const u: Units = new fm._cellml.Units();

@@ -1,15 +1,19 @@
 import assert from "assert";
-import { convertSelectedElement } from "../../../src/backend/converter/ConvertElement";
+import { convertSelectedElement } from "../../../src/backend/converter/convertElement";
 import FileManagement from "../../../src/backend/FileManagement";
 import { Elements } from "../../../src/types/Elements";
 import { Model, Units, Component } from "../../../src/types/ILibcellml";
 
 describe("Converting CellML Model into property format", function () {
   this.timeout(5000);
-  it("Converting Empty Model", async () => {
-    const fm = new FileManagement();
-    await fm.init();
+  let fm: FileManagement;
 
+  beforeEach(async () => {
+    fm = new FileManagement();
+    await fm.init();
+  });
+
+  it("Converting Empty Model", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("test");
 
@@ -27,8 +31,6 @@ describe("Converting CellML Model into property format", function () {
   });
 
   it("Converting a Model with children", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("test");
     const c: Component = new fm._cellml.Component();

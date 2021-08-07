@@ -12,8 +12,8 @@ const updateTestVariable = (
 ) => {
   const variable = value;
   // Find variable
-  // const parent = curElm.parent() as Component;
-  const parent = componentRoot;
+  const parent = curElm.parent() as Component;
+  // const parent = componentRoot;
   const parentName = parent.name();
   const newVar = model
     .componentByName(parentName, true)

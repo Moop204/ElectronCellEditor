@@ -1,19 +1,19 @@
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Component, Model, Variable } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
-import { convertSelectedElement } from "../../../src/backend/converter/ConvertElement";
+import { convertSelectedElement } from "../../../src/backend/converter/convertElement";
 import assert from "assert";
 
 describe("Converting CellML Variables into property format", function () {
   this.timeout(5000);
-  it("Converting barest Variable", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+
+  it("Converting barest Variable", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();
@@ -33,8 +33,6 @@ describe("Converting CellML Variables into property format", function () {
     assert.strictEqual(convertedElement.unit.length, 0);
   });
   it("Converting Variable with interface", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();
@@ -57,8 +55,6 @@ describe("Converting CellML Variables into property format", function () {
     assert.strictEqual(convertedElement.unit.length, 0);
   });
   it("Converting Variable with initial value", async () => {
-    const fm = new FileManagement();
-    await fm.init();
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();

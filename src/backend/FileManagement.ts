@@ -106,11 +106,13 @@ export default class FileManagement {
       await this.init();
     }
     const validator = await validateModel(this, s);
-    if (this.type === Elements.none && validator.issueCount() === 0) {
+    if (this.type === Elements.none || validator.issueCount() === 0) {
       this.setCurrentComponent(
         this._parser.parseModel(this.content),
         Elements.model
       );
+    } else {
+      console.log("Invalid update content state");
     }
     if (ipcMain) ipcMain.emit("update-content-b", this.getContent());
   }
@@ -290,6 +292,7 @@ export default class FileManagement {
 
   // Run once to set up handlers
   setupHandlers(): void {
+    if (!ipcMain) return;
     ipcMain.on("new-file", async (event: IpcMainEvent) => {
       this.newFile();
       event.reply("update-content-b", this.getContent());
@@ -497,6 +500,6 @@ export default class FileManagement {
   }
 
   destroyHandlers(): void {
-    ipcMain.removeAllListeners();
+    if (ipcMain) ipcMain.removeAllListeners();
   }
 }

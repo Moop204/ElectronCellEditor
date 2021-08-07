@@ -9,22 +9,26 @@ import { ensureValid } from "../../../src/utility/ensureValid";
 describe("Adding Unit to Units", function () {
   this.timeout(5000);
 
-  it("Adds standard Unit", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
-
     // Building model
     const m: Model = new fm._cellml.Model();
     m.setName("test_model");
     const u: Units = new fm._cellml.Units();
     u.setName("u1");
     m.addUnits(u);
-
     // Assigning model
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
+    fm.setContent(fm._printer.printModel(m, false));
     fm.setCurrentComponent(u, Elements.units);
+  });
 
+  afterEach(async () => {
+    fm.newFile();
+  });
+
+  it("Adds standard Unit", async () => {
     // Applying update
     const child: ChildUnitDetail = {
       type: Elements.unit,
@@ -36,12 +40,12 @@ describe("Adding Unit to Units", function () {
       },
     };
 
-    addUnit(fm, child);
+    await addUnit(fm, child);
 
     // Validation
-    const updatedContent = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const newModel = parser.parseModel(updatedContent);
+    const newCurrentElement = fm.getCurrentComponent();
+    const newModel = fm._parser.parseModel(fm.getContent());
+
     assert.strictEqual(newModel.unitsByIndex(0).unitCount(), 1);
     assert.strictEqual(newModel.unitsByIndex(0).unitAttributeExponent(0), 32);
     assert.strictEqual(newModel.unitsByIndex(0).unitAttributeMultiplier(0), 2);
@@ -54,5 +58,32 @@ describe("Adding Unit to Units", function () {
       "milli"
     );
     assert.strictEqual(ensureValid(fm), true);
+    assert.ok(newCurrentElement instanceof fm._cellml.Units);
+
+    // assert.strictEqual(
+    //   (newCurrentElement as Units).unitCount(),
+    //   1,
+    //   "New unit not added"
+    // );
+    assert.strictEqual(
+      (newCurrentElement as Units).unitAttributeExponent(0),
+      32,
+      "Current element has wrong exponent"
+    );
+    assert.strictEqual(
+      (newCurrentElement as Units).unitAttributeMultiplier(0),
+      2,
+      "Current element has wrong multiplier"
+    );
+    assert.strictEqual(
+      (newCurrentElement as Units).unitAttributeReference(0),
+      "second",
+      "Current element has wrong reference"
+    );
+    assert.strictEqual(
+      (newCurrentElement as Units).unitAttributePrefix(0),
+      "milli",
+      "Current element has wrong prefix"
+    );
   });
 });

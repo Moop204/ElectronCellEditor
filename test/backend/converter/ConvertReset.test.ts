@@ -6,14 +6,19 @@ import {
   Variable,
 } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
-import { convertSelectedElement } from "../../../src/backend/converter/ConvertElement";
+import { convertSelectedElement } from "../../../src/backend/converter/convertElement";
 import assert from "assert";
 
 describe("Converting CellML Reset into property format", function () {
   this.timeout(5000);
-  it("Converting Reset", async () => {
-    const fm = new FileManagement();
+  let fm: FileManagement;
+
+  beforeEach(async () => {
+    fm = new FileManagement();
     await fm.init();
+  });
+
+  it("Converting Reset", async () => {
     const m: Model = new fm._cellml.Model();
     m.setName("testModel");
     const component: Component = new fm._cellml.Component();

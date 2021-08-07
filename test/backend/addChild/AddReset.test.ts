@@ -9,7 +9,7 @@ import {
 } from "../../../src/types/ILibcellml";
 import { Elements } from "../../../src/types/Elements";
 import { ChildResetDetail } from "../../../src/types/ChildDetail";
-import { AddReset } from "../../../src/backend/addChild/AddReset";
+import { addReset } from "../../../src/backend/addChild/addReset";
 
 describe("Adding reset to component", function () {
   this.timeout(5000);
@@ -49,7 +49,7 @@ describe("Adding reset to component", function () {
       },
     };
 
-    AddReset(fm, child);
+    addReset(fm, child);
 
     const updatedContent = fm.getContent();
     const parser: Parser = new fm._cellml.Parser();

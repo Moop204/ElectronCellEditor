@@ -1,24 +1,12 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Component, Model, Variable } from "../../../src/types/ILibcellml";
 import { IUpdate } from "../../../src/types/IQuery";
 
 describe("Updating Math element", function () {
   this.timeout(5000);
   let fm: FileManagement;
-  // const newValue = `<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><eq/>
-  //   <cn cellml:units="dimensionless">4<cn/>
-  //   <apply><times/>
-  //     <cn cellml:units="dimensionless">2<cn/>
-  //     <cn cellml:units="dimensionless">2<cn/>
-  //   </apply>
-  // </apply></math>`;
   const newValue =
     `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
 
@@ -51,7 +39,7 @@ describe("Updating Math element", function () {
       value: newValue,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     console.log("DOWN HERE");
     console.log(fm.getContent());
@@ -106,7 +94,7 @@ describe("Updating Math element", function () {
       value: newValue,
     };
 
-    fm.update([update], fm.getContent(), fm.getCurrentComponent(), fm);
+    fm.update([update], fm.getContent(), fm);
 
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());
