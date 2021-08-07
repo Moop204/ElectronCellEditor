@@ -16,6 +16,7 @@ import { ElementHelp } from "../../help/ElementHelp";
 import { PropertyIcon } from "../children/PropertyIcon";
 import { ElementForm } from "./ElementForm";
 import { AddBadge } from "./../../../component/AddBadge";
+
 interface IAddChild {
   childElement: Elements;
   parentElement: Elements;

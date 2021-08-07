@@ -31,10 +31,10 @@ const fs = require("fs");
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-// const libcellModule = require("libcellml.js/libcellml.common");
+const libcellModule = require("libcellml.js/libcellml.common");
 
-import libCellMLModule from "./mainLibcellml/libcellml.js";
-import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+// import libCellMLModule from "./mainLibcellml/libcellml.js";
+// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -64,7 +64,8 @@ export default class FileManagement {
   _parser: Parser;
   _cellmlLoaded: boolean;
   selectedFile: string;
-
+  // Stop-gap solution until Reset elements are children of ParentedEntity
+  componentRoot: Component;
   constructor() {
     this.content = `<?xml version="1.0" encoding="UTF-8"?>
 <model xmlns="http://www.cellml.org/cellml/2.0#" >
@@ -74,21 +75,22 @@ export default class FileManagement {
     this.type = Elements.none;
     this._cellmlLoaded = false;
     this.selectedFile = "";
+    this.componentRoot = null;
     this.init();
   }
 
   async init(): Promise<void> {
     if (this._cellmlLoaded) return;
     // @ts-ignore
-    this._cellml = await new libCellMLModule({
-      locateFile(path: string, prefix: string) {
-        if (path.endsWith(".wasm")) {
-          return prefix + libCellMLWasm;
-        }
-        return prefix + path;
-      },
-    });
-    // this._cellml = await libcellModule();
+    // this._cellml = await new libCellMLModule({
+    //   locateFile(path: string, prefix: string) {
+    //     if (path.endsWith(".wasm")) {
+    //       return prefix + libCellMLWasm;
+    //     }
+    //     return prefix + path;
+    //   },
+    // });
+    this._cellml = await libcellModule();
     this._parser = new this._cellml.Parser();
     this._printer = new this._cellml.Printer();
     this._cellmlLoaded = true;
@@ -142,7 +144,14 @@ export default class FileManagement {
     return this.content;
   }
 
-  setCurrentComponent(currentComponent: EditorElement, type: Elements): void {
+  setCurrentComponent(
+    currentComponent: EditorElement,
+    type: Elements,
+    componentRoot?: Component
+  ): void {
+    if (componentRoot) {
+      this.componentRoot = componentRoot;
+    }
     this.currentComponent = currentComponent;
     this.type = type;
   }
@@ -153,16 +162,8 @@ export default class FileManagement {
 
   // Helpers
 
-  update = async (
-    updates: IUpdate[],
-    content: string,
-    curElm: EditorElement,
-    fm: FileManagement
-  ) => {
+  update = async (updates: IUpdate[], content: string, fm: FileManagement) => {
     const model: Model = this._parser.parseModel(content);
-    console.log("THIS");
-    console.log(content);
-    console.log(model);
     // TODO: Jank fix, refactor properly
 
     for (const updateDescriptor of updates) {
@@ -177,7 +178,7 @@ export default class FileManagement {
       const { newCurrentElement, newModel } = updateEvent(
         model,
         updateDescriptor,
-        curElm
+        fm
       );
       fm.setCurrentComponent(newCurrentElement, fm.type);
       await fm.updateContentFromModel(newModel);
@@ -346,12 +347,7 @@ export default class FileManagement {
         }
         console.log("Update Received");
         console.log(updateDescription);
-        await this.update(
-          updateDescription,
-          this.getContent(),
-          this.getCurrentComponent(),
-          this
-        );
+        await this.update(updateDescription, this.getContent(), this);
         if (ipcMain) {
           event.reply("update-content-b", this.getContent());
           //event.returnValue("a");
@@ -389,6 +385,10 @@ export default class FileManagement {
         console.log(`Looking for ${elmToStr(element)}`);
         console.log(select);
 
+        // Stopgap solution to lack of parents for Reset
+        if (element === Elements.reset) {
+          this.componentRoot = this.currentComponent as Component;
+        }
         findElement(this, select, element, this.getCurrentComponent());
 
         const selection = this.getCurrentAsSelection(element);

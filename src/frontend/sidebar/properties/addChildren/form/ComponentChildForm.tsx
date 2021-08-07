@@ -3,11 +3,12 @@ import { useFormik } from "formik";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import * as yup from "yup";
-import { Elements } from "../../../../../types/Elements";
+import { Elements, elmToStr } from "../../../../../types/Elements";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 //import { ElementHelp } from "../../../../components/helper/ElementHelp";
+import { useSnackbar } from "notistack";
 
 const nameValidation = (curComponents: string[]) =>
   yup.object({
@@ -70,6 +71,14 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
       });
     },
   });
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added component to ${parentName}`, {
+      variant: "info",
+    });
+  };
 
   return (
     <div>
@@ -150,6 +159,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
                   Boolean(formik.errors.source)
                 )
               ) {
+                notifyAdd();
                 handleClose();
               } else {
                 console.log(formik.errors);

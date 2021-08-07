@@ -12,6 +12,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { useSnackbar } from "notistack";
 
 const validation = (validVariables: string[]) =>
   yup.object({
@@ -72,6 +73,14 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
       });
     },
   });
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added component to ${parentName}`, {
+      variant: "info",
+    });
+  };
 
   return (
     <div>
@@ -223,6 +232,7 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
                 ) &&
                 formik.values.order
               ) {
+                notifyAdd();
                 return handleClose();
               }
             }}

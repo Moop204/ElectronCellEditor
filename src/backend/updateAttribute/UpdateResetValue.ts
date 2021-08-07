@@ -5,13 +5,19 @@ import { Component, Model, Reset } from "../../types/ILibcellml";
 // @element - The type of element where math is being updated on
 // @parentSelect - Identifying the parental element of the current element
 // @value - Value that the math attribute will be replace with
-// @currentElement - The currently selected Units
-const updateResetValue = (model: Model, curElm: Reset, value: string) => {
+// @currentElement - The currently selected Reset
+const updateResetValue = (
+  model: Model,
+  curElm: Reset,
+  value: string,
+  componentRoot: Component
+) => {
   if (curElm) {
     // Updating current element
     (curElm as Reset).setResetValue(value);
     // Find Reset index
-    const parent = curElm.parent() as Component;
+    //    const parent = curElm.parent() as Component;
+    const parent = componentRoot;
     const parentName = parent.name();
     let resetIndex = 0;
     for (let i = 0; i < parent.resetCount(); i++) {

@@ -1,5 +1,4 @@
 import {
-  Button,
   createStyles,
   Dialog,
   DialogTitle,
@@ -61,9 +60,7 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
       <RoundButton>
         <ListItem button onClick={handleOpen} dense>
           <ListItemIcon>
-            <AddBadge>
-              <PropertyIcon element="connection" />
-            </AddBadge>
+            <PropertyIcon element="connection" />
           </ListItemIcon>
           <ListItemText primary={name} />
         </ListItem>

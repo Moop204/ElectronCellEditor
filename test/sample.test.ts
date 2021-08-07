@@ -8,6 +8,7 @@ import {
   Model,
   Parser,
   Printer,
+  Reset,
   Units,
   Variable,
 } from "../src/types/ILibcellml";
@@ -30,30 +31,61 @@ const validMathMl = (fm: FileManagement, mathml: string): boolean => {
 };
 
 describe("array", () => {
-  it("checks variable parents", async () => {
+  it("checks reset parents", async () => {
     const fm = new FileManagement();
     await fm.init();
 
     const m: Model = new fm._cellml.Model();
-    m.setName("m1");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
-    c.addVariable(v);
-    m.addComponent(c);
+    m.setName("model");
+    const c1: Component = new fm._cellml.Component();
+    c1.setName("c1");
+    const v1: Variable = new fm._cellml.Variable();
+    v1.setName("v1");
+    v1.setUnitsByName("second");
+    const r: Reset = new fm._cellml.Reset();
+    r.setOrder(1);
+    const mathValue =
+      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
+    r.setResetValue(mathValue);
+    r.setTestValue(mathValue);
+    r.setTestVariable(v1);
+    r.setVariable(v1);
 
-    const { editedModel, editedCurrentElement } = updateNameOfVariable(
-      m,
-      v,
-      { name: "v1", index: null },
-      "V2"
-    );
-    console.log(editedCurrentElement.parent());
-    console.log(v.parent());
+    c1.addVariable(v1);
+    c1.addReset(r);
+    m.addComponent(c1);
+
+    fm.setContent(fm._printer.printModel(m, false));
+    fm.setCurrentComponent(r, Elements.reset);
+
+    console.log(r.parent());
     // const u: Units = new fm._cellml.Units();
   });
+
+  // it("checks variable parents", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+
+  //   const m: Model = new fm._cellml.Model();
+  //   m.setName("m1");
+  //   const c: Component = new fm._cellml.Component();
+  //   c.setName("c1");
+  //   const v: Variable = new fm._cellml.Variable();
+  //   v.setName("v1");
+  //   v.setUnitsByName("second");
+  //   c.addVariable(v);
+  //   m.addComponent(c);
+
+  //   const { editedModel, editedCurrentElement } = updateNameOfVariable(
+  //     m,
+  //     v,
+  //     { name: "v1", index: null },
+  //     "V2"
+  //   );
+  //   console.log(editedCurrentElement.parent());
+  //   console.log(v.parent());
+  //   // const u: Units = new fm._cellml.Units();
+  // });
 
   //   it("validates MathML", async () => {
   //     const fm = new FileManagement();

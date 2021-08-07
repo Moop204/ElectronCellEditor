@@ -62,7 +62,7 @@ describe("Updating Reset attribute reset_value", function () {
         name: "c1",
         index: 0,
       },
-      attribute: "reset_value",
+      attribute: "test_value",
       value: newValue,
     };
 
@@ -71,12 +71,12 @@ describe("Updating Reset attribute reset_value", function () {
     const newCurrentElement = fm.getCurrentComponent();
     const newModel = fm._parser.parseModel(fm.getContent());
     assert.strictEqual(
-      (newCurrentElement as Reset).resetValue().trim(),
+      (newCurrentElement as Reset).testValue().trim(),
       newValue.trim(),
       "Current selection name not changed."
     );
     assert.strictEqual(
-      (newModel as Model).componentByIndex(0).reset(0).resetValue().trim(),
+      (newModel as Model).componentByIndex(0).reset(0).testValue().trim(),
       newValue.trim(),
       "Model name not changed."
     );

@@ -12,16 +12,18 @@ import { updatePrefix } from "./updatePrefix";
 import { updateReference } from "./UpdateReference";
 import { updateRemoveConnection } from "./UpdateRemoveConnection";
 import { updateResetValue } from "./UpdateResetValue";
-import { updateTestValue } from "./UpdateTestValue";
+import { updateTestValue } from "./updateTestValue";
 import { updateTestVariable } from "./UpdateTestVariable";
 import { updateUnits } from "./UpdateUnits";
 import { updateVariable } from "./UpdateVariable";
+import FileManagement from "../FileManagement";
 
 const updateEvent = (
   model: Model,
   { element, select, attribute, value }: IUpdate,
-  curElm: EditorElement
+  fm: FileManagement
 ) => {
+  const curElm = fm.getCurrentComponent();
   let newModel = model;
   let newCurrentElement: EditorElement = curElm;
 
@@ -141,13 +143,15 @@ const updateEvent = (
     ({ newModel, newCurrentElement } = updateResetValue(
       model,
       curElm as Reset,
-      value
+      value,
+      fm.componentRoot
     ));
   } else if (attribute === "test_value") {
     ({ newModel, newCurrentElement } = updateTestValue(
       model,
       curElm as Reset,
-      value
+      value,
+      fm.componentRoot
     ));
   } else {
     console.log(
