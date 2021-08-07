@@ -1,4 +1,5 @@
 // A simple test to verify a visible window is opened with a title
+import { setupBrowser } from "@testing-library/webdriverio";
 const Application = require("spectron").Application;
 const assert = require("assert");
 const appPath =
@@ -37,15 +38,25 @@ describe("Basic tests", function () {
     await app.start();
   });
 
-  it("Ensure application works", async () => {
-    const winCount = await app.client.getWindowCount();
-    return assert.equal(winCount, 2);
+  // it("Ensure application works", async () => {
+  //   const winCount = await app.client.getWindowCount();
+  //   return assert.equal(winCount, 2);
+  // });
+
+  it("test-webdriver", async () => {
+    const { getByRole } = setupBrowser(app.client);
+
+    const button = await getByRole("button", { name: /click me/i });
+    //@ts-ignore
+    button.click();
+    expect(
+      await getByRole("heading", { name: /clicking happened!/i })
+    ).toBeDefined();
   });
 
   afterEach(async () => {
-    await app.stop();
-    // if (app && app.isRunning()) {
-    //   return app.stop();
-    // }
+    if (app && app.isRunning()) {
+      await app.stop();
+    }
   });
 });

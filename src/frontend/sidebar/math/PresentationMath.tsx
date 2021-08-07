@@ -81,7 +81,7 @@ const PresentationMath: FunctionComponent<IMath> = ({ mathml }) => {
     <Grid style={{ textTransform: "none" }}>
       {/* <MathJax.Provider> */}
       {formulas.map((formula) => (
-        <MathJax.Html html={formula} />
+        <MathJax.Html html={formula} key={formula} />
       ))}
       {/* </MathJax.Provider> */}
     </Grid>

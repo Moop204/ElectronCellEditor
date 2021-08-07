@@ -1,17 +1,20 @@
-import React, { FunctionComponent } from "react";
+import React, { createRef, FunctionComponent } from "react";
 import { Elements, elmToStr } from "../../../../types/Elements";
 import { AddChildSelect } from "./AddChildSelect";
 import Grid from "@material-ui/core/Grid";
 import { List, ListItem, Typography } from "@material-ui/core";
+import { RoundButton } from "../../../component/RoundButton";
 
 const AddChild = (childElm: Elements, parent: Elements, parentName: string) => {
   return (
-    <AddChildSelect
-      childElement={childElm}
-      parentElement={parent}
-      parentName={parentName}
-      key={elmToStr(childElm)}
-    />
+    <RoundButton key={"add" + elmToStr(childElm)}>
+      <AddChildSelect
+        childElement={childElm}
+        parentElement={parent}
+        parentName={parentName}
+        key={elmToStr(childElm)}
+      />
+    </RoundButton>
   );
 };
 

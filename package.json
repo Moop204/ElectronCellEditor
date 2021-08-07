@@ -109,6 +109,7 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@monaco-editor/loader": "^1.1.0",
     "@monaco-editor/react": "^4.2.0",
+    "@testing-library/webdriverio": "^3.0.2",
     "buffer": "^6.0.3",
     "electron-chromedriver": "^13.0.0",
     "electron-squirrel-startup": "^1.0.0",

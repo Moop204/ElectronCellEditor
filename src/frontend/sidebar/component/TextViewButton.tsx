@@ -20,7 +20,12 @@ const TextViewButton: FunctionComponent<ITextViewButton> = ({
     <div>
       <Tooltip title="Text View">
         <Link to="">
-          <IconButton aria-label="Text View" color="primary" onClick={onClick}>
+          <IconButton
+            name="text-view-button"
+            aria-label="Text View"
+            color="primary"
+            onClick={onClick}
+          >
             <CreateIcon />
           </IconButton>
         </Link>

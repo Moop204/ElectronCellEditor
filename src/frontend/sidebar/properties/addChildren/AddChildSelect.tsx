@@ -15,7 +15,7 @@ import { Elements, elmToStr, strToElm } from "../../../../types/Elements";
 import { ElementHelp } from "../../help/ElementHelp";
 import { PropertyIcon } from "../children/PropertyIcon";
 import { ElementForm } from "./ElementForm";
-import AddIcon from "@material-ui/icons/Add";
+import { AddBadge } from "./../../../component/AddBadge";
 interface IAddChild {
   childElement: Elements;
   parentElement: Elements;
@@ -44,14 +44,9 @@ const AddChildSelect: FunctionComponent<IAddChild> = ({
         style={{ alignItems: "center" }}
       >
         <ListItemIcon>
-          <Badge
-            color="error"
-            style={{ backgroundColor: "" }}
-            overlap="circle"
-            badgeContent="+"
-          >
+          <AddBadge>
             <PropertyIcon element={elmToStr(childElement)} />
-          </Badge>
+          </AddBadge>
         </ListItemIcon>
         <ListItemText primary={elmToStr(childElement)} />
         <ListItemSecondaryAction>

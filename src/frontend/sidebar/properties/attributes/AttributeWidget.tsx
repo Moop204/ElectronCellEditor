@@ -37,8 +37,8 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
         <PropertyAttribute
           title={attrTitle}
           value={attrVal}
-          key={attrTitle}
           index={idx}
+          key={attrTitle + attrVal}
           // onChange={(e) => handleChange(attrTitle, e.target.value)}
           onChange={handleChange}
         />

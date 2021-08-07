@@ -82,7 +82,7 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
   const classes = useStyles();
 
   const renderTree = (nodes: IXmlElement, index: string) => {
-    const id = nodes.name + index;
+    const id = nodes.name + index + JSON.stringify(nodes.attributes);
     return (
       <TreeItem
         key={id}

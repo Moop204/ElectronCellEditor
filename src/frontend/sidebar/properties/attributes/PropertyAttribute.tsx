@@ -1,10 +1,5 @@
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import React, { useState, FunctionComponent } from "react";
@@ -13,7 +8,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { PresentationMath } from "../../math/PresentationMath";
 import { capitaliseFirst } from "../../../../utility/capitaliseFirst";
-import { FormControl, Select, Input, FormHelperText } from "@material-ui/core";
+import { FormControl, Select, Input } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import { AllInterfaceType } from "../../../../utility/interfaceConverter";
 import { VariableAttr } from "./VariableAttr";
@@ -64,6 +59,9 @@ const processAttribute = (title: string) => {
 const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
   const { title, value, onChange, index } = props;
   const [error, setError] = useState(false);
+
+  const [localValue, setLocalValue] = useState(value);
+
   // if (title === 'math') {
   //   return (
   //     <Grid container item direction="row">
@@ -152,18 +150,24 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
       <TextField
         error={error}
         id={title}
-        value={value}
+        value={localValue}
         onChange={(e) => {
           if (
             e.target.value.match(/^[a-zA-Z_][a-zA-Z_0-9]*$/) ||
             e.target.value === ""
           ) {
-            if (error) setError(false);
-            /*_.debounce(() =>*/ onChange(
-              title,
-              e.target.value,
-              index
-            ); /*, 100);*/
+            setLocalValue(e.target.value);
+            if (e.target.value !== "") {
+              setError(false);
+              console.log("Local value HAS STUFF");
+            }
+            if (e.target.value === "") {
+              setError(true);
+              console.log("Local value IS EMPTY");
+            }
+            if (!error) {
+              onChange(title, localValue, index);
+            }
           } else {
             if (!error) setError(true);
           }

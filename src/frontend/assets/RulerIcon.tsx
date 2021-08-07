@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { FunctionComponent } from "react";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
-const RulerIcon: React.FunctionComponent = () => {
+const RulerIcon: FunctionComponent = () => {
   return (
     <SvgIcon color="primary">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

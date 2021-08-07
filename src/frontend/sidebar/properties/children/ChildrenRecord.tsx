@@ -58,48 +58,10 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   parentName,
 }) => {
   const style = useStyle();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
 
   // New implementation
-  return (
-    <ListItem button onClick={onClick} dense>
-      <ListItemIcon>
-        <PropertyIcon element={element} />
-      </ListItemIcon>
-      <ListItemText primary={title} />
-      <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
-          <DeleteButton
-            elementType={strToElm(element)}
-            name={title}
-            index={index}
-          />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-  );
-
-  // if (element === "connection") {
-  //   return (
-  //     <Grid container className={style.root}>
-  //       <Grid item xs={10}>
-  //         <Button
-  //           variant="outlined"
-  //           onClick={handleOpen}
-  //           fullWidth
-  //           className={style.button}
-  //         >
-  //           <Grid container>
-  //             <Grid item xs={2}>
-  //               <PropertyIcon element={element} />
-  //             </Grid>
-  //             <Grid item xs={10}>
-  //               {title}
-  //             </Grid>
-  //           </Grid>
-  //         </Button>
-  //       </Grid>
-  //       <Grid item xs={2}>
-  //         <Button
   //           onClick={() => {
   //             window.api.send("update-attribute", [
   //               {
@@ -110,42 +72,43 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   //               },
   //             ]);
   //           }}
-  //         >
-  //           X
-  //         </Button>
-  //       </Grid>
-  //     </Grid>
-  //   );
+
+  // if(element==="connection") {
+  //   return (
+  //     <ListItem button onClick={handleOpen} dense>
+  //     <ListItemIcon>
+  //       <PropertyIcon element={element} />
+  //     </ListItemIcon>
+  //     <ListItemText primary={title} />
+  //     <ListItemSecondaryAction>
+  //       <IconButton edge="end" aria-label="delete">
+  //         <DeleteButton
+  //           elementType={strToElm(element)}
+  //           name={title}
+  //           index={index}
+  //         />
+  //       </IconButton>
+  //     </ListItemSecondaryAction>
+  //   </ListItem>
+
+  //   )
   // }
 
-  // return (
-  //   <Grid container direction="row" key={element + title}>
-  //     <Grid item xs={6} sm={6} md={8} lg={10} className={style.button}>
-  //       <Button
-  //         variant="outlined"
-  //         onClick={onClick}
-  //         fullWidth
-  //         className={style.button}
-  //       >
-  //         <Grid container>
-  //           <Grid item xs={1}>
-  //             <PropertyIcon element={element} />
-  //           </Grid>
-  //           <Grid item xs={11} className={style.buttonText}>
-  //             {title}
-  //           </Grid>
-  //         </Grid>
-  //       </Button>
-  //     </Grid>
-  //     <Grid item xs={6} sm={6} md={4} lg={2} className={style.button}>
-  //       <DeleteButton
-  //         elementType={strToElm(element)}
-  //         name={title}
-  //         index={index}
-  //       />
-  //     </Grid>
-  //   </Grid>
-  // );
+  return (
+    <ListItem button onClick={onClick} dense>
+      <ListItemIcon>
+        <PropertyIcon element={element} />
+      </ListItemIcon>
+      <ListItemText primary={title} />
+      <ListItemSecondaryAction>
+        <DeleteButton
+          elementType={strToElm(element)}
+          name={title}
+          index={index}
+        />
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
 };
 
 export { ChildrenRecord };

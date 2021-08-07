@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/capitaliseFirst";
+import { RoundButton } from "../../../component/RoundButton";
 
 const findElement = (elm: Elements, name: string, index: number) => {
   const select: ISearch = { index, name };
@@ -88,27 +89,23 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                 {Object.values(childrenType).map(
                   (attrType: IChild, index: number) => {
                     return (
-                      // <Grid
-                      //   container
-                      //   direction="row-reverse"
-                      //   key={parentKey + attrType.name}
-                      // >
-                      <ChildrenRecord
-                        title={attrType.name}
-                        onClick={() => {
-                          findElement(
-                            Elements[parentKey as keyof typeof Elements],
-                            attrType.name ? attrType.name : "",
-                            attrType.index
-                          );
-                          resetChanges();
-                        }}
-                        element={parentKey}
-                        key={attrType.name}
-                        index={index}
-                        parentName={attrType.parentName}
-                      />
-                      // </Grid>
+                      <RoundButton>
+                        <ChildrenRecord
+                          title={attrType.name}
+                          onClick={() => {
+                            findElement(
+                              Elements[parentKey as keyof typeof Elements],
+                              attrType.name ? attrType.name : "",
+                              attrType.index
+                            );
+                            resetChanges();
+                          }}
+                          element={parentKey}
+                          key={attrType.name}
+                          index={index}
+                          parentName={attrType.parentName}
+                        />
+                      </RoundButton>
                     );
                   }
                 )}
