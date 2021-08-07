@@ -7,11 +7,13 @@ import {
 import Grid from "@material-ui/core/Grid";
 import React, { FunctionComponent, useState } from "react";
 import { PropertyAttribute } from "./PropertyAttribute";
-
+import { useSnackbar } from "notistack";
+import { Elements, elmToStr } from "./../../../../types/Elements";
 interface IAttributeWidget {
   handleChange: (attrType: string, attrVal: string, index: number) => void;
   attribute: Record<string, string>;
   updateAttribute: any;
+  parentType: Elements;
 }
 
 const useStyle = makeStyles(() =>
@@ -26,8 +28,15 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
   handleChange,
   attribute,
   updateAttribute,
+  parentType,
 }) => {
   const styles = useStyle();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const notifyUpdate = () => {
+    enqueueSnackbar("Updated attributes", { variant: "info" });
+  };
+
   return (
     <Grid item xs={12}>
       <Typography variant="h4" style={{ paddingLeft: "5px" }}>
@@ -38,14 +47,17 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
           title={attrTitle}
           value={attrVal}
           index={idx}
-          key={attrTitle + attrVal}
+          key={elmToStr(parentType) + attrTitle}
           // onChange={(e) => handleChange(attrTitle, e.target.value)}
           onChange={handleChange}
         />
       ))}
       <Button
         variant="outlined"
-        onClick={updateAttribute}
+        onClick={() => {
+          updateAttribute();
+          notifyUpdate();
+        }}
         fullWidth
         className={styles.updateButton}
       >

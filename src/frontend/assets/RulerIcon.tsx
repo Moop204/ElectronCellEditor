@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from "react";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
-const RulerIcon: FunctionComponent = () => {
+const RulerIcon = React.forwardRef((props, ref: any) => {
   return (
-    <SvgIcon color="primary">
+    <SvgIcon ref={ref} color="primary">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
         <g className="" transform="translate(0,0)">
           <g>
@@ -76,6 +76,6 @@ const RulerIcon: FunctionComponent = () => {
       </svg>
     </SvgIcon>
   );
-};
+});
 
 export { RulerIcon };

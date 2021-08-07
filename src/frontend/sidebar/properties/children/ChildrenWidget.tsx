@@ -8,6 +8,7 @@ import {
   createStyles,
   Divider,
   List,
+  ListItem,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -74,16 +75,17 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
       {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
         if (childrenType.length > 0)
           return (
-            <div
-              key={parentKey}
+            <List
+              key={"outer" + parentKey}
               className={styles.childCategory}
               style={{ paddingLeft: "2vw" }}
             >
-              <Divider variant="middle" />
-              <Typography variant="h5">
-                {(parentKey === "component" ? "Encapsulated " : "") +
-                  capitaliseFirst(parentKey)}
-              </Typography>
+              <ListItem>
+                <Typography variant="h5">
+                  {(parentKey === "component" ? "Encapsulated " : "") +
+                    capitaliseFirst(parentKey)}
+                </Typography>
+              </ListItem>
 
               <List>
                 {Object.values(childrenType).map(
@@ -110,7 +112,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
                   }
                 )}
               </List>
-            </div>
+            </List>
           );
       })}
     </Grid>

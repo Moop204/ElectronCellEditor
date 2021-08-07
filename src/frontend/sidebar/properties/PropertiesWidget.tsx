@@ -21,8 +21,7 @@ import { ConnectionWidget } from "./ConnectionWidget";
 const localStyles = makeStyles(() =>
   createStyles({
     propertyWidget: {
-      paddingLeft: "1wv",
-      paddingRight: "1wv",
+      paddingRight: "3px",
     },
     plainText: {
       color: "black",
@@ -213,6 +212,7 @@ const PropertiesWidget: FunctionComponent = () => {
           attribute={abstractModel.attribute}
           handleChange={handleAttributeChange}
           updateAttribute={sendAttributeUpdate}
+          parentType={abstractModel.type}
         />
 
         {abstractModel.unit.length > 0 && (
@@ -260,6 +260,7 @@ const PropertiesWidget: FunctionComponent = () => {
             attribute={abstractModel.attribute}
             handleChange={handleAttributeChange}
             updateAttribute={sendAttributeUpdate}
+            parentType={abstractModel.type}
           />
         </Grid>
       </Grid>

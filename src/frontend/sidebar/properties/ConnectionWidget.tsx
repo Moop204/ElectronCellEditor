@@ -4,6 +4,9 @@ import {
   Dialog,
   DialogTitle,
   Grid,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -11,8 +14,10 @@ import React, { FunctionComponent, useState } from "react";
 import { Elements } from "../../../types/Elements";
 import { IChild } from "../../../types/IProperties";
 import { ElementHelp } from "../help/ElementHelp";
-import { UnitEditForm } from "./addChildren/form/UnitEditForm";
-import { RulerIcon } from "../../assets/RulerIcon";
+import { RoundButton } from "../../component/RoundButton";
+import { AddBadge } from "../../component/AddBadge";
+
+import { PropertyIcon } from "./children/PropertyIcon";
 
 interface IConnection {
   connection: IChild[];
@@ -52,22 +57,17 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
   const handleOpen = () => setOpen(true);
   const style = useStyle();
   return (
-    <Grid item container xs={12}>
-      <Button
-        variant="outlined"
-        onClick={handleOpen}
-        fullWidth
-        className={style.button}
-      >
-        <Grid container>
-          <Grid item xs={2}>
-            <RulerIcon />
-          </Grid>
-          <Grid item xs={10} className={style.buttonText}>
-            {name}
-          </Grid>
-        </Grid>
-      </Button>
+    <>
+      <RoundButton>
+        <ListItem button onClick={handleOpen} dense>
+          <ListItemIcon>
+            <AddBadge>
+              <PropertyIcon element="connection" />
+            </AddBadge>
+          </ListItemIcon>
+          <ListItemText primary={name} />
+        </ListItem>
+      </RoundButton>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <Grid container item direction="row">
@@ -83,7 +83,7 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
         </DialogTitle>
         <div className={style.buffer}>EDIT STUFF</div>
       </Dialog>
-    </Grid>
+    </>
   );
 };
 
