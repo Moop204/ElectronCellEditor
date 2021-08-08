@@ -1,4 +1,4 @@
-/* eslint-disable no-case-declarations */
+9; /* eslint-disable no-case-declarations */
 import { ipcMain, BrowserWindow, IpcMainEvent } from "electron";
 import { convertSelectedElement } from "./converter/convertElement";
 import { Elements, elmToStr } from "../types/Elements";
@@ -31,19 +31,20 @@ const fs = require("fs");
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-const libcellModule = require("libcellml.js/libcellml.common");
+// const libcellModule = require("libcellml.js/libcellml.common");
 
-// import libCellMLModule from "./mainLibcellml/libcellml.js";
-// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+import libCellMLModule from "./mainLibcellml/libcellml.js";
+import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
 import {
   getAllVariableNames,
   getGlobalVariableNames,
+  getVariablesofComponent,
 } from "../utility/variable/getAllVariableNames";
 import { getAllUnitsNames } from "./utility/getAllUnitsNames";
-import { getAllComponentNames } from "./utility/GetAllComponentNames";
+import { getAllComponentNames } from "./utility/getAllComponentNames";
 import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { RemoveElement } from "./removeChild/removeElement";
 import { saveAs, save } from "../utility/save";
@@ -82,22 +83,22 @@ export default class FileManagement {
   async init(): Promise<void> {
     if (this._cellmlLoaded) return;
     // @ts-ignore
-    // this._cellml = await new libCellMLModule({
-    //   locateFile(path: string, prefix: string) {
-    //     if (path.endsWith(".wasm")) {
-    //       return prefix + libCellMLWasm;
-    //     }
-    //     return prefix + path;
-    //   },
-    // });
-    this._cellml = await libcellModule();
+    this._cellml = await new libCellMLModule({
+      locateFile(path: string, prefix: string) {
+        if (path.endsWith(".wasm")) {
+          return prefix + libCellMLWasm;
+        }
+        return prefix + path;
+      },
+    });
+    // this._cellml = await libcellModule();
     this._parser = new this._cellml.Parser();
     this._printer = new this._cellml.Printer();
     this._cellmlLoaded = true;
   }
 
   async updateContentFromModel(m: Model): Promise<void> {
-    await this.updateContent(this._printer.printModel(m, true));
+    await this.updateContent(this._printer.printModel(m, false));
   }
 
   async updateContent(s: string): Promise<void> {
@@ -372,8 +373,8 @@ export default class FileManagement {
 
     ipcMain.on(
       "add-child",
-      async (event: IpcMainEvent, { child, parent, parentType }: IAddChild) => {
-        await addChild(this, child, parent, parentType);
+      async (event: IpcMainEvent, { child, parentType }: IAddChild) => {
+        await addChild(this, child, parentType);
         event.reply("update-content-b", this.getContent());
       }
     );
@@ -497,6 +498,15 @@ export default class FileManagement {
         this.getCurrentComponent().parent() as NamedEntity
       ).name();
     });
+
+    ipcMain.on(
+      "select-variables",
+      (event: IpcMainEvent, componentName: string) => {
+        const m = generateModel(this._cellml, this.getContent());
+        const c = m.componentByName(componentName, true);
+        event.returnValue = c ? getVariablesofComponent(c) : [];
+      }
+    );
   }
 
   destroyHandlers(): void {

@@ -8,6 +8,8 @@ const getAllVariableNames = async (fm: FileManagement) => {
     await fm.init();
   }
   const current = fm.getCurrentComponent() as Component;
+  console.log("Current?");
+  console.log(current);
   const varCount = current.variableCount();
   const res: string[] = [];
   for (let i = 0; i < varCount; i++) {
@@ -44,4 +46,19 @@ const getGlobalVariableNames = (fm: FileManagement): VariableDescriptor[] => {
   return res;
 };
 
-export { getAllVariableNames, getGlobalVariableNames, VariableDescriptor };
+const getVariablesofComponent = (component: Component) => {
+  const res = [];
+
+  for (let i = 0; i < component.variableCount(); i++) {
+    const v = component.variableByIndex(i);
+    res.push(v.name());
+  }
+  return res;
+};
+
+export {
+  getAllVariableNames,
+  getGlobalVariableNames,
+  VariableDescriptor,
+  getVariablesofComponent,
+};

@@ -7,11 +7,11 @@ import { addReset } from "./addReset";
 import { addUnit } from "./addUnit";
 import { addUnits } from "./addUnits";
 import { addVariable } from "./addVariable";
+import { addConnection } from "./addConnection";
 
 const addChild = async (
   fm: FileManagement,
   child: ChildDetail,
-  parent: ISearch,
   parentType: Elements
 ) => {
   if (!fm._cellmlLoaded) {
@@ -36,6 +36,10 @@ const addChild = async (
     }
     case Elements.unit: {
       await addUnit(fm, child);
+      break;
+    }
+    case Elements.connection: {
+      await addConnection(fm, child);
       break;
     }
     default:

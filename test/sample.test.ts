@@ -16,6 +16,7 @@ import { stripMath } from "../src/frontend/sidebar/math/stripMath";
 import { Elements } from "../src/types/Elements";
 import { updateMath } from "../src/backend/updateAttribute/updateMath";
 import { updateNameOfVariable } from "../src/backend/updateAttribute/updateName/updateNameOfVariable";
+import { getAllVariableNames } from "../src/utility/variable/getAllVariableNames";
 
 const validMathMl = (fm: FileManagement, mathml: string): boolean => {
   const cellml = fm._cellml;
@@ -31,7 +32,7 @@ const validMathMl = (fm: FileManagement, mathml: string): boolean => {
 };
 
 describe("array", () => {
-  it("checks reset parents", async () => {
+  it("add equivalence", async () => {
     const fm = new FileManagement();
     await fm.init();
 
@@ -42,25 +43,86 @@ describe("array", () => {
     const v1: Variable = new fm._cellml.Variable();
     v1.setName("v1");
     v1.setUnitsByName("second");
-    const r: Reset = new fm._cellml.Reset();
-    r.setOrder(1);
-    const mathValue =
-      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
-    r.setResetValue(mathValue);
-    r.setTestValue(mathValue);
-    r.setTestVariable(v1);
-    r.setVariable(v1);
+
+    const c2: Component = new fm._cellml.Component();
+    c2.setName("c1");
+    const v2: Variable = new fm._cellml.Variable();
+    v2.setName("v2");
+    v2.setUnitsByName("second");
 
     c1.addVariable(v1);
-    c1.addReset(r);
+    c2.addVariable(v2);
     m.addComponent(c1);
+    m.addComponent(c2);
 
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(r, Elements.reset);
+    const commandVar: Variable = fm._cellml.Variable;
+    commandVar.addEquivalence(v1, v2);
 
-    console.log(r.parent());
-    // const u: Units = new fm._cellml.Units();
+    console.log(fm._printer.printModel(m, false));
   });
+
+  // it("obtains all var names", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+
+  //   const m: Model = new fm._cellml.Model();
+  //   m.setName("model");
+  //   const c1: Component = new fm._cellml.Component();
+  //   c1.setName("c1");
+  //   const v1: Variable = new fm._cellml.Variable();
+  //   v1.setName("v1");
+  //   v1.setUnitsByName("second");
+  //   const r: Reset = new fm._cellml.Reset();
+  //   r.setOrder(1);
+  //   const mathValue =
+  //     `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
+  //   r.setResetValue(mathValue);
+  //   r.setTestValue(mathValue);
+  //   r.setTestVariable(v1);
+  //   r.setVariable(v1);
+
+  //   c1.addVariable(v1);
+  //   c1.addReset(r);
+  //   m.addComponent(c1);
+
+  //   fm.updateContentFromModel(m);
+  //   // fm.setCurrentComponent(r, Elements.reset);
+  //   fm.resetToModel();
+
+  //   const res = await getAllVariableNames(fm);
+  //   console.log(res);
+  // });
+
+  // it("checks reset parents", async () => {
+  //   const fm = new FileManagement();
+  //   await fm.init();
+
+  //   const m: Model = new fm._cellml.Model();
+  //   m.setName("model");
+  //   const c1: Component = new fm._cellml.Component();
+  //   c1.setName("c1");
+  //   const v1: Variable = new fm._cellml.Variable();
+  //   v1.setName("v1");
+  //   v1.setUnitsByName("second");
+  //   const r: Reset = new fm._cellml.Reset();
+  //   r.setOrder(1);
+  //   const mathValue =
+  //     `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
+  //   r.setResetValue(mathValue);
+  //   r.setTestValue(mathValue);
+  //   r.setTestVariable(v1);
+  //   r.setVariable(v1);
+
+  //   c1.addVariable(v1);
+  //   c1.addReset(r);
+  //   m.addComponent(c1);
+
+  //   fm.setContent(fm._printer.printModel(m, false));
+  //   fm.setCurrentComponent(r, Elements.reset);
+
+  //   console.log(r.parent());
+  //   // const u: Units = new fm._cellml.Units();
+  // });
 
   // it("checks variable parents", async () => {
   //   const fm = new FileManagement();

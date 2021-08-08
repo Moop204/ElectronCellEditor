@@ -40,7 +40,7 @@ contextBridge.exposeInMainWorld("api", {
     // whitelist channels
     // if (true || validChannels.includes(channel)) {
     console.log(`SENDING SYNC ${channel}`);
-    // console.log(data);
+    console.log(data);
     return ipcRenderer.sendSync(channel, data);
     // }
   },

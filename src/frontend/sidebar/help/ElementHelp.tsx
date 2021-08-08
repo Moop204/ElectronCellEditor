@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Elements } from "../../../types/Elements";
 import { ComponentHelp } from "./ComponentHelp";
+import { ConnectionHelp } from "./ConnectionHelp";
 import { MathHelp } from "./MathHelp";
 import { ModelHelp } from "./ModelHelp";
 import { ResetHelp } from "./ResetHelp";
@@ -32,9 +33,13 @@ const ElementHelp: FunctionComponent<IElementHelp> = ({ type }) => {
       break;
     case Elements.reset:
       help = <ResetHelp />;
+      break;
     case Elements.math:
       help = <MathHelp />;
-
+      break;
+    case Elements.connection:
+      help = <ConnectionHelp />;
+      break;
     default:
   }
   return help;

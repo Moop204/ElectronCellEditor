@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     height: 110,
     flexGrow: 1,
     maxWidth: "100vh",
+    marginTop: "8px",
   },
   record: {
     margin: "2px",

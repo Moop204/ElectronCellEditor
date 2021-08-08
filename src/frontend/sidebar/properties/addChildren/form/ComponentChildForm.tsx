@@ -72,7 +72,7 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
     },
   });
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const notifyAdd = () => {
     enqueueSnackbar(`Successfully added component to ${parentName}`, {

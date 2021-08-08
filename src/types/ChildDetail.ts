@@ -42,6 +42,15 @@ interface ChildUnitsDetail extends ChildDetail {
   };
 }
 
+interface ChildConnectionDetail extends ChildDetail {
+  attribute: {
+    variable1: string;
+    variable2: string;
+    component1: string;
+    component2: string;
+  };
+}
+
 interface ChildVariableDetail extends ChildDetail {
   attribute: {
     name: string;
@@ -58,4 +67,5 @@ export {
   ChildUnitDetail,
   ChildUnitsDetail,
   ChildVariableDetail,
+  ChildConnectionDetail,
 };
