@@ -34,6 +34,7 @@ const removeElement = async (
       break;
     case Elements.connection:
       await removeConnection(fm, child);
+      break;
     default:
       console.log("FM: Remove child - should not reach here");
       console.log(elmToStr(type));

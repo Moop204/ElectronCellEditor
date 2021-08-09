@@ -222,7 +222,7 @@ const PropertiesWidget: FunctionComponent = () => {
           />
         )}
 
-        {abstractModel.connection?.length > 0 && (
+        {abstractModel.type === Elements.variable && (
           <ConnectionWidget connection={abstractModel.connection} />
         )}
 

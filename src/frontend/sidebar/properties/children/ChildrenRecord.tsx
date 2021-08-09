@@ -18,6 +18,7 @@ import React, { FunctionComponent, MouseEventHandler, useState } from "react";
 import { Elements, strToElm } from "../../../../types/Elements";
 import { DeleteButton } from "./DeleteButton";
 import { PropertyIcon } from "./PropertyIcon";
+import { RoundButton } from "../../../component/RoundButton";
 
 interface IChildrenRecord {
   title: string;
@@ -95,19 +96,21 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   // }
 
   return (
-    <ListItem button onClick={onClick} dense>
-      <ListItemIcon>
-        <PropertyIcon element={element} />
-      </ListItemIcon>
-      <ListItemText primary={title} />
-      <ListItemSecondaryAction>
-        <DeleteButton
-          elementType={strToElm(element)}
-          name={title}
-          index={index}
-        />
-      </ListItemSecondaryAction>
-    </ListItem>
+    <RoundButton>
+      <ListItem button onClick={onClick} dense>
+        <ListItemIcon>
+          <PropertyIcon element={element} />
+        </ListItemIcon>
+        <ListItemText primary={title} />
+        <ListItemSecondaryAction>
+          <DeleteButton
+            elementType={strToElm(element)}
+            name={title}
+            index={index}
+          />
+        </ListItemSecondaryAction>
+      </ListItem>
+    </RoundButton>
   );
 };
 

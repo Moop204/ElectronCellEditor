@@ -70,5 +70,7 @@ describe("Removing CellML Connection", function () {
       0,
       "Connection remains"
     );
+    assert.strictEqual(fm.type, Elements.variable);
+    assert.ok(fm.currentComponent instanceof fm._cellml.Variable);
   });
 });

@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  ListItemSecondaryAction,
   ListItemText,
   makeStyles,
   TextField,
@@ -412,11 +413,35 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
             <PropertyIcon element="connection" />
           </ListItemIcon>
           <ListItemText primary={name} />
-          <DeleteButton
-            elementType={Elements.connection}
-            name={name}
-            index={index}
-          />
+          <ListItemSecondaryAction>
+            <DeleteButton
+              elementType={Elements.connection}
+              name={name}
+              index={index}
+            />
+          </ListItemSecondaryAction>
+        </ListItem>
+      </RoundButton>
+    </>
+  );
+};
+
+const AddConnectionButton: FunctionComponent = () => {
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+  const style = useStyle();
+
+  return (
+    <>
+      <RoundButton>
+        <ListItem button onClick={handleOpen} dense>
+          <ListItemIcon>
+            <AddBadge>
+              <PropertyIcon element="connection" />
+            </AddBadge>
+          </ListItemIcon>
+          <ListItemText primary="Connection" />
         </ListItem>
       </RoundButton>
       <Dialog
@@ -438,7 +463,7 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
             </Grid>
           </Grid>
         </DialogTitle>
-        <DialogContent style={{ height: "80vh" }}>
+        <DialogContent style={{}}>
           <AddConnectionForm
             connection={{
               component1: "",
@@ -449,10 +474,6 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
             onClose={handleClose}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button>Add</Button>
-        </DialogActions>
       </Dialog>
     </>
   );
@@ -473,11 +494,7 @@ const ConnectionWidget: FunctionComponent<IConnection> = ({ connection }) => {
       </List>
       <Grid item>
         <List>
-          <RoundButton>
-            <ListItem button>
-              <div>Add Connection</div>
-            </ListItem>
-          </RoundButton>
+          <AddConnectionButton />
         </List>
       </Grid>
     </Grid>
