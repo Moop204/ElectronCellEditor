@@ -6,8 +6,9 @@ import { removeUnits } from "./removeUnits";
 import { removeVariable } from "./removeVariable";
 import { removeReset } from "./removeReset";
 import { removeUnit } from "./removeUnit";
+import { removeConnection } from "./removeConnection";
 
-const RemoveElement = async (
+const removeElement = async (
   fm: FileManagement,
   type: Elements,
   child: ISearch
@@ -31,6 +32,8 @@ const RemoveElement = async (
     case Elements.unit:
       await removeUnit(fm, child);
       break;
+    case Elements.connection:
+      await removeConnection(fm, child);
     default:
       console.log("FM: Remove child - should not reach here");
       console.log(elmToStr(type));
@@ -38,4 +41,4 @@ const RemoveElement = async (
   }
 };
 
-export { RemoveElement };
+export { removeElement };

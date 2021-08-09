@@ -25,6 +25,7 @@ import { AddBadge } from "../../component/AddBadge";
 import { PropertyIcon } from "./children/PropertyIcon";
 import { Autocomplete } from "@material-ui/lab";
 import { useFormik } from "formik";
+import { DeleteButton } from "./children/DeleteButton";
 
 interface IConnection {
   connection: IChild[];
@@ -411,6 +412,11 @@ const ConnectionButton: FunctionComponent<IConnectionButton> = ({
             <PropertyIcon element="connection" />
           </ListItemIcon>
           <ListItemText primary={name} />
+          <DeleteButton
+            elementType={Elements.connection}
+            name={name}
+            index={index}
+          />
         </ListItem>
       </RoundButton>
       <Dialog
