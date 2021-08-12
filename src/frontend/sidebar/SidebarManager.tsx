@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { ExpandedSidebar } from "./ExpandedSidebar";
 import { UnexpandedSidebar } from "./UnexpandedSidebar";
 
@@ -23,6 +23,10 @@ const SidebarManager: FunctionComponent<ISidebarManager> = ({
   switchSidebar,
   switchView,
 }) => {
+  useEffect(() => {
+    window.api.send("validate-file", content);
+  }, []);
+
   if (viewSidebar) {
     return (
       <ExpandedSidebar

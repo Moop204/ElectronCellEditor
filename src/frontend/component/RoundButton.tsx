@@ -1,4 +1,5 @@
 import { makeStyles, createStyles, Button } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import React, { forwardRef } from "react";
 import { FunctionComponent } from "react";
 
@@ -6,8 +7,9 @@ const useStyle = makeStyles(() =>
   createStyles({
     roundButton: {
       borderRadius: "25px",
-      border: "2px solid #000000",
+      border: "6px solid lightgrey",
       marginBottom: "4px",
+      backgroundColor: "#DCDCDC",
     },
   })
 );
@@ -19,12 +21,12 @@ const useStyle = makeStyles(() =>
 
 const RoundButton: FunctionComponent = (props) => {
   const style = useStyle();
-  return <div className={style.roundButton}>{props.children}</div>;
-  // return (
-  //   <Button color="primary" fullWidth>
-  //     {props.children}
-  //   </Button>
-  // );
+  // return <div className={style.roundButton}>{props.children}</div>;
+  return (
+    <Button disabled fullWidth style={{ backgroundColor: "#DCDCDC" }}>
+      {props.children}
+    </Button>
+  );
 };
 
 export { RoundButton };

@@ -7,6 +7,7 @@ import { Elements } from "../../../../../types/Elements";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { useSnackbar } from "notistack";
 
 const nameValidation = (curComponents: string[]) =>
   yup.object({
@@ -43,6 +44,13 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
   const namespaces = window.api.sendSync("all-units");
   console.log(namespaces);
   const validationSchema = nameValidation(namespaces);
+
+  const { enqueueSnackbar } = useSnackbar();
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added Units to ${parentName}`, {
+      variant: "info",
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -146,6 +154,7 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
                   Boolean(formik.errors.component_ref)
                 )
               ) {
+                notifyAdd();
                 return handleClose();
               } else {
                 console.log(formik.errors);

@@ -15,6 +15,7 @@ import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { AllPrefix } from "../../../../../utility/prefixConverter";
 import { IPopup } from "../IPopup";
+import { useSnackbar } from "notistack";
 
 const validation = (validPrefix: string[], validUnits: string[]) =>
   yup.object({
@@ -56,6 +57,13 @@ const UnitChildForm: FunctionComponent<IPopup> = ({
       });
     },
   });
+
+  const { enqueueSnackbar } = useSnackbar();
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added Unit to ${parentName}`, {
+      variant: "info",
+    });
+  };
 
   return (
     <Grid container xs={12}>
@@ -173,7 +181,7 @@ const UnitChildForm: FunctionComponent<IPopup> = ({
                 ) &&
                 formik.values.units
               ) {
-                console.log(">>> <<<<");
+                notifyAdd();
                 return handleClose();
               }
             }}

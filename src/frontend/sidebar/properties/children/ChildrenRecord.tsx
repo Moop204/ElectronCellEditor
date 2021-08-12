@@ -1,21 +1,14 @@
 import {
   makeStyles,
   createStyles,
-  Grid,
-  Button,
-  Avatar,
-  IconButton,
-  List,
   ListItem,
-  ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  Typography,
   ListItemIcon,
+  Button,
 } from "@material-ui/core";
-import { title } from "process";
 import React, { FunctionComponent, MouseEventHandler, useState } from "react";
-import { Elements, strToElm } from "../../../../types/Elements";
+import { strToElm } from "../../../../types/Elements";
 import { DeleteButton } from "./DeleteButton";
 import { PropertyIcon } from "./PropertyIcon";
 import { RoundButton } from "../../../component/RoundButton";
@@ -58,50 +51,18 @@ const ChildrenRecord: FunctionComponent<IChildrenRecord> = ({
   index,
   parentName,
 }) => {
-  const style = useStyle();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-
-  // New implementation
-  //           onClick={() => {
-  //             window.api.send("update-attribute", [
-  //               {
-  //                 element: Elements.variable,
-  //                 select: { name: title, index: index },
-  //                 attribute: "connection",
-  //                 value: parentName,
-  //               },
-  //             ]);
-  //           }}
-
-  // if(element==="connection") {
-  //   return (
-  //     <ListItem button onClick={handleOpen} dense>
-  //     <ListItemIcon>
-  //       <PropertyIcon element={element} />
-  //     </ListItemIcon>
-  //     <ListItemText primary={title} />
-  //     <ListItemSecondaryAction>
-  //       <IconButton edge="end" aria-label="delete">
-  //         <DeleteButton
-  //           elementType={strToElm(element)}
-  //           name={title}
-  //           index={index}
-  //         />
-  //       </IconButton>
-  //     </ListItemSecondaryAction>
-  //   </ListItem>
-
-  //   )
-  // }
-
   return (
     <RoundButton>
-      <ListItem button onClick={onClick} dense>
+      <ListItem
+        button
+        onClick={onClick}
+        dense
+        style={{ backgroundColor: "default" }}
+      >
         <ListItemIcon>
           <PropertyIcon element={element} />
         </ListItemIcon>
-        <ListItemText primary={title} />
+        <ListItemText primary={title} style={{ textOverflow: "ellipsis" }} />
         <ListItemSecondaryAction>
           <DeleteButton
             elementType={strToElm(element)}

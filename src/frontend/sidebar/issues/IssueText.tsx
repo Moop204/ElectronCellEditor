@@ -44,7 +44,7 @@ const IssueText: FunctionComponent<IssueList> = ({ issues }) => {
     );
   }
   return (
-    <Grid item className={styles.plainText} xs={12}>
+    <Grid item>
       <Divider />
       <Typography variant="body1" style={{ paddingLeft: "5px" }}>
         No problems!

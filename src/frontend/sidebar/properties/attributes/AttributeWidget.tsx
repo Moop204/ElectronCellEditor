@@ -53,7 +53,8 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
         />
       ))}
       <Button
-        variant="outlined"
+        variant="contained"
+        color="primary"
         onClick={() => {
           updateAttribute();
           notifyUpdate();

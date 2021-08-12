@@ -15,6 +15,7 @@ import { AllInterfaceType } from "../../../../../utility/interfaceConverter";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { IPopup } from "../IPopup";
+import { useSnackbar } from "notistack";
 
 const validation = (
   curUnits: string[],
@@ -69,6 +70,13 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
     validInterface,
     validVariable
   );
+
+  const { enqueueSnackbar } = useSnackbar();
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added Variable to ${parentName}`, {
+      variant: "info",
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -211,7 +219,7 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
                 ) &&
                 formik.values.name
               ) {
-                console.log(">>> <<<<");
+                notifyAdd();
                 return handleClose();
               }
             }}

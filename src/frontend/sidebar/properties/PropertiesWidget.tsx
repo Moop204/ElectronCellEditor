@@ -16,7 +16,7 @@ import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
 import { EmptyProperty } from "./content/EmptyProperty";
 import { LoadingProperty } from "./content/LoadingProperty";
-import { ConnectionWidget } from "./ConnectionWidget";
+import { ConnectionWidget } from "./connection/ConnectionWidget";
 
 const localStyles = makeStyles(() =>
   createStyles({
