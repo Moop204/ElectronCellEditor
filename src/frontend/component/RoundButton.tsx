@@ -21,12 +21,12 @@ const useStyle = makeStyles(() =>
 
 const RoundButton: FunctionComponent = (props) => {
   const style = useStyle();
-  // return <div className={style.roundButton}>{props.children}</div>;
-  return (
-    <Button disabled fullWidth style={{ backgroundColor: "#DCDCDC" }}>
-      {props.children}
-    </Button>
-  );
+  return <div className={style.roundButton}>{props.children}</div>;
+  // return (
+  //   <Button disabled fullWidth style={{ backgroundColor: "#DCDCDC" }}>
+  //     {props.children}
+  //   </Button>
+  // );
 };
 
 export { RoundButton };

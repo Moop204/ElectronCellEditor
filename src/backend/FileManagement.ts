@@ -51,6 +51,8 @@ import { saveAs, save } from "../utility/save";
 import { findElement } from "./utility/FindElement";
 import { generateModel } from "./addChild/generateModel";
 import { validMathMl } from "./math/validateMathMl";
+import { IMoveTo } from "../backend/moveTo/interfaces";
+import { moveTo } from "../backend/moveTo/moveTo";
 
 interface FileIssues {
   model: string;
@@ -131,8 +133,10 @@ export default class FileManagement {
     if (!this._cellmlLoaded) {
       await this.init();
     }
-    this.currentComponent = this._parser.parseModel(this.content);
-    this.type = Elements.model;
+    this.setCurrentComponent(
+      this._parser.parseModel(this.content),
+      Elements.model
+    );
     const resetProp = convertSelectedElement(
       this.type,
       this.getCurrentComponent(),
@@ -400,16 +404,16 @@ export default class FileManagement {
       }
     );
 
-    ipcMain.on(
-      "direct-find-element",
-      (event: IpcMainEvent, { element, select, parent }: IDirectSelect) => {
-        const m = generateModel(this._cellml, this.getContent());
-        const c = m.componentByName(parent, false);
-        findElement(this, select, element, c);
-        const selection = this.getCurrentAsSelection(element);
-        event.reply("res-select-element", selection);
-      }
-    );
+    // ipcMain.on(
+    //   "direct-find-element",
+    //   (event: IpcMainEvent, { element, select, parent }: IDirectSelect) => {
+    //     const m = generateModel(this._cellml, this.getContent());
+    //     const c = m.componentByName(parent, false);
+    //     findElement(this, select, element, c);
+    //     const selection = this.getCurrentAsSelection(element);
+    //     event.reply("res-select-element", selection);
+    //   }
+    // );
 
     ipcMain.on("reset-parent", async (event: IpcMainEvent) => {
       const resetProp = await this.resetToModel();
@@ -507,6 +511,15 @@ export default class FileManagement {
         event.returnValue = c ? getVariablesofComponent(c) : [];
       }
     );
+
+    ipcMain.on("move-to", (event: IpcMainEvent, move: IMoveTo) => {
+      console.log("RECEIEVED");
+      moveTo(move, this);
+      console.log("POST MOVE");
+      const selection = this.getCurrentAsSelection(this.type);
+      console.log("ABOUT TO REPLY");
+      event.reply("res-select-element", selection);
+    });
   }
 
   destroyHandlers(): void {

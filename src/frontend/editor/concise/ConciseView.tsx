@@ -16,6 +16,10 @@ const localStyles = makeStyles(() =>
   createStyles({
     conciseView: {
       paddingLeft: "3vh",
+      scrollBehavior: "smooth",
+      overflowY: "auto",
+      height: "95vh",
+      paddingBottom: "4px",
     },
     notLoaded: {
       textAlign: "center",

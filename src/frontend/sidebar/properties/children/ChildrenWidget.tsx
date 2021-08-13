@@ -40,10 +40,7 @@ interface IChildrenWidget {
 const useStyle = makeStyles(() =>
   createStyles({
     childCategory: {
-      marginTop: "1vh",
-    },
-    childElement: {
-      marginTop: "5px",
+      marginTop: "0px",
     },
   })
 );

@@ -1,3 +1,4 @@
+import SearchIcon from "@material-ui/icons/Search";
 import React, { FunctionComponent } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TreeView from "@material-ui/lab/TreeView";
@@ -13,9 +14,14 @@ import {
   CardContent,
   Divider,
   Grid,
+  IconButton,
+  ListItemSecondaryAction,
   Typography,
 } from "@material-ui/core";
 import { PropertyIcon } from "../../sidebar/properties/children/PropertyIcon";
+import { strToElm } from "../../../types/Elements";
+import { IDirectSelect } from "../../../types/IQuery";
+import { IMoveTo } from "../../../backend/moveTo/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid lightgrey",
     borderRadius: "10px",
   },
+  content: {},
+
   // group: {
   //   marginLeft: 7,
   //   paddingLeft: 18,
@@ -39,15 +47,21 @@ const useStyles = makeStyles((theme) => ({
 
 interface IElement {
   element: IXmlElement;
+  selection: IMoveTo;
 }
 
-const ElementRecord: FunctionComponent<IElement> = ({ element }) => {
+const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
   const style = useStyles();
 
   return (
-    <div className={style.record}>
-      {/* <CardContent> */}
-      <Grid container direction="row" spacing={2} alignItems="center">
+    <span className={style.record}>
+      <Grid
+        container
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        className={style.content}
+      >
         <Grid item>
           <PropertyIcon element={element.name} />
         </Grid>
@@ -69,8 +83,20 @@ const ElementRecord: FunctionComponent<IElement> = ({ element }) => {
           );
         })}
       </Grid>
-      {/* </CardContent> */}
-    </div>
+      <Grid
+        item
+        style={{ paddingTop: "0px", paddingBottom: "0px" }}
+        className={style.content}
+      >
+        <IconButton
+          onClick={() => {
+            window.api.send("move-to", selection);
+          }}
+        >
+          <SearchIcon />
+        </IconButton>
+      </Grid>
+    </span>
   );
 };
 
@@ -82,17 +108,37 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
 
   const classes = useStyles();
 
-  const renderTree = (nodes: IXmlElement, index: string) => {
-    const id = nodes.name + index + JSON.stringify(nodes.attributes);
+  const renderTree = (nodes: IXmlElement, index: number, parent?: string) => {
+    const id = parent + nodes.name + index + JSON.stringify(nodes.attributes);
+
+    const selection: IMoveTo = {
+      element: strToElm(nodes.name),
+      search: { index, name: nodes.attributes?.name },
+      parent: parent ? parent : "",
+    };
     return (
       <TreeItem
         key={id}
         nodeId={id}
-        label={<ElementRecord element={nodes} />}
+        label={<ElementRecord element={nodes} selection={selection} />}
+
         // className={classes.group}
       >
         {Array.isArray(nodes.elements)
-          ? nodes.elements.map((node, i) => renderTree(node, index + i))
+          ? nodes.elements.map((node, i) => {
+              let indexCount = 0;
+              console.log("BEGIN");
+              for (let j = 0; j < i; j++) {
+                if (nodes.elements[j].name === nodes.name) {
+                  indexCount = indexCount + 1;
+                } else {
+                  console.log(nodes.elements[j].name + " != " + nodes.name);
+                }
+              }
+              console.log(indexCount);
+              console.log("END");
+              return renderTree(node, indexCount, nodes.attributes?.name);
+            })
           : null}
       </TreeItem>
     );
@@ -106,7 +152,7 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
       defaultExpanded={["1"]}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      {renderTree(richObject.elements[0], "0")}
+      {renderTree(richObject.elements[0], 0)}
     </TreeView>
   );
 };
