@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid lightgrey",
     borderRadius: "10px",
   },
-  content: {},
+  content: {
+    paddingTop: "0px",
+    paddingBottom: "0px",
+  },
 
   // group: {
   //   marginLeft: 7,
@@ -54,7 +57,7 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
   const style = useStyles();
 
   return (
-    <span className={style.record}>
+    <div className={style.record}>
       <Grid
         container
         direction="row"
@@ -82,21 +85,25 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
             </>
           );
         })}
+        <Grid item className={style.content}>
+          <IconButton
+            className={style.content}
+            onClick={(e) => {
+              e.stopPropagation();
+              window.api.send("move-to", selection);
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Grid>
       </Grid>
-      <Grid
+      {/* <Grid
         item
         style={{ paddingTop: "0px", paddingBottom: "0px" }}
         className={style.content}
-      >
-        <IconButton
-          onClick={() => {
-            window.api.send("move-to", selection);
-          }}
-        >
-          <SearchIcon />
-        </IconButton>
-      </Grid>
-    </span>
+      > */}
+      {/* </Grid> */}
+    </div>
   );
 };
 
