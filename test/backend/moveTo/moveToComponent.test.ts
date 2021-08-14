@@ -1,14 +1,7 @@
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
-import {
-  Component,
-  Model,
-  Parser,
-  Printer,
-} from "../../../src/types/ILibcellml";
-import { addComponent } from "../../../src/backend/addChild/addComponent";
+import { Component, Model } from "../../../src/types/ILibcellml";
 import { Elements } from "../../../src/types/Elements";
-import { ChildComponentDetail } from "../../../src/types/ChildDetail";
 import { moveTo } from "../../../src/backend/moveTo/moveTo";
 import { IMoveTo } from "../../../src/backend/moveTo/interfaces";
 
@@ -38,7 +31,10 @@ describe("Move to component in model", function () {
     // Applying update
     const move: IMoveTo = {
       element: Elements.component,
-      index: 0,
+      search: {
+        index: 0,
+        name: "c1",
+      },
       parent: "test_model",
     };
 
@@ -52,33 +48,4 @@ describe("Move to component in model", function () {
     const cur = fm.getCurrentComponent() as Component;
     assert.strictEqual(cur.name(), "c1");
   });
-  // it("Adds imported component", async () => {
-  //   // Applying update
-  //   const child: ChildComponentDetail = {
-  //     type: Elements.component,
-  //     attribute: {
-  //       name: "child_component",
-  //       imported: true,
-  //       source: "somewhere",
-  //       component_ref: "to_be_imported",
-  //     },
-  //   };
-
-  //   addComponent(fm, Elements.model, child);
-
-  //   // Validation
-  // const newModel = fm._parser.parseModel(fm.getContent());
-  // assert.strictEqual(newModel.componentCount(), 1);
-  // assert.strictEqual(newModel.componentByIndex(0).name(), "child_component");
-  // // Added as issue #916 to libcellml
-  // //    assert.strictEqual(newModel.componentByIndex(0).isImport(), true);
-  // // assert.strictEqual(
-  // //   newModel.componentByIndex(0).importReference(),
-  // //   "to_be_imported"
-  // // );
-  // // assert.strictEqual(
-  // //   newModel.componentByIndex(0).importSource(),
-  // //   "somewhere"
-  // // );
-  // });
 });

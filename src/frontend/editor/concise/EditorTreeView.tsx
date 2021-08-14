@@ -87,7 +87,6 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
         })}
         <Grid item className={style.content}>
           <IconButton
-            className={style.content}
             onClick={(e) => {
               e.stopPropagation();
               window.api.send("move-to", selection);
