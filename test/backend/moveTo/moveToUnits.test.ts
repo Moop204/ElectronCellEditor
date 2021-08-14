@@ -54,5 +54,6 @@ describe("Move to Units in model", function () {
 
     const cur = fm.getCurrentComponent() as Units;
     assert.strictEqual(cur.name(), "u1");
+    assert.strictEqual(fm.type, Elements.units);
   });
 });

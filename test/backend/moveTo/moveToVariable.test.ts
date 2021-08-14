@@ -45,5 +45,6 @@ describe("Move to Variable in model", function () {
 
     const cur = fm.getCurrentComponent() as Variable;
     assert.strictEqual(cur.name(), "v1");
+    assert.strictEqual(fm.type, Elements.variable);
   });
 });

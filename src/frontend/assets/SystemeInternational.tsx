@@ -19,7 +19,7 @@ const SystemInternationalIcon: React.FunctionComponent = () => {
             // style="line-height:1.25"
             // xml:space="preserve"
           >
-            <tspan x="0.95023608" y="4.8221211" stroke-width=".60846">
+            <tspan x="0.95023608" y="4.8221211" strokeWidth=".60846">
               SI
             </tspan>
           </text>

@@ -5,6 +5,7 @@ import { IMoveTo } from "./interfaces";
 import { moveToModel } from "./moveToModel";
 import { moveToVariable } from "./moveToVariable";
 import { moveToUnits } from "./moveToUnits";
+import { moveToReset } from "./moveToReset";
 
 const moveTo = (move: IMoveTo, fm: FileManagement) => {
   console.log("MOVE TO ");
@@ -21,8 +22,14 @@ const moveTo = (move: IMoveTo, fm: FileManagement) => {
       break;
     case Elements.units:
       moveToUnits(move, fm);
+      break;
+    case Elements.reset:
+      moveToReset(move, fm);
+      break;
     default:
-      console.log("MoveTo does not recognise the Element" + move.element);
+      console.log(
+        "MoveTo does not recognise the Element" + elmToStr(move.element)
+      );
   }
 };
 

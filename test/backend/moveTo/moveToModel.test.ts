@@ -42,5 +42,6 @@ describe("Move to component in model", function () {
 
     const cur = fm.getCurrentComponent() as Model;
     assert.strictEqual(cur.name(), "test_model");
+    assert.strictEqual(fm.type, Elements.model);
   });
 });

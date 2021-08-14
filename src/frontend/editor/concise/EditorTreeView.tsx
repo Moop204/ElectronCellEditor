@@ -32,13 +32,17 @@ const useStyles = makeStyles((theme) => ({
   },
   record: {
     margin: "2px",
-    padding: "10px",
+    padding: "4px",
     border: "1px solid lightgrey",
     borderRadius: "10px",
   },
   content: {
     paddingTop: "0px",
     paddingBottom: "0px",
+  },
+  button: {
+    marginTop: "0px",
+    marginBottom: "0px",
   },
 
   // group: {
@@ -85,7 +89,7 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
             </>
           );
         })}
-        <Grid item className={style.content}>
+        <Grid item className={style.content + "-" + style.button}>
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
@@ -114,12 +118,17 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
 
   const classes = useStyles();
 
-  const renderTree = (nodes: IXmlElement, index: number, parent?: string) => {
+  const renderTree = (
+    nodes: IXmlElement,
+    index: number,
+    elementIndex: number,
+    parent?: string
+  ) => {
     const id = parent + nodes.name + index + JSON.stringify(nodes.attributes);
 
     const selection: IMoveTo = {
       element: strToElm(nodes.name),
-      search: { index, name: nodes.attributes?.name },
+      search: { index: elementIndex, name: nodes.attributes?.name },
       parent: parent ? parent : "",
     };
     return (
@@ -133,17 +142,21 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
         {Array.isArray(nodes.elements)
           ? nodes.elements.map((node, i) => {
               let indexCount = 0;
-              console.log("BEGIN");
+              console.log(nodes.attributes?.name);
+              console.log("BEGIN to " + i);
               for (let j = 0; j < i; j++) {
-                if (nodes.elements[j].name === nodes.name) {
+                if (nodes.elements[j].name === nodes.elements[i].name) {
                   indexCount = indexCount + 1;
+                  console.log("MATCH! " + indexCount);
                 } else {
-                  console.log(nodes.elements[j].name + " != " + nodes.name);
+                  console.log(
+                    nodes.elements[j].name + " != " + nodes.elements[i].name
+                  );
                 }
               }
               console.log(indexCount);
               console.log("END");
-              return renderTree(node, indexCount, nodes.attributes?.name);
+              return renderTree(node, i, indexCount, nodes.attributes?.name);
             })
           : null}
       </TreeItem>
@@ -158,7 +171,7 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
       defaultExpanded={["1"]}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      {renderTree(richObject.elements[0], 0)}
+      {renderTree(richObject.elements[0], 0, 0)}
     </TreeView>
   );
 };

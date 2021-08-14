@@ -23,7 +23,7 @@
     <reset variable="N" test_variable="t" order="1">
       <test_value>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <ci>t</ci>
+          <ci>N</ci>
         </math>
       </test_value>
       <reset_value>
