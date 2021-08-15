@@ -151,6 +151,8 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
         error={error}
         id={title}
         value={localValue}
+        variant="outlined"
+        label={processAttribute(title)}
         onChange={(e) => {
           if (
             e.target.value.match(/^[a-zA-Z_][a-zA-Z_0-9]*$/) ||
@@ -231,14 +233,12 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     return (
       <div>
         <Grid container item direction="row">
-          <Grid container item xs={12}>
-            <Grid item xs={2}>
+          {/* <Grid container item xs={12}> */}
+          {/* <Grid item xs={2}>
               <InputLabel id={title}>{processAttribute(title)}</InputLabel>
-            </Grid>
-            <Grid item xs={10}>
-              {form}
-            </Grid>
-          </Grid>
+            </Grid> */}
+          {form}
+          {/* </Grid> */}
         </Grid>
       </div>
     );

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: 110,
     flexGrow: 1,
-    maxWidth: "100vh",
+    // maxWidth: "100vh",
     marginTop: "8px",
   },
   record: {
@@ -41,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "0px",
   },
   button: {
+    paddingTop: "0px",
+    paddingBottom: "0px",
     marginTop: "0px",
     marginBottom: "0px",
   },
@@ -77,9 +79,7 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
             <>
               <Divider orientation="vertical" flexItem />
               <Grid item>
-                <Typography variant="subtitle2" style={{}}>
-                  {key}:
-                </Typography>
+                <Typography variant="subtitle2">{key}:</Typography>
               </Grid>
               <Grid item>
                 <Typography variant="body2" color="textSecondary">
@@ -89,16 +89,18 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
             </>
           );
         })}
-        <Grid item className={style.content + "-" + style.button}>
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              window.api.send("move-to", selection);
-            }}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Grid>
+        {element.name !== "unit" && (
+          <Grid item className={style.button}>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                window.api.send("move-to", selection);
+              }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
       {/* <Grid
         item
@@ -124,7 +126,8 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
     elementIndex: number,
     parent?: string
   ) => {
-    const id = parent + nodes.name + index + JSON.stringify(nodes.attributes);
+    // const id = parent + nodes.name + index + JSON.stringify(nodes.attributes);
+    const id = nodes.name + JSON.stringify(nodes.attributes);
 
     const selection: IMoveTo = {
       element: strToElm(nodes.name),
@@ -168,7 +171,6 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
       className={classes.root}
       defaultCollapseIcon={<ExpandMoreIcon />}
       // defaultExpanded={["root"]}
-      defaultExpanded={["1"]}
       defaultExpandIcon={<ChevronRightIcon />}
     >
       {renderTree(richObject.elements[0], 0, 0)}

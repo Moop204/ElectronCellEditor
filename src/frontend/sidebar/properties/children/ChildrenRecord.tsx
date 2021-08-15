@@ -26,8 +26,7 @@ const useStyle = makeStyles(() =>
     button: {
       marginTop: "0.5vh",
       paddingLeft: "3px",
-      //marginLeft: "1vw",
-      paddingRight: "0px",
+      // paddingRight: "0px",
       maxWidth: "16vw",
     },
     root: {

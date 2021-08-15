@@ -37,7 +37,7 @@ const DeleteButton: FunctionComponent<IDeleteButton> = ({
 
   return (
     <span>
-      <IconButton aria-label={`delete-${name}`} onClick={handleOpen}>
+      <IconButton edge="end" aria-label={`delete-${name}`} onClick={handleOpen}>
         <DeleteIcon />
       </IconButton>
       <Dialog

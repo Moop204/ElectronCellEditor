@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { capitaliseFirst } from "../../../../utility/capitaliseFirst";
+import { AddChildSelect } from "../addChildren/AddChildSelect";
 
 const findElement = (elm: Elements, name: string, index: number) => {
   const select: ISearch = { index, name };
@@ -35,6 +36,7 @@ interface IChildrenWidget {
   abstractChildren: Record<string, IChild[]>;
   parentType: Elements;
   resetChanges: () => void;
+  parentName: string;
 }
 
 const useStyle = makeStyles(() =>
@@ -49,6 +51,7 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
   abstractChildren,
   parentType,
   resetChanges,
+  parentName,
 }) => {
   if (!abstractChildren) {
     return <div>NO CHILD</div>;
@@ -69,45 +72,49 @@ const ChildrenWidget: FunctionComponent<IChildrenWidget> = ({
       )}
 
       {Object.entries(abstractChildren).map(([parentKey, childrenType]) => {
-        if (childrenType.length > 0)
-          return (
-            <List
-              key={"outer" + parentKey}
-              className={styles.childCategory}
-              style={{ paddingLeft: "2vw" }}
-            >
-              <ListItem>
-                <Typography variant="h5">
-                  {(parentKey === "component" ? "Encapsulated " : "") +
-                    capitaliseFirst(parentKey)}
-                </Typography>
-              </ListItem>
+        return (
+          <List
+            key={"outer" + parentKey}
+            className={styles.childCategory}
+            // style={{ paddingLeft: "2vw" }}
+          >
+            <ListItem>
+              <Typography variant="h5">
+                {(parentKey === "component" ? "Encapsulated " : "") +
+                  capitaliseFirst(parentKey)}
+              </Typography>
+            </ListItem>
 
-              <List>
-                {Object.values(childrenType).map(
-                  (attrType: IChild, index: number) => {
-                    return (
-                      <ChildrenRecord
-                        title={attrType.name}
-                        onClick={() => {
-                          findElement(
-                            Elements[parentKey as keyof typeof Elements],
-                            attrType.name ? attrType.name : "",
-                            attrType.index
-                          );
-                          resetChanges();
-                        }}
-                        element={parentKey}
-                        key={attrType.name}
-                        index={index}
-                        parentName={attrType.parentName}
-                      />
-                    );
-                  }
-                )}
-              </List>
+            <List>
+              {Object.values(childrenType).map(
+                (attrType: IChild, index: number) => {
+                  return (
+                    <ChildrenRecord
+                      title={attrType.name}
+                      onClick={() => {
+                        findElement(
+                          Elements[parentKey as keyof typeof Elements],
+                          attrType.name ? attrType.name : "",
+                          attrType.index
+                        );
+                        resetChanges();
+                      }}
+                      element={parentKey}
+                      key={attrType.name}
+                      index={index}
+                      parentName={attrType.parentName}
+                    />
+                  );
+                }
+              )}
+              <AddChildSelect
+                childElement={strToElm(parentKey)}
+                parentElement={parentType}
+                parentName={parentName}
+              />
             </List>
-          );
+          </List>
+        );
       })}
     </Grid>
   );

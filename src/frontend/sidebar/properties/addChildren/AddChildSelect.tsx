@@ -1,5 +1,6 @@
 import {
   Badge,
+  createStyles,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -8,6 +9,7 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  makeStyles,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import React, { FunctionComponent, useState } from "react";
@@ -16,12 +18,22 @@ import { ElementHelp } from "../../help/ElementHelp";
 import { PropertyIcon } from "../children/PropertyIcon";
 import { ElementForm } from "./ElementForm";
 import { AddBadge } from "./../../../component/AddBadge";
-
+import { RoundButton } from "../../../../frontend/component/RoundButton";
 interface IAddChild {
   childElement: Elements;
   parentElement: Elements;
   parentName: string;
 }
+
+const useStyle = makeStyles(() =>
+  createStyles({
+    addButton: {
+      paddingTop: "2px",
+      paddingBottom: "2px",
+      alignItems: "center",
+    },
+  })
+);
 
 // Describes children that user can choose to add
 const AddChildSelect: FunctionComponent<IAddChild> = ({
@@ -36,14 +48,10 @@ const AddChildSelect: FunctionComponent<IAddChild> = ({
     setOpen(false);
     console.log("I GOT HERE ");
   };
-
+  const style = useStyle();
   return (
-    <>
-      <ListItem
-        button
-        onClick={handleClickOpen}
-        style={{ alignItems: "center" }}
-      >
+    <RoundButton>
+      <ListItem button onClick={handleClickOpen} className={style.addButton}>
         <ListItemIcon>
           <AddBadge>
             <PropertyIcon element={elmToStr(childElement)} />
@@ -80,7 +88,7 @@ const AddChildSelect: FunctionComponent<IAddChild> = ({
           />
         </DialogContent>
       </Dialog>
-    </>
+    </RoundButton>
   );
 };
 

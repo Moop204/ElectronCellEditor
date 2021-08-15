@@ -29,7 +29,7 @@ const localStyles = makeStyles(() =>
 
     properties: {
       height: "70vh",
-      paddingLeft: "1wv",
+      // paddingLeft: "1wv",
       paddingRight: "1wv",
       alignContent: "start",
     },
@@ -226,17 +226,16 @@ const PropertiesWidget: FunctionComponent = () => {
           <ConnectionWidget connection={abstractModel.connection} />
         )}
 
-        {Object.entries(abstractModel.children).length > 0 && (
-          <ChildrenWidget
-            abstractChildren={abstractModel.children}
-            parentType={abstractModel.type}
-            resetChanges={resetChanges}
-          />
-        )}
-        <AddChildrenWidget
+        <ChildrenWidget
+          abstractChildren={abstractModel.children}
+          parentType={abstractModel.type}
+          resetChanges={resetChanges}
+          parentName={abstractModel.attribute.name}
+        />
+        {/* <AddChildrenWidget
           element={abstractModel.type}
           name={abstractModel.attribute.name}
-        />
+        /> */}
       </Grid>
     );
   } else {

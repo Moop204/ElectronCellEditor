@@ -40,16 +40,18 @@ const PropertiesWidgetTop: FunctionComponent<IPropertiesWidgetTop> = ({
       className={style.root}
     >
       <Grid item xs={1}>
-        <IconButton
-          onClick={() => {
-            resetChanges();
-            onClick();
-            window.api.send("to-parent");
-            window.api.send("get-element");
-          }}
-        >
-          <ArrowBackIosIcon />
-        </IconButton>
+        {type !== Elements.model && (
+          <IconButton
+            onClick={() => {
+              resetChanges();
+              onClick();
+              window.api.send("to-parent");
+              window.api.send("get-element");
+            }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+        )}
       </Grid>
       <Grid
         item
