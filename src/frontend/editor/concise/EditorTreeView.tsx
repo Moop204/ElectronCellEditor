@@ -12,6 +12,7 @@ import {
   alpha,
   Card,
   CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -61,6 +62,10 @@ interface IElement {
 
 const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
   const style = useStyles();
+  const selectElement: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    window.api.send("move-to", selection);
+  };
 
   return (
     <div className={style.record}>
@@ -75,6 +80,9 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
           <PropertyIcon element={element.name} />
         </Grid>
         {Object.entries(element.attributes).map(([key, value]) => {
+          if (key === "math") {
+            return <Chip color="primary" label="math" />;
+          }
           return (
             <>
               <Divider orientation="vertical" flexItem />
@@ -91,12 +99,7 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
         })}
         {element.name !== "unit" && (
           <Grid item className={style.button}>
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                window.api.send("move-to", selection);
-              }}
-            >
+            <IconButton onClick={selectElement}>
               <SearchIcon />
             </IconButton>
           </Grid>
@@ -138,7 +141,7 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
       <TreeItem
         key={id}
         nodeId={id}
-        label={<ElementRecord element={nodes} selection={selection} />}
+        label={<ElementRecord key={id} element={nodes} selection={selection} />}
 
         // className={classes.group}
       >

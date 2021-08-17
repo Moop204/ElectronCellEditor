@@ -1,3 +1,4 @@
+import { CellmlProcessor } from "../CellmlProcessor";
 import { Model, Component } from "../../types/ILibcellml";
 import FileManagement from "../FileManagement";
 
@@ -11,15 +12,12 @@ import FileManagement from "../FileManagement";
 // @fm      - State manager
 // @mathml  - The string that represents the 'math',
 //           'reset value' and 'test value' elements
-const validMathMl = (fm: FileManagement, mathml: string): boolean => {
-  const cellml = fm._cellml;
-  const m: Model = new cellml.Model();
-  m.setName("m");
-  const c1: Component = new cellml.Component();
-  c1.setName("c1");
+const validMathMl = (processor: CellmlProcessor, mathml: string): boolean => {
+  const m = processor.buildModel("m");
+  const c1 = processor.buildComponent("c1");
   c1.setMath(mathml);
   m.addComponent(c1);
-  const stringedModel = fm._printer.printModel(m, true);
+  const stringedModel = processor.printModel(m);
   return stringedModel !== "";
 };
 

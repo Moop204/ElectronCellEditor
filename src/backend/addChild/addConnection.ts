@@ -17,8 +17,7 @@ const addConnection = async (
 ) => {
   const { component1, component2, variable1, variable2 } = child.attribute;
   // Initialised by caller
-  const libcellml = fm._cellml;
-  const m = generateModel(libcellml, fm.getContent());
+  const m = fm.parseModel(fm.getContent());
 
   // Identify the first and second variables
   const parentComp1 = m.componentByName(component1, true);
@@ -28,17 +27,12 @@ const addConnection = async (
   const var2 = parentComp2.variableByName(variable2);
 
   // Update the state
-  const staticVariable: Variable = fm._cellml.Variable;
-  const id = component1 + variable1 + "_" + component2 + variable2;
-  staticVariable.addEquivalenceWithIds(
-    var1,
-    var2,
-    "map_" + id,
-    "connect_" + id
-  );
 
-  fm.setCurrentComponent(fm.getCurrentComponent(), fm.type);
-  await fm.updateContent(modelToString(libcellml, m));
+  const id = component1 + variable1 + "_" + component2 + variable2;
+  fm._processor.addEquivalence(var1, var2, "map_" + id, "connect_" + id);
+
+  fm.setCurrentComponent(fm.getCurrentComponent());
+  await fm.updateContent(fm.displayModel(m));
 };
 
 export { addConnection };

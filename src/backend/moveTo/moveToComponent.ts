@@ -7,7 +7,7 @@ const moveToComponent = (
   { search: { index, name }, parent }: IMoveTo,
   fm: FileManagement
 ) => {
-  const m = fm._parser.parseModel(fm.getContent());
+  const m = fm.parseModel(fm.getContent());
   console.log(parent);
   console.log(index);
   let parentElement: ComponentEntity;

@@ -168,7 +168,9 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
               console.log("Local value IS EMPTY");
             }
             if (!error) {
-              onChange(title, localValue, index);
+              console.log("NOTHING WRONG WITH INPUT");
+              console.log(localValue);
+              onChange(title, e.target.value, index);
             }
           } else {
             if (!error) setError(true);

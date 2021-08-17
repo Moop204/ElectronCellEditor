@@ -1,3 +1,4 @@
+import { CellmlProcessor } from "../../../backend/CellmlProcessor";
 import FileManagement from "../../../backend/FileManagement";
 import { Level, Model, Parser, Validator } from "../../../types/ILibcellml";
 import { IssueDescriptor } from "./Issue";
@@ -47,18 +48,9 @@ const formatMessage = (v: Validator): IssueDescriptor[] => {
   return hints;
 };
 
-const validateModel = async (
-  fm: FileManagement,
-  file: string
-): Promise<Validator> => {
-  if (!fm._cellml) {
-    await fm.init();
-  }
-  const libcellml = fm._cellml;
-  const m: Model = fm._parser.parseModel(file);
-  const v: Validator = new libcellml.Validator();
-  v.validateModel(m);
-  return v;
+const validateModel = (processor: CellmlProcessor, file: string): Validator => {
+  const m: Model = processor.generateModel(file);
+  return processor.validateModel(m);
 };
 
 const obtainIssues = async (v: Validator): Promise<IssueDescriptor[]> => {

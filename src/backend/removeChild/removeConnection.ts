@@ -10,8 +10,7 @@ import { Elements } from "../../types/Elements";
 // @fm - State management of model
 // @child - Identifies Connection to be removed by name
 const removeConnection = async (fm: FileManagement, child: ISearch) => {
-  const libcellml = fm._cellml;
-  const m = generateModel(libcellml, fm.getContent());
+  const m = fm.parseModel(fm.getContent());
   const currentVariable = fm.getCurrentComponent() as Variable;
   const parentName = (currentVariable.parent() as Variable).name();
   const firstVar = m
@@ -20,8 +19,7 @@ const removeConnection = async (fm: FileManagement, child: ISearch) => {
   const secondVar = firstVar.equivalentVariable(child.index);
 
   // Remove connection
-  const commandVar: Variable = fm._cellml.Variable;
-  const removed = commandVar.removeEquivalence(firstVar, secondVar);
+  const removed = fm._processor.removeConnection(firstVar, secondVar);
   if (!removed) {
     console.log("Failed to remove Connection");
   }

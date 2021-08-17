@@ -8,8 +8,7 @@ import { generateModel } from "../addChild/generateModel";
 // @fm - State management of model
 // @child - Identifies Variable to be removed by name
 const removeVariable = async (fm: FileManagement, child: ISearch) => {
-  const printer: Printer = new fm._cellml.Printer();
-  const m = generateModel(fm._cellml, fm.getContent());
+  const m = fm.parseModel(fm.getContent());
   const name = child.name;
 
   // Remove element in properties
@@ -25,7 +24,7 @@ const removeVariable = async (fm: FileManagement, child: ISearch) => {
     console.log("Failed to remove Variable");
   }
   await fm.updateContentFromModel(m);
-  fm.setCurrentComponent(curElm as EditorElement, fm.type);
+  fm.setCurrentComponent(curElm as EditorElement);
 };
 
 export { removeVariable };

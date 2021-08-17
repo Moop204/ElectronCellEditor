@@ -1,4 +1,4 @@
-9; /* eslint-disable no-case-declarations */
+99; /* eslint-disable no-case-declarations */
 import { ipcMain, BrowserWindow, IpcMainEvent } from "electron";
 import { convertSelectedElement } from "./converter/convertElement";
 import { Elements, elmToStr } from "../types/Elements";
@@ -33,8 +33,8 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 // const libcellModule = require("libcellml.js/libcellml.common");
 
-import libCellMLModule from "./mainLibcellml/libcellml.js";
-import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+// import libCellMLModule from "./mainLibcellml/libcellml.js";
+// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -51,132 +51,81 @@ import { saveAs, save } from "../utility/save";
 import { findElement } from "./utility/FindElement";
 import { generateModel } from "./addChild/generateModel";
 import { validMathMl } from "./math/validateMathMl";
-import { IMoveTo } from "../backend/moveTo/interfaces";
-import { moveTo } from "../backend/moveTo/moveTo";
+import { IMoveTo } from "./moveTo/interfaces";
+import { moveTo } from "./moveTo/moveTo";
+import { LibcellmlProcessor } from "./libcellmlProcessor";
+import { CellmlModel } from "./model/CellmlModel";
 
 interface FileIssues {
   model: string;
   issues: IssueDescriptor[];
 }
 export default class FileManagement {
-  content: string;
-  currentComponent: Component | Model | Reset | Units | Variable | null;
-  type: Elements;
-  _cellml: any;
-  _printer: Printer;
-  _parser: Parser;
-  _cellmlLoaded: boolean;
-  selectedFile: string;
+  _processor: LibcellmlProcessor;
+  _model: CellmlModel;
   // Stop-gap solution until Reset elements are children of ParentedEntity
   componentRoot: Component;
   constructor() {
-    this.content = `<?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" >
-
-</model>`;
-    this.currentComponent = null;
-    this.type = Elements.none;
-    this._cellmlLoaded = false;
-    this.selectedFile = "";
-    this.componentRoot = null;
+    this._processor = new LibcellmlProcessor();
     this.init();
+    // this._cellmlLoaded = false;
+    this.componentRoot = null;
+    this._model = new CellmlModel();
   }
 
   async init(): Promise<void> {
-    if (this._cellmlLoaded) return;
-    // @ts-ignore
-    this._cellml = await new libCellMLModule({
-      locateFile(path: string, prefix: string) {
-        if (path.endsWith(".wasm")) {
-          return prefix + libCellMLWasm;
-        }
-        return prefix + path;
-      },
-    });
-    // this._cellml = await libcellModule();
-    this._parser = new this._cellml.Parser();
-    this._printer = new this._cellml.Printer();
-    this._cellmlLoaded = true;
+    await this._processor.init();
   }
 
   async updateContentFromModel(m: Model): Promise<void> {
-    await this.updateContent(this._printer.printModel(m, false));
+    await this.updateContent(this._processor.printModel(m));
   }
 
   async updateContent(s: string): Promise<void> {
-    this.content = s;
-    if (!this._cellmlLoaded) {
-      await this.init();
-    }
-    const validator = await validateModel(this, s);
-    if (this.type === Elements.none || validator.issueCount() === 0) {
-      this.setCurrentComponent(
-        this._parser.parseModel(this.content),
-        Elements.model
-      );
+    this._model.setContent(s, this._processor.generateModel(s));
+    // if (!this._cellmlLoaded) {
+    //   await this.init();
+    // }
+    const validator = validateModel(this._processor, s);
+    if (
+      this._model.getType() === Elements.none ||
+      validator.issueCount() === 0
+    ) {
+      this._model.setCurrent(this._processor.generateModel(s), Elements.model);
     } else {
       console.log("Invalid update content state");
     }
-    if (ipcMain) ipcMain.emit("update-content-b", this.getContent());
-  }
-
-  async setContent(s: string): Promise<void> {
-    this.content = s;
-    this.type = Elements.model;
-    if (!this._cellmlLoaded) {
-      await this.init();
-    }
-    this.currentComponent = this._parser.parseModel(this.content);
+    if (ipcMain) ipcMain.emit("update-content-b", this._model.getContent());
   }
 
   async resetToModel(): Promise<IProperties> {
-    if (!this._cellmlLoaded) {
-      await this.init();
-    }
-    this.setCurrentComponent(
-      this._parser.parseModel(this.content),
-      Elements.model
-    );
+    this._model.resetToModel(this._processor);
     const resetProp = convertSelectedElement(
-      this.type,
-      this.getCurrentComponent(),
+      this._model.getType(),
+      this._model.getCurrent(),
       this
     );
     return resetProp;
   }
 
-  // Getters and Setters
-
-  getContent(): string {
-    return this.content;
-  }
-
-  setCurrentComponent(
-    currentComponent: EditorElement,
-    type: Elements,
-    componentRoot?: Component
-  ): void {
-    if (componentRoot) {
-      this.componentRoot = componentRoot;
-    }
-    this.currentComponent = currentComponent;
-    this.type = type;
-  }
-
-  getCurrentComponent(): EditorElement {
-    return this.currentComponent;
-  }
-
   // Helpers
 
+  parseModel(content: string): Model {
+    return this._processor.generateModel(content);
+  }
+
+  displayModel(model: Model): string {
+    return this._processor.printModel(model);
+  }
+
   update = async (updates: IUpdate[], content: string, fm: FileManagement) => {
-    const model: Model = this._parser.parseModel(content);
+    const model: Model = this._processor.generateModel(content);
     // TODO: Jank fix, refactor properly
 
     for (const updateDescriptor of updates) {
       if (updateDescriptor.attribute === "name") {
         updateDescriptor.select = {
-          name: (this.getCurrentComponent() as NamedEntity).name(),
+          name: (this._model.getCurrent() as NamedEntity).name(),
           index: null,
         };
       }
@@ -187,7 +136,7 @@ export default class FileManagement {
         updateDescriptor,
         fm
       );
-      fm.setCurrentComponent(newCurrentElement, fm.type);
+      this._model.setCurrent(newCurrentElement);
       await fm.updateContentFromModel(newModel);
     }
   };
@@ -197,25 +146,22 @@ export default class FileManagement {
   async importFile(fileLoc: string): Promise<FileIssues> {
     const file: string = fs.readFileSync(fileLoc, "utf8");
     console.log(file);
-    this.selectedFile = fileLoc;
+    this._model.setFile(fileLoc);
     try {
-      const validator = await validateModel(this, file);
+      const validator = validateModel(this._processor, file);
       const issues = await obtainIssues(validator);
 
       // Update file management class
-      if (!this._cellmlLoaded) {
-        await this.init();
-      }
-      const cellml = this._cellml;
+      this._model.setCurrent(
+        this._processor.generateModel(file),
+        Elements.model
+      );
 
-      this.type = Elements.model;
-      this.setCurrentComponent(this._parser.parseModel(file), Elements.model);
       await this.updateContent(file);
       const res = {
         model: file,
         issues: issues,
       };
-      console.log(this.content);
       return res;
     } catch (e) {
       console.log("LIBCELLML: Failed to load errors");
@@ -229,27 +175,30 @@ export default class FileManagement {
 
   // Make a new file
   newFile() {
-    this.content = `<?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" >
+    this._model = new CellmlModel();
+  }
 
-</model>`;
-    this.currentComponent = null;
-    this.type = Elements.none;
-    this._cellmlLoaded = true;
-    this.selectedFile = "";
+  // If type not provided the currently set type is used
+  setCurrentComponent(element: EditorElement, type?: Elements) {
+    this._model.setCurrent(element, type);
+  }
+
+  getCurrentComponent(): EditorElement {
+    return this._model.getCurrent();
+  }
+
+  getContent(): string {
+    return this._model.getContent();
   }
 
   // Print out model
 
   async printModel(): Promise<void> {
-    const content = this.getContent();
+    const content = this._model.getContent();
     console.log("PRINTING OUT MODEL");
     console.log(content);
 
-    if (!this._cellmlLoaded) {
-      await this.init();
-    }
-    const model = this._parser.parseModel(content);
+    const model = this._processor.generateModel(content);
     for (let i = 0; i < model.componentCount(); i += 1) {
       console.log(model.componentByIndex(i).name());
     }
@@ -257,10 +206,10 @@ export default class FileManagement {
 
   // Internal
   getCurrentAsSelection(element: Elements): ISelection {
-    this.type = element;
+    this._model.setType(element);
     const prop = convertSelectedElement(
       element,
-      this.getCurrentComponent(),
+      this._model.getCurrent(),
       this
     );
     const selection: ISelection = { element, prop };
@@ -268,31 +217,34 @@ export default class FileManagement {
   }
 
   // Public
-
   async openedFile(filePath: string, mainWindow: BrowserWindow): Promise<void> {
     const { model, issues } = await this.importFile(filePath);
     mainWindow.webContents.send("init-content", model);
     mainWindow.webContents.send("error-reply", {
       issues,
     });
-    mainWindow.webContents.send("receive-filename", this.selectedFile);
+    mainWindow.webContents.send("receive-filename", this._model.getFile());
   }
 
   async saveFile(mainWindow?: BrowserWindow) {
-    console.log("GAVE THIS " + this.selectedFile);
-    const fileName = await save(this.getContent(), this.selectedFile);
+    const fileName = await save(
+      this._model.getContent(),
+      this._model.getFile()
+    );
     console.log("GOT THIS " + fileName);
-    this.selectedFile = fileName;
-    mainWindow?.webContents.send("receive-filename", this.selectedFile);
+    this._model.setFile(fileName);
+    mainWindow?.webContents.send("receive-filename", this._model.getFile());
   }
 
   async saveAsFile(mainWindow?: BrowserWindow) {
-    console.log("GAVE THIS " + this.selectedFile);
-    const fileName = await saveAs(this.getContent(), this.selectedFile);
+    const fileName = await saveAs(
+      this._model.getContent(),
+      this._model.getFile()
+    );
     console.log("GOT THIS " + fileName);
-    this.selectedFile = fileName;
+    this._model.setFile(fileName);
     if (mainWindow)
-      mainWindow.webContents.send("receive-filename", this.selectedFile);
+      mainWindow.webContents.send("receive-filename", this._model.getFile());
   }
 
   // Run once to set up handlers
@@ -300,8 +252,8 @@ export default class FileManagement {
     if (!ipcMain) return;
     ipcMain.on("new-file", async (event: IpcMainEvent) => {
       this.newFile();
-      event.reply("update-content-b", this.getContent());
-      event.reply("receive-filename", this.selectedFile);
+      event.reply("update-content-b", this._model.getContent());
+      event.reply("receive-filename", this._model.getFile());
     });
 
     ipcMain.on(
@@ -309,7 +261,7 @@ export default class FileManagement {
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
         this.resetToModel();
-        const selection = this.getCurrentAsSelection(this.type);
+        const selection = this.getCurrentAsSelection(this._model.getType());
         event.reply("res-select-element", selection);
       }
     );
@@ -319,20 +271,26 @@ export default class FileManagement {
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
         await this.saveFile();
-        event.reply("receive-filename", this.selectedFile);
+        event.reply("receive-filename", this._model.getFile());
       }
     );
 
     ipcMain.on("to-parent", async (event: IpcMainEvent) => {
-      if (this.type === Elements.model) return;
-      const cur = this.getCurrentComponent();
+      const type = this._model.getType();
+      if (type === Elements.model) return;
+      const cur = this._model.getCurrent();
       const parent = cur.parent();
+      console.log("To Parent");
+      console.log("From " + elmToStr(type));
       let newType = Elements.component;
-      console.log("Going back to parent");
-      console.log(elmToStr(this.type));
-      switch (this.type) {
+      switch (type) {
         case Elements.component:
-          if (parent instanceof this._cellml.Model) {
+          if (
+            this._processor.matchElement(
+              parent as EditorElement,
+              Elements.model
+            )
+          ) {
             newType = Elements.model;
           }
           break;
@@ -340,8 +298,8 @@ export default class FileManagement {
           newType = Elements.model;
           break;
       }
-      this.setCurrentComponent(parent as EditorElement, newType);
-      const selection = this.getCurrentAsSelection(this.type);
+      this._model.setCurrent(parent as EditorElement, newType);
+      const selection = this.getCurrentAsSelection(newType);
       event.reply("res-select-element", selection);
     });
 
@@ -350,14 +308,11 @@ export default class FileManagement {
     ipcMain.on(
       "update-attribute",
       async (event: IpcMainEvent, updateDescription: IUpdate[]) => {
-        if (!this._cellmlLoaded) {
-          await this.init();
-        }
         console.log("Update Received");
         console.log(updateDescription);
-        await this.update(updateDescription, this.getContent(), this);
+        await this.update(updateDescription, this._model.getContent(), this);
         if (ipcMain) {
-          event.reply("update-content-b", this.getContent());
+          event.reply("update-content-b", this._model.getContent());
           //event.returnValue("a");
         }
       }
@@ -379,7 +334,7 @@ export default class FileManagement {
       "add-child",
       async (event: IpcMainEvent, { child, parentType }: IAddChild) => {
         await addChild(this, child, parentType);
-        event.reply("update-content-b", this.getContent());
+        event.reply("update-content-b", this._model.getContent());
       }
     );
 
@@ -395,10 +350,9 @@ export default class FileManagement {
 
         // Stopgap solution to lack of parents for Reset
         if (element === Elements.reset) {
-          this.componentRoot = this.currentComponent as Component;
+          this.componentRoot = this._model.getCurrent() as Component;
         }
-        findElement(this, select, element, this.getCurrentComponent());
-
+        findElement(this._model, select, element, this._model.getCurrent());
         const selection = this.getCurrentAsSelection(element);
         event.reply("res-select-element", selection);
       }
@@ -428,25 +382,23 @@ export default class FileManagement {
     // OUTPUT
     // Sets the raw truth directly to frontend
     ipcMain.on("get-element", (event: IpcMainEvent) => {
-      const prop = this.getCurrentAsSelection(this.type);
+      const prop = this.getCurrentAsSelection(this._model.getType());
       event.reply("res-get-element", prop.prop);
     });
 
     ipcMain.on("validate-file", async (event: IpcMainEvent, file: string) => {
-      const validator = await validateModel(this, file);
+      const validator = validateModel(this._processor, file);
       event.reply("validated-file", validator.issueCount() === 0);
       const issues = await obtainIssues(validator);
       await this.updateContent(file);
-      if (issues.length === 0 && this.type === Elements.none) {
-        this.type = Elements.model;
-        const libcellml = this._cellml;
-        const m: Model = this._parser.parseModel(file);
-        this.currentComponent = m;
-        const prop = this.getCurrentAsSelection(this.type);
+      if (issues.length === 0 && this._model.getType() === Elements.none) {
+        const m: Model = this._processor.generateModel(file);
+        this._model.setCurrent(m, Elements.model);
+
+        const prop = this.getCurrentAsSelection(this._model.getType());
         event.reply("res-get-element", prop.prop);
       } else {
         console.log(`Issue length: ${issues.length}`);
-        console.log(`Current Type: ${this.type}`);
       }
       event.reply("error-reply", issues);
     });
@@ -454,11 +406,7 @@ export default class FileManagement {
     //ipcMain.emit()
 
     ipcMain.on("all-components", async (event: IpcMainEvent) => {
-      if (!this._cellmlLoaded) {
-        await this.init();
-      }
-      const libcellml = this._cellml;
-      const model = this._parser.parseModel(this.content);
+      const model = this._processor.generateModel(this._model.getContent());
       let res: string[] = [];
       res = getAllComponentNames(res, model);
       event.returnValue = res;
@@ -486,27 +434,28 @@ export default class FileManagement {
       "delete-element",
       async (event: IpcMainEvent, { element, select }: ISelect) => {
         removeElement(this, element, select);
-        const prop = this.getCurrentAsSelection(this.type);
+        const prop = this.getCurrentAsSelection(this._model.getType());
         event.reply("res-get-element", prop.prop);
-        event.reply("update-content-b", this.getContent());
+        event.reply("update-content-b", this._model.getContent());
       }
     );
 
     ipcMain.on("validate-math", async (event: IpcMainEvent, mathml: string) => {
-      const res = validMathMl(this, mathml);
+      const res = validMathMl(this._processor, mathml);
       event.reply("math-validity", res);
     });
 
     ipcMain.on("parent-name", (event: IpcMainEvent) => {
       event.returnValue = (
-        this.getCurrentComponent().parent() as NamedEntity
+        this._model.getCurrent().parent() as NamedEntity
       ).name();
     });
 
     ipcMain.on(
       "select-variables",
       (event: IpcMainEvent, componentName: string) => {
-        const m = generateModel(this._cellml, this.getContent());
+        const content = this._model.getContent();
+        const m = this._processor.generateModel(content);
         const c = m.componentByName(componentName, true);
         event.returnValue = c ? getVariablesofComponent(c) : [];
       }
@@ -516,7 +465,8 @@ export default class FileManagement {
       console.log("RECEIEVED");
       moveTo(move, this);
       console.log("POST MOVE");
-      const selection = this.getCurrentAsSelection(this.type);
+      console.log(elmToStr(this._model.getType()));
+      const selection = this.getCurrentAsSelection(this._model.getType());
       console.log("ABOUT TO REPLY");
       event.reply("res-select-element", selection);
     });

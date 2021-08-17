@@ -1,11 +1,8 @@
 import FileManagement from "../FileManagement";
 
 const getAllUnitsNames = async (fm: FileManagement) => {
-  if (!fm._cellmlLoaded) {
-    await fm.init();
-  }
   try {
-    const model = fm._parser.parseModel(fm.content);
+    const model = fm.parseModel(fm.getContent());
     const res = [];
     const unitsCount = model.unitsCount();
     for (let i = 0; i < unitsCount; i++) {

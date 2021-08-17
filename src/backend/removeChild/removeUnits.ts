@@ -8,8 +8,7 @@ import { generateModel } from "../addChild/generateModel";
 // @fm - State management of model
 // @child - Identifies Units to be removed by name
 const removeUnits = async (fm: FileManagement, child: ISearch) => {
-  const libcellml = fm._cellml;
-  const m: Model = generateModel(libcellml, fm.getContent());
+  const m: Model = fm.parseModel(fm.getContent());
   const name = child.name;
 
   // Remove component in editor
@@ -23,7 +22,7 @@ const removeUnits = async (fm: FileManagement, child: ISearch) => {
   let curElm = fm.getCurrentComponent() as Model;
   curElm.removeUnitsByName(name);
 
-  fm.setCurrentComponent(curElm as EditorElement, fm.type);
+  fm.setCurrentComponent(curElm as EditorElement);
 };
 
 export { removeUnits };

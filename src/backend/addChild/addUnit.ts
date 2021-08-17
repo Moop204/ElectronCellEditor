@@ -9,9 +9,8 @@ import { modelToString } from "./modelToString";
 // @fm - Manages the model of the program
 // @child - Describes details of the new component
 const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
-  const libcellml = fm._cellml;
   const { prefix, multiplier, exponent, units } = child.attribute;
-  const m = generateModel(fm._cellml, fm.getContent());
+  const m = fm.parseModel(fm.getContent());
   const parentName = (fm.getCurrentComponent() as Units).name();
 
   // Find the units
@@ -36,7 +35,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
     );
   }
 
-  await fm.updateContent(modelToString(libcellml, m));
+  await fm.updateContent(fm.displayModel(m));
   // Update current element
   fm.setCurrentComponent(parentUnits, Elements.units);
 };

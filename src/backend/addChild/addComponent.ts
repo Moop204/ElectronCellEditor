@@ -5,30 +5,6 @@ import FileManagement from "../FileManagement";
 import { generateModel } from "./generateModel";
 import { modelToString } from "./modelToString";
 
-// Creates a component
-// @fm            - State management
-// @name          - Name of new component
-// @imported      - Whether or not the new component is imported
-// @source        - Location of file where component is imported from
-// @component_ref - Name of Component in the source file that is being imported
-const makeComponent = (
-  fm: FileManagement,
-  name: string,
-  imported: boolean,
-  source: string,
-  component_ref: string
-): Component => {
-  const libcellml = fm._cellml;
-  const newComp: Component = new libcellml.Component();
-  newComp.setName(name as string);
-  if (imported) {
-    const importSource: ImportSource = new libcellml.ImportSource();
-    importSource.setUrl(source);
-    newComp.setSourceComponent(importSource, component_ref);
-  }
-  return newComp;
-};
-
 // Add a Component to the currently selected element (Model, Component).
 // @fm - Manages the model of the program
 // @parentType - Identifies type of element that component is added to
@@ -38,10 +14,13 @@ const addComponent = async (
   parentType: Elements,
   child: ChildComponentDetail
 ) => {
-  const libcellml = fm._cellml;
-  const m = generateModel(fm._cellml, fm.getContent());
+  const m = fm.parseModel(fm.getContent());
   const { name, imported, source, component_ref } = child.attribute;
-  const newComponent = makeComponent(fm, name, imported, source, component_ref);
+  const newComponent = fm._processor.buildComponent(
+    name,
+    source,
+    component_ref
+  );
 
   // Update current component and model, either a Model or a Component
   if (parentType === Elements.model) {
@@ -54,7 +33,7 @@ const addComponent = async (
     const curComp = m.componentByName(parentName as string, true);
     fm.setCurrentComponent(curComp, Elements.component);
   }
-  await fm.updateContent(modelToString(libcellml, m));
+  await fm.updateContent(fm.displayModel(m));
 };
 
 export { addComponent };

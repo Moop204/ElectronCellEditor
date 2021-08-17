@@ -13,9 +13,6 @@ const removeElement = async (
   type: Elements,
   child: ISearch
 ) => {
-  if (!fm._cellmlLoaded) {
-    await fm.init();
-  }
   switch (type) {
     case Elements.component:
       await removeComponent(fm, child);

@@ -7,8 +7,7 @@ import { EditorElement } from "../../types/EditorElement";
 // @fm - Manages the state of the file
 // @child - Identifies parent Units name as well as reset index
 const removeUnit = async (fm: FileManagement, child: ISearch) => {
-  const libcellml = fm._cellml;
-  const m: Model = fm._parser.parseModel(fm.getContent());
+  const m: Model = fm.parseModel(fm.getContent());
   const index = child.index;
 
   // Remove element in properties
@@ -22,7 +21,7 @@ const removeUnit = async (fm: FileManagement, child: ISearch) => {
   m.unitsByName(componentName).removeUnitByIndex(index);
   await fm.updateContentFromModel(m);
 
-  fm.setCurrentComponent(curElm as EditorElement, fm.type);
+  fm.setCurrentComponent(curElm as EditorElement);
 };
 
 export { removeUnit };

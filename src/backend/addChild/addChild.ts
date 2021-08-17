@@ -1,4 +1,4 @@
-import { Elements } from "../../types/Elements";
+import { Elements, elmToStr } from "../../types/Elements";
 import { ChildDetail } from "../../types/ChildDetail";
 import { ISearch } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
@@ -14,9 +14,7 @@ const addChild = async (
   child: ChildDetail,
   parentType: Elements
 ) => {
-  if (!fm._cellmlLoaded) {
-    await fm.init();
-  }
+  console.log("Adding child " + elmToStr(child.type));
   switch (child.type) {
     case Elements.component: {
       await addComponent(fm, parentType, child);

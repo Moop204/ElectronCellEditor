@@ -9,8 +9,8 @@ import { EditorElement } from "../../types/EditorElement";
 
 const removeReset = async (fm: FileManagement, child: ISearch) => {
   console.log("Removing Reset");
-  const libcellml = fm._cellml;
-  const m: Model = fm._parser.parseModel(fm.getContent());
+
+  const m: Model = fm.parseModel(fm.getContent());
   const index = child.index;
 
   // Remove element in properties
@@ -23,7 +23,7 @@ const removeReset = async (fm: FileManagement, child: ISearch) => {
   m.componentByName(componentName, true).removeResetByIndex(index);
   await fm.updateContentFromModel(m);
 
-  fm.setCurrentComponent(curElm as EditorElement, fm.type);
+  fm.setCurrentComponent(curElm as EditorElement);
 };
 
 export { removeReset };

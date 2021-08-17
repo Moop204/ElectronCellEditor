@@ -1,3 +1,5 @@
+import { CellmlModel } from "../model/CellmlModel";
+import { CellmlProcessor } from "../CellmlProcessor";
 import { EditorElement } from "../../types/EditorElement";
 import { Elements } from "../../types/Elements";
 import { ComponentEntity, Model, Component } from "../../types/ILibcellml";
@@ -6,12 +8,13 @@ import FileManagement from "../FileManagement";
 
 // Find selected element
 const findElement = (
-  fm: FileManagement,
+  // fm: FileManagement,
+  model: CellmlModel,
   select: ISearch,
   element: Elements,
   curElm: EditorElement
 ): void => {
-  if (!fm.currentComponent) {
+  if (!model.getCurrent()) {
     return;
   }
   const { name, index } = select;
@@ -23,12 +26,12 @@ const findElement = (
         const curCompEntity = curElm as ComponentEntity;
         if (name != null) {
           const nameComponent = curCompEntity.componentByName(name, false);
-          fm.setCurrentComponent(nameComponent, Elements.component);
+          model.setCurrent(nameComponent, Elements.component);
         } else if (index != null) {
           const indexComponent = curCompEntity.componentByIndex(index);
-          fm.setCurrentComponent(indexComponent, Elements.component);
+          model.setCurrent(indexComponent, Elements.component);
         }
-        fm.type = Elements.component;
+        model.setType(Elements.component);
       }
       break;
     case Elements.units:
@@ -38,16 +41,16 @@ const findElement = (
         if (name != null) {
           if (curModel.hasUnitsByName(name)) {
             const nameUnits = curModel.unitsByName(name);
-            fm.setCurrentComponent(nameUnits, Elements.units);
+            model.setCurrent(nameUnits, Elements.units);
           } else {
             const nameUnits = curModel.unitsByName(name.slice(1));
-            fm.setCurrentComponent(nameUnits, Elements.units);
+            model.setCurrent(nameUnits, Elements.units);
           }
         } else if (index != null) {
           const indexUnits = curModel.unitsByIndex(index);
-          fm.setCurrentComponent(indexUnits, Elements.units);
+          model.setCurrent(indexUnits, Elements.units);
         }
-        fm.type = Elements.units;
+        model.setType(Elements.units);
       }
       break;
     case Elements.reset:
@@ -55,19 +58,19 @@ const findElement = (
         const curComp = curElm as Component;
         // Require to find in parent
         if (index != null) {
-          fm.currentComponent = curComp.reset(index);
+          model.setCurrent(curComp.reset(index));
         } else {
           console.log("NO INDEX given FOR A RESET");
         }
-        fm.type = Elements.reset;
+        model.setType(Elements.reset);
         console.log("ELEMENT OF TYPE RESET");
-        console.log(fm.currentComponent);
+        console.log(model.getCurrent());
       }
       break;
     case Elements.variable:
       {
         const curComp = curElm as Component;
-        fm.setCurrentComponent(
+        model.setCurrent(
           curComp.variableByName(name as string),
           Elements.variable
         );

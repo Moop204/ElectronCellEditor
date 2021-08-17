@@ -7,8 +7,7 @@ import { EditorElement } from "../../types/EditorElement";
 // @fm - Manages state
 // @child - Identifies the child to be removed
 const removeComponent = async (fm: FileManagement, child: ISearch) => {
-  const libcellml = fm._cellml;
-  const m: Model = fm._parser.parseModel(fm.getContent());
+  const m: Model = fm.parseModel(fm.getContent());
   const name = child.name;
 
   // Remove component in editor
@@ -23,7 +22,7 @@ const removeComponent = async (fm: FileManagement, child: ISearch) => {
   //curElm = curElm.clone();
   curElm.removeComponentByName(name, false);
 
-  fm.setCurrentComponent(curElm as EditorElement, fm.type);
+  fm.setCurrentComponent(curElm as EditorElement);
 };
 
 export { removeComponent };

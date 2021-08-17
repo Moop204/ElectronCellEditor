@@ -4,9 +4,6 @@ import { VariableDescriptor } from "./VariableDescriptor";
 
 // Obtain variables of the selected component
 const getAllVariableNames = async (fm: FileManagement) => {
-  if (!fm._cellmlLoaded) {
-    await fm.init();
-  }
   const current = fm.getCurrentComponent() as Component;
   console.log("Current?");
   console.log(current);
@@ -36,7 +33,7 @@ const recursiveHelper = (c: Component): VariableDescriptor[] => {
 // Find all variables mentioned in model
 const getGlobalVariableNames = (fm: FileManagement): VariableDescriptor[] => {
   const content = fm.getContent();
-  const m = fm._parser.parseModel(content);
+  const m = fm.parseModel(content);
 
   let res: VariableDescriptor[] = [];
   for (let i = 0; i < m.componentCount(); i++) {
