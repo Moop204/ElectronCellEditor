@@ -95,7 +95,7 @@ export default class FileManagement {
     } else {
       console.log("Invalid update content state");
     }
-    if (ipcMain) ipcMain.emit("update-content-b", this._model.getContent());
+    if (ipcMain) ipcMain.emit("res-update-content", this._model.getContent());
   }
 
   async resetToModel(): Promise<IProperties> {
@@ -219,7 +219,7 @@ export default class FileManagement {
   // Public
   async openedFile(filePath: string, mainWindow: BrowserWindow): Promise<void> {
     const { model, issues } = await this.importFile(filePath);
-    mainWindow.webContents.send("init-content", model);
+    mainWindow.webContents.send("res-update-content", model);
     mainWindow.webContents.send("error-reply", {
       issues,
     });
@@ -252,7 +252,7 @@ export default class FileManagement {
     if (!ipcMain) return;
     ipcMain.on("new-file", async (event: IpcMainEvent) => {
       this.newFile();
-      event.reply("update-content-b", this._model.getContent());
+      event.reply("res-update-content", this._model.getContent());
       event.reply("receive-filename", this._model.getFile());
     });
 
@@ -312,7 +312,7 @@ export default class FileManagement {
         console.log(updateDescription);
         await this.update(updateDescription, this._model.getContent(), this);
         if (ipcMain) {
-          event.reply("update-content-b", this._model.getContent());
+          event.reply("res-update-content", this._model.getContent());
           //event.returnValue("a");
         }
       }
@@ -334,7 +334,7 @@ export default class FileManagement {
       "add-child",
       async (event: IpcMainEvent, { child, parentType }: IAddChild) => {
         await addChild(this, child, parentType);
-        event.reply("update-content-b", this._model.getContent());
+        event.reply("res-update-content", this._model.getContent());
       }
     );
 
@@ -358,21 +358,10 @@ export default class FileManagement {
       }
     );
 
-    // ipcMain.on(
-    //   "direct-find-element",
-    //   (event: IpcMainEvent, { element, select, parent }: IDirectSelect) => {
-    //     const m = generateModel(this._cellml, this.getContent());
-    //     const c = m.componentByName(parent, false);
-    //     findElement(this, select, element, c);
-    //     const selection = this.getCurrentAsSelection(element);
-    //     event.reply("res-select-element", selection);
-    //   }
-    // );
-
-    ipcMain.on("reset-parent", async (event: IpcMainEvent) => {
-      const resetProp = await this.resetToModel();
-      event.reply("res-get-element", resetProp);
-    });
+    // ipcMain.on("reset-parent", async (event: IpcMainEvent) => {
+    //   const resetProp = await this.resetToModel();
+    //   event.reply("res-get-element", resetProp);
+    // });
 
     // Takes the currently selected element
     // INPUT
@@ -436,7 +425,7 @@ export default class FileManagement {
         removeElement(this, element, select);
         const prop = this.getCurrentAsSelection(this._model.getType());
         event.reply("res-get-element", prop.prop);
-        event.reply("update-content-b", this._model.getContent());
+        event.reply("res-update-content", this._model.getContent());
       }
     );
 
@@ -445,11 +434,11 @@ export default class FileManagement {
       event.reply("math-validity", res);
     });
 
-    ipcMain.on("parent-name", (event: IpcMainEvent) => {
-      event.returnValue = (
-        this._model.getCurrent().parent() as NamedEntity
-      ).name();
-    });
+    // ipcMain.on("parent-name", (event: IpcMainEvent) => {
+    //   event.returnValue = (
+    //     this._model.getCurrent().parent() as NamedEntity
+    //   ).name();
+    // });
 
     ipcMain.on(
       "select-variables",

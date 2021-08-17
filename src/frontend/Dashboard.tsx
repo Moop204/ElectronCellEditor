@@ -81,11 +81,11 @@ const Dashboard: FunctionComponent = () => {
       console.log("Update content B");
       window.api.send("get-element");
     };
-    window.api.receive("update-content-b", updateContentFn);
-    const initContentFn = (event: Event, message: string) => {
-      setContentExist(message);
-    };
-    window.api.receive("init-content", initContentFn);
+    window.api.receive("res-update-content", updateContentFn);
+    // const initContentFn = (event: Event, message: string) => {
+    //   setContentExist(message);
+    // };
+    // window.api.receive("init-content", initContentFn);
     const validatedFile = (event: Event, res: boolean) => {
       setValid(res);
     };
@@ -97,8 +97,8 @@ const Dashboard: FunctionComponent = () => {
     window.api.receive("receive-filename", namedFile);
 
     return () => {
-      window.api.remove("init-content", initContentFn);
-      window.api.remove("update-content-b", updateContentFn);
+      // window.api.remove("init-content", initContentFn);
+      window.api.remove("res-update-content", updateContentFn);
       window.api.remove("validated-file", validatedFile);
       window.api.remove("receive-filename", namedFile);
     };

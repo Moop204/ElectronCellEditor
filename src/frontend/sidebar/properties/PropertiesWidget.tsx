@@ -98,7 +98,7 @@ const PropertiesWidget: FunctionComponent = () => {
     // TODO: Prime candidate for removal. Role should be done in backend.
     // Asks backend to convert current pointer into a specific element
     // Element MUST be correct type
-    window.api.receive("init-content", handleInitContent);
+    window.api.receive("update-content-b", handleInitContent);
 
     const handleUpdateAbstractModel = (
       event: IpcRendererEvent,
@@ -116,7 +116,7 @@ const PropertiesWidget: FunctionComponent = () => {
     // });
     return () => {
       window.api.remove("res-select-element", handleUpdateAbstractModel);
-      window.api.remove("init-content", handleInitContent);
+      window.api.remove("res-update-content", handleInitContent);
       window.api.remove("res-get-element", handleReceiveSelectedElement);
     };
   }, []);

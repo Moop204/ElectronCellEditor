@@ -33,7 +33,7 @@ contextBridge.exposeInMainWorld("api", {
     // if (true || validChannels.includes(channel)) {
     ipcRenderer.send(channel, data);
     console.log(`SENDING ${channel}`);
-    // console.log(data);
+    console.log(data);
     // }
   },
   sendSync: (channel: string, data?: unknown) => {

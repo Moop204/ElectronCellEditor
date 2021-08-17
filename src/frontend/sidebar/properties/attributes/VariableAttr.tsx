@@ -28,10 +28,10 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
     window.api.sendSync("global-variable");
   const initVal = value;
   // Refactor out
-  const name = window.api.sendSync("parent-name");
+  // const name = window.api.sendSync("parent-name");
   return (
     <FormControl fullWidth>
-      <Autocomplete
+      {/* <Autocomplete
         id="editingVariable"
         options={validVariable.map((v: VariableDescriptor) => v.variable)}
         defaultValue={value}
@@ -44,9 +44,9 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
           />
         )}
         onChange={(e, v) => onChange(title, v, index)}
-      />
+      /> */}
 
-      {/* <Select
+      <Select
         labelId="editingVariable"
         id="editingVariable"
         name="editingVariable"
@@ -54,6 +54,7 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
         onChange={(e) => onChange(title, e.target.value, index)}
         label="editingVariable"
         input={<Input />}
+        variant="outlined"
       >
         {validVariable.map((v: VariableDescriptor) => {
           return (
@@ -62,7 +63,7 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
             </MenuItem>
           );
         })}
-      </Select> */}
+      </Select>
     </FormControl>
   );
 };
