@@ -30,7 +30,7 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
   // Refactor out
   // const name = window.api.sendSync("parent-name");
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth id={title}>
       {/* <Autocomplete
         id="editingVariable"
         options={validVariable.map((v: VariableDescriptor) => v.variable)}
@@ -45,16 +45,21 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
         )}
         onChange={(e, v) => onChange(title, v, index)}
       /> */}
+      <InputLabel htmlFor={`${title}-label`}>{title}</InputLabel>
 
       <Select
-        labelId="editingVariable"
+        labelId={`${title}-label`}
         id="editingVariable"
         name="editingVariable"
         value={initVal}
         onChange={(e) => onChange(title, e.target.value, index)}
-        label="editingVariable"
+        label={title}
         // input={<Input />}
         variant="outlined"
+        inputProps={{
+          name: "age",
+          id: "outlined-age-native-simple",
+        }}
       >
         {validVariable.map((v: VariableDescriptor) => {
           return (

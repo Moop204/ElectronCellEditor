@@ -159,6 +159,9 @@ const updateEvent = (
       `UPDATE AT'update-content-B'TRIBUTE: Failed to identify attribute ${attribute}`
     );
   }
+
+  console.log("CURELM IS ");
+  console.log(curElm);
   return { newModel, newCurrentElement };
 };
 

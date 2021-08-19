@@ -15,6 +15,7 @@ import { initial } from "lodash";
 
 import libCellMLModule from "./mainLibcellml/libcellml.js";
 import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+
 import { Elements } from "../types/Elements";
 import { EditorElement } from "../types/EditorElement";
 
@@ -61,9 +62,9 @@ class LibcellmlProcessor implements CellmlProcessor {
   // Create a new Variable
   buildVariable(
     name: string,
-    varInterface: string,
-    initialValue: string,
-    units: string
+    units: string,
+    varInterface?: string,
+    initialValue?: string
   ): Variable {
     const newVariable: Variable = new this._cellml.Variable();
     newVariable.setName(name as string);
@@ -138,6 +139,10 @@ class LibcellmlProcessor implements CellmlProcessor {
     element.addComponent(newComponent);
   }
 
+  addVariable(element: Component, newVariable: Variable): void {
+    element.addVariable(newVariable);
+  }
+
   // Remove
   removeComponent(element: ComponentEntity, targetName: string) {
     const removed = element.removeComponentByName(targetName, true);
@@ -146,6 +151,8 @@ class LibcellmlProcessor implements CellmlProcessor {
     }
     return element;
   }
+
+  // Connect
 
   // Find elements from Model
 

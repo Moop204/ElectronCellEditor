@@ -48,7 +48,7 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   // TODO: Remove for production
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

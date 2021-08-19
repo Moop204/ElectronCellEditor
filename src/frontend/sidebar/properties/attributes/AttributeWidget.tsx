@@ -37,10 +37,18 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
     enqueueSnackbar("Updated attributes", { variant: "info" });
   };
 
+  const notifyError = () => {
+    enqueueSnackbar("Something went wrong with the attributes", {
+      variant: "error",
+    });
+  };
+
   const submitForm = (e: any) => {
     e.preventDefault();
     let noError = true;
+    console.log(e.currentTarget.elements);
     Object.keys(attribute).map((attrTitle, index) => {
+      console.log("LOoking for " + attrTitle);
       noError =
         noError &&
         handleChange(
@@ -52,6 +60,8 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
     if (noError) {
       updateAttribute();
       notifyUpdate();
+    } else {
+      notifyError();
     }
   };
 

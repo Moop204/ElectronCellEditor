@@ -78,7 +78,6 @@ const Dashboard: FunctionComponent = () => {
   useEffect(() => {
     const updateContentFn = (event: Event, content: string) => {
       setContentExist(content);
-      console.log("Update content B");
       window.api.send("get-element");
     };
     window.api.receive("res-update-content", updateContentFn);
@@ -186,7 +185,8 @@ const Dashboard: FunctionComponent = () => {
                     <ConciseView
                       contentExist={contentExist}
                       setContentExist={setContentExist}
-                      key="concise-view"
+                      // key="concise-view"
+                      key={contentExist}
                     />
                   )}
                 </Route>

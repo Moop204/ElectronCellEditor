@@ -36,10 +36,8 @@ class CellmlModel {
   }
 
   // Content
-  setContent(content: string, m: Model) {
+  setContent(content: string) {
     this._content = content;
-    this._type = Elements.model;
-    this._current = m;
   }
 
   getContent() {

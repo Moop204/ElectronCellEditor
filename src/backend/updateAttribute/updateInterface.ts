@@ -23,7 +23,6 @@ const updateInterface = (
   value: any,
   currentElement: Variable
 ) => {
-  const modelCopy = model.clone();
   const parentName = (currentElement?.parent() as Component).name();
   switch (element) {
     case Elements.variable:

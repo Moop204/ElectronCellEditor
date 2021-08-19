@@ -14,9 +14,9 @@ const addVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
 
   const newVariable = fm._processor.buildVariable(
     name,
+    units,
     varInterface,
-    initialValue,
-    units
+    initialValue
   );
 
   // Add to Model

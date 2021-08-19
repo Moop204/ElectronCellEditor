@@ -15,6 +15,7 @@ import { VariableAttr } from "./VariableAttr";
 import { EditMathDialog } from "./EditMathDialog";
 import { UnitsAttribute } from "./UnitsAttribute";
 import _ from "lodash";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -77,32 +78,72 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
     const validInterface = AllInterfaceType();
 
     return (
-      <Grid container item xs={12}>
-        <Grid item xs={2}>
+      <>
+        {/* <Grid item xs={2}>
           <InputLabel>{processAttribute(title)}</InputLabel>
-        </Grid>
-        <Grid item xs={10}>
-          <FormControl fullWidth>
-            <Select
-              labelId="interface"
-              id="interface"
-              name="interface"
-              value={value}
-              onChange={(e) => onChange(title, e.target.value, index)}
-              label="units"
-              input={<Input />}
-            >
-              {validInterface.map((v: string) => {
-                return (
-                  <MenuItem key={v} value={v.toLowerCase()}>
-                    {v}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
+        </Grid> */}
+        {/* <Grid item xs={10}> */}
+        <FormControl variant="outlined" fullWidth id={title}>
+          <InputLabel id="interface-label">interface</InputLabel>
+          <Select
+            labelId="interface-label"
+            id="interfaceType"
+            value={value}
+            fullWidth
+            onChange={(e) => onChange(title, e.target.value, index)}
+            label="units"
+            // input={<Input />}
+            // input={
+            //   <input
+            //     aria-hidden="true"
+            //     className="MuiSelect-nativeInput"
+            //     id="interfaceType"
+            //   />
+            // }
+            native
+          >
+            {validInterface.map((v: string) => {
+              return (
+                <option key={v} value={v.toLowerCase()}>
+                  {v}
+                </option>
+              );
+            })}
+          </Select>
+        </FormControl>
+        {/* </Grid> */}
+
+        {/* <Autocomplete
+          id={title}
+          options={validInterface}
+          fullWidth
+          classes={
+            {
+              // option: style.option,
+            }
+          }
+          autoHighlight
+          defaultValue={value}
+          value={value}
+          getOptionLabel={(option: string) => option}
+          renderOption={(option: string) => (
+            <React.Fragment>{option}</React.Fragment>
+          )}
+          renderInput={(params: any) => (
+            <TextField
+              {...params}
+              label={"interface"}
+              variant="filled"
+              inputProps={{
+                ...params.inputProps,
+              }}
+            />
+          )}
+          onChange={(e, val) => {
+            onChange(title, val, index);
+          }}
+        /> */}
+      </>
     );
   }
 
@@ -194,13 +235,17 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
           <TextField
             error={error}
             id={title}
-            value={value}
+            defaultValue={value}
+            label="initial value"
+            variant="outlined"
             onChange={(e) => {
               if (e.target.value.match(/[^a-zA-Z_0-9]/)) {
                 setError(true);
+                e.target.value = localValue;
               } else {
                 setError(false);
-                onChange(title, e.target.value, index);
+                setLocalValue(e.target.value);
+                // onChange(title, e.target.value, index);
               }
             }}
             helperText={
@@ -238,7 +283,7 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
 
     return (
       <div>
-        <Grid container item direction="row">
+        <Grid container item direction="row" style={{ margin: "4px" }}>
           {/* <Grid container item xs={12}> */}
           {/* <Grid item xs={2}>
               <InputLabel id={title}>{processAttribute(title)}</InputLabel>

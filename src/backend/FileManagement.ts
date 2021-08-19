@@ -82,19 +82,22 @@ export default class FileManagement {
   }
 
   async updateContent(s: string): Promise<void> {
-    this._model.setContent(s, this._processor.generateModel(s));
+    this._model.setContent(s);
     // if (!this._cellmlLoaded) {
     //   await this.init();
     // }
-    const validator = validateModel(this._processor, s);
+    console.log("PRE UPDATE CONTENT " + elmToStr(this._model.getType()));
+
+    // const validator = validateModel(this._processor, s);
     if (
-      this._model.getType() === Elements.none ||
-      validator.issueCount() === 0
+      this._model.getType() === Elements.none
+      // ||validator.issueCount() === 0
     ) {
       this._model.setCurrent(this._processor.generateModel(s), Elements.model);
     } else {
       console.log("Invalid update content state");
     }
+    console.log("POST UPDATE CONTENT " + elmToStr(this._model.getType()));
     if (ipcMain) ipcMain.emit("res-update-content", this._model.getContent());
   }
 
@@ -131,13 +134,17 @@ export default class FileManagement {
       }
       console.log("descriptor");
       console.log(updateDescriptor);
+      console.log("BEFORE FM UPDATEVENT" + elmToStr(fm._model.getType()));
+
       const { newCurrentElement, newModel } = updateEvent(
         model,
         updateDescriptor,
         fm
       );
+      console.log("AFTER FM UPDATEVENT" + elmToStr(fm._model.getType()));
       this._model.setCurrent(newCurrentElement);
       await fm.updateContentFromModel(newModel);
+      console.log("POST CONTENTFROMMODEL" + elmToStr(fm._model.getType()));
     }
   };
 
@@ -317,7 +324,7 @@ export default class FileManagement {
           //event.returnValue("a");
         }
         const prop = this.getCurrentAsSelection();
-        event.reply("res-get-element", prop.prop);
+        if (ipcMain) event.reply("res-get-element", prop.prop);
       }
     );
 

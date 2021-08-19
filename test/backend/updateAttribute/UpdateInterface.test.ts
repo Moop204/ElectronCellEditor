@@ -1,6 +1,8 @@
 import assert from "assert";
+import { CellmlProcessor } from "../../../src/backend/CellmlProcessor";
 import FileManagement from "../../../src/backend/FileManagement";
-import { Elements } from "../../../src/types/Elements";
+import { CellmlModel } from "../../../src/backend/model/CellmlModel";
+import { Elements, elmToStr } from "../../../src/types/Elements";
 import { Component, Model, Variable } from "../../../src/types/ILibcellml";
 import { IUpdate } from "../../../src/types/IQuery";
 
@@ -10,19 +12,17 @@ describe("Updating interface attribute", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
+    const modeller: CellmlProcessor = fm._processor;
 
-    c.addVariable(v);
-    m.addComponent(c);
+    const m: Model = modeller.buildModel("model");
+    const c: Component = modeller.buildComponent("c1");
 
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(v, Elements.variable);
+    const v: Variable = modeller.buildVariable("v1", "second");
+    modeller.addVariable(c, v);
+    modeller.addComponent(m, c);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(v, Elements.variable);
   });
 
   it("Updating interface with public", async () => {
@@ -35,10 +35,15 @@ describe("Updating interface attribute", function () {
       attribute: "interface",
       value: "public",
     };
-
+    console.log("PRE UPDATE" + elmToStr(fm._model.getType()));
     fm.update([update], fm.getContent(), fm);
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    console.log("POST UDATE" + elmToStr(fm._model.getType()));
+
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
+    console.log("END " + elmToStr(fm._model.getType()));
+
+    console.log(newCurrentElement);
     assert.strictEqual(
       (newCurrentElement as Variable).interfaceType(),
       "public",
@@ -66,8 +71,8 @@ describe("Updating interface attribute", function () {
     };
 
     fm.update([update], fm.getContent(), fm);
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Variable).interfaceType(),
       "private",
@@ -95,8 +100,8 @@ describe("Updating interface attribute", function () {
     };
 
     fm.update([update], fm.getContent(), fm);
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Variable).interfaceType(),
       "public_and_private",

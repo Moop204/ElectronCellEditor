@@ -2,6 +2,7 @@ import { EditorElement } from "../types/EditorElement";
 import { Elements } from "../types/Elements";
 import {
   Component,
+  ComponentEntity,
   Model,
   Units,
   Validator,
@@ -24,7 +25,8 @@ interface CellmlProcessor {
     mapId: string,
     connectionId: string
   ): boolean;
-
+  addComponent(element: ComponentEntity, newComponent: Component): void;
+  addVariable(element: Component, newComponent: Variable): void;
   validateModel(m: Model): Validator;
   // addVariable(c: Component, name: string, units: string): Model;
   // addComponent(
@@ -65,9 +67,9 @@ interface CellmlProcessor {
 
   buildVariable(
     name: string,
-    varInterface: string,
-    initialValue: string,
-    units: string
+    units: string,
+    varInterface?: string,
+    initialValue?: string
   ): Variable;
 
   buildUnits(name: string, source?: string, component_ref?: string): Units;
