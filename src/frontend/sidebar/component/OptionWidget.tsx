@@ -17,8 +17,6 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { ISidebar } from "../ISidebar";
 import { SearchElement } from "./search/SearchElement";
-import SearchIcon from "@material-ui/icons/Search";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import { NewFileButton } from "./NewFileButton";
 
 const useStyle = makeStyles(() =>
@@ -41,7 +39,6 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
   const [elementSearch, setElementSearch] = useState(false);
-
   useEffect(() => {
     setBaseContent(content);
   }, []);

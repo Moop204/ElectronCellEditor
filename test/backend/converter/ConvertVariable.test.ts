@@ -14,13 +14,8 @@ describe("Converting CellML Variables into property format", function () {
   });
 
   it("Converting barest Variable", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const component: Component = new fm._cellml.Component();
-    component.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
+    const processor = fm._processor;
+    const v: Variable = processor.buildVariable("v1", "second");
     const convertedElement = convertSelectedElement(Elements.variable, v, fm);
 
     // Check attributes of element are preserved
@@ -33,14 +28,8 @@ describe("Converting CellML Variables into property format", function () {
     assert.strictEqual(convertedElement.unit.length, 0);
   });
   it("Converting Variable with interface", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const component: Component = new fm._cellml.Component();
-    component.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
-    v.setInterfaceTypeByString("public");
+    const processor = fm._processor;
+    const v: Variable = processor.buildVariable("v1", "second", "public");
     const convertedElement = convertSelectedElement(Elements.variable, v, fm);
 
     // Check attributes of element are preserved
@@ -55,14 +44,8 @@ describe("Converting CellML Variables into property format", function () {
     assert.strictEqual(convertedElement.unit.length, 0);
   });
   it("Converting Variable with initial value", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const component: Component = new fm._cellml.Component();
-    component.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
-    v.setInitialValueByString("245");
+    const processor = fm._processor;
+    const v: Variable = processor.buildVariable("v1", "second", "", "245");
     const convertedElement = convertSelectedElement(Elements.variable, v, fm);
 
     // Check attributes of element are preserved

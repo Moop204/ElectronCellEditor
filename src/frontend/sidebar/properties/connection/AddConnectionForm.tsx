@@ -128,7 +128,6 @@ const AddConnectionForm: FunctionComponent<IEditConnectionForm> = ({
         <Grid item>
           <Autocomplete
             id="variable1"
-            style={{ width: 300 }}
             options={variables1}
             classes={{
               option: style.option,

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-          <model xmlns="http://www.cellml.org/cellml/2.0#" name="multipleImportedUnit">
-	  <component name="root"/>
-	  <component name="L1_c1"/>
-          <units prefix="1" name="normalUnit"/>
-      </model>
-

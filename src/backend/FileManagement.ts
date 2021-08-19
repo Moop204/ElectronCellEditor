@@ -1,4 +1,4 @@
-99; /* eslint-disable no-case-declarations */
+/* eslint-disable no-case-declarations */
 import { ipcMain, BrowserWindow, IpcMainEvent } from "electron";
 import { convertSelectedElement } from "./converter/convertElement";
 import { Elements, elmToStr } from "../types/Elements";
@@ -30,11 +30,6 @@ import { ChildDetail } from "../types/ChildDetail";
 const fs = require("fs");
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-
-// const libcellModule = require("libcellml.js/libcellml.common");
-
-// import libCellMLModule from "./mainLibcellml/libcellml.js";
-// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { IProperties } from "../types/IProperties";
 import { IssueDescriptor } from "../frontend/sidebar/issues/Issue";
@@ -281,35 +276,32 @@ export default class FileManagement {
         await this.saveFile();
         event.reply("receive-filename", this._model.getFile());
       }
+      // const type = this._model.getType();
+      // if (type === Elements.model) return;
+      // const cur = this._model.getCurrent();
+      // const parent = cur.parent();
+      // console.log("To Parent");
+      // console.log("From " + elmToStr(type));
+      // let newType = Elements.component;
+      // switch (type) {
+      //   case Elements.component:
+      //     if (
+      //       this._processor.matchElement(
+      //         parent as EditorElement,
+      //         Elements.model
+      //       )
+      //     ) {
+      //       newType = Elements.model;
+      //     }
+      //     break;
+      //   case Elements.units:
+      //     newType = Elements.model;
+      //     break;
+      // }
+      // this._model.setCurrent(parent as EditorElement, newType);
+      // const selection = this.getCurrentAsSelection();
+      // event.reply("res-select-element", selection);
     );
-
-    ipcMain.on("to-parent", async (event: IpcMainEvent) => {
-      const type = this._model.getType();
-      if (type === Elements.model) return;
-      const cur = this._model.getCurrent();
-      const parent = cur.parent();
-      console.log("To Parent");
-      console.log("From " + elmToStr(type));
-      let newType = Elements.component;
-      switch (type) {
-        case Elements.component:
-          if (
-            this._processor.matchElement(
-              parent as EditorElement,
-              Elements.model
-            )
-          ) {
-            newType = Elements.model;
-          }
-          break;
-        case Elements.units:
-          newType = Elements.model;
-          break;
-      }
-      this._model.setCurrent(parent as EditorElement, newType);
-      const selection = this.getCurrentAsSelection();
-      event.reply("res-select-element", selection);
-    });
 
     // Used in Spatial view
     // Assume starting valid

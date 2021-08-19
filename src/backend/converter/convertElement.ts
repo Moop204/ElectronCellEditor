@@ -12,6 +12,7 @@ import { convertComponent } from "./convertComponent";
 import { convertModel } from "./convertModel";
 import { convertReset } from "./convertReset";
 import { convertUnits } from "./convertUnits";
+
 import { convertVariable } from "./convertVariable";
 
 // Convert currently selected element into properties-ready format

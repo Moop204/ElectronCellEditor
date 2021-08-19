@@ -1,7 +1,6 @@
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import HelpIcon from "@material-ui/icons/Help";
 import React, { useState, FunctionComponent } from "react";
@@ -38,9 +37,9 @@ const HelpPopup: FunctionComponent<IHelpDoc> = ({
   const style = useStyle();
   return (
     <div>
-      <IconButton edge="end" onClick={() => setOpenHelp(true)} color="primary">
+      <Button onClick={() => setOpenHelp(true)}>
         <HelpIcon />
-      </IconButton>
+      </Button>
       <Dialog
         disableEscapeKeyDown
         open={openHelp}
