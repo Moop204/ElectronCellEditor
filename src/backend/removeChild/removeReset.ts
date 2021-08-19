@@ -14,7 +14,7 @@ const removeReset = async (fm: FileManagement, child: ISearch) => {
   const index = child.index;
 
   // Remove element in properties
-  let curElm = fm.getCurrentComponent() as Component;
+  let curElm = fm.getCurrent() as Component;
   const componentName = curElm.name();
   // curElm = curElm.clone();
   curElm.removeResetByIndex(index);
@@ -23,7 +23,7 @@ const removeReset = async (fm: FileManagement, child: ISearch) => {
   m.componentByName(componentName, true).removeResetByIndex(index);
   await fm.updateContentFromModel(m);
 
-  fm.setCurrentComponent(curElm as EditorElement);
+  fm.setCurrent(curElm as EditorElement);
 };
 
 export { removeReset };

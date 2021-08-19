@@ -13,7 +13,7 @@ const addReset = async (fm: FileManagement, child: ChildResetDetail) => {
 
   // Find the variables
   // NOTE: Valid variables are within the same component
-  const parentName = (fm.getCurrentComponent() as Component).name();
+  const parentName = (fm.getCurrent() as Component).name();
   const parentComponent = m.componentByName(parentName as string, true);
   const v = parentComponent.variableByName(reset_variable);
   const vTest = parentComponent.variableByName(test_variable);
@@ -30,7 +30,7 @@ const addReset = async (fm: FileManagement, child: ChildResetDetail) => {
   await fm.updateContent(fm.displayModel(m));
 
   // Update current element
-  fm.setCurrentComponent(parentComponent.clone(), Elements.component);
+  fm.setCurrent(parentComponent.clone(), Elements.component);
 };
 
 export { addReset };

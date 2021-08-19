@@ -11,7 +11,7 @@ import { modelToString } from "./modelToString";
 const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
   const { prefix, multiplier, exponent, units } = child.attribute;
   const m = fm.parseModel(fm.getContent());
-  const parentName = (fm.getCurrentComponent() as Units).name();
+  const parentName = (fm.getCurrent() as Units).name();
 
   // Find the units
   const parentUnits = m.unitsByName(parentName);
@@ -37,7 +37,7 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
 
   await fm.updateContent(fm.displayModel(m));
   // Update current element
-  fm.setCurrentComponent(parentUnits, Elements.units);
+  fm.setCurrent(parentUnits, Elements.units);
 };
 
 export { addUnit };

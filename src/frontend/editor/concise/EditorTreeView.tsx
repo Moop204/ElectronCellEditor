@@ -85,7 +85,7 @@ const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
           }
           return (
             <>
-              <Divider orientation="vertical" flexItem />
+              <Divider orientation="vertical" variant="middle" flexItem />
               <Grid item>
                 <Typography variant="subtitle2">{key}:</Typography>
               </Grid>

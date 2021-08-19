@@ -70,6 +70,7 @@ const findElement = (
     case Elements.variable:
       {
         const curComp = curElm as Component;
+        model.setType(Elements.variable);
         model.setCurrent(
           curComp.variableByName(name as string),
           Elements.variable

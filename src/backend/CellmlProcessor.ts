@@ -1,3 +1,5 @@
+import { EditorElement } from "../types/EditorElement";
+import { Elements } from "../types/Elements";
 import {
   Component,
   Model,
@@ -68,16 +70,11 @@ interface CellmlProcessor {
     units: string
   ): Variable;
 
-  buildUnits(
-    name: string,
-    imported: boolean,
-    source: string,
-    component_ref: string
-  ): Units;
-
+  buildUnits(name: string, source?: string, component_ref?: string): Units;
   // Utility
   printModel(m: Model): string;
   generateModel(content: string): Model;
+  matchElement(element: EditorElement, type: Elements): boolean;
 }
 
 export { CellmlProcessor };

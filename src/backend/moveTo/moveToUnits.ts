@@ -17,7 +17,7 @@ const moveToUnits = (
   } else {
     currentElement = parentElement.unitsByIndex(index);
   }
-  fm.setCurrentComponent(currentElement, Elements.units);
+  fm.setCurrent(currentElement, Elements.units);
 };
 
 export { moveToUnits };

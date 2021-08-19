@@ -180,7 +180,7 @@ const Dashboard: FunctionComponent = () => {
                 </Tabs>
               </AppBar>
               <Switch>
-                <Route exact path="/concise">
+                <Route path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
                     <ConciseView

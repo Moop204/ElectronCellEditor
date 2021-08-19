@@ -4,7 +4,7 @@ import { VariableDescriptor } from "./VariableDescriptor";
 
 // Obtain variables of the selected component
 const getAllVariableNames = async (fm: FileManagement) => {
-  const current = fm.getCurrentComponent() as Component;
+  const current = fm.getCurrent() as Component;
   console.log("Current?");
   console.log(current);
   const varCount = current.variableCount();

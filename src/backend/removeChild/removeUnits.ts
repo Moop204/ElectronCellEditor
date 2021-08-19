@@ -19,10 +19,10 @@ const removeUnits = async (fm: FileManagement, child: ISearch) => {
   await fm.updateContentFromModel(m);
 
   // Remove component in properties
-  let curElm = fm.getCurrentComponent() as Model;
+  let curElm = fm.getCurrent() as Model;
   curElm.removeUnitsByName(name);
 
-  fm.setCurrentComponent(curElm as EditorElement);
+  fm.setCurrent(curElm as EditorElement);
 };
 
 export { removeUnits };

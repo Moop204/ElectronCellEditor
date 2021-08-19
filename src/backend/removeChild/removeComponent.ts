@@ -11,18 +11,25 @@ const removeComponent = async (fm: FileManagement, child: ISearch) => {
   const name = child.name;
 
   // Remove component in editor
-  const removed = m.removeComponentByName(name, true);
-  if (!removed) {
-    console.log("Failed to remove Component");
-  }
+  // const removed = m.removeComponentByName(name, true);
+  // if (!removed) {
+  //   console.log("Failed to remove Component");
+  // }
+  fm._processor.removeComponent(m, name);
+
   await fm.updateContentFromModel(m);
 
   // Remove component in properties
-  let curElm = fm.getCurrentComponent() as Component | Model;
-  //curElm = curElm.clone();
-  curElm.removeComponentByName(name, false);
+  let curElm = fm.getCurrent() as Component | Model;
+  const currentName = curElm.name();
+  if (m.name() === currentName) {
+    curElm = m;
+  } else {
+    curElm = fm._processor.findComponent(m, name);
+    fm._processor.removeComponent(curElm, name);
+  }
 
-  fm.setCurrentComponent(curElm as EditorElement);
+  fm.setCurrent(curElm as EditorElement);
 };
 
 export { removeComponent };

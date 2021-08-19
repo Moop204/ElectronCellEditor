@@ -12,7 +12,7 @@ const moveToReset = (
   console.log(index);
   const parentElement = m.componentByName(parent, true);
   let currentElement = parentElement.reset(index);
-  fm.setCurrentComponent(currentElement, Elements.reset);
+  fm.setCurrent(currentElement, Elements.reset);
 };
 
 export { moveToReset };

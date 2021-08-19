@@ -11,7 +11,7 @@ import { Elements } from "../../types/Elements";
 // @child - Identifies Connection to be removed by name
 const removeConnection = async (fm: FileManagement, child: ISearch) => {
   const m = fm.parseModel(fm.getContent());
-  const currentVariable = fm.getCurrentComponent() as Variable;
+  const currentVariable = fm.getCurrent() as Variable;
   const parentName = (currentVariable.parent() as Variable).name();
   const firstVar = m
     .componentByName(parentName, true)
@@ -27,7 +27,7 @@ const removeConnection = async (fm: FileManagement, child: ISearch) => {
   await fm.updateContentFromModel(m);
   // const compParent = m.componentByName(parentName, true);
   // const newVariable = compParent.variableByName(currentVariable.name());
-  fm.setCurrentComponent(firstVar, Elements.variable);
+  fm.setCurrent(firstVar, Elements.variable);
 };
 
 export { removeConnection };

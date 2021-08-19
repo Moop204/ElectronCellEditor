@@ -138,6 +138,10 @@ const PropertiesWidget: FunctionComponent = () => {
     attrVal: string,
     index: number
   ) => {
+    if (attrVal === "" && attrType === "name") {
+      return false;
+    }
+
     const newAbstractModel = {
       ...abstractModel,
       attribute: { ...abstractModel?.attribute, [attrType]: attrVal },
@@ -162,6 +166,7 @@ const PropertiesWidget: FunctionComponent = () => {
       }
     }
     if (newChangeFlag) diffSet.push(change);
+    return true;
   };
 
   const sendAttributeUpdate = () => {

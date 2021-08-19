@@ -11,7 +11,7 @@ const removeUnit = async (fm: FileManagement, child: ISearch) => {
   const index = child.index;
 
   // Remove element in properties
-  let curElm = fm.getCurrentComponent() as Units;
+  let curElm = fm.getCurrent() as Units;
   const componentName = curElm.name();
   const removed = curElm.removeUnitByIndex(index);
   if (!removed) {
@@ -21,7 +21,7 @@ const removeUnit = async (fm: FileManagement, child: ISearch) => {
   m.unitsByName(componentName).removeUnitByIndex(index);
   await fm.updateContentFromModel(m);
 
-  fm.setCurrentComponent(curElm as EditorElement);
+  fm.setCurrent(curElm as EditorElement);
 };
 
 export { removeUnit };

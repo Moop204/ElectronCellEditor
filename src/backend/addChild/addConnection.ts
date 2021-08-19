@@ -31,7 +31,7 @@ const addConnection = async (
   const id = component1 + variable1 + "_" + component2 + variable2;
   fm._processor.addEquivalence(var1, var2, "map_" + id, "connect_" + id);
 
-  fm.setCurrentComponent(fm.getCurrentComponent());
+  fm.setCurrent(fm.getCurrent());
   await fm.updateContent(fm.displayModel(m));
 };
 

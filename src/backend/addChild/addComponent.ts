@@ -24,14 +24,14 @@ const addComponent = async (
 
   // Update current component and model, either a Model or a Component
   if (parentType === Elements.model) {
-    m.addComponent(newComponent);
-    fm.setCurrentComponent(m, Elements.model);
+    fm._processor.addComponent(m, newComponent);
+    fm.setCurrent(m, Elements.model);
   } else {
-    const parentName = (fm.getCurrentComponent() as Model | Component).name();
-    const parentComponent = m.componentByName(parentName, true);
-    parentComponent.addComponent(newComponent);
-    const curComp = m.componentByName(parentName as string, true);
-    fm.setCurrentComponent(curComp, Elements.component);
+    const parentName = (fm.getCurrent() as Model | Component).name();
+    const parentComponent = fm._processor.findComponent(m, parentName);
+    fm._processor.addComponent(parentComponent, newComponent);
+    const curComp = fm._processor.findComponent(m, parentName);
+    fm.setCurrent(curComp, Elements.component);
   }
   await fm.updateContent(fm.displayModel(m));
 };

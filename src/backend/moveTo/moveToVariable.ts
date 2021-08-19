@@ -17,7 +17,7 @@ const moveToVariable = (
   } else {
     currentElement = parentElement.variableByIndex(index);
   }
-  fm.setCurrentComponent(currentElement, Elements.variable);
+  fm.setCurrent(currentElement, Elements.variable);
 };
 
 export { moveToVariable };

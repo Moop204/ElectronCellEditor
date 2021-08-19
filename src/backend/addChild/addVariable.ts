@@ -8,7 +8,7 @@ import FileManagement from "../FileManagement";
 // @child - Describes details of the new Variable
 const addVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
   const m = fm.parseModel(fm.getContent());
-  const parentName = (fm.getCurrentComponent() as Component).name();
+  const parentName = (fm.getCurrent() as Component).name();
 
   const { name, varInterface, initialValue, units } = child.attribute;
 
@@ -28,7 +28,7 @@ const addVariable = async (fm: FileManagement, child: ChildVariableDetail) => {
   await fm.updateContent(fm.displayModel(m));
 
   // Add to cur elm
-  fm.setCurrentComponent(parentComponent, Elements.component);
+  fm.setCurrent(parentComponent, Elements.component);
 };
 
 export { addVariable };

@@ -22,7 +22,7 @@ const moveToComponent = (
   } else {
     currentElement = parentElement.componentByIndex(index);
   }
-  fm.setCurrentComponent(currentElement, Elements.component);
+  fm.setCurrent(currentElement, Elements.component);
 };
 
 export { moveToComponent };

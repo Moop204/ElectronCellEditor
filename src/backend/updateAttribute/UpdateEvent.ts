@@ -23,7 +23,7 @@ const updateEvent = (
   { element, select, attribute, value }: IUpdate,
   fm: FileManagement
 ) => {
-  const curElm = fm.getCurrentComponent();
+  const curElm = fm.getCurrent();
   let newModel = model;
   let newCurrentElement: EditorElement = curElm;
 

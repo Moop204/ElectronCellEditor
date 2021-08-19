@@ -10,7 +10,7 @@ import { PropertyAttribute } from "./PropertyAttribute";
 import { useSnackbar } from "notistack";
 import { Elements, elmToStr } from "./../../../../types/Elements";
 interface IAttributeWidget {
-  handleChange: (attrType: string, attrVal: string, index: number) => void;
+  handleChange: (attrType: string, attrVal: string, index: number) => boolean;
   attribute: Record<string, string>;
   updateAttribute: any;
   parentType: Elements;
@@ -37,33 +37,50 @@ const AttributeWidget: FunctionComponent<IAttributeWidget> = ({
     enqueueSnackbar("Updated attributes", { variant: "info" });
   };
 
+  const submitForm = (e: any) => {
+    e.preventDefault();
+    let noError = true;
+    Object.keys(attribute).map((attrTitle, index) => {
+      noError =
+        noError &&
+        handleChange(
+          attrTitle,
+          e.currentTarget.elements[attrTitle].value,
+          index
+        );
+    });
+    if (noError) {
+      updateAttribute();
+      notifyUpdate();
+    }
+  };
+
   return (
     <Grid item xs={12}>
       <Typography variant="h4" style={{ paddingLeft: "5px" }}>
         Attributes
       </Typography>
-      {Object.entries(attribute).map(([attrTitle, attrVal], idx) => (
-        <PropertyAttribute
-          title={attrTitle}
-          value={attrVal}
-          index={idx}
-          key={elmToStr(parentType) + attrTitle + attrVal}
-          // onChange={(e) => handleChange(attrTitle, e.target.value)}
-          onChange={handleChange}
-        />
-      ))}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          updateAttribute();
-          notifyUpdate();
-        }}
-        fullWidth
-        className={styles.updateButton}
-      >
-        Update Attribute
-      </Button>
+      <form onSubmit={submitForm}>
+        {Object.entries(attribute).map(([attrTitle, attrVal], idx) => (
+          <PropertyAttribute
+            title={attrTitle}
+            value={attrVal}
+            index={idx}
+            key={elmToStr(parentType) + attrTitle + attrVal}
+            // onChange={(e) => handleChange(attrTitle, e.target.value)}
+            onChange={handleChange}
+          />
+        ))}
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          fullWidth
+          className={styles.updateButton}
+        >
+          Update Attribute
+        </Button>
+      </form>
     </Grid>
   );
 };

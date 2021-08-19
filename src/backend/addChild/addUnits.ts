@@ -12,16 +12,11 @@ const addUnits = async (fm: FileManagement, child: ChildUnitsDetail) => {
   const m = fm.parseModel(fm.getContent());
 
   // Make new element with attributes specified by user
-  const newUnits = fm._processor.buildUnits(
-    name,
-    imported,
-    source,
-    component_ref
-  );
+  const newUnits = fm._processor.buildUnits(name, source, component_ref);
 
   // Get the truth and update it
   m.addUnits(newUnits);
-  fm.setCurrentComponent(m, Elements.model);
+  fm.setCurrent(m, Elements.model);
   await fm.updateContent(fm.displayModel(m));
 };
 

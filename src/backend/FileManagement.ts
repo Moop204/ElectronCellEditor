@@ -179,11 +179,11 @@ export default class FileManagement {
   }
 
   // If type not provided the currently set type is used
-  setCurrentComponent(element: EditorElement, type?: Elements) {
+  setCurrent(element: EditorElement, type?: Elements) {
     this._model.setCurrent(element, type);
   }
 
-  getCurrentComponent(): EditorElement {
+  getCurrent(): EditorElement {
     return this._model.getCurrent();
   }
 
@@ -193,20 +193,21 @@ export default class FileManagement {
 
   // Print out model
 
-  async printModel(): Promise<void> {
-    const content = this._model.getContent();
-    console.log("PRINTING OUT MODEL");
-    console.log(content);
+  // async printModel(): Promise<void> {
+  //   const content = this._model.getContent();
+  //   console.log("PRINTING OUT MODEL");
+  //   console.log(content);
 
-    const model = this._processor.generateModel(content);
-    for (let i = 0; i < model.componentCount(); i += 1) {
-      console.log(model.componentByIndex(i).name());
-    }
-  }
+  //   const model = this._processor.generateModel(content);
+  //   for (let i = 0; i < model.componentCount(); i += 1) {
+  //     console.log(model.componentByIndex(i).name());
+  //   }
+  // }
 
   // Internal
-  getCurrentAsSelection(element: Elements): ISelection {
-    this._model.setType(element);
+  getCurrentAsSelection(): ISelection {
+    // this._model.setType(element);
+    const element = this._model.getType();
     const prop = convertSelectedElement(
       element,
       this._model.getCurrent(),
@@ -261,7 +262,7 @@ export default class FileManagement {
       async (event: IpcMainEvent, newContent: string) => {
         await this.updateContent(newContent);
         this.resetToModel();
-        const selection = this.getCurrentAsSelection(this._model.getType());
+        const selection = this.getCurrentAsSelection();
         event.reply("res-select-element", selection);
       }
     );
@@ -299,7 +300,7 @@ export default class FileManagement {
           break;
       }
       this._model.setCurrent(parent as EditorElement, newType);
-      const selection = this.getCurrentAsSelection(newType);
+      const selection = this.getCurrentAsSelection();
       event.reply("res-select-element", selection);
     });
 
@@ -315,6 +316,8 @@ export default class FileManagement {
           event.reply("res-update-content", this._model.getContent());
           //event.returnValue("a");
         }
+        const prop = this.getCurrentAsSelection();
+        event.reply("res-get-element", prop.prop);
       }
     );
 
@@ -353,7 +356,7 @@ export default class FileManagement {
           this.componentRoot = this._model.getCurrent() as Component;
         }
         findElement(this._model, select, element, this._model.getCurrent());
-        const selection = this.getCurrentAsSelection(element);
+        const selection = this.getCurrentAsSelection();
         event.reply("res-select-element", selection);
       }
     );
@@ -371,7 +374,7 @@ export default class FileManagement {
     // OUTPUT
     // Sets the raw truth directly to frontend
     ipcMain.on("get-element", (event: IpcMainEvent) => {
-      const prop = this.getCurrentAsSelection(this._model.getType());
+      const prop = this.getCurrentAsSelection();
       event.reply("res-get-element", prop.prop);
     });
 
@@ -384,7 +387,7 @@ export default class FileManagement {
         const m: Model = this._processor.generateModel(file);
         this._model.setCurrent(m, Elements.model);
 
-        const prop = this.getCurrentAsSelection(this._model.getType());
+        const prop = this.getCurrentAsSelection();
         event.reply("res-get-element", prop.prop);
       } else {
         console.log(`Issue length: ${issues.length}`);
@@ -423,7 +426,7 @@ export default class FileManagement {
       "delete-element",
       async (event: IpcMainEvent, { element, select }: ISelect) => {
         removeElement(this, element, select);
-        const prop = this.getCurrentAsSelection(this._model.getType());
+        const prop = this.getCurrentAsSelection();
         event.reply("res-get-element", prop.prop);
         event.reply("res-update-content", this._model.getContent());
       }
@@ -455,7 +458,7 @@ export default class FileManagement {
       moveTo(move, this);
       console.log("POST MOVE");
       console.log(elmToStr(this._model.getType()));
-      const selection = this.getCurrentAsSelection(this._model.getType());
+      const selection = this.getCurrentAsSelection();
       console.log("ABOUT TO REPLY");
       event.reply("res-select-element", selection);
     });

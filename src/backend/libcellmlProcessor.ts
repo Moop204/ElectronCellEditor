@@ -1,5 +1,6 @@
 import {
   Component,
+  ComponentEntity,
   ImportSource,
   Model,
   Parser,
@@ -100,14 +101,10 @@ class LibcellmlProcessor implements CellmlProcessor {
   // @imported      - Whether or not the new component is imported
   // @source        - Location of file where component is imported from
   // @component_ref - Name of Units in the source file that is being imported
-  buildUnits(
-    name: string,
-    imported: boolean,
-    source: string,
-    component_ref: string
-  ): Units {
+  buildUnits(name: string, source?: string, component_ref?: string): Units {
     const newUnits: Units = new this._cellml.Units();
     newUnits.setName(name as string);
+    const imported = source && component_ref;
     if (imported) {
       const importSource: ImportSource = new this._cellml.ImportSource();
       importSource.setUrl(source);
@@ -134,6 +131,26 @@ class LibcellmlProcessor implements CellmlProcessor {
 
   generateModel(content: string): Model {
     return this._parser.parseModel(content);
+  }
+
+  // Add element to another element
+  addComponent(element: ComponentEntity, newComponent: Component) {
+    element.addComponent(newComponent);
+  }
+
+  // Remove
+  removeComponent(element: ComponentEntity, targetName: string) {
+    const removed = element.removeComponentByName(targetName, true);
+    if (!removed) {
+      console.log("Failed to remove Component");
+    }
+    return element;
+  }
+
+  // Find elements from Model
+
+  findComponent(model: Model, name: string) {
+    return model.componentByName(name, true);
   }
 
   //// Static ////

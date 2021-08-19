@@ -150,9 +150,12 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
       <TextField
         error={error}
         id={title}
-        value={localValue}
+        defaultValue={localValue}
         variant="outlined"
         label={processAttribute(title)}
+        onSubmit={() => {
+          console.log("I submit ><><><><><><>");
+        }}
         onChange={(e) => {
           if (
             e.target.value.match(/^[a-zA-Z_][a-zA-Z_0-9]*$/) ||
@@ -170,10 +173,11 @@ const PropertyAttribute: FunctionComponent<IPropertyAttribute> = (props) => {
             if (!error) {
               console.log("NOTHING WRONG WITH INPUT");
               console.log(localValue);
-              onChange(title, e.target.value, index);
+              // onChange(title, e.target.value, index);
             }
           } else {
             if (!error) setError(true);
+            e.target.value = localValue;
           }
         }}
         helperText={

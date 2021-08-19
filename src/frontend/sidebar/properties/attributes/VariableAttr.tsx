@@ -53,7 +53,7 @@ const VariableAttr: FunctionComponent<IVariableAttr> = ({
         value={initVal}
         onChange={(e) => onChange(title, e.target.value, index)}
         label="editingVariable"
-        input={<Input />}
+        // input={<Input />}
         variant="outlined"
       >
         {validVariable.map((v: VariableDescriptor) => {

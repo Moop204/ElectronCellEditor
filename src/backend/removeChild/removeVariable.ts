@@ -12,7 +12,7 @@ const removeVariable = async (fm: FileManagement, child: ISearch) => {
   const name = child.name;
 
   // Remove element in properties
-  let curElm = fm.getCurrentComponent() as Component;
+  let curElm = fm.getCurrent() as Component;
   const componentName = curElm.name();
   curElm.removeVariableByName(name);
 
@@ -24,7 +24,7 @@ const removeVariable = async (fm: FileManagement, child: ISearch) => {
     console.log("Failed to remove Variable");
   }
   await fm.updateContentFromModel(m);
-  fm.setCurrentComponent(curElm as EditorElement);
+  fm.setCurrent(curElm as EditorElement);
 };
 
 export { removeVariable };
