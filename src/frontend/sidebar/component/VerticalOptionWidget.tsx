@@ -6,7 +6,7 @@ import { SpatialViewButton } from "./SpatialViewButton";
 import { VisibilityButton } from "./VisibilityButton";
 import { ISidebar } from "../ISidebar";
 import { SaveButton } from "./SaveButton";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import { NewFileButton } from "./NewFileButton";
 
 const localStyles = makeStyles(() =>
   createStyles({
@@ -53,23 +53,24 @@ const VerticalOptionWidget: FunctionComponent<ISidebar> = ({
           </Grid>
         )}
         <Grid item container direction="row" justifyContent="center" xs={12}>
-          <VisibilityButton onClick={switchSidebar} expanded={false} />
+          <VisibilityButton
+            onClick={() => {
+              switchSidebar();
+              window.api.send("validate-file", content);
+            }}
+            expanded={false}
+          />
         </Grid>
         <Grid item container direction="row" justifyContent="center" xs={12}>
           <SaveButton
             content={content}
             expanded={false}
-            color={baseContent === content ? "primary" : "secondary"}
+            color={"primary"}
             updateBaseContent={updateBaseContent}
           />
         </Grid>
         <Grid item>
-          <IconButton
-            color="primary"
-            onClick={() => window.api.send("new-file")}
-          >
-            <NoteAddIcon />
-          </IconButton>
+          <NewFileButton />
         </Grid>
       </Grid>
     </Paper>

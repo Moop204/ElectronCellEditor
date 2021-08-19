@@ -19,6 +19,7 @@ import { ISidebar } from "../ISidebar";
 import { SearchElement } from "./search/SearchElement";
 import SearchIcon from "@material-ui/icons/Search";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import { NewFileButton } from "./NewFileButton";
 
 const useStyle = makeStyles(() =>
   createStyles({
@@ -40,67 +41,72 @@ const OptionWidget: React.FunctionComponent<ISidebar> = ({
   const style = useStyle();
   const [baseContent, setBaseContent] = useState("");
   const [elementSearch, setElementSearch] = useState(false);
-  const [newFile, setNewFile] = useState(false);
 
   useEffect(() => {
     setBaseContent(content);
   }, []);
 
   return (
-    <Grid container item xs={12} className={style.options}>
-      <Grid container item xs={12}>
-        {view && (
-          <Grid item xs={2}>
-            <TextViewButton onClick={switchView} expanded={true} />
-          </Grid>
-        )}
-        {!view && (
-          <Grid item xs={2}>
-            <SpatialViewButton
-              onClick={() => {
-                switchView();
-                window.api.send("update-content", content);
-                window.api.send("get-element");
-              }}
-              expanded={true}
-            />
-          </Grid>
-        )}
-        <Grid item xs={2}>
-          <VisibilityButton onClick={switchSidebar} expanded={true} />
+    <Grid
+      container
+      item
+      xs={12}
+      direction="row"
+      justifyContent="space-around"
+      className={style.options}
+    >
+      {view && (
+        <Grid item>
+          <TextViewButton onClick={switchView} expanded={true} />
         </Grid>
-        <Grid item xs={2}>
-          <SaveButton
-            color={"primary"} //{baseContent === content ? "primary" : "secondary"}
+      )}
+      {!view && (
+        <Grid item>
+          <SpatialViewButton
+            onClick={() => {
+              switchView();
+              window.api.send("update-content", content);
+              window.api.send("get-element");
+            }}
             expanded={true}
-            content={content}
-            updateBaseContent={updateBaseContent}
           />
         </Grid>
-        {/* <Grid item xs={2}>
+      )}
+      <Grid item>
+        <VisibilityButton
+          onClick={() => {
+            switchSidebar();
+            window.api.send("validate-file", content);
+          }}
+          expanded={true}
+        />
+      </Grid>
+      <Grid item>
+        <SaveButton
+          color={"primary"} //{baseContent === content ? "primary" : "secondary"}
+          expanded={true}
+          content={content}
+          updateBaseContent={updateBaseContent}
+        />
+      </Grid>
+      {/* <Grid item xs={2}>
           <IconButton color="primary" onClick={() => setElementSearch(true)}>
             <SearchIcon />
           </IconButton>
         </Grid> */}
-        <Grid item xs={2}>
-          <IconButton
-            color="primary"
-            onClick={() => window.api.send("new-file")}
-          >
-            <NoteAddIcon />
-          </IconButton>
-        </Grid>
-        <Dialog
-          open={elementSearch}
-          onClose={() => setElementSearch(false)}
-          fullWidth
-          maxWidth="xl"
-        >
-          <DialogContent>
-            <SearchElement />
-          </DialogContent>
-        </Dialog>
+      <Grid item>
+        <NewFileButton />
       </Grid>
+      <Dialog
+        open={elementSearch}
+        onClose={() => setElementSearch(false)}
+        fullWidth
+        maxWidth="xl"
+      >
+        <DialogContent>
+          <SearchElement />
+        </DialogContent>
+      </Dialog>
     </Grid>
   );
 };

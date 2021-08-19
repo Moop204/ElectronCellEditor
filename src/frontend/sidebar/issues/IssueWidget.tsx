@@ -30,12 +30,6 @@ interface IssuesProp {
 
 const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
   const [issues, setIssues] = useState<IssueDescriptor[]>([]);
-  const [errorMode, setErrorMode] = useState<boolean>(true);
-  const [warningMode, setWarningMode] = useState<boolean>(true);
-  const [hintMode, setHintMode] = useState<boolean>(true);
-
-  const styles = useStyle();
-
   let errorCount = 0;
   let warningCount = 0;
   let hintCount = 0;
@@ -108,8 +102,8 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
     );
   }
   return (
-    <Paper style={{ height: "95vh" }}>
-      <Grid container style={{ padding: "5px" }}>
+    <Paper style={{ height: "95vh", maxHeight: "95vh", overflowY: "auto" }}>
+      <Grid container style={{ padding: "5px", paddingBottom: "16px" }}>
         <Grid item xs={5}>
           <Typography variant="h4">Issues</Typography>
         </Grid>
@@ -175,7 +169,7 @@ const IssuesWidget: FunctionComponent<IssuesProp> = ({ expanded }) => {
           </Grid>
         </Grid> */}
 
-        <Grid item md={12}>
+        <Grid item md={12} style={{ overflowY: "auto" }}>
           <IssueText issues={issues} />
         </Grid>
       </Grid>
