@@ -16,36 +16,24 @@ describe("Updating Reset attribute reset_value", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const c1 = processor.buildComponent("c1");
+    const v1 = processor.buildVariable("v1", "second");
+    const v2 = processor.buildVariable("v2", "s2cond");
+    const mathValue =
+      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
+    const r = processor.buildReset(v1, v2, 1, mathValue, mathValue);
+    processor.addVariable(c1, v2);
+    processor.addVariable(c1, v1);
+    processor.addReset(c1, r);
+    processor.addComponent(m, c1);
+    fm.updateContentFromModel(m);
+    fm.setCurrent(r, Elements.reset);
   });
 
   it("updates", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c1: Component = new fm._cellml.Component();
-    c1.setName("c1");
-    const v1: Variable = new fm._cellml.Variable();
-    v1.setName("v1");
-    v1.setUnitsByName("second");
-    const v2: Variable = new fm._cellml.Variable();
-    v2.setName("v2");
-    v2.setUnitsByName("second");
-    const r: Reset = new fm._cellml.Reset();
-    r.setOrder(1);
-    const mathValue =
-      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
-    r.setResetValue(mathValue);
-    r.setTestValue(mathValue);
-    r.setTestVariable(v1);
-    r.setVariable(v1);
-
-    c1.addVariable(v2);
-    c1.addVariable(v1);
-    c1.addReset(r);
-    m.addComponent(c1);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(r, Elements.reset, c1);
-
     const update: IUpdate = {
       element: Elements.reset,
       select: {
@@ -58,8 +46,8 @@ describe("Updating Reset attribute reset_value", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Reset).testVariable().name(),
       newValue,

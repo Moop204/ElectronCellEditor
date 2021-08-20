@@ -10,6 +10,7 @@ const updateVariable = (model: Model, curElm: Reset, value: string) => {
   console.log("Order " + value + typeof value);
   const variable = value;
   // Find variable
+  console.log(curElm);
   const parent = curElm.parent() as Component;
   const parentName = parent.name();
   const newVar = model

@@ -11,23 +11,19 @@ describe("Updating Units attribute", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const c = processor.buildComponent("c1");
+    const v = processor.buildVariable("v1", "joules");
+
+    processor.addVariable(c, v);
+    processor.addComponent(m, c);
+    fm.updateContentFromModel(m);
+    fm.setCurrent(v, Elements.variable);
   });
 
   it("Updating a Variable with standard Units", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("joules");
-
-    c.addVariable(v);
-    m.addComponent(c);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(v, Elements.variable);
-
     const update: IUpdate = {
       element: Elements.variable,
       select: {
@@ -40,8 +36,8 @@ describe("Updating Units attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Variable).units().name(),
       newName,

@@ -16,26 +16,15 @@ const addUnit = async (fm: FileManagement, child: ChildUnitDetail) => {
   // Find the units
   const parentUnits = m.unitsByName(parentName);
 
-  // Remove in case of duplication
-  parentUnits.removeUnitByReference(units);
+  fm._processor.addUnit(
+    parentUnits,
+    units,
+    prefix,
+    parseFloat(multiplier),
+    parseFloat(exponent)
+  );
 
-  if (prefix === "") {
-    parentUnits.addUnitByReferenceExponent(
-      units,
-      exponent === "" ? 1.0 : parseFloat(exponent),
-      [parentName, prefix, units, exponent, multiplier].join("_")
-    );
-  } else {
-    parentUnits.addUnitByReferenceStringPrefix(
-      units,
-      prefix,
-      exponent === "" ? 1.0 : parseFloat(exponent),
-      multiplier === "" ? 1.0 : parseFloat(multiplier),
-      [parentName, prefix, units, exponent, multiplier].join("_")
-    );
-  }
-
-  await fm.updateContent(fm.displayModel(m));
+  await fm.updateContentFromModel(m);
   // Update current element
   fm.setCurrent(parentUnits, Elements.units);
 };

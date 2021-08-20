@@ -13,22 +13,32 @@ describe("Updating Math element", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const c1 = processor.buildComponent("c1");
+
+    const c2 = processor.buildComponent("c2");
+    const mathml = `<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+    <apply><eq/>
+      <ci>v1</ci>
+      <apply><times/>
+        <cn cellml:units="dimensionless">2</cn>
+        <cn cellml:units="dimensionless">2</cn>
+      </apply>
+    </apply></math>`;
+    processor.updateMath(c2, mathml);
+    processor.addComponent(m, c1);
+    processor.addComponent(m, c2);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(m, Elements.model);
   });
 
   it("Updating Math of a Component without Math", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
+    const m = fm.getCurrent() as Model;
+    fm.setCurrent(m.componentByName("c1", true), Elements.component);
 
-    c.addVariable(v);
-    m.addComponent(c);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(c, Elements.component);
     const update: IUpdate = {
       element: Elements.component,
       select: {
@@ -41,13 +51,8 @@ describe("Updating Math element", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    console.log("DOWN HERE");
-    console.log(fm.getContent());
-
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
-    console.log("POST");
-    console.log(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
 
     assert.strictEqual(
       (newCurrentElement as Component).math(),
@@ -62,27 +67,8 @@ describe("Updating Math element", function () {
   });
 
   it("Updating Math of a Component with Math", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setMath(`<math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
-    <apply><eq/>
-      <ci>v1</ci>
-      <apply><times/>
-        <cn cellml:units="dimensionless">2</cn>
-        <cn cellml:units="dimensionless">2</cn>
-      </apply>
-    </apply></math>`);
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("second");
-
-    c.addVariable(v);
-    m.addComponent(c);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(c, Elements.component);
+    const m = fm.getCurrent() as Model;
+    fm.setCurrent(m.componentByName("c2", true), Elements.component);
 
     const update: IUpdate = {
       element: Elements.component,
@@ -96,8 +82,8 @@ describe("Updating Math element", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Component).math().trim(),
       newValue,

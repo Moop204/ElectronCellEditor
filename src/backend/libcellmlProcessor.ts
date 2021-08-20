@@ -13,13 +13,13 @@ import {
 import { CellmlProcessor } from "./CellmlProcessor";
 import { initial } from "lodash";
 
-import libCellMLModule from "./mainLibcellml/libcellml.js";
-import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
+// import libCellMLModule from "./mainLibcellml/libcellml.js";
+// import libCellMLWasm from "./mainLibcellml/libcellml.wasm";
 
 import { Elements } from "../types/Elements";
 import { EditorElement } from "../types/EditorElement";
 
-// const libcellModule = require("libcellml.js/libcellml.common");
+const libcellModule = require("libcellml.js/libcellml.common");
 
 class LibcellmlProcessor implements CellmlProcessor {
   private _cellml: any;
@@ -37,15 +37,15 @@ class LibcellmlProcessor implements CellmlProcessor {
   async init(): Promise<void> {
     if (this._cellmlLoaded) return;
     // @ts-ignore
-    this._cellml = await new libCellMLModule({
-      locateFile(path: string, prefix: string) {
-        if (path.endsWith(".wasm")) {
-          return prefix + libCellMLWasm;
-        }
-        return prefix + path;
-      },
-    });
-    // this._cellml = await libcellModule();
+    // this._cellml = await new libCellMLModule({
+    //   locateFile(path: string, prefix: string) {
+    //     if (path.endsWith(".wasm")) {
+    //       return prefix + libCellMLWasm;
+    //     }
+    //     return prefix + path;
+    //   },
+    // });
+    this._cellml = await libcellModule();
     this._parser = new this._cellml.Parser();
     this._printer = new this._cellml.Printer();
     this._validator = new this._cellml.Validator();
@@ -143,6 +143,48 @@ class LibcellmlProcessor implements CellmlProcessor {
     element.addVariable(newVariable);
   }
 
+  addReset(element: Component, newReset: Reset): void {
+    element.addReset(newReset);
+  }
+
+  addUnit(
+    element: Units,
+    units: string,
+    prefix?: string,
+    multiplier?: number,
+    exponent?: number
+  ) {
+    // Remove in case of duplication
+    element.removeUnitByReference(units);
+
+    if (multiplier === undefined) {
+      multiplier = 1.0;
+    }
+    if (exponent === undefined) {
+      exponent = 1.0;
+    }
+
+    if (prefix === undefined) {
+      element.addUnitByReferenceExponent(
+        units,
+        exponent ? 1.0 : exponent,
+        [element.name(), prefix, units, exponent, multiplier].join("_")
+      );
+    } else {
+      element.addUnitByReferenceStringPrefix(
+        units,
+        prefix,
+        exponent,
+        multiplier,
+        [element.name(), prefix, units, exponent, multiplier].join("_")
+      );
+    }
+  }
+
+  addUnits(element: Model, newUnits: Units) {
+    element.addUnits(newUnits);
+  }
+
   // Remove
   removeComponent(element: ComponentEntity, targetName: string) {
     const removed = element.removeComponentByName(targetName, true);
@@ -158,6 +200,12 @@ class LibcellmlProcessor implements CellmlProcessor {
 
   findComponent(model: Model, name: string) {
     return model.componentByName(name, true);
+  }
+
+  // Update
+
+  updateMath(element: Component, mathml: string) {
+    element.setMath(mathml);
   }
 
   //// Static ////

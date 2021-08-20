@@ -11,19 +11,18 @@ describe("Updating multiplier attribute", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const u1 = processor.buildUnits("u1");
+
+    processor.addUnits(m, u1);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(u1, Elements.units);
   });
 
   it("Updating multiplier with a number", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const u: Units = new fm._cellml.Units();
-    u.setName("u1");
-    u.addUnitByReferenceExponent("second", 12, "second");
-    m.addUnits(u);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(u, Elements.units);
-
     const update: IUpdate = {
       element: Elements.units,
       select: {
@@ -36,8 +35,8 @@ describe("Updating multiplier attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Units).unitAttributeMultiplier(0),
       newValue,

@@ -17,14 +17,22 @@ describe("Updating name attribute", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const c1 = processor.buildComponent("c1");
+    const u1 = processor.buildUnits("u1");
+    const v1 = processor.buildVariable("v1", "joules");
+
+    processor.addComponent(m, c1);
+    processor.addUnits(m, u1);
+    processor.addVariable(c1, v1);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(m, Elements.model);
   });
 
   it("Updating a model", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(m, Elements.model);
-
     const update: IUpdate = {
       element: Elements.model,
       select: {
@@ -37,8 +45,8 @@ describe("Updating name attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Model).name(),
       newName,
@@ -52,13 +60,8 @@ describe("Updating name attribute", function () {
   });
 
   it("Updating a component", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    m.addComponent(c);
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(c, Elements.component);
+    const m = fm.getCurrent() as Model;
+    fm.setCurrent(m.componentByName("c1", true), Elements.component);
 
     const update: IUpdate = {
       element: Elements.component,
@@ -72,8 +75,8 @@ describe("Updating name attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Component).name(),
       newName,
@@ -86,13 +89,8 @@ describe("Updating name attribute", function () {
     );
   });
   it("Updating a units", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const u: Units = new fm._cellml.Units();
-    u.setName("u1");
-    m.addUnits(u);
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(u, Elements.component);
+    const m = fm.getCurrent() as Model;
+    fm.setCurrent(m.unitsByName("u1"), Elements.units);
 
     const update: IUpdate = {
       element: Elements.units,
@@ -106,8 +104,8 @@ describe("Updating name attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Component).name(),
       newName,
@@ -120,19 +118,8 @@ describe("Updating name attribute", function () {
     );
   });
   it("Updating a Variable", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const c: Component = new fm._cellml.Component();
-    c.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("joules");
-
-    c.addVariable(v);
-    m.addComponent(c);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(v, Elements.variable);
+    const m = fm.getCurrent() as Model;
+    fm.setCurrent(m.componentByIndex(0).variableByIndex(0), Elements.variable);
 
     const update: IUpdate = {
       element: Elements.variable,
@@ -146,8 +133,8 @@ describe("Updating name attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Variable).name(),
       newName,

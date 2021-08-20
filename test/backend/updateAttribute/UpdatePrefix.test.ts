@@ -11,19 +11,19 @@ describe("Updating exponent attribute", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("model");
+    const u = processor.buildUnits("u1");
+
+    processor.addUnit(u, "second", undefined, undefined, 12);
+    processor.addUnits(m, u);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(u, Elements.units);
   });
 
   it("Updating exponent with a prefix name", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("model");
-    const u: Units = new fm._cellml.Units();
-    u.setName("u1");
-    u.addUnitByReferenceExponent("second", 12, "second");
-    m.addUnits(u);
-
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(u, Elements.units);
-
     const update: IUpdate = {
       element: Elements.units,
       select: {
@@ -36,8 +36,8 @@ describe("Updating exponent attribute", function () {
 
     fm.update([update], fm.getContent(), fm);
 
-    const newCurrentElement = fm.getCurrentComponent();
-    const newModel = fm._parser.parseModel(fm.getContent());
+    const newCurrentElement = fm.getCurrent();
+    const newModel = fm.parseModel(fm.getContent());
     assert.strictEqual(
       (newCurrentElement as Units).unitAttributePrefix(0),
       newValue,
