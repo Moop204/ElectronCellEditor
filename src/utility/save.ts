@@ -1,5 +1,4 @@
 import { dialog, BrowserWindow } from "electron";
-// import fs from "fs";
 const fs = require("fs");
 
 // Requests the user specify where to save. Returns the
@@ -30,6 +29,11 @@ const saveAs = async (content: string, recentFile: string): Promise<string> => {
   return res;
 };
 
+// Requests the user specify where to save only for new files.
+// Returns the location chosen
+// @content     - The text to be written to the file
+// @recentFile  - Location of the current file or if no file
+//                is current then an empty string
 const save = async (content: string, recentFile: string): Promise<string> => {
   const options = {
     title: "Save file",

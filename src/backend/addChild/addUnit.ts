@@ -2,8 +2,6 @@ import { Elements } from "../../types/Elements";
 import { ChildUnitDetail } from "../../types/ChildDetail";
 import { Units } from "../../types/ILibcellml";
 import FileManagement from "../FileManagement";
-import { generateModel } from "./generateModel";
-import { modelToString } from "./modelToString";
 
 // Add a Unit to the currently selected Units.
 // @fm - Manages the model of the program

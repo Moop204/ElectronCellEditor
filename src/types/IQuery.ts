@@ -1,6 +1,9 @@
 import { Elements } from "./Elements";
 import { IProperties } from "./IProperties";
 
+// Types used for identifying elements
+
+// Identifies an element relative to another
 interface ISelect {
   element: Elements;
   select: ISearch;

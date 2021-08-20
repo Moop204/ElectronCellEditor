@@ -1,7 +1,7 @@
-import { Parser, Validator } from "../types/ILibcellml";
 import FileManagement from "../backend/FileManagement";
 import { validateModel } from "../frontend/sidebar/issues/IssueUtilities";
 
+// Returns a boolean describing whether or not a file is valid
 const ensureValid = (fm: FileManagement): boolean => {
   const v = validateModel(fm._processor, fm.getContent());
 

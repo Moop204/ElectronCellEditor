@@ -1,10 +1,10 @@
 import FileManagement from "../FileManagement";
 import { Elements } from "../../types/Elements";
-import { IMoveTo } from "./interfaces";
-import { Component, ComponentEntity, Units } from "../../types/ILibcellml";
+import { Units } from "../../types/ILibcellml";
+import { IDirectSelect } from "../../types/IQuery";
 
 const moveToUnits = (
-  { search: { index, name }, parent }: IMoveTo,
+  { select: { index, name }, parent }: IDirectSelect,
   fm: FileManagement
 ) => {
   const m = fm.parseModel(fm.getContent());

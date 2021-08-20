@@ -1,13 +1,7 @@
 import assert from "assert";
 import FileManagement from "../../../src/backend/FileManagement";
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Reset,
-  Units,
-  Variable,
-} from "../../../src/types/ILibcellml";
+import { Component, Model, Variable } from "../../../src/types/ILibcellml";
 import { IUpdate } from "../../../src/types/IQuery";
 
 describe("Updating name attribute", function () {

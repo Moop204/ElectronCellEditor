@@ -1,8 +1,6 @@
 import FileManagement from "../FileManagement";
-import { Elements } from "../../types/Elements";
-import { IMoveTo } from "./interfaces";
-import { Component, ComponentEntity } from "../../types/ILibcellml";
 
+// Move to Model element from any arbitrary element
 const moveToModel = (fm: FileManagement) => {
   fm.resetToModel();
 };

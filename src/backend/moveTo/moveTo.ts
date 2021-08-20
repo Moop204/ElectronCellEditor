@@ -1,13 +1,13 @@
 import FileManagement from "../FileManagement";
 import { Elements, elmToStr } from "../../types/Elements";
 import { moveToComponent } from "./moveToComponent";
-import { IMoveTo } from "./interfaces";
 import { moveToModel } from "./moveToModel";
 import { moveToVariable } from "./moveToVariable";
 import { moveToUnits } from "./moveToUnits";
 import { moveToReset } from "./moveToReset";
+import { IDirectSelect } from "../../types/IQuery";
 
-const moveTo = (move: IMoveTo, fm: FileManagement) => {
+const moveTo = (move: IDirectSelect, fm: FileManagement) => {
   console.log("MOVE TO ");
   console.log(elmToStr(move.element));
   switch (move.element) {

@@ -1,10 +1,10 @@
 import FileManagement from "../FileManagement";
 import { Elements } from "../../types/Elements";
-import { IMoveTo } from "./interfaces";
-import { Component, ComponentEntity, Variable } from "../../types/ILibcellml";
+import { Variable } from "../../types/ILibcellml";
+import { IDirectSelect } from "../../types/IQuery";
 
 const moveToVariable = (
-  { search: { index, name }, parent }: IMoveTo,
+  { select: { index, name }, parent }: IDirectSelect,
   fm: FileManagement
 ) => {
   const m = fm.parseModel(fm.getContent());

@@ -1,9 +1,9 @@
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
-import { Component, Model } from "../../../src/types/ILibcellml";
+import { Model } from "../../../src/types/ILibcellml";
 import { Elements } from "../../../src/types/Elements";
 import { moveTo } from "../../../src/backend/moveTo/moveTo";
-import { IMoveTo } from "../../../src/backend/moveTo/interfaces";
+import { IDirectSelect } from "../../../src/types/IQuery";
 
 describe("Move to component in model", function () {
   this.timeout(5000);
@@ -13,14 +13,12 @@ describe("Move to component in model", function () {
     fm = new FileManagement();
     await fm.init();
     // Building model
-    const m: Model = new fm._cellml.Model();
-    m.setName("test_model");
-    const c1: Component = new fm._cellml.Component();
-    c1.setName("c1");
-    m.addComponent(c1);
-    // Assigning model
-    fm.setContent(fm._printer.printModel(m, false));
-    fm.setCurrentComponent(c1, Elements.component);
+    const processor = fm._processor;
+    const m = processor.buildModel("test_model");
+    const c1 = processor.buildComponent("c1");
+    processor.addComponent(m, c1);
+    fm.updateContentFromModel(m);
+    fm.setCurrent(c1, Elements.component);
   });
 
   afterEach(async () => {
@@ -29,9 +27,9 @@ describe("Move to component in model", function () {
 
   it("Moves to local component", async () => {
     // Applying update
-    const move: IMoveTo = {
+    const move: IDirectSelect = {
       element: Elements.model,
-      search: {
+      select: {
         index: 0,
         name: "test_model",
       },
@@ -40,8 +38,8 @@ describe("Move to component in model", function () {
 
     moveTo(move, fm);
 
-    const cur = fm.getCurrentComponent() as Model;
+    const cur = fm.getCurrent() as Model;
     assert.strictEqual(cur.name(), "test_model");
-    assert.strictEqual(fm.type, Elements.model);
+    assert.strictEqual(fm._model.getType(), Elements.model);
   });
 });

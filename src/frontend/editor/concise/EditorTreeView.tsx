@@ -8,21 +8,10 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import convert from "xml-js";
 import { IEditorXml } from "./EditorXml";
 import { IXmlElement, IXmlJs } from "../../../backend/compressCellml";
-import {
-  alpha,
-  Card,
-  CardContent,
-  Chip,
-  Divider,
-  Grid,
-  IconButton,
-  ListItemSecondaryAction,
-  Typography,
-} from "@material-ui/core";
+import { Chip, Divider, Grid, IconButton, Typography } from "@material-ui/core";
 import { PropertyIcon } from "../../sidebar/properties/children/PropertyIcon";
 import { strToElm } from "../../../types/Elements";
 import { IDirectSelect } from "../../../types/IQuery";
-import { IMoveTo } from "../../../backend/moveTo/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IElement {
   element: IXmlElement;
-  selection: IMoveTo;
+  selection: IDirectSelect;
 }
 
 const ElementRecord: FunctionComponent<IElement> = ({ element, selection }) => {
@@ -132,9 +121,9 @@ const EditorTreeView: FunctionComponent<IEditorXml> = ({ xmlInput }) => {
     // const id = parent + nodes.name + index + JSON.stringify(nodes.attributes);
     const id = nodes.name + JSON.stringify(nodes.attributes);
 
-    const selection: IMoveTo = {
+    const selection: IDirectSelect = {
       element: strToElm(nodes.name),
-      search: { index: elementIndex, name: nodes.attributes?.name },
+      select: { index: elementIndex, name: nodes.attributes?.name },
       parent: parent ? parent : "",
     };
     return (

@@ -1,15 +1,12 @@
 import FileManagement from "../FileManagement";
 import { Elements } from "../../types/Elements";
-import { IMoveTo } from "./interfaces";
-import { Component, ComponentEntity, Variable } from "../../types/ILibcellml";
+import { IDirectSelect } from "../../types/IQuery";
 
 const moveToReset = (
-  { search: { index, name }, parent }: IMoveTo,
+  { select: { index, name }, parent }: IDirectSelect,
   fm: FileManagement
 ) => {
   const m = fm.parseModel(fm.getContent());
-  console.log(parent);
-  console.log(index);
   const parentElement = m.componentByName(parent, true);
   let currentElement = parentElement.reset(index);
   fm.setCurrent(currentElement, Elements.reset);

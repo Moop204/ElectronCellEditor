@@ -2,17 +2,7 @@
 import { ipcMain, BrowserWindow, IpcMainEvent } from "electron";
 import { convertSelectedElement } from "./converter/convertElement";
 import { Elements, elmToStr } from "../types/Elements";
-import {
-  Component,
-  ComponentEntity,
-  Model,
-  Reset,
-  Units,
-  Variable,
-  Parser,
-  NamedEntity,
-  Printer,
-} from "../types/ILibcellml";
+import { Component, Model, NamedEntity } from "../types/ILibcellml";
 import {
   IDirectSelect,
   ISearch,
@@ -44,9 +34,7 @@ import { updateEvent } from "./updateAttribute/UpdateEvent";
 import { removeElement } from "./removeChild/removeElement";
 import { saveAs, save } from "../utility/save";
 import { findElement } from "./utility/FindElement";
-import { generateModel } from "./addChild/generateModel";
 import { validMathMl } from "./math/validateMathMl";
-import { IMoveTo } from "./moveTo/interfaces";
 import { moveTo } from "./moveTo/moveTo";
 import { LibcellmlProcessor } from "./libcellmlProcessor";
 import { CellmlModel } from "./model/CellmlModel";
@@ -192,19 +180,6 @@ export default class FileManagement {
   getContent(): string {
     return this._model.getContent();
   }
-
-  // Print out model
-
-  // async printModel(): Promise<void> {
-  //   const content = this._model.getContent();
-  //   console.log("PRINTING OUT MODEL");
-  //   console.log(content);
-
-  //   const model = this._processor.generateModel(content);
-  //   for (let i = 0; i < model.componentCount(); i += 1) {
-  //     console.log(model.componentByIndex(i).name());
-  //   }
-  // }
 
   // Internal
   getCurrentAsSelection(): ISelection {
@@ -452,7 +427,7 @@ export default class FileManagement {
       }
     );
 
-    ipcMain.on("move-to", (event: IpcMainEvent, move: IMoveTo) => {
+    ipcMain.on("move-to", (event: IpcMainEvent, move: IDirectSelect) => {
       console.log("RECEIEVED");
       moveTo(move, this);
       console.log("POST MOVE");

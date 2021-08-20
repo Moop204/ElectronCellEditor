@@ -1,10 +1,8 @@
 import { CellmlModel } from "../model/CellmlModel";
-import { CellmlProcessor } from "../CellmlProcessor";
 import { EditorElement } from "../../types/EditorElement";
 import { Elements } from "../../types/Elements";
 import { ComponentEntity, Model, Component } from "../../types/ILibcellml";
 import { ISearch } from "../../types/IQuery";
-import FileManagement from "../FileManagement";
 
 // Find selected element
 const findElement = (
