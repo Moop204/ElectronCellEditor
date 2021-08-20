@@ -21,7 +21,7 @@ describe("Updating Reset attribute reset_value", function () {
     const m = processor.buildModel("model");
     const c1 = processor.buildComponent("c1");
     const v1 = processor.buildVariable("v1", "second");
-    const v2 = processor.buildVariable("v2", "s2cond");
+    const v2 = processor.buildVariable("v2", "second");
     const mathValue =
       `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
     const r = processor.buildReset(v1, v2, 1, mathValue, mathValue);

@@ -1,8 +1,8 @@
-import { Model, Parser, Printer, Units } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { IChild } from "../../../src/types/IProperties";
 import { removeUnits } from "../../../src/backend/removeChild/removeUnits";
+import { Elements } from "../../../src/types/Elements";
 
 describe("Removing CellML Units in property format", function () {
   this.timeout(5000);
@@ -10,18 +10,17 @@ describe("Removing CellML Units in property format", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("testModel");
+    const u1 = processor.buildUnits("u1");
+
+    processor.addUnits(m, u1);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(m, Elements.model);
   });
   it("Removing Units", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const u: Units = new fm._cellml.Units();
-    u.setName("u1");
-    m.addUnits(u);
-
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-    fm.resetToModel();
-
     const child: IChild = {
       name: "u1",
       index: 0,
@@ -30,8 +29,7 @@ describe("Removing CellML Units in property format", function () {
     removeUnits(fm, child);
 
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.unitsCount(),
@@ -39,9 +37,8 @@ describe("Removing CellML Units in property format", function () {
       "No Units remain after removing only variable."
     );
     // Check children
-    assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Model,
-      true,
+    assert.ok(
+      fm._processor.matchElement(fm.getCurrent(), Elements.model),
       "Current element remains the same"
     );
   });

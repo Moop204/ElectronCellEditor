@@ -1,4 +1,3 @@
-import { Model, Parser, Printer, Units } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { IChild } from "../../../src/types/IProperties";
@@ -12,20 +11,18 @@ describe("Removing CellML Unit in property format", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("testModel");
+    const u1 = processor.buildUnits("u1");
+
+    processor.addUnits(m, u1);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(u1, Elements.units);
   });
 
   it("Removing Unit", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const u: Units = new fm._cellml.Units();
-    u.setName("u1");
-    u.addUnitByReference("second");
-    m.addUnits(u);
-
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-    fm.setCurrentComponent(u, Elements.units);
-
     const child: IChild = {
       name: null,
       index: 0,
@@ -34,8 +31,7 @@ describe("Removing CellML Unit in property format", function () {
     removeUnit(fm, child);
 
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.unitsByIndex(0).unitCount(),
@@ -43,9 +39,8 @@ describe("Removing CellML Unit in property format", function () {
       "No Unit remain after removing only variable."
     );
     // Check children
-    assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Units,
-      true,
+    assert.ok(
+      (fm.getCurrent(), Elements.units),
       "Current element remains the same"
     );
   });

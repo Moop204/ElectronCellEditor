@@ -1,11 +1,4 @@
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Parser,
-  Printer,
-  Variable,
-} from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { IChild } from "../../../src/types/IProperties";
@@ -17,23 +10,19 @@ describe("Removing CellML Variable into property format", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("testModel");
+    const c = processor.buildComponent("c1");
+    const v = processor.buildVariable("v1", "kelvin");
+
+    processor.addVariable(c, v);
+    processor.addComponent(m, c);
+    fm.updateContentFromModel(m);
+    fm.setCurrent(c, Elements.component);
   });
 
   it("Removing Variable", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const component: Component = new fm._cellml.Component();
-    component.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("kelvin");
-    component.addVariable(v);
-    m.addComponent(component);
-
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-    fm.setCurrentComponent(component, Elements.component);
-
     const child: IChild = {
       name: "v1",
       index: 0,
@@ -42,8 +31,7 @@ describe("Removing CellML Variable into property format", function () {
     removeVariable(fm, child);
 
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.componentByIndex(0).variableCount(),
@@ -51,9 +39,9 @@ describe("Removing CellML Variable into property format", function () {
       "No variables remain after removing only variable."
     );
     // Check children
-    assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Component,
-      true,
+
+    assert.ok(
+      fm._processor.matchElement(fm.getCurrent(), Elements.component),
       "Current element remains the same"
     );
   });

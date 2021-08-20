@@ -398,8 +398,8 @@ export default class FileManagement {
 
     ipcMain.on(
       "delete-element",
-      async (event: IpcMainEvent, { element, select }: ISelect) => {
-        removeElement(this, element, select);
+      async (event: IpcMainEvent, selection: ISelect) => {
+        removeElement(this, selection);
         const prop = this.getCurrentAsSelection();
         event.reply("res-get-element", prop.prop);
         event.reply("res-update-content", this._model.getContent());

@@ -4,6 +4,7 @@ import { IProperties } from "../../types/IProperties";
 
 // Convert Component into property-ready format
 const convertComponent = (component: Component) => {
+  console.log(component);
   if (component === null) {
     console.log("ConvertComponent: Given component is null");
   }

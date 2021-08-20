@@ -1,14 +1,11 @@
-import {
-  Component,
-  ImportSource,
-  Model,
-  Parser,
-  Printer,
-} from "../../../src/types/ILibcellml";
+import { Model } from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { removeComponent } from "../../../src/backend/removeChild/removeComponent";
 import { IChild } from "../../../src/types/IProperties";
+import { Elements } from "../../../src/types/Elements";
+import { removeElement } from "../../../src/backend/removeChild/removeElement";
+import { ISelect } from "../../../src/types/IQuery";
 
 describe("Removing CellML Component into property format", function () {
   this.timeout(5000);
@@ -17,34 +14,32 @@ describe("Removing CellML Component into property format", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
-    m = new fm._cellml.Model();
-    m.setName("testModel");
-    const c1: Component = new fm._cellml.Component();
-    c1.setName("c1");
 
-    const c2: Component = new fm._cellml.Component();
-    c2.setName("c2");
-    c2.importSource;
-    const importSource: ImportSource = new fm._cellml.ImportSource();
-    importSource.setUrl("source");
-    c2.setSourceComponent(importSource, "component_ref");
+    const processor = fm._processor;
+    m = processor.buildModel("testModel");
+    const c1 = processor.buildComponent("c1");
+    const c2 = processor.buildComponent("c2", "source", "component_ref");
 
-    m.addComponent(c1);
-    m.addComponent(c2);
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-    await fm.resetToModel();
+    processor.addComponent(m, c1);
+    processor.addComponent(m, c2);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(m, Elements.model);
   });
 
   it("Removing local Component", async () => {
-    const child: IChild = {
-      name: "c1",
-      index: 0,
+    const request: ISelect = {
+      element: Elements.component,
+      select: {
+        index: 0,
+        name: "c1",
+      },
     };
-    removeComponent(fm, child);
+
+    removeElement(fm, request);
+
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.componentCount(),
@@ -53,7 +48,7 @@ describe("Removing CellML Component into property format", function () {
     );
     // Check children
     assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Model,
+      fm._processor.matchElement(fm.getCurrent(), Elements.model),
       true,
       "Current element remains the same"
     );
@@ -67,8 +62,7 @@ describe("Removing CellML Component into property format", function () {
     removeComponent(fm, child);
 
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.componentCount(),
@@ -77,7 +71,7 @@ describe("Removing CellML Component into property format", function () {
     );
     // Check children
     assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Model,
+      fm._processor.matchElement(fm.getCurrent(), Elements.model),
       true,
       "Current element remains the same"
     );

@@ -1,12 +1,4 @@
 import { Elements } from "../../../src/types/Elements";
-import {
-  Component,
-  Model,
-  Parser,
-  Printer,
-  Reset,
-  Variable,
-} from "../../../src/types/ILibcellml";
 import FileManagement from "../../../src/backend/FileManagement";
 import assert from "assert";
 import { IChild } from "../../../src/types/IProperties";
@@ -18,32 +10,24 @@ describe("Removing CellML Reset into property format", function () {
   beforeEach(async () => {
     fm = new FileManagement();
     await fm.init();
+
+    const processor = fm._processor;
+    const m = processor.buildModel("testModel");
+    const c1 = processor.buildComponent("c1");
+    const v1 = processor.buildVariable("v1", "kelvin");
+    const mathValue =
+      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
+    const r = processor.buildReset(v1, v1, 1, mathValue, mathValue);
+
+    processor.addComponent(m, c1);
+    processor.addVariable(c1, v1);
+    processor.addReset(c1, r);
+
+    fm.updateContentFromModel(m);
+    fm.setCurrent(c1, Elements.component);
   });
 
   it("Removing Reset", async () => {
-    const m: Model = new fm._cellml.Model();
-    m.setName("testModel");
-    const component: Component = new fm._cellml.Component();
-    component.setName("c1");
-    const v: Variable = new fm._cellml.Variable();
-    v.setName("v1");
-    v.setUnitsByName("kelvin");
-    const r: Reset = new fm._cellml.Reset();
-    r.setOrder(1);
-    const mathValue =
-      `<math xmlns="http://www.w3.org/1998/Math/MathML"><ci>v1</ci></math>`.trim();
-    r.setResetValue(mathValue);
-    r.setTestValue(mathValue);
-    r.setVariable(v);
-    r.setTestVariable(v);
-    component.addVariable(v);
-    component.addReset(r);
-    m.addComponent(component);
-
-    const printer: Printer = new fm._cellml.Printer();
-    fm.setContent(printer.printModel(m, false));
-    fm.setCurrentComponent(component, Elements.component);
-
     const child: IChild = {
       name: "v1",
       index: 0,
@@ -52,8 +36,7 @@ describe("Removing CellML Reset into property format", function () {
     removeReset(fm, child);
 
     const postRemoval = fm.getContent();
-    const parser: Parser = new fm._cellml.Parser();
-    const postModel = parser.parseModel(postRemoval);
+    const postModel = fm.parseModel(postRemoval);
     // Check attributes of element are preserved
     assert.strictEqual(
       postModel.componentByIndex(0).resetCount(),
@@ -61,9 +44,8 @@ describe("Removing CellML Reset into property format", function () {
       "No variables remain after removing only variable."
     );
     // Check children
-    assert.strictEqual(
-      fm.getCurrentComponent() instanceof fm._cellml.Component,
-      true,
+    assert.ok(
+      (fm.getCurrent(), Elements.component),
       "Current element remains the same"
     );
   });

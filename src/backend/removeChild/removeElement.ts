@@ -1,5 +1,5 @@
 import { Elements, elmToStr } from "../../types/Elements";
-import { ISearch } from "../../types/IQuery";
+import { ISelect } from "../../types/IQuery";
 import FileManagement from "../FileManagement";
 import { removeComponent } from "./removeComponent";
 import { removeUnits } from "./removeUnits";
@@ -10,31 +10,30 @@ import { removeConnection } from "./removeConnection";
 
 const removeElement = async (
   fm: FileManagement,
-  type: Elements,
-  child: ISearch
+  { element, select }: ISelect
 ) => {
-  switch (type) {
+  switch (element) {
     case Elements.component:
-      await removeComponent(fm, child);
+      await removeComponent(fm, select);
       break;
     case Elements.units:
-      await removeUnits(fm, child);
+      await removeUnits(fm, select);
       break;
     case Elements.variable:
-      await removeVariable(fm, child);
+      await removeVariable(fm, select);
       break;
     case Elements.reset:
-      await removeReset(fm, child);
+      await removeReset(fm, select);
       break;
     case Elements.unit:
-      await removeUnit(fm, child);
+      await removeUnit(fm, select);
       break;
     case Elements.connection:
-      await removeConnection(fm, child);
+      await removeConnection(fm, select);
       break;
     default:
       console.log("FM: Remove child - should not reach here");
-      console.log(elmToStr(type));
+      console.log(elmToStr(element));
     // }
   }
 };
