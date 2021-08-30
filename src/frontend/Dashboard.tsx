@@ -27,6 +27,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { SystemInternationalIcon } from "./assets/SystemeInternational";
 import { EditorTab } from "./component/EditorTab";
+import { Editors } from "./component/Editors";
 
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
@@ -151,7 +152,12 @@ const Dashboard: FunctionComponent = () => {
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
               <EditorTab fileName={fileName} />
-              <Switch>
+              <Editors
+                valid={valid}
+                contentExist={contentExist}
+                setContentExist={setContentExist}
+              />
+              {/* <Switch>
                 <Route path="/concise">
                   {!valid && <Redirect to="" />}
                   {valid && (
@@ -177,7 +183,7 @@ const Dashboard: FunctionComponent = () => {
                     key="raw-view"
                   />
                 </Route>
-              </Switch>
+              </Switch> */}
             </Paper>
           </Grid>
         </Grid>
