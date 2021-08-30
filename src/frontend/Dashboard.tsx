@@ -26,6 +26,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { SystemInternationalIcon } from "./assets/SystemeInternational";
+import { EditorTab } from "./component/EditorTab";
 
 global.Buffer = global.Buffer || require("buffer").Buffer;
 
@@ -149,35 +150,7 @@ const Dashboard: FunctionComponent = () => {
 
           <Grid item xs={viewSidebar ? 9 : 11}>
             <Paper className={styles.contentView}>
-              <AppBar position="static" color="default">
-                <Tabs
-                  value={fileName}
-                  // onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="file tabs"
-                >
-                  <Tooltip title={fileName}>
-                    <Tab
-                      style={{
-                        textOverflow: "ellipsis",
-                        textTransform: "none",
-                        textDecoration: "underline",
-                      }}
-                      wrapped
-                      label={
-                        fileName[0] !== "/"
-                          ? fileName === ""
-                            ? "untitled"
-                            : fileName
-                          : fileName.match(/\/[^/]+$/)[0].slice(1)
-                      }
-                    />
-                  </Tooltip>
-                </Tabs>
-              </AppBar>
+              <EditorTab fileName={fileName} />
               <Switch>
                 <Route path="/concise">
                   {!valid && <Redirect to="" />}

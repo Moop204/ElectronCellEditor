@@ -54,80 +54,73 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
     <Grid container>
       <form onSubmit={formik.handleSubmit} style={{ width: "70vw" }}>
         <Grid container>
-          <Grid item xs={6}>
-            <FormControl fullWidth>
-              <InputLabel
-                id="component"
-                error={Boolean(formik.errors.component)}
-              >
-                Component
-              </InputLabel>
-              <Select
-                required
-                labelId="component"
-                id="component"
-                name="component"
-                value={formik.values.component}
-                onChange={formik.handleChange}
-                label="component"
-                input={<Input />}
-                error={
-                  formik.touched.component && Boolean(formik.errors.component)
-                }
-              >
-                {validComponents.map((v: string) => {
+          <FormControl fullWidth>
+            <InputLabel id="component" error={Boolean(formik.errors.component)}>
+              Component
+            </InputLabel>
+            <Select
+              required
+              labelId="component"
+              id="component"
+              name="component"
+              value={formik.values.component}
+              onChange={formik.handleChange}
+              label="component"
+              input={<Input />}
+              error={
+                formik.touched.component && Boolean(formik.errors.component)
+              }
+            >
+              {validComponents.map((v: string) => {
+                return (
+                  <MenuItem key={v} value={v.toLowerCase()}>
+                    {v}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            <FormHelperText error>
+              {formik.touched.component && formik.errors.component}
+            </FormHelperText>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="variable" error={Boolean(formik.errors.variable)}>
+              Variable
+            </InputLabel>
+            <Select
+              required
+              labelId="variable"
+              id="variable"
+              name="variable"
+              value={formik.values.variable}
+              onChange={formik.handleChange}
+              label="variable"
+              input={<Input />}
+              error={formik.touched.variable && Boolean(formik.errors.variable)}
+            >
+              {validVariables
+                .filter((variable: IConnectionDescriptor) => {
+                  if (formik.values.component === "any") {
+                    return true;
+                  } else {
+                    return formik.values.component === variable.component;
+                  }
+                })
+                .map((v: IConnectionDescriptor) => {
                   return (
-                    <MenuItem key={v} value={v.toLowerCase()}>
-                      {v}
+                    <MenuItem
+                      key={v.component + v.variable}
+                      value={v.variable.toLowerCase()}
+                    >
+                      {v.variable}
                     </MenuItem>
                   );
                 })}
-              </Select>
-              <FormHelperText error>
-                {formik.touched.component && formik.errors.component}
-              </FormHelperText>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id="variable" error={Boolean(formik.errors.variable)}>
-                Variable
-              </InputLabel>
-              <Select
-                required
-                labelId="variable"
-                id="variable"
-                name="variable"
-                value={formik.values.variable}
-                onChange={formik.handleChange}
-                label="variable"
-                input={<Input />}
-                error={
-                  formik.touched.variable && Boolean(formik.errors.variable)
-                }
-              >
-                {validVariables
-                  .filter((variable: IConnectionDescriptor) => {
-                    if (formik.values.component === "any") {
-                      return true;
-                    } else {
-                      return formik.values.component === variable.component;
-                    }
-                  })
-                  .map((v: IConnectionDescriptor) => {
-                    return (
-                      <MenuItem
-                        key={v.component + v.variable}
-                        value={v.variable.toLowerCase()}
-                      >
-                        {v.variable}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-              <FormHelperText error>
-                {formik.touched.variable && formik.errors.variable}
-              </FormHelperText>
-            </FormControl>
-          </Grid>
+            </Select>
+            <FormHelperText error>
+              {formik.touched.variable && formik.errors.variable}
+            </FormHelperText>
+          </FormControl>
         </Grid>
       </form>
       <DialogActions>

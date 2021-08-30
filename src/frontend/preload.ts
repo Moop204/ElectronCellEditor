@@ -12,7 +12,14 @@ declare global {
 }
 
 const validChannels = [
+  // Frontend -> Backend
+  // Takes a string containing content of file
+  // Triggers
+  // "validated file"
+  // "error-reply"
+  // "res-get-element" if file is invalid
   "validate-file",
+
   "get-element",
   "save-content",
   "all-variable",
