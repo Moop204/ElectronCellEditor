@@ -295,6 +295,34 @@ export default class FileManagement {
       }
     );
 
+    ipcMain.on("to-parent", async (event: IpcMainEvent) => {
+      const curType = this._model.getType();
+      if (curType === Elements.model) return;
+      const cur = this.getCurrent();
+      const parent = cur.parent();
+      let newType = Elements.component;
+      console.log("Going back to parent");
+      console.log(elmToStr(curType));
+      switch (curType) {
+        case Elements.component:
+          if (
+            this._processor.matchElement(
+              parent as EditorElement,
+              Elements.model
+            )
+          ) {
+            newType = Elements.model;
+          }
+          break;
+        case Elements.units:
+          newType = Elements.model;
+          break;
+      }
+      this.setCurrent(parent as EditorElement, newType);
+      const selection = this.getCurrentAsSelection();
+      event.reply("res-select-element", selection);
+    });
+
     // ipcMain.on('notify-backend', (event: any, content: string) => {
     //   if (content !== this.getContent()) {
     //     this.updateContent(content);
