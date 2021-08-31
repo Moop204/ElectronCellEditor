@@ -10,6 +10,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { CloseButton } from "../../../component/CloseButton";
+import { ConfirmButton } from "../../../component/ConfirmButton";
+import { FormAction } from "./FormActions";
 
 interface IConnectionEdit {
   index: number;
@@ -49,7 +52,13 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
       console.log(values);
     },
   });
-
+  const acceptForm = () => {
+    if (
+      !(Boolean(formik.errors.component) || Boolean(formik.errors.variable))
+    ) {
+      return handleClose();
+    }
+  };
   return (
     <Grid container>
       <form onSubmit={formik.handleSubmit} style={{ width: "70vw" }}>
@@ -123,34 +132,11 @@ const ConnectionEditForm: FunctionComponent<IConnectionEdit> = ({
           </FormControl>
         </Grid>
       </form>
-      <DialogActions>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          onClick={handleClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          type="submit"
-          onClick={() => {
-            if (
-              !(
-                Boolean(formik.errors.component) ||
-                Boolean(formik.errors.variable)
-              )
-            ) {
-              return handleClose();
-            }
-          }}
-        >
-          Apply Change
-        </Button>
-      </DialogActions>
+      <FormAction
+        close={handleClose}
+        accept={acceptForm}
+        acceptText="ApplyChange"
+      />
     </Grid>
   );
 };

@@ -44,17 +44,29 @@ const UnitChildForm: FunctionComponent<IPopup> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.unit,
-          attribute: values,
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
-      });
+      if (
+        !(
+          Boolean(formik.errors.exponent) ||
+          Boolean(formik.errors.multiplier) ||
+          Boolean(formik.errors.prefix) ||
+          Boolean(formik.errors.units)
+        ) &&
+        formik.values.units
+      ) {
+        window.api.send("add-child", {
+          child: {
+            type: Elements.unit,
+            attribute: values,
+          },
+          parent: {
+            name: parentName,
+            index: null,
+          },
+          parentType: parent,
+        });
+        notifyAdd();
+        handleClose();
+      }
     },
   });
 
@@ -166,26 +178,7 @@ const UnitChildForm: FunctionComponent<IPopup> = ({
           >
             Close
           </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            type="submit"
-            onClick={() => {
-              if (
-                !(
-                  Boolean(formik.errors.exponent) ||
-                  Boolean(formik.errors.multiplier) ||
-                  Boolean(formik.errors.prefix) ||
-                  Boolean(formik.errors.units)
-                ) &&
-                formik.values.units
-              ) {
-                notifyAdd();
-                return handleClose();
-              }
-            }}
-          >
+          <Button color="primary" variant="contained" fullWidth type="submit">
             Add
           </Button>
         </DialogActions>

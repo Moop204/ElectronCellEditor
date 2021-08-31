@@ -9,11 +9,15 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 //import { ElementHelp } from "../../../../components/helper/ElementHelp";
 import { useSnackbar } from "notistack";
+import { CloseButton } from "../../../component/CloseButton";
+import { ConfirmButton } from "../../../component/ConfirmButton";
+import { FormAction } from "./FormActions";
 
 const nameValidation = (curComponents: string[]) =>
   yup.object({
     name: yup
       .string()
+      .required()
       .min(1, "Require at least one character")
       .matches(
         /^[a-zA-Z][a-zA-Z0-9_]*$/,
@@ -49,6 +53,12 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
   const namespaces = window.api.sendSync("all-components");
   const validationSchema = nameValidation(namespaces);
 
+  const notifyAdd = () => {
+    enqueueSnackbar(`Successfully added component to ${parentName}`, {
+      variant: "info",
+    });
+  };
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -58,33 +68,42 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.component,
-          attribute: values,
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
-      });
+      console.log(formik.errors);
+      if (
+        Boolean(formik.errors.imported) ||
+        Boolean(formik.errors.name) ||
+        Boolean(formik.errors.component_ref) ||
+        Boolean(formik.errors.source)
+      ) {
+        console.log("I recognise theres an error");
+      } else {
+        window.api.send("add-child", {
+          child: {
+            type: Elements.component,
+            attribute: values,
+          },
+          parent: {
+            name: parentName,
+            index: null,
+          },
+          parentType: parent,
+        });
+        notifyAdd();
+        console.log("CLOSIN");
+        handleClose();
+        console.log("CLOSED");
+      }
     },
   });
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const notifyAdd = () => {
-    enqueueSnackbar(`Successfully added component to ${parentName}`, {
-      variant: "info",
-    });
-  };
+  const acceptForm = (formik: any) => {};
 
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          required
           fullWidth
           id="name"
           name="name"
@@ -108,7 +127,6 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
         {formik.values.imported && (
           <div>
             <TextField
-              required
               fullWidth
               id="source"
               name="source"
@@ -119,7 +137,6 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
               helperText={formik.touched.source && formik.errors.source}
             />
             <TextField
-              required
               fullWidth
               id="component_ref"
               name="component_ref"
@@ -136,39 +153,11 @@ const ComponentChildForm: FunctionComponent<IPopup> = ({
             />
           </div>
         )}
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            type="submit"
-            onClick={() => {
-              if (
-                !(
-                  Boolean(formik.errors.imported) ||
-                  Boolean(formik.errors.name) ||
-                  Boolean(formik.errors.component_ref) ||
-                  Boolean(formik.errors.source)
-                )
-              ) {
-                notifyAdd();
-                handleClose();
-              } else {
-                console.log(formik.errors);
-              }
-            }}
-          >
-            Add
-          </Button>
-        </DialogActions>
+        <FormAction
+          close={handleClose}
+          accept={() => acceptForm(formik)}
+          acceptText="Add"
+        />
       </form>
     </div>
   );

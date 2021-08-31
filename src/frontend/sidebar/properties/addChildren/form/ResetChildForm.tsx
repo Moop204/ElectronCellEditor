@@ -13,6 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { useSnackbar } from "notistack";
+import { FormAction } from "./FormActions";
 
 const validation = (validVariables: string[]) =>
   yup.object({
@@ -54,23 +55,36 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.reset,
-          attribute: {
-            reset_variable: values.reset_variable,
-            test_variable: values.test_variable,
-            order: values.order,
-            reset_value: values.reset_value,
-            test_value: values.test_value,
+      if (
+        !(
+          Boolean(formik.errors.order) ||
+          Boolean(formik.errors.reset_value) ||
+          Boolean(formik.errors.test_value) ||
+          Boolean(formik.errors.test_variable) ||
+          Boolean(formik.errors.reset_variable)
+        ) &&
+        formik.values.order
+      ) {
+        window.api.send("add-child", {
+          child: {
+            type: Elements.reset,
+            attribute: {
+              reset_variable: values.reset_variable,
+              test_variable: values.test_variable,
+              order: values.order,
+              reset_value: values.reset_value,
+              test_value: values.test_value,
+            },
           },
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
-      });
+          parent: {
+            name: parentName,
+            index: null,
+          },
+          parentType: parent,
+        });
+        notifyAdd();
+        return handleClose();
+      }
     },
   });
 
@@ -86,7 +100,6 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          required
           fullWidth
           id="order"
           name="order"
@@ -108,7 +121,6 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
                 Variable
               </InputLabel>
               <Select
-                required
                 labelId="reset_variable"
                 id="reset_variable"
                 name="reset_variable"
@@ -186,7 +198,6 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
           value={formik.values.reset_value}
           multiline
           rows={4}
-          required
           onChange={formik.handleChange}
           error={
             formik.touched.reset_value && Boolean(formik.errors.reset_value)
@@ -201,45 +212,12 @@ const ResetChildForm: FunctionComponent<IPopup> = ({
           value={formik.values.test_value}
           multiline
           rows={4}
-          required
           onChange={formik.handleChange}
           error={formik.touched.test_value && Boolean(formik.errors.test_value)}
           helperText={formik.touched.test_value && formik.errors.test_value}
         />
 
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            type="submit"
-            onClick={() => {
-              if (
-                !(
-                  Boolean(formik.errors.order) ||
-                  Boolean(formik.errors.reset_value) ||
-                  Boolean(formik.errors.test_value) ||
-                  Boolean(formik.errors.test_variable) ||
-                  Boolean(formik.errors.reset_variable)
-                ) &&
-                formik.values.order
-              ) {
-                notifyAdd();
-                return handleClose();
-              }
-            }}
-          >
-            Add
-          </Button>
-        </DialogActions>
+        <FormAction close={handleClose} acceptText="Add" />
       </form>
     </div>
   );

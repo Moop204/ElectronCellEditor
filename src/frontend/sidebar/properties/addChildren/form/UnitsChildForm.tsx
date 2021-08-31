@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useSnackbar } from "notistack";
+import { FormAction } from "./FormActions";
 
 const nameValidation = (curComponents: string[]) =>
   yup.object({
@@ -61,17 +62,30 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.units,
-          attribute: values,
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
-      });
+      if (
+        !(
+          Boolean(formik.errors.imported) ||
+          Boolean(formik.errors.name) ||
+          Boolean(formik.errors.source) ||
+          Boolean(formik.errors.component_ref)
+        )
+      ) {
+        window.api.send("add-child", {
+          child: {
+            type: Elements.units,
+            attribute: values,
+          },
+          parent: {
+            name: parentName,
+            index: null,
+          },
+          parentType: parent,
+        });
+        notifyAdd();
+        handleClose();
+      } else {
+        console.log(formik.errors);
+      }
     },
   });
 
@@ -79,7 +93,6 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          required
           fullWidth
           id="name"
           name="name"
@@ -103,7 +116,6 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
         {formik.values.imported && (
           <div>
             <TextField
-              required
               fullWidth
               id="source"
               name="source"
@@ -114,7 +126,6 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
               helperText={formik.touched.source && formik.errors.source}
             />
             <TextField
-              required
               fullWidth
               id="component_ref"
               name="component_ref"
@@ -131,39 +142,7 @@ const UnitsChildForm: FunctionComponent<IPopup> = ({
             />
           </div>
         )}
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            type="submit"
-            onClick={() => {
-              if (
-                !(
-                  Boolean(formik.errors.imported) ||
-                  Boolean(formik.errors.name) ||
-                  Boolean(formik.errors.source) ||
-                  Boolean(formik.errors.component_ref)
-                )
-              ) {
-                notifyAdd();
-                return handleClose();
-              } else {
-                console.log(formik.errors);
-              }
-            }}
-          >
-            Add
-          </Button>
-        </DialogActions>
+        <FormAction close={handleClose} acceptText="Add" />
       </form>
     </div>
   );

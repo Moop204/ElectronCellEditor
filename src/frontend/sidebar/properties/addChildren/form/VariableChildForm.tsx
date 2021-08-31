@@ -16,6 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { IPopup } from "../IPopup";
 import { useSnackbar } from "notistack";
+import { FormAction } from "./FormActions";
 
 const validation = (
   curUnits: string[],
@@ -87,17 +88,30 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
     },
     validationSchema,
     onSubmit: (values) => {
-      window.api.send("add-child", {
-        child: {
-          type: Elements.variable,
-          attribute: values,
-        },
-        parent: {
-          name: parentName,
-          index: null,
-        },
-        parentType: parent,
-      });
+      if (
+        !(
+          Boolean(formik.errors.units) ||
+          Boolean(formik.errors.name) ||
+          Boolean(formik.errors.initialValue) ||
+          Boolean(formik.errors.interfaceType)
+        ) &&
+        formik.values.name
+      ) {
+        window.api.send("add-child", {
+          child: {
+            type: Elements.variable,
+            attribute: values,
+          },
+          parent: {
+            name: parentName,
+            index: null,
+          },
+          parentType: parent,
+        });
+
+        notifyAdd();
+        handleClose();
+      }
     },
   });
 
@@ -105,7 +119,6 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          required
           fullWidth
           id="name"
           name="name"
@@ -183,50 +196,7 @@ const VariableChildForm: FunctionComponent<IPopup> = ({
           }
           helperText={formik.touched.initialValue && formik.errors.initialValue}
         />
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            type="submit"
-            onClick={() => {
-              console.log(Boolean(formik.errors.units));
-              console.log(Boolean(formik.errors.name));
-              console.log(Boolean(formik.errors.initialValue));
-              console.log(Boolean(formik.errors.interfaceType));
-              console.log(
-                !(
-                  Boolean(formik.errors.units) ||
-                  Boolean(formik.errors.name) ||
-                  Boolean(formik.errors.initialValue) ||
-                  Boolean(formik.errors.interfaceType)
-                )
-              );
-              if (
-                !(
-                  Boolean(formik.errors.units) ||
-                  Boolean(formik.errors.name) ||
-                  Boolean(formik.errors.initialValue) ||
-                  Boolean(formik.errors.interfaceType)
-                ) &&
-                formik.values.name
-              ) {
-                notifyAdd();
-                return handleClose();
-              }
-            }}
-          >
-            Add
-          </Button>
-        </DialogActions>
+        <FormAction close={handleClose} acceptText="Add" />
       </form>
     </div>
   );
