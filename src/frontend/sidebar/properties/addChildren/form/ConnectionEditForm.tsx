@@ -1,8 +1,6 @@
 import React, { FunctionComponent, useState } from "react";
 import { useFormik } from "formik";
-import DialogActions from "@material-ui/core/DialogActions";
 import * as yup from "yup";
-import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -10,8 +8,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { CloseButton } from "../../../component/CloseButton";
-import { ConfirmButton } from "../../../component/ConfirmButton";
 import { FormAction } from "./FormActions";
 
 interface IConnectionEdit {

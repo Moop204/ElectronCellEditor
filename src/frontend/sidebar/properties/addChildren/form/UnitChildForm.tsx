@@ -16,6 +16,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import { AllPrefix } from "../../../../../utility/prefixConverter";
 import { IPopup } from "../IPopup";
 import { useSnackbar } from "notistack";
+import { FormAction } from "./FormActions";
 
 const validation = (validPrefix: string[], validUnits: string[]) =>
   yup.object({

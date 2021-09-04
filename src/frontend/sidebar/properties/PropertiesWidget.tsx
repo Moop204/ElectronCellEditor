@@ -10,7 +10,7 @@ import { ISelection } from "../../../types/IQuery";
 import { IpcRendererEvent } from "electron";
 import { Box, Paper, Typography } from "@material-ui/core";
 import { AttributeWidget } from "./attributes/AttributeWidget";
-import { UnitWidget } from "./UnitWidget";
+import { UnitWidget } from "./unit/UnitWidget";
 import { ChildrenWidget } from "./children/ChildrenWidget";
 import { AddChildrenWidget } from "./addChildren/AddChildrenWidget";
 import { PropertiesWidgetTop } from "../component/PropertiesWidgetTop";
@@ -220,11 +220,13 @@ const PropertiesWidget: FunctionComponent = () => {
           parentType={abstractModel.type}
         />
 
-        {abstractModel.unit.length > 0 && (
-          <UnitWidget
-            unitMap={abstractModel.unit}
-            parentName={abstractModel.attribute.name}
-          />
+        {abstractModel.type === Elements.units && (
+          <Grid item xs={12}>
+            <UnitWidget
+              unitMap={abstractModel.unit}
+              parentName={abstractModel.attribute.name}
+            />
+          </Grid>
         )}
 
         {abstractModel.type === Elements.variable && (
