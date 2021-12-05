@@ -2,8 +2,35 @@
 
 A GUI editor for the [CellML language](https://www.cellml.org/)
 
+## Features
+
+### CellML 2.0 Supported!
+Using libcellml's API lets this application parse and create CellML 2.0 files regardless of the implementation.
+
+### Text Editing
+![Text Editor](media/text-navigation.png "Text Editor")
+Integrated the Monaco editor into this project to enable smooth text editing with line numbers, syntax highlighting and an overview of the file you're currently working on.
+
+## Compressed Visualisation
+![Concise Visualisation](media/encapsulation-concise.png "Concise Visualisation")
+
+Read CellML based on what matters. Instead of showing raw XML, files can also be represented as a tree showing only crucial information. This allows for a simpler overview of the CellML file.
+
+## MathML Rendering
+![MathML Visualisation](media/mathml-displayed.png "MathML Visualisation")
+
+Read MathML equations quickly as it gets automatically formatted into readable formulas. 
+
+## Formatted Editing
+
+![Formatted Editing](media/edit-form.png "Formatted Editing")
+
+Create and edit CellML elements using forms to avoid common mistakes. 
+
 ## Download Now!
 Release is available [here](https://github.com/Moop204/ElectronCellEditor/releases/tag/v1.0.0)
+
+
 
 ## How to Build
 
